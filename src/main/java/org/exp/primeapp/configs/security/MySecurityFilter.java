@@ -14,14 +14,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import static org.exp.primeapp.utils.Const.*;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class MySecurityFilter extends OncePerRequestFilter {
-
-    private static final String AUTH_HEADER = "Authorization";
-    private static final String TOKEN_PREFIX = "Bearer ";
 
     private final ObjectMapper jacksonObjectMapper;
     private final JwtService jwtService;

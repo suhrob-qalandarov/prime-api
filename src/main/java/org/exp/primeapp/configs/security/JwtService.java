@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.exp.primeapp.utils.Const.TOKEN_PREFIX;
+
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -25,7 +27,7 @@ public class JwtService {
     public String generateToken(String email) {
         User user = userRepository.findByEmail(email);
 
-        return "Bearer " + Jwts.builder()
+        return TOKEN_PREFIX + Jwts.builder()
                 .setSubject(email)
                 .claim("phone", user.getEmail())
                 .claim("id", user.getId())
@@ -38,7 +40,7 @@ public class JwtService {
 
     public String generateRefreshToken(String email) {
         User user = userRepository.findByEmail(email);
-        return "Bearer " + Jwts.builder()
+        return TOKEN_PREFIX + Jwts.builder()
                 .setSubject(email)
                 .claim("phone", user.getEmail())
                 .claim("id", user.getId())
@@ -76,9 +78,9 @@ public class JwtService {
         String email = claims.getSubject();
         String roles = (String) claims.get("roles");
         List<Role> authorities = Arrays.stream(roles.split(",")).map(Role::new).toList();
-        return new User(
-                email,
-                authorities
-        );
+        return User.builder()
+                .email(email)
+                .roles(authorities)
+                .build();
     }
 }

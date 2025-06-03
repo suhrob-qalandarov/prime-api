@@ -16,13 +16,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.exp.primeapp.utils.Const.*;
+
 @EnableMethodSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
-
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http, MySecurityFilter mySecurityFilter) throws Exception {
@@ -35,7 +36,10 @@ public class SecurityConfig {
 //                                "/swagger-ui/**",
 //                                "/v3/api-docs/**"
 //                        ).permitAll()
-                        .requestMatchers("/api/auth", "/api/auth/*").permitAll()
+                        .requestMatchers(
+                                API + VERSION + V1 + AUTH,
+                                API + VERSION + V1 + AUTH + WAY_ALL
+                        ).permitAll()
                         .anyRequest().authenticated()
         );
         http.addFilterBefore(mySecurityFilter, UsernamePasswordAuthenticationFilter.class);
@@ -50,7 +54,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        var authProvider = new DaoAuthenticationProvider();
         authProvider.setPasswordEncoder(passwordEncoder());
         authProvider.setUserDetailsService(customUserDetailsService);
         return authProvider;

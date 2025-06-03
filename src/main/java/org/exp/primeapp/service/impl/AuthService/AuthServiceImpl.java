@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.coyote.BadRequestException;
 import org.exp.primeapp.configs.security.JwtService;
-import org.exp.primeapp.dto.LoginDTO;
-import org.exp.primeapp.dto.RegisterDTO;
+import org.exp.primeapp.dto.request.LoginReq;
+import org.exp.primeapp.dto.request.RegisterReq;
 import org.exp.primeapp.dto.responce.LoginRes;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import static org.exp.primeapp.utils.Const.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +31,13 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public LoginRes login(LoginDTO loginDTO) {
+    public LoginRes login(LoginReq loginReq) {
         var auth = new UsernamePasswordAuthenticationToken(
-                loginDTO.getEmail(),
-                loginDTO.getPassword()
+                loginReq.getEmail(),
+                loginReq.getPassword()
         );
         authenticationManager.authenticate(auth);
-        String token = jwtService.generateToken(loginDTO.getEmail());
+        String token = jwtService.generateToken(loginReq.getEmail());
         return new LoginRes(
                 token
         );
@@ -44,16 +45,24 @@ public class AuthServiceImpl implements AuthService {
 
     @SneakyThrows
     @Override
-    public void register(RegisterDTO registerDTO) {
+    public void register(RegisterReq registerDTO) {
         if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
-            throw new BadRequestException("Passwords do not match");
+            throw new BadRequestException(PASSWORD_NO_MATCH_MSG);
         }
-        User user = new User();
-        user.setEmail(registerDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        user.setFirstName(registerDTO.getFirstName());
-        user.setLastName(registerDTO.getLastName());
-        user.setPhone(registerDTO.getPhone());
+
+        if (userRepository.existsByEmail(registerDTO.getEmail())) {
+            throw new BadRequestException(EMAIL_EXIST_MSG);
+        }
+
+        User user = User.builder()
+                .firstName(registerDTO.getFirstName())
+                .lastName(registerDTO.getLastName())
+                .email(registerDTO.getEmail())
+                .password(passwordEncoder.encode(registerDTO.getPassword()))
+                .phone(registerDTO.getPhone())
+                ._active(true)
+                .build();
+
         List<Role> roleUser = roleRepository.findALlByNameIn(List.of("ROLE_USER"));
         user.setRoles(roleUser);
         userRepository.save(user);
