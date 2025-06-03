@@ -1,8 +1,6 @@
 package org.exp.primeapp.models.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "web_users")
+@Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
 
     private String firstName;
@@ -30,14 +28,23 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
     private String phone;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Role> roles;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return this.roles;
     }
 
     @Override
     public String getUsername() {
         return this.email;
     }
+
+    public User(String email, List<Role> roles) {
+        this.email = email;
+        this.roles = roles;
+    }
 }
+
 
