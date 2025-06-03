@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 import static org.exp.primeapp.utils.Const.*;
 
 @Service
@@ -45,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
 
     @SneakyThrows
     @Override
-    public void register(RegisterReq registerDTO) {
+    public User register(RegisterReq registerDTO) {
         if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
             throw new BadRequestException(PASSWORD_NO_MATCH_MSG);
         }
@@ -65,6 +66,6 @@ public class AuthServiceImpl implements AuthService {
 
         List<Role> roleUser = roleRepository.findALlByNameIn(List.of("ROLE_USER"));
         user.setRoles(roleUser);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 }
