@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/category")
 @RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<Category>> getCategory() {
+    public ResponseEntity<List<Category>> getCategories() {
         List<Category>categories=categoryService.getCategoriesByActive();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
@@ -30,11 +30,17 @@ public class CategoryController {
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{category_id}")
+    @PostMapping("/update/{category_id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long category_id,
                                                    @RequestBody CategoryReq categoryReq) {
         Category updatedCategory=categoryService.updateCategoryById(category_id,categoryReq);
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+    }
+
+    @GetMapping("/{category_id}")
+    public ResponseEntity<Category> getCategoryById(@PathVariable Long category_id) {
+        Category category=categoryService.getCategoryById(category_id);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     @DeleteMapping("/{category_id}")
