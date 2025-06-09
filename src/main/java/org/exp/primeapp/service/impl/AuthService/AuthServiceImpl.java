@@ -39,8 +39,11 @@ public class AuthServiceImpl implements AuthService {
         );
         authenticationManager.authenticate(auth);
         String token = jwtService.generateToken(loginReq.getEmail());
+        String refreshToken = jwtService.generateRefreshToken(loginReq.getEmail());
+
         return new LoginRes(
-                token
+                token,
+                refreshToken
         );
     }
 
