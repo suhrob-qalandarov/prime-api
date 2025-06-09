@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import static org.exp.primeapp.utils.Const.*;
 
 @RestController
-@RequestMapping(API + VERSION + V1 + AUTH)
+@RequestMapping(API + V1 + AUTH)
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;

@@ -4,7 +4,7 @@ public interface Const {
     String WAY_ALL = "/*";
 
     String API = "/api";
-    String VERSION = "/version";
+    //String VERSION = "/version";
     String V1 = "/v1";
 
     String AUTH_HEADER = "Authorization";
@@ -18,5 +18,10 @@ public interface Const {
 
     String EMAIL_EXIST_MSG = "Email already exist!";
     String PASSWORD_NO_MATCH_MSG = "Passwords do not match!";
-    String WAY_ALL = "/*";
+
+    String ROLE_MEGA_SUPER_ADMIN ="ROLE_MEGA_SUPER_ADMIN";
+    String ROLE_SUPER_ADMIN ="ROLE_SUPER_ADMIN";
+    String ROLE_ADMIN ="ROLE_ADMIN";
+    String ROLE_USER ="ROLE_USER";
+
 }
