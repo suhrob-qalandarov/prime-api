@@ -1,4 +1,4 @@
-package org.exp.primeapp.service.impl.AuthService;
+package org.exp.primeapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.CategoryReq;

@@ -16,6 +16,7 @@ public class Product extends BaseEntity {
     String name;
     Double price;
     Integer amount;
+    String description;
     @ManyToOne
     private Category category;
 
