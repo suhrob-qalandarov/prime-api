@@ -2,13 +2,12 @@ package org.exp.primeapp.models.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.exp.primeapp.models.base.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
