@@ -14,4 +14,6 @@ public interface CategoryService {
     Category updateCategoryById(Long categoryId, CategoryReq categoryReq);
 
     void updateCategoryIsActive(Long categoryId);
+
+    Category getCategoryById(Long categoryId);
 }

@@ -51,4 +51,9 @@ public class CategoryServiceImpl implements CategoryService {
         products.forEach(product->product.set_active(false));
         productRepository.saveAll(products);
     }
+
+    @Override
+    public Category getCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+    }
 }
