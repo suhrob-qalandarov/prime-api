@@ -3,9 +3,12 @@ package org.exp.primeapp.service.impl.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.CategoryReq;
 import org.exp.primeapp.models.entities.Category;
+import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.models.repo.CategoryRepository;
+import org.exp.primeapp.models.repo.ProductRepository;
 import org.exp.primeapp.service.interfaces.CategoryService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public List<Category> getCategoriesByActive() {
@@ -35,5 +39,16 @@ public class CategoryServiceImpl implements CategoryService {
         category.setName(categoryReq.getName());
         category.set_active(categoryReq.getActive());
         return categoryRepository.save(category);
+    }
+
+    @Transactional
+    @Override
+    public void updateCategoryIsActive(Long categoryId) {
+        Category category=categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+        category.set_active(false);
+        categoryRepository.save(category);
+        List<Product> products=productRepository.findByCategory(category);
+        products.forEach(product->product.set_active(false));
+        productRepository.saveAll(products);
     }
 }
