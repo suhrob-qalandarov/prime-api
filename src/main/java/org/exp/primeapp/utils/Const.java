@@ -1,6 +1,7 @@
 package org.exp.primeapp.utils;
 
 public interface Const {
+    String WAY_ALL = "/*";
 
     String API = "/api";
     String VERSION = "/version";
@@ -12,6 +13,8 @@ public interface Const {
     String AUTH = "/auth";
     String LOGIN = "/login";
     String REGISTER = "/register";
+
+    String ATTACHMENT = "/attachment";
 
     String EMAIL_EXIST_MSG = "Email already exist!";
     String PASSWORD_NO_MATCH_MSG = "Passwords do not match!";

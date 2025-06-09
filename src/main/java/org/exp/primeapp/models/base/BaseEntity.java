@@ -21,5 +21,5 @@ public class BaseEntity extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    private Boolean _active;
+    private Boolean _active = true;
 }

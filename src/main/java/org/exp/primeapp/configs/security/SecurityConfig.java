@@ -31,14 +31,14 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
         http.authorizeHttpRequests(auth ->
                 auth
-//                        .requestMatchers(
-//                                "/swagger-ui.html",
-//                                "/swagger-ui/**",
-//                                "/v3/api-docs/**"
-//                        ).permitAll()
                         .requestMatchers(
-                                API + VERSION + V1 + AUTH,
-                                API + VERSION + V1 + AUTH + WAY_ALL
+                                API + V1 + ATTACHMENT,
+                                API + V1 + ATTACHMENT + WAY_ALL
+                        ).permitAll()
+
+                        .requestMatchers(
+                                API + V1 + AUTH,
+                                API + V1 + AUTH + WAY_ALL
                         ).permitAll()
                         .anyRequest().authenticated()
         );
