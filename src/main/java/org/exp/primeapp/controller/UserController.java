@@ -17,25 +17,25 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/admin")
     public ResponseEntity<User> addUser(@RequestBody UserReq userReq) {
         User user=userService.createUser(userReq);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping
+    @GetMapping("/admin")
     public ResponseEntity<List<User>> getUsers() {
         List<User> users=userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/{user_id}")
+    @GetMapping("/admin/{user_id}")
     public ResponseEntity<User> getUser(@PathVariable Long user_id) {
         User user=userService.getByUserId(user_id);
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/{user_id}")
+    @PostMapping("/update/{user_id}")
     public ResponseEntity<User> updateUser(@PathVariable Long user_id,@RequestBody UserUpdateReq userReq) {
         User user=userService.updateUser(user_id,userReq);
         return ResponseEntity.ok(user);
