@@ -27,8 +27,8 @@ public class S3ServiceImpl implements S3Service {
     @SneakyThrows
     @Override
     public String uploadAttachment(MultipartFile file) {
-        String originalFilename = file.getOriginalFilename();
-        String key = originalFilename + "_" + System.currentTimeMillis();
+        String filename = file.getName();
+        String key = filename + "_" + System.currentTimeMillis();
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)

@@ -22,15 +22,15 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final AttachmentRepository attachmentRepository;
 
     @Override
-    public Long upload(MultipartFile file) {
+    public Attachment upload(MultipartFile file) {
         String key = s3Service.uploadAttachment(file);
 
         Attachment newAttachment = Attachment.builder()
                 .url(key)
+                ._active(true)
                 .build();
 
-        Attachment savedAttachment = attachmentRepository.save(newAttachment);
-        return savedAttachment.getId();
+        return attachmentRepository.save(newAttachment);
     }
 
     @SneakyThrows
