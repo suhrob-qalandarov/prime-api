@@ -34,9 +34,9 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            mkdir -p /home/ubuntu/final-xo
+            mkdir -p /home/ubuntu/prime_app
             sudo usermod -aG docker $USER
-            cd /home/ubuntu/final-xo
+            cd /home/ubuntu/prime_app
             sudo docker-compose down || echo "docker-compose down failed"
             sudo docker rm -f $(sudo docker ps -aq) || echo "Container removal failed"
 
@@ -47,7 +47,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "target/app.jar,docker-compose.yml,Dockerfile"
-          target: /home/ubuntu/final-xo
+          target: /home/ubuntu/prime_app
           port: 22
           timeout: 30s
           command_timeout: 10m
@@ -62,8 +62,8 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd ~/final-xo
-            ls -l /home/ubuntu/final-xo || echo "Files not found in final-xo"
+            cd ~/prime_app
+            ls -l /home/ubuntu/prime_app || echo "Files not found in prime_app"
             # Create .env file
             echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" > .env
             echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
