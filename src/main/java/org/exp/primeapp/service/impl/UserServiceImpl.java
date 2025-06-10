@@ -3,6 +3,7 @@ package org.exp.primeapp.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.UserReq;
 import org.exp.primeapp.dto.request.UserUpdateReq;
+import org.exp.primeapp.dto.responce.UserRes;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.models.repo.RoleRepository;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User createUser(UserReq userReq) {
+    public UserRes createUser(UserReq userReq) {
         if (!userReq.getPassword().equals(userReq.getConfirmPassword())) {
             throw new IllegalArgumentException("Password and confirm password do not match");
         }
@@ -41,22 +43,38 @@ public class UserServiceImpl implements UserService {
         checkUserIs_ActiveAndRolesAndUse(userReq.get_active(), user, userReq.getRole_ids());
 
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return new UserRes(savedUser.getFirstName(),
+                savedUser.getLastName(),
+                savedUser.getEmail(),
+                savedUser.getPhone());
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserRes> getAllUsers() {
+            List<User> users = userRepository.findAll();
+            return users.stream()
+                    .map(user -> new UserRes(
+                            user.getFirstName(),
+                            user.getLastName(),
+                            user.getEmail(),
+                            user.getPhone()
+                    ))
+                    .collect(Collectors.toList());
     }
 
     @Override
-    public User getByUserId(Long userId) {
-        return userRepository.findById(userId).orElseThrow(RuntimeException::new);
+    public UserRes getByUserId(Long userId) {
+        User foundUser = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+        return new UserRes(foundUser.getFirstName(),
+                foundUser.getLastName(),
+                foundUser.getEmail(),
+                foundUser.getPhone());
     }
 
     @Transactional
     @Override
-    public User updateUser(Long user_id, UserUpdateReq userReq) {
+    public UserRes updateUser(Long user_id, UserUpdateReq userReq) {
         User user = User.builder()
                 .firstName(userReq.getFirstName())
                 .lastName(userReq.getLastName())
@@ -66,7 +84,11 @@ public class UserServiceImpl implements UserService {
 
         checkUserIs_ActiveAndRolesAndUse(userReq.get_active(), user, userReq.getRole_ids());
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return new UserRes(savedUser.getFirstName(),
+                savedUser.getLastName(),
+                savedUser.getEmail(),
+                savedUser.getPhone());
     }
 
     @Transactional
