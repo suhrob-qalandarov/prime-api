@@ -1,4 +1,4 @@
-name: Build and Deploy to Server
+name: Build and Deploy Web App to Server
 
 on:
   push:
@@ -9,28 +9,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Repositoriyni olish
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: JDK 21 ni o'rnatish
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: JAR faylini yaratish
+      - name: Build JAR file
         run: ./mvnw clean package -DskipTests
 
-      - name: Fayllarni tekshirish
+      - name: Verify files
         run: |
-          echo "target katalogi tarkibi:"
-          ls -l target/ || echo "target/ katalogi topilmadi"
-          echo "docker-compose.yml fayli:"
-          ls -l docker-compose.yml || echo "docker-compose.yml fayli topilmadi"
-          echo "Dockerfile fayli:"
-          ls -l Dockerfile || echo "Dockerfile fayli topilmadi"
+          ls -l target/ || echo "target/ not found"
+          ls -l docker-compose.yml || echo "docker-compose.yml not found"
+          ls -l Dockerfile || echo "Dockerfile not found"
 
-      - name: Serverda maqsadli katalog yaratish
+      - name: Create target directory on server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -39,12 +36,11 @@ jobs:
           script: |
             mkdir -p /home/ubuntu/final-xo
             sudo usermod -aG docker $USER
-            # Eski konteynerlarni tozalash
             cd /home/ubuntu/final-xo
-            sudo docker-compose down || echo "docker-compose down muvaffaqiyatsiz"
-            sudo docker rm -f $(sudo docker ps -aq) || echo "Konteynerlarni o'chirish muvaffaqiyatsiz"
+            sudo docker-compose down || echo "docker-compose down failed"
+            sudo docker rm -f $(sudo docker ps -aq) || echo "Container removal failed"
 
-      - name: Fayllarni serverga ko'chirish
+      - name: Copy files to server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -59,7 +55,7 @@ jobs:
           strip_components: 0
           overwrite: true
 
-      - name: Serverda deploy qilish
+      - name: Deploy on server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -67,31 +63,20 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd ~/final-xo
-
-            # Fayllarni tekshirish
-            ls -l /home/ubuntu/final-xo || echo "final-xo katalogida fayllar topilmadi"
-            cat /home/ubuntu/final-xo/.env || echo ".env fayli topilmadi"
-
-            # .env faylini yaratish
+            ls -l /home/ubuntu/final-xo || echo "Files not found in final-xo"
+            # Create .env file
             echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" > .env
             echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
             echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-            echo "SPRING_DATASOURCE_URL=jdbc:postgresql://game_db:5432/${{ secrets.POSTGRES_DB }}" >> .env
+            echo "SPRING_DATASOURCE_URL=jdbc:postgresql://web_db:5432/${{ secrets.POSTGRES_DB }}" >> .env
             echo "SPRING_DATASOURCE_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-            echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> .env
-
-            # dos2unix o'rnatish va .env faylini tozalash
+            echo "AWS_S3_BUCKET=${{ secrets.S3_BUCKET_NAME }}" >> .env
+            echo "AWS_S3_REGION=${{ secrets.S3_REGION }}" >> .env
+            echo "AWS_S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}" >> .env
+            echo "AWS_S3_SECRET_ACCESS_KEY=${{ secrets.S3_SECRET_ACCESS_KEY }}" >> .env
             sudo apt-get update && sudo apt-get install -y dos2unix
             dos2unix .env
-
-            # Docker Compose orqali konteynerlarni yangilash
             sudo docker-compose down
             sudo docker-compose up --build -d
-
-            # Konteynerlar holatini tekshirish
             sudo docker ps -a
-            # game_bot loglari
-            sudo docker logs game_bot || echo "game_bot konteyneri topilmadi"
-            # game_db loglari
-            sudo docker logs game_db || echo "game_db konteyneri topilmadi"
