@@ -52,8 +52,14 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(productReq.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Kategoriya topilmadi: ID = " + productReq.getCategoryId()));
 
-        Attachment attachment = attachmentRepository.findById(productReq.getAttachmentId())
-                .orElseThrow(() -> new RuntimeException("Attachment topilmadi: ID = " + productReq.getAttachmentId()));
+        List<Long> attachmentIds = productReq.getAttachmentIds();
+        List<Attachment> attachmentList;
+
+        if (!attachmentIds.isEmpty()){
+            attachmentList = attachmentRepository.findAllById(attachmentIds);
+        } else {
+            attachmentList = attachmentRepository.findAllById(List.of(1L, 2L, 3L));
+        }
 
         Product product = Product.builder()
                 .name(productReq.getName())
@@ -62,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
                 .amount(productReq.getAmount())
                 ._active(true)
                 .category(category)
-                .attachment(attachment)
+                .attachments(attachmentList)
                 .build();
 
         productRepository.save(product);
@@ -72,7 +78,6 @@ public class ProductServiceImpl implements ProductService {
     public void updateProduct(Long id) {
         productRepository.updateActive(id);
     }
-
 
     private ProductRes convertToProductRes(Product product) {
         return new ProductRes(

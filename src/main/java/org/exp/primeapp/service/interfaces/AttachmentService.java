@@ -5,9 +5,13 @@ import org.exp.primeapp.models.entities.Attachment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 public interface AttachmentService {
-    Attachment upload(MultipartFile file);
+    Attachment uploadOne(MultipartFile file);
 
     void get(Long attachmentId, HttpServletResponse response);
+
+    List<Attachment> uploadMultiple(MultipartFile[] files);
 }

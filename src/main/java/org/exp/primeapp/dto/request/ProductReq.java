@@ -2,6 +2,8 @@ package org.exp.primeapp.dto.request;
 
 import lombok.Value;
 
+import java.util.List;
+
 @Value
 public class ProductReq {
     String name;
@@ -9,5 +11,5 @@ public class ProductReq {
     Double price;
     Integer amount;
     Long categoryId;
-    Long attachmentId;
+    List<Long> attachmentIds;
 }

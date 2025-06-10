@@ -1,10 +1,12 @@
 package org.exp.primeapp.models.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.exp.primeapp.models.base.BaseEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,12 +16,18 @@ import org.exp.primeapp.models.base.BaseEntity;
 @Entity
 public class Product extends BaseEntity {
     String name;
+    String description;
     Double price;
     Integer amount;
-    String description;
+
     @ManyToOne
     private Category category;
 
-    @ManyToOne
-    private Attachment attachment;
+    @OneToMany
+    @JoinTable(
+            name = "product_attachment",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "attachment_id")
+    )
+    private List<Attachment> attachments = new ArrayList<>();
 }

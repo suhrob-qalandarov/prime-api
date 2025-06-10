@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.exp.primeapp.utils.Const.*;
 
 @RestController
@@ -21,13 +24,15 @@ public class AttachmentController {
     private final AttachmentService attachmentService;
 
     @PostMapping
-    public ResponseEntity<AttachmentRes> uploadFile(@RequestParam("file") MultipartFile file) {
-        Attachment uploadedFile = attachmentService.upload(file);
-        AttachmentRes attachmentRes = AttachmentRes.builder()
-                .id(uploadedFile.getId())
-                .key(uploadedFile.getUrl())
-                .build();
-        return ResponseEntity.ok(attachmentRes);
+    public ResponseEntity<List<AttachmentRes>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
+        List<Attachment> uploadedFiles = attachmentService.uploadMultiple(files);
+        List<AttachmentRes> attachmentResponses = uploadedFiles.stream()
+                .map(attachment -> AttachmentRes.builder()
+                        .id(attachment.getId())
+                        .key(attachment.getUrl())
+                        .build())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(attachmentResponses);
     }
 
     @GetMapping("{attachmentId}")
