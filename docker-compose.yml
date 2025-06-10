@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "80:8080"  # Tashqi 80-port ichki 8080-portga yo'naltiriladi
     environment:
       - SPRING_PROFILES_ACTIVE=prod
     depends_on:
