@@ -9,6 +9,5 @@ public class ProductReq {
     Double price;
     Integer amount;
     Long categoryId;
-
-
+    Long attachmentId;
 }
