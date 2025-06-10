@@ -2,11 +2,8 @@ package org.exp.primeapp.dto.responce;
 
 import lombok.*;
 
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
+@Value
 public class ProductRes {
     String name;
     String description;
