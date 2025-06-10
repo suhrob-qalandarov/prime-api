@@ -4,11 +4,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.ProductReq;
 import org.exp.primeapp.dto.responce.ProductRes;
-import org.exp.primeapp.models.entities.Attachment;
-import org.exp.primeapp.models.entities.Category;
-import org.exp.primeapp.models.entities.Product;
+import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.repo.AttachmentRepository;
 import org.exp.primeapp.models.repo.CategoryRepository;
+import org.exp.primeapp.models.repo.ProductIncomeRepository;
 import org.exp.primeapp.models.repo.ProductRepository;
 import org.exp.primeapp.service.interfaces.ProductService;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
+    private final ProductIncomeRepository productIncomeRepository;
 
     @Override
     public List<ProductRes> getProducts() {
@@ -49,8 +49,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public void saveProduct(ProductReq productReq) {
-        Category category = categoryRepository.findById(productReq.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Kategoriya topilmadi: ID = " + productReq.getCategoryId()));
+        Category category = categoryRepository.findById(productReq.getCategoryId()).get();
 
         List<Long> attachmentIds = productReq.getAttachmentIds();
         List<Attachment> attachmentList;
@@ -72,6 +71,13 @@ public class ProductServiceImpl implements ProductService {
                 .build();
 
         productRepository.save(product);
+
+        ProductIncome productIncome = ProductIncome.builder()
+                .amount(productReq.getAmount())
+                .product(product)
+                .build();
+
+        productIncomeRepository.save(productIncome);
     }
 
     @Override

@@ -18,7 +18,7 @@ import org.exp.primeapp.models.base.Inventory;
 @NoArgsConstructor
 @Entity
 public class ProductIncome extends Inventory {
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_user_id")
     private User userAdmin;
 }
