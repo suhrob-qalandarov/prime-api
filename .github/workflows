@@ -1,0 +1,97 @@
+name: Build and Deploy to Server
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repositoriyni olish
+        uses: actions/checkout@v4
+
+      - name: JDK 21 ni o'rnatish
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: JAR faylini yaratish
+        run: ./mvnw clean package -DskipTests
+
+      - name: Fayllarni tekshirish
+        run: |
+          echo "target katalogi tarkibi:"
+          ls -l target/ || echo "target/ katalogi topilmadi"
+          echo "docker-compose.yml fayli:"
+          ls -l docker-compose.yml || echo "docker-compose.yml fayli topilmadi"
+          echo "Dockerfile fayli:"
+          ls -l Dockerfile || echo "Dockerfile fayli topilmadi"
+
+      - name: Serverda maqsadli katalog yaratish
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            mkdir -p /home/ubuntu/final-xo
+            sudo usermod -aG docker $USER
+            # Eski konteynerlarni tozalash
+            cd /home/ubuntu/final-xo
+            sudo docker-compose down || echo "docker-compose down muvaffaqiyatsiz"
+            sudo docker rm -f $(sudo docker ps -aq) || echo "Konteynerlarni o'chirish muvaffaqiyatsiz"
+
+      - name: Fayllarni serverga ko'chirish
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "target/app.jar,docker-compose.yml,Dockerfile"
+          target: /home/ubuntu/final-xo
+          port: 22
+          timeout: 30s
+          command_timeout: 10m
+          debug: true
+          strip_components: 0
+          overwrite: true
+
+      - name: Serverda deploy qilish
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd ~/final-xo
+
+            # Fayllarni tekshirish
+            ls -l /home/ubuntu/final-xo || echo "final-xo katalogida fayllar topilmadi"
+            cat /home/ubuntu/final-xo/.env || echo ".env fayli topilmadi"
+
+            # .env faylini yaratish
+            echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" > .env
+            echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+            echo "SPRING_DATASOURCE_URL=jdbc:postgresql://game_db:5432/${{ secrets.POSTGRES_DB }}" >> .env
+            echo "SPRING_DATASOURCE_USERNAME=${{ secrets.POSTGRES_USER }}" >> .env
+            echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+            echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> .env
+
+            # dos2unix o'rnatish va .env faylini tozalash
+            sudo apt-get update && sudo apt-get install -y dos2unix
+            dos2unix .env
+
+            # Docker Compose orqali konteynerlarni yangilash
+            sudo docker-compose down
+            sudo docker-compose up --build -d
+
+            # Konteynerlar holatini tekshirish
+            sudo docker ps -a
+            # game_bot loglari
+            sudo docker logs game_bot || echo "game_bot konteyneri topilmadi"
+            # game_db loglari
+            sudo docker logs game_db || echo "game_db konteyneri topilmadi"
