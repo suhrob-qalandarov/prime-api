@@ -31,10 +31,10 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
         http.authorizeHttpRequests(auth ->
                 auth
-                        .requestMatchers(
-                                API + V1 + ATTACHMENT,
-                                API + V1 + ATTACHMENT + WAY_ALL
-                        ).permitAll()
+/*                        .requestMatchers(
+                                API + V1,
+                                API + V1 + WAY_ALL
+                        ).permitAll()*/
 
                         .requestMatchers(
                                 API + V1 + AUTH,
