@@ -28,8 +28,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Transactional
     @Override
     public List<Attachment> uploadMultiple(MultipartFile[] files) {
-        // Har bir faylni S3 ga yuklash va Attachment sifatida saqlash
-        List<Attachment> attachments = Arrays.stream(files)
+        return Arrays.stream(files)
                 .map(file -> {
 
                    /* if (!file.getContentType().startsWith("image/")) {
@@ -49,8 +48,6 @@ public class AttachmentServiceImpl implements AttachmentService {
                     return attachmentRepository.save(newAttachment);
                 })
                 .collect(Collectors.toList());
-
-        return attachments;
     }
 
     @SneakyThrows
