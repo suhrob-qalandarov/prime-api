@@ -32,9 +32,9 @@ public class AttachmentServiceImpl implements AttachmentService {
         List<Attachment> attachments = Arrays.stream(files)
                 .map(file -> {
 
-                    if (!file.getContentType().startsWith("image/")) {
+                   /* if (!file.getContentType().startsWith("image/")) {
                         throw new IllegalArgumentException("Faqat rasm fayllari ruxsat etiladi!");
-                    }
+                    }*/
 
                     // Faylni S3 ga yuklash
                     String key = s3Service.uploadAttachment(file);

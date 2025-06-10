@@ -24,7 +24,7 @@ public class AttachmentController {
     private final AttachmentService attachmentService;
 
     @PostMapping
-    public ResponseEntity<List<AttachmentRes>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity<List<AttachmentRes>> uploadFiles(@RequestParam("file") MultipartFile[] files) {
         List<Attachment> uploadedFiles = attachmentService.uploadMultiple(files);
         List<AttachmentRes> attachmentResponses = uploadedFiles.stream()
                 .map(attachment -> AttachmentRes.builder()
