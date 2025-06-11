@@ -36,7 +36,7 @@ public class Runner implements CommandLineRunner {
             roleRepository.saveAll(roles);
         }
 
-        if (userRepository.count() == 0) {
+        if (userRepository.count() == 2) {
             userRepository.save(
                     User.builder()
                             .firstName(ROLE_MEGA_SUPER_ADMIN)

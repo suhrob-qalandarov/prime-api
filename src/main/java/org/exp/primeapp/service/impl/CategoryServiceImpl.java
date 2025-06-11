@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category=Category.
                 builder()
                 .name(categoryReq.getName())
-                .attachment(attachment)
+                //.attachment(attachment)
                 ._active(categoryReq.getActive())
                 .build();
 
