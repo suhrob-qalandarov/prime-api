@@ -27,6 +27,7 @@ public class User extends BaseEntity implements UserDetails {
     private String email;
     private String password;
     private String phone;
+    private String verifyCode;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
@@ -44,6 +45,11 @@ public class User extends BaseEntity implements UserDetails {
     public User(String email, List<Role> roles) {
         this.email = email;
         this.roles = roles;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return Boolean.TRUE.equals(get_active());
     }
 }
 

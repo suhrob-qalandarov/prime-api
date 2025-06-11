@@ -34,6 +34,12 @@ public class MySecurityFilter extends OncePerRequestFilter {
             try {
                 if (jwtService.validateToken(token)) {
                     User user = jwtService.getUserObject(token);
+                    if (!user.get_active()) {
+                        log.warn("User is not active: {}", user.getUsername());
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.getWriter().write("User account is not active.");
+                        return;
+                    }
                     var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }

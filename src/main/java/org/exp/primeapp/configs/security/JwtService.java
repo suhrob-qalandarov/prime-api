@@ -24,12 +24,11 @@ import static org.exp.primeapp.utils.Const.TOKEN_PREFIX;
 public class JwtService {
     private final UserRepository userRepository;
 
-    public String generateToken(String email) {
-        User user = userRepository.findByEmail(email);
+    public String generateToken(User user) {
 
         return TOKEN_PREFIX + Jwts.builder()
-                .setSubject(email)
-                .claim("phone", user.getEmail())
+                .setSubject(user.getEmail())
+                .claim("email", user.getEmail())
                 .claim("id", user.getId())
                 .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                 .issuedAt(new Date())

@@ -8,10 +8,11 @@ import lombok.Value;
 @AllArgsConstructor
 @Value
 public class RegisterReq {
-    String email;
-    String password;
-    String confirmPassword;
-    String firstName;
-    String lastName;
-    String phone;
+     String firstName;
+     String lastName;
+     String email;
+     String phone;
+     String password;
+     String confirmPassword;
 }
+
