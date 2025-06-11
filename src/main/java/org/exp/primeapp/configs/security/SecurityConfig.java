@@ -31,15 +31,28 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
         http.authorizeHttpRequests(auth ->
                 auth
-/*                        .requestMatchers(
-                                API + V1,
-                                API + V1 + WAY_ALL
-                        ).permitAll()*/
-
+                        // Auth endpoints - ochiq
                         .requestMatchers(
                                 API + V1 + AUTH,
                                 API + V1 + AUTH + WAY_ALL
                         ).permitAll()
+
+                        // Product va Category GET requestlari - ochiq
+                        .requestMatchers(
+                                "GET",
+                                "/api/products",
+                                "/api/products/**",
+                                "/api/category",
+                                "/api/category/**"
+                        ).permitAll()
+
+                        // Attachment GET requestlari - ochiq (rasmlarni ko'rish uchun)
+                        .requestMatchers(
+                                "GET",
+                                API + V1 + ATTACHMENT + "/**"
+                        ).permitAll()
+
+                        // Qolgan barcha requestlar - himoyalangan
                         .anyRequest().authenticated()
         );
         http.addFilterBefore(mySecurityFilter, UsernamePasswordAuthenticationFilter.class);
