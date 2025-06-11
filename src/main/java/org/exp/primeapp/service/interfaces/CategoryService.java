@@ -13,7 +13,7 @@ public interface CategoryService {
 
     Category updateCategoryById(Long categoryId, CategoryReq categoryReq);
 
-    void updateCategoryIsActive(Long categoryId);
+    void updateCategoryActive(Long categoryId);
 
     Category getCategoryById(Long categoryId);
 }
