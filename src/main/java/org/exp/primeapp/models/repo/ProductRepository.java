@@ -1,6 +1,7 @@
 package org.exp.primeapp.models.repo;
 
 import jakarta.transaction.Transactional;
+import org.exp.primeapp.dto.responce.ProductRes;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,4 +23,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Transactional
     @Query("update Product p set p._active = false where p.id = :id")
     void updateActive(@Param("id") Long id);
+
+    List<ProductRes> findAllByCategory_Id(Long categoryId);
 }

@@ -16,4 +16,6 @@ public interface ProductService {
     void saveProduct(ProductReq productReq);
 
     void updateProduct(Long id);
+
+    List<ProductRes> getProductsByCategoryId(Long categoryId);
 }
