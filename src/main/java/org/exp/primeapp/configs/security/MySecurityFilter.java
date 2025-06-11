@@ -28,6 +28,16 @@ public class MySecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        // OPTIONS so‘rovlarini qo‘llab-quvvatlash
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setHeader("Access-Control-Allow-Origin", "http://localhost:63342"); // Frontend manzilingiz
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            response.setHeader("Access-Control-Allow-Headers", "*");
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+            return; // So‘rovni keyingi filtrga o‘tkazmaslik
+        }
+
         String token = extractToken(request);
 
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -50,7 +60,6 @@ public class MySecurityFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
     private String extractToken(HttpServletRequest request) {
         String header = request.getHeader(AUTH_HEADER);
         if (header != null && header.startsWith(TOKEN_PREFIX)) {

@@ -85,6 +85,11 @@ public class ProductServiceImpl implements ProductService {
         productRepository.updateActive(id);
     }
 
+    @Override
+    public List<ProductRes> getProductsByCategoryId(Long categoryId) {
+        return productRepository.findAllByCategory_Id(categoryId);
+    }
+
     private ProductRes convertToProductRes(Product product) {
         return new ProductRes(
                 product.getName(),
