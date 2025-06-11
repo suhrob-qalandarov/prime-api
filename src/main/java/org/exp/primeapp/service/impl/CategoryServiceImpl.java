@@ -2,8 +2,10 @@ package org.exp.primeapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.CategoryReq;
+import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
+import org.exp.primeapp.models.repo.AttachmentRepository;
 import org.exp.primeapp.models.repo.CategoryRepository;
 import org.exp.primeapp.models.repo.ProductRepository;
 import org.exp.primeapp.service.interfaces.CategoryService;
@@ -17,19 +19,26 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final AttachmentRepository attachmentRepository;
 
     @Override
     public List<Category> getCategoriesByActive() {
         return categoryRepository.findBy_active(true);
     }
 
+    @Transactional
     @Override
     public Category saveCategory(CategoryReq categoryReq) {
+        Long attachmentId = categoryReq.getAttachmentId();
+        Attachment attachment = attachmentRepository.findById(attachmentId).get();
+
         Category category=Category.
                 builder()
                 .name(categoryReq.getName())
+                .attachment(attachment)
                 ._active(categoryReq.getActive())
                 .build();
+
         return categoryRepository.save(category);
     }
 
@@ -43,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public void updateCategoryIsActive(Long categoryId) {
+    public void updateCategoryActive(Long categoryId) {
         Category category=categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.set_active(false);
         categoryRepository.save(category);

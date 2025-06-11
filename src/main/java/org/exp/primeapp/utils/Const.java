@@ -14,6 +14,7 @@ public interface Const {
     String LOGIN = "/login";
     String REGISTER = "/register";
 
+    String CATEGORY = "/category";
     String ATTACHMENT = "/attachment";
 
     String EMAIL_EXIST_MSG = "Email already exist!";
