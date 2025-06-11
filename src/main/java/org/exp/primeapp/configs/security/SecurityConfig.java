@@ -37,7 +37,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth ->
                 auth
                         // Auth endpoints - ochiq
-                        .requestMatchers(
+                        /*.requestMatchers(
                                 API + V1 + AUTH,
                                 API + V1 + AUTH + WAY_ALL
                         ).permitAll()
@@ -55,10 +55,10 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "GET",
                                 API + V1 + ATTACHMENT + "/**"
-                        ).permitAll()
+                        ).permitAll()*/
 
                         // Qolgan barcha requestlar - himoyalangan
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
         );
         http.addFilterBefore(mySecurityFilter, UsernamePasswordAuthenticationFilter.class);
 
