@@ -51,10 +51,10 @@ public class AuthServiceImpl implements AuthService {
             // load user to generate token
             User user = (User) userDetailsService.loadUserByUsername(loginReq.getEmail());
 
-            String token = jwtService.generateToken(user);
+            String accessToken = jwtService.generateToken(user);
             String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
-            return new LoginRes(token, refreshToken, "success");
+            return new LoginRes(accessToken, refreshToken, "success");
 
         } catch (DisabledException e) {
             return new LoginRes(null, null, "Account not active");

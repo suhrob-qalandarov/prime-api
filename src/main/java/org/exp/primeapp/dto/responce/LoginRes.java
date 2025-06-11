@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class LoginRes {
-    String token;
+    String accessToken;
     String refreshToken;
     String message;
 }
