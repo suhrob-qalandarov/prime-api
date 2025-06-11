@@ -16,6 +16,7 @@ public interface Const {
     String VERIFY = "/verify";
     String LOGOUT = "/logout";
 
+    String CATEGORY = "/category";
     String ATTACHMENT = "/attachment";
 
     String EMAIL_EXIST_MSG = "Email already exist!";
