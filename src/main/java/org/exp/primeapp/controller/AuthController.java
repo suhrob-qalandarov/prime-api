@@ -3,10 +3,9 @@ package org.exp.primeapp.controller;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.LoginReq;
 import org.exp.primeapp.dto.request.RegisterReq;
+import org.exp.primeapp.dto.request.VerifyEmailReq;
 import org.exp.primeapp.dto.responce.LoginRes;
-import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.service.interfaces.AuthService;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +18,7 @@ import static org.exp.primeapp.utils.Const.*;
 @RequestMapping(API + V1 + AUTH)
 @RequiredArgsConstructor
 public class AuthController {
+
     private final AuthService authService;
 
     @PostMapping(LOGIN)
@@ -28,8 +28,15 @@ public class AuthController {
     }
 
     @PostMapping(REGISTER)
-    public ResponseEntity<User> register(@RequestBody RegisterReq registerDTO) {
-        User registeredUser=authService.register(registerDTO);
-        return ResponseEntity.ok(registeredUser);
+    public ResponseEntity<String> sendCode(@RequestBody RegisterReq req) {
+        String msg = authService.sendVerificationCode(req);
+        return ResponseEntity.ok(msg);
+    }
+
+    @PostMapping(VERIFY)
+    public ResponseEntity<String> verifyCode(@RequestBody VerifyEmailReq req) {
+        String msg = authService.verifyCodeAndRegister(req);
+        return ResponseEntity.ok(msg);
     }
 }
+

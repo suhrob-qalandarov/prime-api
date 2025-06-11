@@ -13,6 +13,8 @@ public interface Const {
     String AUTH = "/auth";
     String LOGIN = "/login";
     String REGISTER = "/register";
+    String VERIFY = "/verify";
+    String LOGOUT = "/logout";
 
     String ATTACHMENT = "/attachment";
 
