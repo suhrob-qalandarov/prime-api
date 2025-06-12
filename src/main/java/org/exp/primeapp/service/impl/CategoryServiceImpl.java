@@ -50,6 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
         category.set_active(categoryReq.getActive());
         Category save = categoryRepository.save(category);
         return CategoryRes.builder()
+                .id(save.getId())
                 .name(save.getName())
                 ._active(save.get_active())
                 .build();
