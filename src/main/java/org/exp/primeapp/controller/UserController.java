@@ -18,7 +18,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/admin")
+    @PostMapping()
     public ResponseEntity<UserRes> addUser(@RequestBody UserReq userReq) {
         UserRes user=userService.createUser(userReq);
         return ResponseEntity.ok(user);
@@ -36,7 +36,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/update/{user_id}")
+    @PostMapping("/{user_id}")
     public ResponseEntity<UserRes> updateUser(@PathVariable Long user_id,@RequestBody UserUpdateReq userReq) {
         UserRes user=userService.updateUser(user_id,userReq);
         return ResponseEntity.ok(user);
