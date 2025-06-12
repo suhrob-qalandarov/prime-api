@@ -33,18 +33,18 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryRes> createCategory(@RequestBody CategoryReq categoryReq) {
-        CategoryRes category = categoryService.saveCategory(categoryReq);
+    public ResponseEntity<Category> createCategory(@RequestBody CategoryReq categoryReq) {
+        Category category = categoryService.saveCategory(categoryReq);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<CategoryRes> updateCategory(
+    public ResponseEntity<String> updateCategory(
             @PathVariable Long categoryId,
             @RequestBody CategoryReq categoryReq
     ) {
         CategoryRes updatedCategory = categoryService.updateCategoryById(categoryId,categoryReq);
-        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
     @GetMapping("/{categoryId}")
@@ -55,7 +55,7 @@ public class CategoryController {
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId) {
-        CategoryRes categoryRes = categoryService.updateCategoryActive(categoryId);
-        return new ResponseEntity<>(categoryRes, HttpStatus.OK);
+        categoryService.updateCategoryActive(categoryId);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 }

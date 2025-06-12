@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public CategoryRes saveCategory(CategoryReq categoryReq) {
+    public Category saveCategory(CategoryReq categoryReq) {
         Long attachmentId = categoryReq.getAttachmentId();
         Attachment attachment = attachmentRepository.findById(attachmentId).get();
 
@@ -38,14 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
                 ._active(categoryReq.getActive())
                 .build();
 
-        Category saved = categoryRepository.save(category);
-
-        return CategoryRes.builder()
-                .id(saved.getId())
-                .name(saved.getName())
-                ._active(saved.get_active())
-                .attachmentId(saved.getAttachment().getId())
-                .build();
+        return categoryRepository.save(category);
     }
 
     @Override

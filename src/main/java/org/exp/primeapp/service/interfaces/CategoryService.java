@@ -10,7 +10,7 @@ public interface CategoryService {
 
     List<Category> getCategoriesByActive();
 
-    CategoryRes saveCategory(CategoryReq categoryReq);
+    Category saveCategory(CategoryReq categoryReq);
 
     CategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq);
 
