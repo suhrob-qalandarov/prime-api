@@ -881,7 +881,7 @@
 
             console.log('Updating product:', productData);
 
-            await api.put(`/api/products/admin/${id}`, productData);
+            await api.put(`/api/v1/product/admin/${id}`, productData);
 
             showNotification('success', 'Muvaffaqiyat', 'Mahsulot muvaffaqiyatli yangilandi');
             bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
@@ -1098,7 +1098,7 @@
             if (loading) loading.classList.add('show');
 
             console.log('Loading products...');
-            const response = await api.get('/api/products/admin');
+            const response = await api.get('/api/v1/product');
             allProducts = response.data || [];
 
             console.log('Products loaded:', allProducts);
@@ -1270,7 +1270,7 @@
 
         try {
             console.log('Deleting product:', productId);
-            await api.delete(`/api/products/admin/${productId}`);
+            await api.delete(`/api/v1/product/admin/${productId}`);
             showNotification('success', 'Muvaffaqiyat', 'Mahsulot muvaffaqiyatli o\'chirildi');
             await loadProducts();
             await loadDashboardData();

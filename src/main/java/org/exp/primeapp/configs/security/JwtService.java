@@ -1,6 +1,5 @@
 package org.exp.primeapp.configs.security;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

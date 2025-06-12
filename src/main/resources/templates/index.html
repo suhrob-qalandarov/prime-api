@@ -461,7 +461,7 @@
 
     async function loadProducts() {
         try {
-            const response = await api.get('/api/products');
+            const response = await api.get('/api/v1/product');
             allProducts = response.data || [];
             renderFeaturedProducts();
         } catch (error) {
@@ -732,9 +732,9 @@
         const grid = document.getElementById(gridId);
 
         const productsHTML = products.map(product => {
-            const mainImage = product.attachments && product.attachments.length > 0
-                ? `${API_BASE_URL}/api/v1/attachment/${product.attachments[0].id}`
-                : '/placeholder.svg?height=280&width=280';
+            const mainImage = product.attachmentIds && product.attachmentIds.length > 0
+                ? `${API_BASE_URL}/api/v1/attachment/${product.attachmentIds[0].id}`
+                : `${API_BASE_URL}/api/v1/attachment/1`;
 
             const isInCart = cart.some(item => item.id === product.id);
             const isInWishlist = wishlist.some(item => item.id === product.id);
@@ -799,9 +799,9 @@
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                image: product.attachments && product.attachments.length > 0
-                    ? `${API_BASE_URL}/api/v1/attachment/${product.attachments[0].id}`
-                    : '/placeholder.svg?height=100&width=100',
+                image: product.attachmentIds && product.attachmentIds.length > 0
+                    ? `${API_BASE_URL}/api/v1/attachment/${product.attachmentIds[0].id}`
+                    : `${API_BASE_URL}/api/v1/attachment/1`,
                 quantity: 1,
                 maxAmount: product.amount
             });
@@ -828,9 +828,9 @@
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                image: product.attachments && product.attachments.length > 0
-                    ? `${API_BASE_URL}/api/v1/attachment/${product.attachments[0].id}`
-                    : '/placeholder.svg?height=100&width=100'
+                image: product.attachmentIds && product.attachmentIds.length > 0
+                    ? `${API_BASE_URL}/api/v1/attachment/${product.attachmentIds[0].id}`
+                    : `${API_BASE_URL}/api/v1/attachment/1`
             });
             showNotification('success', 'Sevimlilarga qo\'shildi', `"${product.name}" sevimlilarga qo'shildi`);
         }

@@ -13,7 +13,7 @@ import java.util.List;
 import static org.exp.primeapp.utils.Const.*;
 
 @RestController
-@RequestMapping(API + V1 + AUTH + PRODUCT)
+@RequestMapping(API + V1 + PRODUCT)
 public class ProductController {
     private final ProductService productService;
 
@@ -45,7 +45,7 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping(ADMIN + INACTIVE +  "/{id}")
+    @DeleteMapping(ADMIN + "/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
         productService.updateProduct(id);
         return new ResponseEntity<>(HttpStatus.OK);
