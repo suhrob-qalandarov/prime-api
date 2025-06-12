@@ -20,16 +20,16 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/all-active")
+    @GetMapping("/active")
     public ResponseEntity<List<CategoryRes>> getCategories() {
         List<CategoryRes>categories = categoryService.getCategoriesByActive();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+        return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/all-inactive")
+    @GetMapping("/inactive")
     public ResponseEntity<List<CategoryRes>> getInactiveCategories() {
         List<CategoryRes>categories = categoryService.getCategoriesByInactive();
-        return new ResponseEntity<>(categories, HttpStatus.OK);
+        return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 
     @PostMapping
