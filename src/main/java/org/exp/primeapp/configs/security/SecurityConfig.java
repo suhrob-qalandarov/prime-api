@@ -38,8 +38,7 @@ public class SecurityConfig {
                 auth
                         .requestMatchers(
                                 API + V1 + AUTH,
-                                API + V1 + AUTH + WAY_ALL
-                        ).permitAll()
+                                API + V1 + AUTH + WAY_ALL).permitAll()
                         .requestMatchers(
                                 "GET",
                                 API + V1 + PRODUCT,
@@ -48,8 +47,6 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "GET",
                                 API + V1 + CATEGORY,
-                                API + V1 + CATEGORY + "/all-active",
-                                API + V1 + CATEGORY + "/all-inactive",
                                 API + V1 + CATEGORY + WAY_ALL
                         ).permitAll()
                         .requestMatchers(
