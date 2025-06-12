@@ -2,8 +2,8 @@ package org.exp.primeapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.CategoryReq;
+import org.exp.primeapp.dto.responce.ApiResponse;
 import org.exp.primeapp.dto.responce.CategoryRes;
-import org.exp.primeapp.dto.responce.ProductRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
@@ -14,71 +14,82 @@ import org.exp.primeapp.service.interfaces.CategoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
+
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final AttachmentRepository attachmentRepository;
 
     @Transactional
     @Override
-    public Category saveCategory(CategoryReq categoryReq) {
-        Long attachmentId = categoryReq.getAttachmentId();
-        Attachment attachment = attachmentRepository.findById(attachmentId).get();
+    public ApiResponse saveCategory(CategoryReq categoryReq) {
+        Attachment attachment = attachmentRepository.findById(categoryReq.getAttachmentId())
+                .orElseThrow(() -> new RuntimeException("Attachment not found with id: " + categoryReq.getAttachmentId()));
 
-        Category category=Category.
-                builder()
+        Category category = Category.builder()
                 .name(categoryReq.getName())
                 .attachment(attachment)
                 ._active(categoryReq.getActive())
                 .build();
 
-        return categoryRepository.save(category);
+        categoryRepository.save(category);
+
+        return new ApiResponse(true, "Category saved successfully");
     }
 
     @Override
-    public CategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq) {
-        Category category=categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+    public ApiResponse updateCategoryById(Long categoryId, CategoryReq categoryReq) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setName(categoryReq.getName());
         category.set_active(categoryReq.getActive());
-        Category saved = categoryRepository.save(category);
-        return CategoryRes.builder()
-                .id(saved.getId())
-                .name(saved.getName())
-                ._active(saved.get_active())
-                .attachmentId(saved.getAttachment().getId())
-                .build();
+        categoryRepository.save(category);
+
+        return new ApiResponse(true, "Category updated successfully");
     }
 
     @Transactional
     @Override
-    public CategoryRes updateCategoryActive(Long categoryId) {
+    public ApiResponse updateCategoryActive(Long categoryId) {
         Category category=categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.set_active(false);
         categoryRepository.save(category);
-        List<Product> products=productRepository.findByCategory(category);
+        List<Product> products=productRepository.findAllByCategory(category);
         products.forEach(product->product.set_active(false));
         productRepository.saveAll(products);
 
-        return CategoryRes.builder()
-                .id(categoryId)
-                .name(category.getName())
-                ._active(false)
-                .build();
+        return new ApiResponse(true, "Category active updated successfully");
     }
 
     @Override
-    public Category getCategoryById(Long categoryId) {
+    public CategoryRes getCategoryById(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+        return convertToCategoryRes(category);
+    }
+
+    @Override
+    public List<CategoryRes> getCategoriesByActive() {
+        return categoryRepository.findBy_active(true).stream()
+                .map(category -> new CategoryRes(
+                        category.getId(),
+                        category.getName(),
+                        category.get_active(),
+                        category.getAttachment() != null ? category.getAttachment().getId() : null
+                ))
+                .toList();
+    }
+
+    @Override
+    public Category getCategoryByIdForAdmin(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
     }
 
     @Override
-    public List<Category> getCategoriesByActive() {
+    public List<Category> getCategoriesByActiveForAdmin() {
         return categoryRepository.findBy_active(true);
     }
 

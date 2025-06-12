@@ -1,13 +1,11 @@
 package org.exp.primeapp.dto.responce;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Value;
 
-@Builder
-@AllArgsConstructor
+@Value
 public class CategoryRes {
     Long id;
     String name;
-    Boolean _active;
+    Boolean active;
     Long attachmentId;
 }
