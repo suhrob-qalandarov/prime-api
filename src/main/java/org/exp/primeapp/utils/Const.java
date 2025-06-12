@@ -16,8 +16,12 @@ public interface Const {
     String VERIFY = "/verify";
     String LOGOUT = "/logout";
 
+    String ADMIN = "/admin";
+
     String CATEGORY = "/category";
     String ATTACHMENT = "/attachment";
+    String PRODUCT = "/product";
+    String INACTIVE = "/inactive";
 
     String EMAIL_EXIST_MSG = "Email already exist!";
     String PASSWORD_NO_MATCH_MSG = "Passwords do not match!";
