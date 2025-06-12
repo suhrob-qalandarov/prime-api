@@ -1,4 +1,4 @@
-package org.exp.primeapp.controller;
+package org.exp.primeapp.controller.attachment;
 
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletResponse;

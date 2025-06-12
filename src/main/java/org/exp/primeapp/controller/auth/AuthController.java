@@ -1,4 +1,4 @@
-package org.exp.primeapp.controller;
+package org.exp.primeapp.controller.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.configs.security.JwtService;
