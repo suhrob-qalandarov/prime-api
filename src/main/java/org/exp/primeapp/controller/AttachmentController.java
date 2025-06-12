@@ -23,8 +23,8 @@ public class AttachmentController {
 
     private final AttachmentService attachmentService;
 
-    @PostMapping
-    public ResponseEntity<List<AttachmentRes>> uploadFiles(@RequestParam("file") MultipartFile[] files) {
+    @PostMapping("/upload")
+    public ResponseEntity<List<AttachmentRes>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
         List<Attachment> uploadedFiles = attachmentService.uploadMultiple(files);
         List<AttachmentRes> attachmentResponses = uploadedFiles.stream()
                 .map(attachment -> AttachmentRes.builder()
@@ -35,7 +35,17 @@ public class AttachmentController {
         return ResponseEntity.ok(attachmentResponses);
     }
 
-    @GetMapping("{attachmentId}")
+    @PostMapping("/upload-one")
+    public ResponseEntity<AttachmentRes> uploadFile(@RequestParam("file") MultipartFile file) {
+        Attachment attachment = attachmentService.uploadOne(file);
+        AttachmentRes attachmentResponse = AttachmentRes.builder()
+                .id(attachment.getId())
+                .key(attachment.getUrl())
+                .build();
+        return ResponseEntity.ok(attachmentResponse);
+    }
+
+    @GetMapping("/{attachmentId}")
     public void getFile(@PathVariable Long attachmentId, HttpServletResponse response) {
         attachmentService.get(attachmentId, response);
     }
