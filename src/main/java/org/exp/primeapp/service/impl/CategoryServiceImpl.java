@@ -67,17 +67,28 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public void updateCategoryActive(Long categoryId) {
+    public CategoryRes updateCategoryActive(Long categoryId) {
         Category category=categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.set_active(false);
         categoryRepository.save(category);
         List<Product> products=productRepository.findByCategory(category);
         products.forEach(product->product.set_active(false));
         productRepository.saveAll(products);
+
+        return CategoryRes.builder()
+                .id(categoryId)
+                .name(category.getName())
+                ._active(false)
+                .build();
     }
 
     @Override
     public Category getCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    public List<CategoryRes> getCategoriesByInactive() {
+        return categoryRepository.findBy_active(false);
     }
 }

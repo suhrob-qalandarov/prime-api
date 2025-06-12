@@ -27,13 +27,19 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
+    @GetMapping("/all-inactive")
+    public ResponseEntity<List<CategoryRes>> getInactiveCategories() {
+        List<CategoryRes>categories = categoryService.getCategoriesByInactive();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<CategoryRes> createCategory(@RequestBody CategoryReq categoryReq) {
         CategoryRes category = categoryService.saveCategory(categoryReq);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
-    @PostMapping("/{categoryId}")
+    @PutMapping("/{categoryId}")
     public ResponseEntity<CategoryRes> updateCategory(
             @PathVariable Long categoryId,
             @RequestBody CategoryReq categoryReq
@@ -50,7 +56,7 @@ public class CategoryController {
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId) {
-        categoryService.updateCategoryActive(categoryId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        CategoryRes categoryRes = categoryService.updateCategoryActive(categoryId);
+        return new ResponseEntity<>(categoryRes, HttpStatus.OK);
     }
 }
