@@ -3,6 +3,7 @@ package org.exp.primeapp.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.CategoryReq;
 import org.exp.primeapp.dto.responce.CategoryRes;
+import org.exp.primeapp.dto.responce.ProductRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,11 +24,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final AttachmentRepository attachmentRepository;
-
-    @Override
-    public List<CategoryRes> getCategoriesByActive() {
-        return categoryRepository.findBy_active(true);
-    }
 
     @Transactional
     @Override
@@ -88,7 +85,23 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryRes> getCategoriesByInactive() {
+    public List<CategoryRes> getCategoriesByActive() {
+        return categoryRepository.findBy_active(true)
+                .stream()
+                .map(this::convertToCategoryRes)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Category> getCategoriesByInactive() {
         return categoryRepository.findBy_active(false);
+    }
+
+    private CategoryRes convertToCategoryRes(Category category) {
+        return CategoryRes.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .attachmentId(category.getAttachment().getId())
+                .build();
     }
 }

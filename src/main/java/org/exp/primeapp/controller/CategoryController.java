@@ -27,8 +27,8 @@ public class CategoryController {
     }
 
     @GetMapping("/inactive")
-    public ResponseEntity<List<CategoryRes>> getInactiveCategories() {
-        List<CategoryRes>categories = categoryService.getCategoriesByInactive();
+    public ResponseEntity<List<Category>> getInactiveCategories() {
+        List<Category>categories = categoryService.getCategoriesByInactive();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 

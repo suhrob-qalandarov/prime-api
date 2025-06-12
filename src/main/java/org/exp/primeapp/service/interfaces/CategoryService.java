@@ -18,5 +18,5 @@ public interface CategoryService {
 
     Category getCategoryById(Long categoryId);
 
-    List<CategoryRes> getCategoriesByInactive();
+    List<Category> getCategoriesByInactive();
 }
