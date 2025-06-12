@@ -9,6 +9,7 @@ import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.models.repo.RoleRepository;
 import org.exp.primeapp.models.repo.UserRepository;
 import org.exp.primeapp.service.interfaces.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
                     .firstName(userReq.getFirstName())
                     .lastName(userReq.getLastName())
                     .email(userReq.getEmail())
-                    .password(userReq.getPassword())
+                    .password(passwordEncoder.encode(userReq.getPassword()))
                     .phone(userReq.getPhone())
                     .build();
 

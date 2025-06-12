@@ -2,6 +2,7 @@ package org.exp.primeapp.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.exp.primeapp.configs.security.JwtService;
 import org.exp.primeapp.dto.request.LoginReq;
 import org.exp.primeapp.dto.request.RegisterReq;
 import org.exp.primeapp.dto.request.VerifyEmailReq;
@@ -12,6 +13,13 @@ import org.exp.primeapp.models.repo.RoleRepository;
 import org.exp.primeapp.models.repo.UserRepository;
 import org.exp.primeapp.service.interfaces.AuthService;
 import org.exp.primeapp.service.interfaces.EmailService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,15 +29,42 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final UserDetailsService userDetailsService;
 
     @Override
     public LoginRes login(LoginReq loginReq) {
-            String accessToken = "";
-            String refreshToken = "";
+        try {
+            var auth = new UsernamePasswordAuthenticationToken(
+                    loginReq.getEmail(),
+                    loginReq.getPassword()
+            );
+
+            // Bu yerda: email/password + isEnabled() avtomatik tekshiriladi
+            authenticationManager.authenticate(auth);
+
+            // load user to generate token
+            User user = (User) userDetailsService.loadUserByUsername(loginReq.getEmail());
+
+            String accessToken = jwtService.generateToken(user);
+            String refreshToken = jwtService.generateRefreshToken(user.getEmail());
+
             return new LoginRes(accessToken, refreshToken, "success");
+
+        } catch (DisabledException e) {
+            return new LoginRes(null, null, "Account not active");
+        } catch (BadCredentialsException e) {
+            return new LoginRes(null, null, "Invalid email or password");
+        } catch (UsernameNotFoundException e) {
+            return new LoginRes(null, null, "User not found");
+        } catch (Exception e) {
+            return new LoginRes(null, null, "Login failed");
+        }
     }
 
     @Override
@@ -51,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
                 .firstName(req.getFirstName())
                 .lastName(req.getLastName())
                 .email(req.getEmail())
-                .password(req.getPassword())
+                .password(passwordEncoder.encode(req.getPassword()))
                 .phone(req.getPhone())
                 ._active(false)
                 .roles(roleUser)
