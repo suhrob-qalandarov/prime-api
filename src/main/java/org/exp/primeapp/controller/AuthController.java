@@ -1,16 +1,15 @@
 package org.exp.primeapp.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.exp.primeapp.configs.security.JwtService;
 import org.exp.primeapp.dto.request.LoginReq;
 import org.exp.primeapp.dto.request.RegisterReq;
 import org.exp.primeapp.dto.request.VerifyEmailReq;
 import org.exp.primeapp.dto.responce.LoginRes;
+import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.service.interfaces.AuthService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.exp.primeapp.utils.Const.*;
 
@@ -20,6 +19,7 @@ import static org.exp.primeapp.utils.Const.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtService jwtService;
 
     @PostMapping(LOGIN)
     public ResponseEntity<LoginRes> login(@RequestBody LoginReq loginReq) {
@@ -37,6 +37,13 @@ public class AuthController {
     public ResponseEntity<String> verifyCode(@RequestBody VerifyEmailReq req) {
         String msg = authService.verifyCodeAndRegister(req);
         return ResponseEntity.ok(msg);
+    }
+
+    @PostMapping(REFRESH + "/{refreshToken}")
+    public ResponseEntity<String> verifyEmail(@RequestParam String refreshToken) {
+        User user = jwtService.getUserObject(refreshToken);
+        String accessToken = jwtService.generateToken(user);
+        return ResponseEntity.ok(accessToken);
     }
 }
 

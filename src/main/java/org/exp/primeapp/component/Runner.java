@@ -26,7 +26,6 @@ public class Runner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         ArrayList<Role> roles = new ArrayList<>(List.of(
-                new Role(ROLE_MEGA_SUPER_ADMIN),
                 new Role(ROLE_SUPER_ADMIN),
                 new Role(ROLE_ADMIN),
                 new Role(ROLE_USER)
@@ -44,6 +43,7 @@ public class Runner implements CommandLineRunner {
                             .password(passwordEncoder.encode("123"))
                             .phone("901234567")
                             ._active(true)
+                            .roles(roles)
                             .build()
             );
         }

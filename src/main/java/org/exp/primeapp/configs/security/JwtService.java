@@ -26,7 +26,6 @@ public class JwtService {
     private final UserRepository userRepository;
 
     public String generateToken(User user) {
-
         return TOKEN_PREFIX + Jwts.builder()
                 .setSubject(user.getEmail())
                 .claim("email", user.getEmail())
@@ -39,16 +38,15 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateRefreshToken(String email) {
-        User user = userRepository.findByEmail(email);
+    public String generateRefreshToken(User user) {
         return TOKEN_PREFIX + Jwts.builder()
-                .setSubject(email)
-                .claim("phone", user.getEmail())
+                .setSubject(user.getEmail())
+                .claim("email", user.getEmail())
                 .claim("id", user.getId())
                 .claim("active", user.get_active()) // Active holatini qo'shish
                 .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                 .issuedAt(new Date())
-                .expiration(new Date(new Date().getTime() + 1000 * 60 * 60 * 24))
+                .expiration(new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 2))
                 .signWith(getSecretKey())
                 .compact();
     }

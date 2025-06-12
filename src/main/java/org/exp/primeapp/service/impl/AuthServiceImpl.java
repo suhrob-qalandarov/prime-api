@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
             User user = (User) userDetailsService.loadUserByUsername(loginReq.getEmail());
 
             String accessToken = jwtService.generateToken(user);
-            String refreshToken = jwtService.generateRefreshToken(user.getEmail());
+            String refreshToken = jwtService.generateRefreshToken(user);
 
             return new LoginRes(accessToken, refreshToken, "success");
 
