@@ -25,4 +25,6 @@ public interface ProductService {
     ApiResponse deleteProduct(Long productId);
 
     List<ProductRes> getAllProducts();
+
+    Product getProductByIdForAdmin(Long productId);
 }

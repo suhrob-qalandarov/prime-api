@@ -20,8 +20,10 @@ public interface Const {
     String ADMIN = "/admin";
 
     String CATEGORY = "/category";
+    String CATEGORIES = "/categories";
     String ATTACHMENT = "/attachment";
     String PRODUCT = "/product";
+    String PRODUCTS = "/products";
     String INACTIVE = "/inactive";
     String BY_CATEGORY = "/by-category";
 

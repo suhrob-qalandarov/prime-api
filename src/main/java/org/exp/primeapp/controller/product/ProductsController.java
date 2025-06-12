@@ -1,4 +1,4 @@
-package org.exp.primeapp.controller;
+package org.exp.primeapp.controller.product;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.responce.ProductRes;
@@ -47,7 +47,7 @@ public class ProductsController {
 
     @GetMapping("/all-inactive/by-category/{categoryId}")
     public ResponseEntity<List<ProductRes>> getInactiveProductsByCategory(@PathVariable Long categoryId) {
-        List<ProductRes> products = productService.getActiveProductsByCategoryId(categoryId);
+        List<ProductRes> products = productService.getInactiveProductsByCategoryId(categoryId);
         return ResponseEntity.ok(products);
     }
 }

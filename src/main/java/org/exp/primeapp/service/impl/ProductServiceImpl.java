@@ -67,12 +67,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductRes getProductById(Long id) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
+    public ProductRes getProductById(Long productId) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
         if (optionalProduct.isEmpty()) {
-            throw new RuntimeException("Product not found with id: " + id);
+            throw new RuntimeException("Product not found with id: " + productId);
         }
         return convertToProductRes(optionalProduct.orElse(null));
+    }
+
+    @Override
+    public Product getProductByIdForAdmin(Long productId) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (optionalProduct.isEmpty()) {
+            throw new RuntimeException("Product not found with id: " + productId);
+        }
+        return optionalProduct.orElse(null);
     }
 
     @Transactional
