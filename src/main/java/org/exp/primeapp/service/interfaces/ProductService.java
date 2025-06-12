@@ -15,7 +15,11 @@ public interface ProductService {
 
     void saveProduct(ProductReq productReq);
 
-    void updateProduct(Long id);
+    Product updateProduct(Long productId, ProductReq productReq);
 
     List<ProductRes> getProductsByCategoryId(Long categoryId);
+
+    List<ProductRes> getInactiveProducts();
+
+    void deleteProduct(Long productId);
 }

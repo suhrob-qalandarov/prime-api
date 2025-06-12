@@ -1,5 +1,6 @@
 package org.exp.primeapp.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.ProductReq;
 import org.exp.primeapp.dto.responce.ProductRes;
 import org.exp.primeapp.models.entities.Product;
@@ -14,22 +15,25 @@ import static org.exp.primeapp.utils.Const.*;
 
 @RestController
 @RequestMapping(API + V1 + PRODUCT)
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
-
-    @GetMapping()
+    @GetMapping("/all-active")
     public ResponseEntity<List<ProductRes>> getProducts() {
         List<ProductRes> products = productService.getProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductRes> getProduct(@PathVariable Long id) {
-        ProductRes product = productService.getProductById(id);
+    @GetMapping("/all-inactive")
+    public ResponseEntity<List<ProductRes>> getInactiveProducts() {
+        List<ProductRes> products = productService.getInactiveProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductRes> getProduct(@PathVariable Long productId) {
+        ProductRes product = productService.getProductById(productId);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
@@ -51,9 +55,15 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping(ADMIN + "/{id}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
-        productService.updateProduct(id);
+    @DeleteMapping(ADMIN + "/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping(ADMIN + "/{productId}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestBody ProductReq productReq) {
+        Product product = productService.updateProduct(productId, productReq);
+        return new ResponseEntity<>(product, HttpStatus.ACCEPTED);
     }
 }

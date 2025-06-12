@@ -13,6 +13,7 @@ import org.exp.primeapp.service.interfaces.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,13 +82,55 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProduct(Long id) {
-        productRepository.updateActive(id);
+    public Product updateProduct(Long productId, ProductReq productReq) {
+        Product product = productRepository.findById(productId).get();
+        Optional<Category> optionalCategory = categoryRepository.findById(productReq.getCategoryId());
+        List<Attachment> attachmentList = attachmentRepository.findAllById(productReq.getAttachmentIds());
+
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            product.setCategory(category);
+        }
+
+        if (!attachmentList.isEmpty()) {
+            product.setAttachments(attachmentList);
+        }
+
+        if (!productReq.getName().isEmpty()) {
+            product.setName(productReq.getName());
+        }
+
+        if (!productReq.getDescription().isEmpty()) {
+            product.setDescription(productReq.getDescription());
+        }
+
+        if (productReq.getAmount() != null) {
+            product.setAmount(productReq.getAmount());
+        }
+
+        if (productReq.getPrice() != null) {
+            product.setPrice(productReq.getPrice());;
+        }
+
+        return productRepository.save(product);
     }
 
     @Override
     public List<ProductRes> getProductsByCategoryId(Long categoryId) {
         return productRepository.findAllByCategory_Id(categoryId);
+    }
+
+    @Override
+    public List<ProductRes> getInactiveProducts() {
+        return productRepository.findBy_active(false)
+                .stream()
+                .map(this::convertToProductRes)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteProduct(Long productId) {
+        productRepository.updateActive(productId);
     }
 
     private ProductRes convertToProductRes(Product product) {
