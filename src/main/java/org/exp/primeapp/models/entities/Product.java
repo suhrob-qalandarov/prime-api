@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.exp.primeapp.models.base.BaseEntity;
+import org.exp.primeapp.models.enums.ProductStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Product extends BaseEntity {
-    String name;
-    String description;
-    Double price;
-    Integer amount;
+    private String name;
+    private String description;
+    private Double price;
+    private Integer amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private ProductStatus status = ProductStatus.NEW;
 
     @ManyToOne
     private Category category;

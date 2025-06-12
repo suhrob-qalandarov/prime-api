@@ -3,6 +3,7 @@ package org.exp.primeapp.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.ProductReq;
+import org.exp.primeapp.dto.responce.ApiResponse;
 import org.exp.primeapp.dto.responce.ProductRes;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.repo.AttachmentRepository;
@@ -26,8 +27,40 @@ public class ProductServiceImpl implements ProductService {
     private final ProductIncomeRepository productIncomeRepository;
 
     @Override
-    public List<ProductRes> getProducts() {
-        return productRepository.findBy_active(true)
+    public List<ProductRes> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(this::convertToProductRes)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductRes> getActiveProducts() {
+        return productRepository.findAllBy_active(true)
+                .stream()
+                .map(this::convertToProductRes)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductRes> getInactiveProducts() {
+        return productRepository.findAllBy_active(false)
+                .stream()
+                .map(this::convertToProductRes)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductRes> getActiveProductsByCategoryId(Long categoryId) {
+        return productRepository.findAllBy_activeAndCategory_Id(true, categoryId)
+                .stream()
+                .map(this::convertToProductRes)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductRes> getInactiveProductsByCategoryId(Long categoryId) {
+        return productRepository.findAllBy_activeAndCategory_Id(false, categoryId)
                 .stream()
                 .map(this::convertToProductRes)
                 .collect(Collectors.toList());
@@ -35,103 +68,112 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductRes getProductById(Long id) {
-        Product activeProduct = productRepository.findBy_activeTrueAndId(id);
-        if (activeProduct == null) {
-            throw new RuntimeException("Mahsulot topilmadi: ID = " + id);
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            throw new RuntimeException("Product not found with id: " + id);
         }
-        return convertToProductRes(activeProduct);
-    }
-
-    @Override
-    public List<Product> getAdminProducts() {
-        return productRepository.findAll();
+        return convertToProductRes(optionalProduct.orElse(null));
     }
 
     @Transactional
     @Override
-    public void saveProduct(ProductReq productReq) {
-        Category category = categoryRepository.findById(productReq.getCategoryId()).get();
+    public ApiResponse saveProduct(ProductReq productReq) {
+        Category category = categoryRepository.findById(productReq.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + productReq.getCategoryId()));
 
         List<Long> attachmentIds = productReq.getAttachmentIds();
-        List<Attachment> attachmentList;
-
-        if (!attachmentIds.isEmpty()) {
-            attachmentList = attachmentRepository.findAllById(attachmentIds);
-        } else {
-            attachmentList = attachmentRepository.findAllById(List.of(1L, 2L, 3L));
+        if (attachmentIds == null || attachmentIds.isEmpty()) {
+            attachmentIds = List.of(1L); // fallback
         }
 
-        Product product = Product.builder()
-                .name(productReq.getName())
-                .description(productReq.getDescription())
-                .price(productReq.getPrice())
-                .amount(productReq.getAmount())
-                ._active(true)
-                .category(category)
-                .attachments(attachmentList)
-                .build();
+        List<Attachment> attachments = attachmentRepository.findAllById(attachmentIds);
 
-        productRepository.save(product);
+        Product product = createProductFromReq(productReq, category, attachments);
+        Product savedProduct = productRepository.save(product);
 
-        ProductIncome productIncome = ProductIncome.builder()
-                .amount(productReq.getAmount())
-                .product(product)
-                .build();
-
-        productIncomeRepository.save(productIncome);
+        ProductIncome income = createIncome(product, product.getAmount());
+        ProductIncome savedIncome = productIncomeRepository.save(income);
+        return new ApiResponse(true, "Product saved successfully with ID: " + savedProduct.getId());
     }
 
+    private Product createProductFromReq(ProductReq req, Category category, List<Attachment> attachments) {
+        return Product.builder()
+                .name(req.getName())
+                .description(req.getDescription())
+                .price(req.getPrice())
+                .amount(req.getAmount())
+                ._active(req.getActive())
+                .category(category)
+                .attachments(attachments)
+                .build();
+    }
+
+    private ProductIncome createIncome(Product product, Integer amount) {
+        return ProductIncome.builder()
+                .amount(amount)
+                .product(product)
+                .build();
+    }
+
+    @Transactional
     @Override
     public Product updateProduct(Long productId, ProductReq productReq) {
-        Product product = productRepository.findById(productId).get();
-        Optional<Category> optionalCategory = categoryRepository.findById(productReq.getCategoryId());
-        List<Attachment> attachmentList = attachmentRepository.findAllById(productReq.getAttachmentIds());
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
-        if (optionalCategory.isPresent()) {
-            Category category = optionalCategory.get();
-            product.setCategory(category);
-        }
-
-        if (!attachmentList.isEmpty()) {
-            product.setAttachments(attachmentList);
-        }
-
-        if (!productReq.getName().isEmpty()) {
-            product.setName(productReq.getName());
-        }
-
-        if (!productReq.getDescription().isEmpty()) {
-            product.setDescription(productReq.getDescription());
-        }
-
-        if (productReq.getAmount() != null) {
-            product.setAmount(productReq.getAmount());
-        }
-
-        if (productReq.getPrice() != null) {
-            product.setPrice(productReq.getPrice());;
-        }
+        updateProductFields(product, productReq);
 
         return productRepository.save(product);
     }
 
-    @Override
-    public List<ProductRes> getProductsByCategoryId(Long categoryId) {
-        return productRepository.findAllByCategory_Id(categoryId);
+    private void updateProductFields(Product product, ProductReq req) {
+        Long categoryId = req.getCategoryId();
+        if (categoryId != null) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+            product.setCategory(category);
+        }
+
+        if (req.getAttachmentIds() != null && !req.getAttachmentIds().isEmpty()) {
+            List<Attachment> attachments = attachmentRepository.findAllById(req.getAttachmentIds());
+            product.setAttachments(attachments);
+        }
+
+        if (hasText(req.getName())) {
+            product.setName(req.getName());
+        }
+
+        if (hasText(req.getDescription())) {
+            product.setDescription(req.getDescription());
+        }
+
+        if (req.getAmount() != null) {
+            product.setAmount(req.getAmount());
+        }
+
+        if (req.getPrice() != null) {
+            product.setPrice(req.getPrice());
+        }
+
+        if (req.getStatus() != null) {
+            product.setStatus(req.getStatus());
+        }
+    }
+
+    private boolean hasText(String str) {
+        return str != null && !str.isBlank();
     }
 
     @Override
-    public List<ProductRes> getInactiveProducts() {
-        return productRepository.findBy_active(false)
-                .stream()
-                .map(this::convertToProductRes)
-                .collect(Collectors.toList());
+    public ApiResponse deleteProduct(Long productId) {
+        int affected = productRepository.updateActive(false, productId);
+        if (affected > 0) {
+            return new ApiResponse(true, "Product deactivated successfully");
+        } else {
+            return new ApiResponse(false, "Product not found or already inactive");
+        }
     }
 
-    @Override
-    public void deleteProduct(Long productId) {
-        productRepository.updateActive(productId);
-    }
 
     private ProductRes convertToProductRes(Product product) {
         return new ProductRes(
@@ -143,5 +185,3 @@ public class ProductServiceImpl implements ProductService {
         );
     }
 }
-
-
