@@ -20,13 +20,13 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/active")
+    @GetMapping("/all-active")
     public ResponseEntity<List<ProductRes>> getProducts() {
         List<ProductRes> products = productService.getProducts();
         return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/inactive")
+    @GetMapping("/all-inactive")
     public ResponseEntity<List<ProductRes>> getInactiveProducts() {
         List<ProductRes> products = productService.getInactiveProducts();
         return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
