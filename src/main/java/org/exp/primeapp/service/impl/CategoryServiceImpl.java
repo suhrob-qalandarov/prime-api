@@ -98,11 +98,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private CategoryRes convertToCategoryRes(Category category) {
-        return CategoryRes.builder()
-                .id(category.getId())
-                .name(category.getName())
-                ._active(category.get_active())
-                .attachmentId(category.getAttachment().getId())
-                .build();
+        return new CategoryRes(
+                category.getId(),
+                category.getName(),
+                category.get_active(),
+                category.getAttachment().getId()
+        );
     }
 }

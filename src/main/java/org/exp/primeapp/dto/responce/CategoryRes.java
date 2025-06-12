@@ -1,10 +1,10 @@
 package org.exp.primeapp.dto.responce;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Value;
 
 @Builder
-@Value
+@AllArgsConstructor
 public class CategoryRes {
     Long id;
     String name;
