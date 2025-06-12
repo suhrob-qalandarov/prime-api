@@ -17,6 +17,7 @@ import static org.exp.primeapp.utils.Const.*;
 @RequestMapping(API + V1 + PRODUCT)
 @RequiredArgsConstructor
 public class ProductController {
+
     private final ProductService productService;
 
     @GetMapping("/all-active")

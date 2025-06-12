@@ -1,6 +1,5 @@
 package org.exp.primeapp.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.CategoryReq;
 import org.exp.primeapp.dto.responce.CategoryRes;

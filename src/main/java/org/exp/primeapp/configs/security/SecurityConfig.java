@@ -48,6 +48,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "GET",
                                 API + V1 + CATEGORY,
+                                API + V1 + CATEGORY + "/all-active",
+                                API + V1 + CATEGORY + "/all-inactive",
                                 API + V1 + CATEGORY + WAY_ALL
                         ).permitAll()
                         .requestMatchers(
