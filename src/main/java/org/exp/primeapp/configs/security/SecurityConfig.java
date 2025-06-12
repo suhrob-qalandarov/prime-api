@@ -38,10 +38,10 @@ public class SecurityConfig {
                 auth
                         .requestMatchers(API + V1 + AUTH, API + V1 + AUTH + WAY_ALL).permitAll()
                         .requestMatchers("GET",
-                                "/api/products", "/api/products/**",
-                                "/api/category", "/api/category/**"
+                                API + V1 + PRODUCT, API + V1 + PRODUCT + WAY_ALL,
+                                API + V1 + CATEGORY, API + V1 + CATEGORY + WAY_ALL
                         ).permitAll()
-                        .requestMatchers("GET", API + V1 + ATTACHMENT + "/**").permitAll()
+                        .requestMatchers("GET", API + V1 + ATTACHMENT + WAY_ALL).permitAll()
                         .anyRequest().authenticated()
         );
 
