@@ -36,12 +36,24 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
         http.authorizeHttpRequests(auth ->
                 auth
-                        .requestMatchers(API + V1 + AUTH, API + V1 + AUTH + WAY_ALL).permitAll()
-                        .requestMatchers("GET",
-                                API + V1 + PRODUCT, API + V1 + PRODUCT + WAY_ALL,
-                                API + V1 + CATEGORY, API + V1 + CATEGORY + WAY_ALL
+                        .requestMatchers(
+                                API + V1 + AUTH,
+                                API + V1 + AUTH + WAY_ALL
                         ).permitAll()
-                        .requestMatchers("GET", API + V1 + ATTACHMENT + WAY_ALL).permitAll()
+                        .requestMatchers(
+                                "GET",
+                                API + V1 + PRODUCT,
+                                API + V1 + PRODUCT + WAY_ALL
+                        ).permitAll()
+                        .requestMatchers(
+                                "GET",
+                                API + V1 + CATEGORY,
+                                API + V1 + CATEGORY + WAY_ALL
+                        ).permitAll()
+                        .requestMatchers(
+                                "GET",
+                                API + V1 + ATTACHMENT + WAY_ALL
+                        ).permitAll()
                         .anyRequest().authenticated()
         );
 
