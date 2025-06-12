@@ -101,6 +101,7 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryRes.builder()
                 .id(category.getId())
                 .name(category.getName())
+                ._active(category.get_active())
                 .attachmentId(category.getAttachment().getId())
                 .build();
     }
