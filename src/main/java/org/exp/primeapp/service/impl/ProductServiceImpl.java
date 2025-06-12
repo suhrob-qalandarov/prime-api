@@ -54,7 +54,7 @@ public class ProductServiceImpl implements ProductService {
         List<Long> attachmentIds = productReq.getAttachmentIds();
         List<Attachment> attachmentList;
 
-        if (!attachmentIds.isEmpty()){
+        if (!attachmentIds.isEmpty()) {
             attachmentList = attachmentRepository.findAllById(attachmentIds);
         } else {
             attachmentList = attachmentRepository.findAllById(List.of(1L, 2L, 3L));
@@ -100,3 +100,5 @@ public class ProductServiceImpl implements ProductService {
         );
     }
 }
+
+
