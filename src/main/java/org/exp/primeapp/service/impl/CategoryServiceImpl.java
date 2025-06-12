@@ -2,6 +2,7 @@ package org.exp.primeapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.CategoryReq;
+import org.exp.primeapp.dto.responce.CategoryRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
@@ -35,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category=Category.
                 builder()
                 .name(categoryReq.getName())
-                //.attachment(attachment)
+                .attachment(attachment)
                 ._active(categoryReq.getActive())
                 .build();
 
@@ -43,11 +44,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategoryById(Long categoryId, CategoryReq categoryReq) {
+    public CategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq) {
         Category category=categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setName(categoryReq.getName());
         category.set_active(categoryReq.getActive());
-        return categoryRepository.save(category);
+        Category save = categoryRepository.save(category);
+        return CategoryRes.builder()
+                .name(save.getName())
+                ._active(save.get_active())
+                .build();
     }
 
     @Transactional

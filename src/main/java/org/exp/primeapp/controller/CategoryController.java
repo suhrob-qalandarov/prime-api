@@ -3,6 +3,7 @@ package org.exp.primeapp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.CategoryReq;
+import org.exp.primeapp.dto.responce.CategoryRes;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.service.interfaces.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -33,11 +34,11 @@ public class CategoryController {
     }
 
     @PostMapping("/{categoryId}")
-    public ResponseEntity<Category> updateCategory(
+    public ResponseEntity<CategoryRes> updateCategory(
             @PathVariable Long categoryId,
             @RequestBody CategoryReq categoryReq
     ) {
-        Category updatedCategory = categoryService.updateCategoryById(categoryId,categoryReq);
+        CategoryRes updatedCategory = categoryService.updateCategoryById(categoryId,categoryReq);
         return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 

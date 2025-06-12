@@ -1,6 +1,7 @@
 package org.exp.primeapp.service.interfaces;
 
 import org.exp.primeapp.dto.request.CategoryReq;
+import org.exp.primeapp.dto.responce.CategoryRes;
 import org.exp.primeapp.models.entities.Category;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface CategoryService {
 
     Category saveCategory(CategoryReq categoryReq);
 
-    Category updateCategoryById(Long categoryId, CategoryReq categoryReq);
+    CategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq);
 
     void updateCategoryActive(Long categoryId);
 

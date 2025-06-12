@@ -15,6 +15,7 @@ public interface Const {
     String REGISTER = "/register";
     String VERIFY = "/verify";
     String LOGOUT = "/logout";
+    String REFRESH = "/refresh";
 
     String ADMIN = "/admin";
 
