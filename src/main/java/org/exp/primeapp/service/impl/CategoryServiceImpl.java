@@ -85,11 +85,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryRes> getCategoriesByActive() {
-        return categoryRepository.findBy_active(true)
-                .stream()
-                .map(this::convertToCategoryRes)
-                .collect(Collectors.toList());
+    public List<Category> getCategoriesByActive() {
+        return categoryRepository.findBy_active(true);
     }
 
     @Override

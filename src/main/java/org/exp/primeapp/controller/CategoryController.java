@@ -21,8 +21,8 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/all-active")
-    public ResponseEntity<List<CategoryRes>> getCategories() {
-        List<CategoryRes>categories = categoryService.getCategoriesByActive();
+    public ResponseEntity<List<Category>> getCategories() {
+        List<Category>categories = categoryService.getCategoriesByActive();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 

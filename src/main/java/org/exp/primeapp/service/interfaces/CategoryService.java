@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CategoryService {
 
-    List<CategoryRes> getCategoriesByActive();
+    List<Category> getCategoriesByActive();
 
     CategoryRes saveCategory(CategoryReq categoryReq);
 
