@@ -23,6 +23,7 @@ public interface Const {
     String ATTACHMENT = "/attachment";
     String PRODUCT = "/product";
     String INACTIVE = "/inactive";
+    String BY_CATEGORY = "/by-category";
 
     String EMAIL_EXIST_MSG = "Email already exist!";
     String PASSWORD_NO_MATCH_MSG = "Passwords do not match!";
