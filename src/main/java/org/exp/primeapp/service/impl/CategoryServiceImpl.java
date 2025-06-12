@@ -13,6 +13,7 @@ import org.exp.primeapp.service.interfaces.CategoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,13 +24,13 @@ public class CategoryServiceImpl implements CategoryService {
     private final AttachmentRepository attachmentRepository;
 
     @Override
-    public List<Category> getCategoriesByActive() {
+    public List<CategoryRes> getCategoriesByActive() {
         return categoryRepository.findBy_active(true);
     }
 
     @Transactional
     @Override
-    public Category saveCategory(CategoryReq categoryReq) {
+    public CategoryRes saveCategory(CategoryReq categoryReq) {
         Long attachmentId = categoryReq.getAttachmentId();
         Attachment attachment = attachmentRepository.findById(attachmentId).get();
 
@@ -40,7 +41,14 @@ public class CategoryServiceImpl implements CategoryService {
                 ._active(categoryReq.getActive())
                 .build();
 
-        return categoryRepository.save(category);
+        Category saved = categoryRepository.save(category);
+
+        return CategoryRes.builder()
+                .id(saved.getId())
+                .name(saved.getName())
+                ._active(saved.get_active())
+                .attachmentId(saved.getAttachment().getId())
+                .build();
     }
 
     @Override
@@ -48,11 +56,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category category=categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setName(categoryReq.getName());
         category.set_active(categoryReq.getActive());
-        Category save = categoryRepository.save(category);
+        Category saved = categoryRepository.save(category);
         return CategoryRes.builder()
-                .id(save.getId())
-                .name(save.getName())
-                ._active(save.get_active())
+                .id(saved.getId())
+                .name(saved.getName())
+                ._active(saved.get_active())
+                .attachmentId(saved.getAttachment().getId())
                 .build();
     }
 

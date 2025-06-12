@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface CategoryService {
 
-    List<Category> getCategoriesByActive();
+    List<CategoryRes> getCategoriesByActive();
 
-    Category saveCategory(CategoryReq categoryReq);
+    CategoryRes saveCategory(CategoryReq categoryReq);
 
     CategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq);
 

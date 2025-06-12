@@ -9,4 +9,5 @@ public class CategoryRes {
     Long id;
     String name;
     Boolean _active;
+    Long attachmentId;
 }

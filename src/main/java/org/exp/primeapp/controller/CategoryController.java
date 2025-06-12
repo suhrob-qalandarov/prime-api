@@ -22,14 +22,14 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping("/all-active")
-    public ResponseEntity<List<Category>> getCategories() {
-        List<Category>categories = categoryService.getCategoriesByActive();
+    public ResponseEntity<List<CategoryRes>> getCategories() {
+        List<CategoryRes>categories = categoryService.getCategoriesByActive();
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody CategoryReq categoryReq) {
-        Category category = categoryService.saveCategory(categoryReq);
+    public ResponseEntity<CategoryRes> createCategory(@RequestBody CategoryReq categoryReq) {
+        CategoryRes category = categoryService.saveCategory(categoryReq);
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
