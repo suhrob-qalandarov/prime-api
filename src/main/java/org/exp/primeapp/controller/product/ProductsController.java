@@ -21,33 +21,15 @@ public class ProductsController {
 
     private final ProductService productService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<ProductRes>> getAllProducts() {
-        List<ProductRes> products = productService.getAllProducts();
-        return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/all-active")
+    @GetMapping
     public ResponseEntity<List<ProductRes>> getProducts() {
         List<ProductRes> products = productService.getActiveProducts();
         return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/all-inactive")
-    public ResponseEntity<List<ProductRes>> getInactiveProducts() {
-        List<ProductRes> products = productService.getInactiveProducts();
-        return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/all-active/by-category/{categoryId}")
+    @GetMapping("/by-category/{categoryId}")
     public ResponseEntity<List<ProductRes>> getActiveProductsByCategory(@PathVariable Long categoryId) {
         List<ProductRes> products = productService.getActiveProductsByCategoryId(categoryId);
-        return ResponseEntity.ok(products);
-    }
-
-    @GetMapping("/all-inactive/by-category/{categoryId}")
-    public ResponseEntity<List<ProductRes>> getInactiveProductsByCategory(@PathVariable Long categoryId) {
-        List<ProductRes> products = productService.getInactiveProductsByCategoryId(categoryId);
         return ResponseEntity.ok(products);
     }
 }
