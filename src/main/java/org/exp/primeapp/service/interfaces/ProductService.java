@@ -1,9 +1,6 @@
 package org.exp.primeapp.service.interfaces;
 
-import org.exp.primeapp.dto.request.ProductReq;
-import org.exp.primeapp.dto.responce.ApiResponse;
 import org.exp.primeapp.dto.responce.ProductRes;
-import org.exp.primeapp.models.entities.Product;
 
 import java.util.List;
 

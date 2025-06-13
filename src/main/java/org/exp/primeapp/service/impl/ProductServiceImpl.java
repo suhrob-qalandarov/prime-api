@@ -2,6 +2,7 @@ package org.exp.primeapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.responce.ProductRes;
+import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.models.repo.ProductRepository;
 import org.exp.primeapp.service.interfaces.ProductService;
@@ -67,12 +68,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private ProductRes convertToProductRes(Product product) {
+        List<Long> attachmentIds = product.getAttachments()
+                .stream()
+                .map(Attachment::getId)
+                .collect(Collectors.toList());
+
         return new ProductRes(
+                product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
                 product.getAmount(),
-                product.getCategory().getId()
+                product.getStatus(),
+                product.getCategory().getId(),
+                attachmentIds
         );
     }
 }
