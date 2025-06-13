@@ -13,15 +13,19 @@ public interface CategoryService {
 
     List<Category> getCategoriesByActiveForAdmin();
 
+    List<Category> getCategoriesByInactive();
+
     ApiResponse saveCategory(CategoryReq categoryReq);
 
     ApiResponse updateCategoryById(Long categoryId, CategoryReq categoryReq);
 
-    ApiResponse updateCategoryActive(Long categoryId);
+    ApiResponse updateCategoryActiveFalse(Long categoryId);
+
+    ApiResponse updateCategoryActiveTrue(Long categoryId);
+
+    ApiResponse updateCategoryProductsActiveTrue(Long categoryId);
 
     CategoryRes getCategoryById(Long categoryId);
 
     Category getCategoryByIdForAdmin(Long categoryId);
-
-    List<Category> getCategoriesByInactive();
 }

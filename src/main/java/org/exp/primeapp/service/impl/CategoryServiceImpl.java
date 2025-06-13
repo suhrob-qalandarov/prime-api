@@ -53,15 +53,40 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public ApiResponse updateCategoryActive(Long categoryId) {
-        Category category=categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+    public ApiResponse updateCategoryActiveFalse(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.set_active(false);
         categoryRepository.save(category);
-        List<Product> products=productRepository.findAllByCategory(category);
-        products.forEach(product->product.set_active(false));
+
+        List<Product> products = productRepository.findAllByCategory(category);
+        products.forEach(product -> product.set_active(false));
         productRepository.saveAll(products);
 
         return new ApiResponse(true, "Category active updated successfully");
+    }
+
+    @Transactional
+    @Override
+    public ApiResponse updateCategoryActiveTrue(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+        category.set_active(true);
+        categoryRepository.save(category);
+
+        return new ApiResponse(true, "Category activated successfully");
+    }
+
+    @Transactional
+    @Override
+    public ApiResponse updateCategoryProductsActiveTrue(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+        category.set_active(true);
+        categoryRepository.save(category);
+
+        List<Product> products = productRepository.findAllByCategory(category);
+        products.forEach(product -> product.set_active(true));
+        productRepository.saveAll(products);
+
+        return new ApiResponse(true, "Category and category products activated successfully");
     }
 
     @Override

@@ -49,7 +49,7 @@ public class AdminCategoryController {
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long categoryId) {
-        ApiResponse apiResponse = categoryService.updateCategoryActive(categoryId);
+        ApiResponse apiResponse = categoryService.updateCategoryActiveFalse(categoryId);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }
