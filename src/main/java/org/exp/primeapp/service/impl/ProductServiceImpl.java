@@ -164,9 +164,9 @@ public class ProductServiceImpl implements ProductService {
             product.setPrice(req.getPrice());
         }
 
-        if (req.getStatus() != null) {
+        /*if (req.getStatus() != null) {
             product.setStatus(req.getStatus());
-        }
+        }*/
     }
 
     private boolean hasText(String str) {
