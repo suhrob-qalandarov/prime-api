@@ -1,6 +1,7 @@
 package org.exp.primeapp.service.interfaces;
 
 import org.exp.primeapp.dto.request.CategoryReq;
+import org.exp.primeapp.dto.responce.ApiResponse;
 import org.exp.primeapp.dto.responce.CategoryRes;
 import org.exp.primeapp.models.entities.Category;
 
@@ -10,13 +11,21 @@ public interface CategoryService {
 
     List<CategoryRes> getCategoriesByActive();
 
-    CategoryRes saveCategory(CategoryReq categoryReq);
+    List<Category> getCategoriesByActiveForAdmin();
 
-    CategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq);
+    List<Category> getCategoriesByInactive();
 
-    CategoryRes updateCategoryActive(Long categoryId);
+    ApiResponse saveCategory(CategoryReq categoryReq);
 
-    Category getCategoryById(Long categoryId);
+    ApiResponse updateCategoryById(Long categoryId, CategoryReq categoryReq);
 
-    List<CategoryRes> getCategoriesByInactive();
+    ApiResponse updateCategoryActiveFalse(Long categoryId);
+
+    ApiResponse updateCategoryActiveTrue(Long categoryId);
+
+    ApiResponse updateCategoryProductsActiveTrue(Long categoryId);
+
+    CategoryRes getCategoryById(Long categoryId);
+
+    Category getCategoryByIdForAdmin(Long categoryId);
 }

@@ -1,7 +1,5 @@
 package org.exp.primeapp.models.repo;
 
-import jakarta.transaction.Transactional;
-import org.exp.primeapp.dto.responce.ProductRes;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,16 +11,13 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findByCategory(Category category);
+    List<Product> findAllByCategory(Category category);
 
-    List<Product> findBy_active(boolean active);
-
-    Product findBy_activeTrueAndId(Long id);
+    List<Product> findAllBy_active(boolean active);
 
     @Modifying
-    @Transactional
-    @Query("update Product p set p._active = false where p.id = :id")
-    void updateActive(@Param("id") Long id);
+    @Query("UPDATE Product p SET p._active = :active WHERE p.id = :productId AND p._active = true")
+    int updateActive(@Param("active") boolean active, @Param("productId") Long productId);
 
-    List<ProductRes> findAllByCategory_Id(Long categoryId);
+    List<Product> findAllBy_activeAndCategory_Id(Boolean active, Long categoryId);
 }
