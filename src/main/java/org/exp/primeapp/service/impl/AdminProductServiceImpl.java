@@ -127,6 +127,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         return str != null && !str.isBlank();
     }
 
+    @Transactional
     @Override
     public ApiResponse deactivateProduct(Long productId) {
         int affected = productRepository.updateActive(false, productId);
@@ -137,6 +138,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         }
     }
 
+    @Transactional
     @Override
     public ApiResponse activateProduct(Long productId) {
         int affected = productRepository.updateActive(true, productId);

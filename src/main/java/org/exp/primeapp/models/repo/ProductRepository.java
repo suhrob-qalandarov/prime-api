@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllBy_active(boolean active);
 
     @Modifying
+    @Transactional
     @Query("UPDATE Product p SET p._active = :active WHERE p.id = :productId AND p._active = true")
     int updateActive(@Param("active") boolean active, @Param("productId") Long productId);
 
