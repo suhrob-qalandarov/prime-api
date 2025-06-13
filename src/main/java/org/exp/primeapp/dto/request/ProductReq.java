@@ -7,13 +7,12 @@ import java.util.List;
 
 @Value
 public class ProductReq {
-    Long id;
     String name;
     String description;
     Double price;
     Integer amount;
     Boolean active;
-    ProductStatus status;
+    //ProductStatus status;
     Long categoryId;
     List<Long> attachmentIds;
 }

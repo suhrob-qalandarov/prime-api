@@ -26,9 +26,9 @@ public class AdminProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Product> addProduct(@RequestBody ProductReq productReq) {
-        productService.saveProduct(productReq);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse> addProduct(@RequestBody ProductReq productReq) {
+        ApiResponse response = productService.saveProduct(productReq);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("/{productId}")
