@@ -64,6 +64,7 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .price(req.getPrice())
                 .amount(req.getAmount())
                 ._active(req.getActive())
+                .status(req.getStatus())
                 .category(category)
                 .attachments(attachments)
                 .build();
@@ -117,9 +118,9 @@ public class AdminProductServiceImpl implements AdminProductService {
             product.setPrice(req.getPrice());
         }
 
-        /*if (req.getStatus() != null) {
+        if (req.getStatus() != null) {
             product.setStatus(req.getStatus());
-        }*/
+        }
     }
 
     private boolean hasText(String str) {
@@ -136,5 +137,13 @@ public class AdminProductServiceImpl implements AdminProductService {
         }
     }
 
+    @Override
+    public List<Product> getActiveProductsForAdmin() {
+        return productRepository.findAllBy_active(true);
+    }
 
+    @Override
+    public List<Product> getInactiveProductsForAdmin() {
+        return productRepository.findAllBy_active(false);
+    }
 }

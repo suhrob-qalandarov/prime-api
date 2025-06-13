@@ -12,7 +12,7 @@ public class ProductReq {
     Double price;
     Integer amount;
     Boolean active;
-    //ProductStatus status;
+    ProductStatus status;
     Long categoryId;
     List<Long> attachmentIds;
 }

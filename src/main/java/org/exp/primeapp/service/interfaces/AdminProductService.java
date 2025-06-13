@@ -5,6 +5,8 @@ import org.exp.primeapp.dto.responce.ApiResponse;
 import org.exp.primeapp.models.entities.Product;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface AdminProductService {
 
@@ -18,4 +20,8 @@ public interface AdminProductService {
 
 
 
+
+    List<Product> getActiveProductsForAdmin();
+
+    List<Product> getInactiveProductsForAdmin();
 }
