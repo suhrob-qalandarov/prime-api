@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Product p SET p._active = :active WHERE p.id = :productId AND p._active = true")
+    @Query("UPDATE Product p SET p._active = :active WHERE p.id = :productId")
     int updateActive(@Param("active") boolean active, @Param("productId") Long productId);
 
     List<Product> findAllBy_activeAndCategory_Id(Boolean active, Long categoryId);
