@@ -128,12 +128,22 @@ public class AdminProductServiceImpl implements AdminProductService {
     }
 
     @Override
-    public ApiResponse deleteProduct(Long productId) {
+    public ApiResponse deactivateProduct(Long productId) {
         int affected = productRepository.updateActive(false, productId);
         if (affected > 0) {
             return new ApiResponse(true, "Product deactivated successfully");
         } else {
             return new ApiResponse(false, "Product not found or already inactive");
+        }
+    }
+
+    @Override
+    public ApiResponse activateProduct(Long productId) {
+        int affected = productRepository.updateActive(true, productId);
+        if (affected > 0) {
+            return new ApiResponse(true, "Product activated successfully");
+        } else {
+            return new ApiResponse(false, "Product not found or already active");
         }
     }
 

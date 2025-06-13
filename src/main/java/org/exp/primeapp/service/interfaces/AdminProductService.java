@@ -16,12 +16,12 @@ public interface AdminProductService {
 
     ApiResponse updateProduct(Long productId, ProductReq productReq);
 
-    ApiResponse deleteProduct(Long productId);
+    ApiResponse deactivateProduct(Long productId);
 
-
-
+    ApiResponse activateProduct(Long productId);
 
     List<Product> getActiveProductsForAdmin();
 
     List<Product> getInactiveProductsForAdmin();
+
 }
