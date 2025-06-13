@@ -4,6 +4,7 @@ package org.exp.primeapp.service.interfaces;
 import org.exp.primeapp.dto.request.LoginReq;
 import org.exp.primeapp.dto.request.RegisterReq;
 import org.exp.primeapp.dto.request.VerifyEmailReq;
+import org.exp.primeapp.dto.responce.ApiResponse;
 import org.exp.primeapp.dto.responce.LoginRes;
 
 public interface AuthService {
@@ -11,6 +12,6 @@ public interface AuthService {
 
 //    User register(RegisterReq registerDTO);
 
-    String sendVerificationCode(RegisterReq registerDTO);
-    String verifyCodeAndRegister(VerifyEmailReq req);
+    ApiResponse sendVerificationCode(RegisterReq registerDTO);
+    ApiResponse verifyCodeAndRegister(VerifyEmailReq req);
 }

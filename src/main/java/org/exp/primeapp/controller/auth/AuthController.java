@@ -5,9 +5,11 @@ import org.exp.primeapp.configs.security.JwtService;
 import org.exp.primeapp.dto.request.LoginReq;
 import org.exp.primeapp.dto.request.RegisterReq;
 import org.exp.primeapp.dto.request.VerifyEmailReq;
+import org.exp.primeapp.dto.responce.ApiResponse;
 import org.exp.primeapp.dto.responce.LoginRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.service.interfaces.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,26 +26,27 @@ public class AuthController {
     @PostMapping(LOGIN)
     public ResponseEntity<LoginRes> login(@RequestBody LoginReq loginReq) {
         LoginRes loginRes = authService.login(loginReq);
-        return ResponseEntity.ok(loginRes);
+        return new ResponseEntity<>(loginRes, HttpStatus.ACCEPTED);
     }
 
     @PostMapping(REGISTER)
-    public ResponseEntity<String> sendCode(@RequestBody RegisterReq req) {
-        String msg = authService.sendVerificationCode(req);
-        return ResponseEntity.ok(msg);
+    public ResponseEntity<ApiResponse> sendCode(@RequestBody RegisterReq req) {
+        ApiResponse response = authService.sendVerificationCode(req);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @PostMapping(VERIFY)
-    public ResponseEntity<String> verifyCode(@RequestBody VerifyEmailReq req) {
-        String msg = authService.verifyCodeAndRegister(req);
-        return ResponseEntity.ok(msg);
+    public ResponseEntity<ApiResponse> verifyCode(@RequestBody VerifyEmailReq req) {
+        ApiResponse response = authService.verifyCodeAndRegister(req);
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @PostMapping(REFRESH + "/{refreshToken}")
-    public ResponseEntity<String> verifyEmail(@RequestParam String refreshToken) {
+    public ResponseEntity<LoginRes> verifyEmail(@RequestParam String refreshToken) {
         User user = jwtService.getUserObject(refreshToken);
         String accessToken = jwtService.generateToken(user);
-        return ResponseEntity.ok(accessToken);
+        LoginRes loginRes = new LoginRes(accessToken, refreshToken, "Successfully updated token!");
+        return new ResponseEntity<>(loginRes, HttpStatus.ACCEPTED);
     }
 }
 

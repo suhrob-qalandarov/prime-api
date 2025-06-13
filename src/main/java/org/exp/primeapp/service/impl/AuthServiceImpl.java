@@ -6,6 +6,7 @@ import org.exp.primeapp.configs.security.JwtService;
 import org.exp.primeapp.dto.request.LoginReq;
 import org.exp.primeapp.dto.request.RegisterReq;
 import org.exp.primeapp.dto.request.VerifyEmailReq;
+import org.exp.primeapp.dto.responce.ApiResponse;
 import org.exp.primeapp.dto.responce.LoginRes;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
@@ -69,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public String sendVerificationCode(RegisterReq req) {
+    public ApiResponse sendVerificationCode(RegisterReq req) {
         if (!req.getPassword().equals(req.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match.");
         }
@@ -95,15 +96,15 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         emailService.sendVerificationEmail(req.getEmail(), code);
-        return "Verification code sent to email.";
+        return new ApiResponse(true, "Verification code sent to email");
     }
 
     @Override
-    public String verifyCodeAndRegister(VerifyEmailReq req) {
+    public ApiResponse verifyCodeAndRegister(VerifyEmailReq req) {
         Optional<User> optionalUser = userRepository.getByEmailOptional(req.getEmail());
 
         if (optionalUser.isEmpty()) {
-            return "Invalid email address.";
+            return new ApiResponse(false, "Invalid email address.");
         }
 
         User user = optionalUser.get();
@@ -112,9 +113,9 @@ public class AuthServiceImpl implements AuthService {
         if (verifyCode != null && verifyCode.equals(req.getCode())) {
             user.set_active(true);
             userRepository.save(user);
-            return "User registered successfully.";
+            return new ApiResponse(true, "User registered successfully");
         } else {
-            return "Invalid verification code.";
+            return new ApiResponse(false, "Invalid verification code.");
         }
     }
 }
