@@ -1,4 +1,4 @@
-package org.exp.primeapp.controller.admin;
+package org.exp.primeapp.controller.admin.category;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.CategoryReq;
@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import static org.exp.primeapp.utils.Const.*;
 
 @RestController
@@ -20,22 +18,16 @@ public class AdminCategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long categoryId) {
-        Category category = categoryService.getCategoryByIdForAdmin(categoryId);
-        return new ResponseEntity<>(category, HttpStatus.OK);
-    }
-
-    @GetMapping("/all-active")
-    public ResponseEntity<List<Category>> getCategories() {
-        List<Category> categories = categoryService.getCategoriesByActiveForAdmin();
-        return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
-    }
-
     @PostMapping
     public ResponseEntity<ApiResponse> createCategory(@RequestBody CategoryReq categoryReq) {
         ApiResponse apiResponse = categoryService.saveCategory(categoryReq);
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<Category> getCategoryById(@PathVariable Long categoryId) {
+        Category category = categoryService.getCategoryByIdForAdmin(categoryId);
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     @PutMapping("/{categoryId}")
@@ -47,9 +39,21 @@ public class AdminCategoryController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{categoryId}")
+    @PutMapping("/activate/{categoryId}")
+    public ResponseEntity<ApiResponse> activateCategory(@PathVariable Long categoryId) {
+        ApiResponse apiResponse = categoryService.activateCategory(categoryId);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/activate-with-products/{categoryId}")
+    public ResponseEntity<ApiResponse> activateCategoryWithProducts(@PathVariable Long categoryId) {
+        ApiResponse apiResponse = categoryService.activateCategoryWithProducts(categoryId);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deactivate/{categoryId}")
     public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long categoryId) {
-        ApiResponse apiResponse = categoryService.updateCategoryActiveFalse(categoryId);
+        ApiResponse apiResponse = categoryService.deactivateCategory(categoryId);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

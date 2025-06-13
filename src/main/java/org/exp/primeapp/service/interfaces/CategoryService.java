@@ -9,23 +9,23 @@ import java.util.List;
 
 public interface CategoryService {
 
-    List<CategoryRes> getCategoriesByActive();
+    CategoryRes getCategoryById(Long categoryId);
 
-    List<Category> getCategoriesByActiveForAdmin();
-
-    List<Category> getCategoriesByInactive();
+    List<CategoryRes> getActiveCategories();
 
     ApiResponse saveCategory(CategoryReq categoryReq);
 
     ApiResponse updateCategoryById(Long categoryId, CategoryReq categoryReq);
 
-    ApiResponse updateCategoryActiveFalse(Long categoryId);
+    ApiResponse deactivateCategory(Long categoryId);
 
-    ApiResponse updateCategoryActiveTrue(Long categoryId);
+    ApiResponse activateCategory(Long categoryId);
 
-    ApiResponse updateCategoryProductsActiveTrue(Long categoryId);
-
-    CategoryRes getCategoryById(Long categoryId);
+    ApiResponse activateCategoryWithProducts(Long categoryId);
 
     Category getCategoryByIdForAdmin(Long categoryId);
+
+    List<Category> getActiveCategoriesForAdmin();
+
+    List<Category> getInactiveCategoriesForAdmin();
 }

@@ -2,7 +2,6 @@ package org.exp.primeapp.controller.category;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.responce.CategoryRes;
-import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.service.interfaces.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +21,8 @@ public class CategoriesController {
     private final CategoryService categoryService;
 
     @GetMapping("/all-active")
-    public ResponseEntity<List<CategoryRes>> getCategories() {
-        List<CategoryRes> categories = categoryService.getCategoriesByActive();
-        return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/all-inactive")
-    public ResponseEntity<List<Category>> getInactiveCategories() {
-        List<Category>categories = categoryService.getCategoriesByInactive();
+    public ResponseEntity<List<CategoryRes>> getActiveCategories() {
+        List<CategoryRes> categories = categoryService.getActiveCategories();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 }
