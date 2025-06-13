@@ -46,8 +46,18 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(
                                 "GET",
+                                API + V1 + PRODUCTS,
+                                API + V1 + PRODUCTS + WAY_ALL
+                        ).permitAll()
+                        .requestMatchers(
+                                "GET",
                                 API + V1 + CATEGORY,
                                 API + V1 + CATEGORY + WAY_ALL
+                        ).permitAll()
+                        .requestMatchers(
+                                "GET",
+                                API + V1 + CATEGORIES,
+                                API + V1 + CATEGORIES + WAY_ALL
                         ).permitAll()
                         .requestMatchers(
                                 "GET",
