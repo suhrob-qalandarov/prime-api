@@ -6,10 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.exp.primeapp.models.base.BaseEntity;
-import org.exp.primeapp.models.base.OrderStatus;
+import org.exp.primeapp.models.enums.OrderStatus;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

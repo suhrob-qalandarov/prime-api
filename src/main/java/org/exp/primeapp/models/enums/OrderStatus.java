@@ -1,4 +1,4 @@
-package org.exp.primeapp.models.base;
+package org.exp.primeapp.models.enums;
 
 public enum OrderStatus {
     PENDING,
