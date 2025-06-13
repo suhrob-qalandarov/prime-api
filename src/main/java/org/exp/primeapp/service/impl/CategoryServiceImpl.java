@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public ApiResponse updateCategoryActiveFalse(Long categoryId) {
+    public ApiResponse deactivateCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.set_active(false);
         categoryRepository.save(category);
@@ -67,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public ApiResponse updateCategoryActiveTrue(Long categoryId) {
+    public ApiResponse activateCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.set_active(true);
         categoryRepository.save(category);
@@ -77,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public ApiResponse updateCategoryProductsActiveTrue(Long categoryId) {
+    public ApiResponse activateCategoryWithProducts(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.set_active(true);
         categoryRepository.save(category);
@@ -97,7 +97,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryRes> getCategoriesByActive() {
+    public List<CategoryRes> getActiveCategories() {
         return categoryRepository.findBy_active(true).stream()
                 .map(category -> new CategoryRes(
                         category.getId(),
@@ -114,12 +114,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getCategoriesByActiveForAdmin() {
+    public List<Category> getActiveCategoriesForAdmin() {
         return categoryRepository.findBy_active(true);
     }
 
     @Override
-    public List<Category> getCategoriesByInactive() {
+    public List<Category> getInactiveCategoriesForAdmin() {
         return categoryRepository.findBy_active(false);
     }
 
