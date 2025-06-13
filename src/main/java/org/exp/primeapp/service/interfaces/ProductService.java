@@ -12,19 +12,12 @@ public interface ProductService {
 
     ProductRes getProductById(Long id);
 
-    ApiResponse saveProduct(ProductReq productReq);
-
-    Product updateProduct(Long productId, ProductReq productReq);
-
     List<ProductRes> getActiveProductsByCategoryId(Long categoryId);
 
     List<ProductRes> getInactiveProductsByCategoryId(Long categoryId);
 
     List<ProductRes> getInactiveProducts();
 
-    ApiResponse deleteProduct(Long productId);
-
     List<ProductRes> getAllProducts();
 
-    Product getProductByIdForAdmin(Long productId);
 }
