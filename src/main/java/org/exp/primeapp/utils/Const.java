@@ -1,7 +1,7 @@
 package org.exp.primeapp.utils;
 
 public interface Const {
-    String WAY_ALL = "/*";
+    String WAY_ALL = "/**";
 
     String API = "/api";
     //String VERSION = "/version";
