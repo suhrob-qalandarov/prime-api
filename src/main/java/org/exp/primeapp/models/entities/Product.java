@@ -1,7 +1,10 @@
 package org.exp.primeapp.models.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.exp.primeapp.models.base.BaseEntity;
 import org.exp.primeapp.models.enums.ProductStatus;
@@ -19,7 +22,9 @@ public class Product extends BaseEntity {
     private String name;
     private String description;
     private Double price;
-    private Integer amount;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductSize> sizes = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -35,4 +40,9 @@ public class Product extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "attachment_id")
     )
     private List<Attachment> attachments = new ArrayList<>();
+
+    public void addSize(ProductSize productSize) {
+        productSize.setProduct(this);
+        sizes.add(productSize);
+    }
 }

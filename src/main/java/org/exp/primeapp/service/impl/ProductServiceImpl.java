@@ -2,6 +2,7 @@ package org.exp.primeapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.responce.ProductRes;
+import org.exp.primeapp.dto.responce.ProductSizeRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.models.repo.ProductRepository;
@@ -9,7 +10,6 @@ import org.exp.primeapp.service.interfaces.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductRes> getActiveProductsByCategoryId(Long categoryId) {
-        return productRepository.findByActiveAndCategoryId( categoryId, true )
+        return productRepository.findByActiveAndCategoryId(categoryId, true)
                 .stream()
                 .map(this::convertToProductRes)
                 .collect(Collectors.toList());
@@ -60,11 +60,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductRes getProductById(Long productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        if (optionalProduct.isEmpty()) {
-            throw new RuntimeException("Product not found with id: " + productId);
-        }
-        return convertToProductRes(optionalProduct.orElse(null));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+        return convertToProductRes(product);
     }
 
     private ProductRes convertToProductRes(Product product) {
@@ -73,15 +71,20 @@ public class ProductServiceImpl implements ProductService {
                 .map(Attachment::getId)
                 .collect(Collectors.toList());
 
+        List<ProductSizeRes> productSizes = product.getSizes()
+                .stream()
+                .map(size -> new ProductSizeRes(size.getSizes(), size.getAmount()))
+                .collect(Collectors.toList());
+
         return new ProductRes(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getAmount(),
                 product.getStatus(),
                 product.getCategory().getId(),
-                attachmentIds
+                attachmentIds,
+                productSizes
         );
     }
 }

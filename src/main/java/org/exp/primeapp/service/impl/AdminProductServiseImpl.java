@@ -4,10 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.request.ProductReq;
 import org.exp.primeapp.dto.responce.ApiResponse;
-import org.exp.primeapp.models.entities.Attachment;
-import org.exp.primeapp.models.entities.Category;
-import org.exp.primeapp.models.entities.Product;
-import org.exp.primeapp.models.entities.ProductIncome;
+import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.repo.AttachmentRepository;
 import org.exp.primeapp.models.repo.CategoryRepository;
 import org.exp.primeapp.models.repo.ProductIncomeRepository;
@@ -16,11 +13,11 @@ import org.exp.primeapp.service.interfaces.AdminProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+
 @RequiredArgsConstructor
-public class AdminProductServiceImpl implements AdminProductService {
+public class AdminProductServiseImpl implements AdminProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -29,11 +26,8 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     @Override
     public Product getProductById(Long productId) {
-        Optional<Product> optionalProduct = productRepository.findById(productId);
-        if (optionalProduct.isEmpty()) {
-            throw new RuntimeException("Product not found with id: " + productId);
-        }
-        return optionalProduct.orElse(null);
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
     }
 
     @Transactional
@@ -52,22 +46,38 @@ public class AdminProductServiceImpl implements AdminProductService {
         Product product = createProductFromReq(productReq, category, attachments);
         Product savedProduct = productRepository.save(product);
 
-        ProductIncome income = createIncome(product, product.getAmount());
-        ProductIncome savedIncome = productIncomeRepository.save(income);
+        // ProductIncome uchun umumiy amount hisoblaymiz
+        Integer totalAmount = product.getSizes().stream()
+                .mapToInt(ProductSize::getAmount)
+                .sum();
+        ProductIncome income = createIncome(product, totalAmount);
+        productIncomeRepository.save(income);
+
         return new ApiResponse(true, "Product saved successfully with ID: " + savedProduct.getId());
     }
 
     private Product createProductFromReq(ProductReq req, Category category, List<Attachment> attachments) {
-        return Product.builder()
+        Product product = Product.builder()
                 .name(req.getName())
                 .description(req.getDescription())
                 .price(req.getPrice())
-                .amount(req.getAmount())
                 ._active(req.getActive())
                 .status(req.getStatus())
                 .category(category)
                 .attachments(attachments)
                 .build();
+
+        // ProductSize'larni qo'shamiz
+        if (req.getProductSizes() != null) {
+            req.getProductSizes().forEach(sizeReq -> {
+                ProductSize productSize = new ProductSize();
+                productSize.setSizes(sizeReq.getSizes());
+                productSize.setAmount(sizeReq.getAmount());
+                product.addSize(productSize);
+            });
+        }
+
+        return product;
     }
 
     private ProductIncome createIncome(Product product, Integer amount) {
@@ -90,10 +100,9 @@ public class AdminProductServiceImpl implements AdminProductService {
     }
 
     private void updateProductFields(Product product, ProductReq req) {
-        Long categoryId = req.getCategoryId();
-        if (categoryId != null) {
-            Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+        if (req.getCategoryId() != null) {
+            Category category = categoryRepository.findById(req.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + req.getCategoryId()));
             product.setCategory(category);
         }
 
@@ -110,16 +119,23 @@ public class AdminProductServiceImpl implements AdminProductService {
             product.setDescription(req.getDescription());
         }
 
-        if (req.getAmount() != null) {
-            product.setAmount(req.getAmount());
-        }
-
         if (req.getPrice() != null) {
             product.setPrice(req.getPrice());
         }
 
         if (req.getStatus() != null) {
             product.setStatus(req.getStatus());
+        }
+
+        // ProductSize'larni yangilaymiz
+        if (req.getProductSizes() != null) {
+            product.getSizes().clear();
+            req.getProductSizes().forEach(sizeReq -> {
+                ProductSize productSize = new ProductSize();
+                productSize.setSizes(sizeReq.getSizes());
+                productSize.setAmount(sizeReq.getAmount());
+                product.addSize(productSize);
+            });
         }
     }
 
@@ -145,9 +161,10 @@ public class AdminProductServiceImpl implements AdminProductService {
         if (affected > 0) {
             return new ApiResponse(true, "Product activated successfully");
         } else {
-            return new ApiResponse(false, "Product not found or already active");
+            return new ApiResponse(false, "Product not found with id or already active");
         }
     }
+
 
     @Override
     public List<Product> getActiveProductsForAdmin() {
