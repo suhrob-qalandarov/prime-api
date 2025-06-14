@@ -2,6 +2,7 @@ package org.exp.primeapp.controller.product;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.dto.responce.ProductRes;
+import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.service.interfaces.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +29,8 @@ public class ProductsController {
     }
 
     @GetMapping("/by-category/{categoryId}")
-    public ResponseEntity<List<ProductRes>> getActiveProductsByCategory(@PathVariable Long categoryId) {
-        List<ProductRes> products = productService.getActiveProductsByCategoryId(categoryId);
+    public ResponseEntity<List<Product>> getActiveProductsByCategory(@PathVariable Long categoryId) {
+        List<Product> products = productService.getActiveProductsByCategoryId(categoryId);
         return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
     }
 }
