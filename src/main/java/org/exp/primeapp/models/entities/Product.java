@@ -42,6 +42,9 @@ public class Product extends BaseEntity {
     private List<Attachment> attachments = new ArrayList<>();
 
     public void addSize(ProductSize productSize) {
+        if (this.sizes == null) {
+            this.sizes = new ArrayList<>();
+        }
         productSize.setProduct(this);
         sizes.add(productSize);
     }

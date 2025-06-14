@@ -12,6 +12,7 @@ import org.exp.primeapp.models.repo.ProductRepository;
 import org.exp.primeapp.service.interfaces.AdminProductService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -65,9 +66,10 @@ public class AdminProductServiseImpl implements AdminProductService {
                 .status(req.getStatus())
                 .category(category)
                 .attachments(attachments)
+                .sizes(new ArrayList<>()) // aniq boshlang‘ich qiymat
                 .build();
 
-        // ProductSize'larni qo'shamiz
+        // ProductSize'larni qo‘shamiz
         if (req.getProductSizes() != null) {
             req.getProductSizes().forEach(sizeReq -> {
                 ProductSize productSize = new ProductSize();
