@@ -43,8 +43,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getActiveProductsByCategoryId(Long categoryId) {
-        return productRepository.findByActiveAndCategoryId(categoryId, true);
+    public List<ProductRes> getActiveProductsByCategoryId(Long categoryId) {
+        return productRepository.findByActiveAndCategoryId( categoryId, true )
+                .stream()
+                .map(this::convertToProductRes)
+                .collect(Collectors.toList());
     }
 
     @Override

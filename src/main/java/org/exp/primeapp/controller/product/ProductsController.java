@@ -29,8 +29,8 @@ public class ProductsController {
     }
 
     @GetMapping("/by-category/{categoryId}")
-    public ResponseEntity<List<Product>> getActiveProductsByCategory(@PathVariable Long categoryId) {
-        List<Product> products = productService.getActiveProductsByCategoryId(categoryId);
+    public ResponseEntity<List<ProductRes>> getActiveProductsByCategory(@PathVariable Long categoryId) {
+        List<ProductRes> products = productService.getActiveProductsByCategoryId(categoryId);
         return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
     }
 }
