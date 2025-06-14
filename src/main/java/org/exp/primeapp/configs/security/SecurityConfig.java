@@ -36,7 +36,7 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
         http.authorizeHttpRequests(auth ->
                 auth
-                        .requestMatchers(
+                        /*.requestMatchers(
                                 API + V1 + AUTH,
                                 API + V1 + AUTH + WAY_ALL).permitAll()
                         .requestMatchers(
@@ -63,8 +63,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "GET",
                                 API + V1 + ATTACHMENT + WAY_ALL
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        ).permitAll()*/
+                        .anyRequest().permitAll()
         );
 
         http.addFilterBefore(mySecurityFilter, UsernamePasswordAuthenticationFilter.class);
