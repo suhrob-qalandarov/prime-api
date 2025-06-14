@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "GET",
                                 API + V1 + PRODUCTS,
+                                API + V1 + PRODUCTS + BY_CATEGORY + "/{categoryId}",
                                 API + V1 + PRODUCTS + WAY_ALL
                         ).permitAll()
                         .requestMatchers(
