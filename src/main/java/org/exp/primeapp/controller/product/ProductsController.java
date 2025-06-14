@@ -30,6 +30,6 @@ public class ProductsController {
     @GetMapping("/by-category/{categoryId}")
     public ResponseEntity<List<ProductRes>> getActiveProductsByCategory(@PathVariable Long categoryId) {
         List<ProductRes> products = productService.getActiveProductsByCategoryId(categoryId);
-        return ResponseEntity.ok(products);
+        return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
     }
 }
