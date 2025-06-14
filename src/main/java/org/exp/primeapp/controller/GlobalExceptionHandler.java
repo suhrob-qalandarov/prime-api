@@ -1,4 +1,4 @@
-package org.exp.primeapp.configs;
+package org.exp.primeapp.controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
