@@ -8,6 +8,8 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.exp.primeapp.models.base.BaseEntity;
 import org.exp.primeapp.models.enums.ProductStatus;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +20,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product extends BaseEntity {
     private String name;
     private String description;
     private Double price;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductSize> sizes = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -41,8 +41,15 @@ public class Product extends BaseEntity {
     )
     private List<Attachment> attachments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductSize> sizes = new ArrayList<>();
+
     public void addSize(ProductSize productSize) {
-        productSize.setProduct(this);
-        sizes.add(productSize);
+        if (sizes.stream().noneMatch(ps -> ps.getSize() == productSize.getSize())) {
+            productSize.setProduct(this);
+            sizes.add(productSize);
+        } else {
+            throw new IllegalArgumentException("Product already has a size: " + productSize.getSize());
+        }
     }
 }
