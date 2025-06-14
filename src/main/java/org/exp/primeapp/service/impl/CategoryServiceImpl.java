@@ -1,9 +1,9 @@
 package org.exp.primeapp.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.dto.request.CategoryReq;
-import org.exp.primeapp.dto.responce.ApiResponse;
-import org.exp.primeapp.dto.responce.CategoryRes;
+import org.exp.primeapp.models.dto.request.CategoryReq;
+import org.exp.primeapp.models.dto.responce.ApiResponse;
+import org.exp.primeapp.models.dto.responce.CategoryRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;

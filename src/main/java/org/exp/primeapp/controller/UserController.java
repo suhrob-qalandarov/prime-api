@@ -1,9 +1,9 @@
 package org.exp.primeapp.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.dto.request.UserReq;
-import org.exp.primeapp.dto.request.UserUpdateReq;
-import org.exp.primeapp.dto.responce.UserRes;
+import org.exp.primeapp.models.dto.request.UserReq;
+import org.exp.primeapp.models.dto.request.UserUpdateReq;
+import org.exp.primeapp.models.dto.responce.UserRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.service.interfaces.UserService;
 import org.springframework.http.ResponseEntity;

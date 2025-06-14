@@ -1,7 +1,6 @@
-package org.exp.primeapp.dto.request;
+package org.exp.primeapp.models.dto.request;
 
 import lombok.Value;
-import org.exp.primeapp.models.enums.Size;
 import org.exp.primeapp.models.enums.ProductStatus;
 
 import java.util.List;

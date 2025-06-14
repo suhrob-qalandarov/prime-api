@@ -1,8 +1,8 @@
 package org.exp.primeapp.controller.admin.category;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.dto.request.CategoryReq;
-import org.exp.primeapp.dto.responce.ApiResponse;
+import org.exp.primeapp.models.dto.request.CategoryReq;
+import org.exp.primeapp.models.dto.responce.ApiResponse;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.service.interfaces.CategoryService;
 import org.springframework.http.HttpStatus;

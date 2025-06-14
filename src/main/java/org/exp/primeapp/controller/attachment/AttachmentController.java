@@ -3,7 +3,7 @@ package org.exp.primeapp.controller.attachment;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.dto.responce.AttachmentRes;
+import org.exp.primeapp.models.dto.responce.AttachmentRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.service.interfaces.AttachmentService;
 import org.springframework.http.ResponseEntity;

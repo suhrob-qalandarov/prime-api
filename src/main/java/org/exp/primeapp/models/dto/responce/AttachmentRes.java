@@ -1,4 +1,4 @@
-package org.exp.primeapp.dto.responce;
+package org.exp.primeapp.models.dto.responce;
 
 import lombok.Builder;
 import lombok.Value;

@@ -2,8 +2,8 @@ package org.exp.primeapp.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.dto.request.ProductReq;
-import org.exp.primeapp.dto.responce.ApiResponse;
+import org.exp.primeapp.models.dto.request.ProductReq;
+import org.exp.primeapp.models.dto.responce.ApiResponse;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.repo.AttachmentRepository;
 import org.exp.primeapp.models.repo.CategoryRepository;

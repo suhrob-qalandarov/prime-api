@@ -1,8 +1,8 @@
 package org.exp.primeapp.service.interfaces;
 
-import org.exp.primeapp.dto.request.CategoryReq;
-import org.exp.primeapp.dto.responce.ApiResponse;
-import org.exp.primeapp.dto.responce.CategoryRes;
+import org.exp.primeapp.models.dto.request.CategoryReq;
+import org.exp.primeapp.models.dto.responce.ApiResponse;
+import org.exp.primeapp.models.dto.responce.CategoryRes;
 import org.exp.primeapp.models.entities.Category;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package org.exp.primeapp.controller.category;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.dto.responce.CategoryRes;
+import org.exp.primeapp.models.dto.responce.CategoryRes;
 import org.exp.primeapp.service.interfaces.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

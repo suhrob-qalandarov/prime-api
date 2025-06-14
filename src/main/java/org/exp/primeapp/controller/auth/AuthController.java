@@ -2,11 +2,11 @@ package org.exp.primeapp.controller.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.configs.security.JwtService;
-import org.exp.primeapp.dto.request.LoginReq;
-import org.exp.primeapp.dto.request.RegisterReq;
-import org.exp.primeapp.dto.request.VerifyEmailReq;
-import org.exp.primeapp.dto.responce.ApiResponse;
-import org.exp.primeapp.dto.responce.LoginRes;
+import org.exp.primeapp.models.dto.request.LoginReq;
+import org.exp.primeapp.models.dto.request.RegisterReq;
+import org.exp.primeapp.models.dto.request.VerifyEmailReq;
+import org.exp.primeapp.models.dto.responce.ApiResponse;
+import org.exp.primeapp.models.dto.responce.LoginRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.service.interfaces.AuthService;
 import org.springframework.http.HttpStatus;

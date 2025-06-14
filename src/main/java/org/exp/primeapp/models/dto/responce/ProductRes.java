@@ -1,7 +1,6 @@
-package org.exp.primeapp.dto.responce;
+package org.exp.primeapp.models.dto.responce;
 
 import lombok.*;
-import org.exp.primeapp.models.enums.Size;
 import org.exp.primeapp.models.enums.ProductStatus;
 
 import java.util.List;

@@ -1,8 +1,7 @@
 package org.exp.primeapp.controller.product;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.dto.responce.ProductRes;
-import org.exp.primeapp.models.entities.Product;
+import org.exp.primeapp.models.dto.responce.ProductRes;
 import org.exp.primeapp.service.interfaces.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

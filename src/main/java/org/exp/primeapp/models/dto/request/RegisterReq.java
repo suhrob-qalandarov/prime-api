@@ -1,4 +1,4 @@
-package org.exp.primeapp.dto.request;
+package org.exp.primeapp.models.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
