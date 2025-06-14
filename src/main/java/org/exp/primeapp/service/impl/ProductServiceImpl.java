@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductRes> getActiveProductsByCategoryId(Long categoryId) {
-        return productRepository.findAllBy_activeAndCategory_Id(true, categoryId)
+        return productRepository.findByActiveAndCategoryId(true, categoryId)
                 .stream()
                 .map(this::convertToProductRes)
                 .collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductRes> getInactiveProductsByCategoryId(Long categoryId) {
-        return productRepository.findAllBy_activeAndCategory_Id(false, categoryId)
+        return productRepository.findByActiveAndCategoryId(false, categoryId)
                 .stream()
                 .map(this::convertToProductRes)
                 .collect(Collectors.toList());
