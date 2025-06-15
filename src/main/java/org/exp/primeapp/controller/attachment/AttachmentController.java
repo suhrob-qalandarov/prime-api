@@ -3,18 +3,18 @@ package org.exp.primeapp.controller.attachment;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.responce.AttachmentRes;
-import org.exp.primeapp.models.entities.Attachment;
-import org.exp.primeapp.service.interfaces.AttachmentService;
-import org.springframework.http.ResponseEntity;
+import org.exp.primeapp.service.interfaces.attachment.AdminAttachmentService;
+import org.exp.primeapp.service.interfaces.attachment.AttachmentService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.exp.primeapp.utils.Const.*;
 
+@Slf4j
 @RestController
 @MultipartConfig
 @RequiredArgsConstructor
@@ -22,31 +22,21 @@ import static org.exp.primeapp.utils.Const.*;
 public class AttachmentController {
 
     private final AttachmentService attachmentService;
-
-    @PostMapping("/upload")
-    public ResponseEntity<List<AttachmentRes>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
-        List<Attachment> uploadedFiles = attachmentService.uploadMultiple(files);
-        List<AttachmentRes> attachmentResponses = uploadedFiles.stream()
-                .map(attachment -> AttachmentRes.builder()
-                        .id(attachment.getId())
-                        .key(attachment.getUrl())
-                        .build())
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(attachmentResponses);
-    }
-
-    @PostMapping("/upload-one")
-    public ResponseEntity<AttachmentRes> uploadFile(@RequestParam("file") MultipartFile file) {
-        Attachment attachment = attachmentService.uploadOne(file);
-        AttachmentRes attachmentResponse = AttachmentRes.builder()
-                .id(attachment.getId())
-                .key(attachment.getUrl())
-                .build();
-        return ResponseEntity.ok(attachmentResponse);
-    }
+    private final AdminAttachmentService adminAttachmentService;
 
     @GetMapping("/{attachmentId}")
-    public void getFile(@PathVariable Long attachmentId, HttpServletResponse response) {
+    public void getAttachment(@PathVariable Long attachmentId, HttpServletResponse response) throws IOException {
+        log.debug("Fetching attachment with ID: {}", attachmentId);
         attachmentService.get(attachmentId, response);
+        log.info("Successfully served attachment: {}", attachmentId);
+    }
+
+    @GetMapping("/multiple")
+    public void getMultipleAttachments(@RequestParam("attachmentIds") List<Long> attachmentIds, HttpServletResponse response) throws IOException {
+        log.debug("Fetching multiple attachments with IDs: {}", attachmentIds);
+        for (Long attachmentId : attachmentIds) {
+            attachmentService.get(attachmentId, response);
+        }
+        log.info("Successfully served multiple attachments: {}", attachmentIds);
     }
 }

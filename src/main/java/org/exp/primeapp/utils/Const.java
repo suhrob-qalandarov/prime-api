@@ -22,6 +22,7 @@ public interface Const {
     String CATEGORY = "/category";
     String CATEGORIES = "/categories";
     String ATTACHMENT = "/attachment";
+    String ATTACHMENTS = "/attachments";
     String PRODUCT = "/product";
     String PRODUCTS = "/products";
     String INACTIVE = "/inactive";
