@@ -35,13 +35,13 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
 
     @Override
     public List<AttachmentRes> getActiveAttachments() {
-        List<Attachment> active = attachmentRepository.findAllBy_activeTrue();
+        List<Attachment> active = attachmentRepository.findAllByActiveTrue();
         return attachmentUtilService.convertToAttachmentResList(active);
     }
 
     @Override
     public List<AttachmentRes> getInactiveAttachments() {
-        List<Attachment> inactive = attachmentRepository.findAllBy_activeFalse();
+        List<Attachment> inactive = attachmentRepository.findAllByActiveFalse();
         return attachmentUtilService.convertToAttachmentResList(inactive);
     }
 
@@ -53,13 +53,13 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
 
     @Override
     public List<AttachmentRes> getActiveAttachmentsNoProduct() {
-        List<Attachment> noProduct = attachmentRepository.findAllBy_activeTrueAndNotLinkedToProduct();
+        List<Attachment> noProduct = attachmentRepository.findAllByActiveTrueAndNotLinkedToProduct();
         return attachmentUtilService.convertToAttachmentResList(noProduct);
     }
 
     @Override
     public List<AttachmentRes> getInactiveAttachmentsNoProduct() {
-        List<Attachment> noProduct = attachmentRepository.findAllBy_activeTrueAndNotLinkedToProduct();
+        List<Attachment> noProduct = attachmentRepository.findAllByActiveTrueAndNotLinkedToProduct();
         return attachmentUtilService.convertToAttachmentResList(noProduct);
     }
 
@@ -70,12 +70,12 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
 
     @Override
     public int getActiveAttachmentsCount() {
-        return attachmentRepository.countAllBy_activeTrue();
+        return attachmentRepository.countAllByActiveTrue();
     }
 
     @Override
     public int getInactiveAttachmentsCount() {
-        return attachmentRepository.countAllBy_activeFalse();
+        return attachmentRepository.countAllByActiveFalse();
     }
 
     @Transactional
@@ -133,7 +133,7 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
         String key = attachment.getUrl();
 
         try {
-            attachment.set_active(false);
+            attachment.setActive(false);
             attachmentRepository.save(attachment);
         } catch (Exception e) {
             log.error("Failed to soft-delete attachment ID {}: {}", attachmentId, e.getMessage());
@@ -162,7 +162,7 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
                 .url(key)
                 .filename(file.getOriginalFilename())
                 .contentType(file.getContentType())
-                ._active(true)
+                .active(true)
                 .build();
         try {
             return attachmentRepository.save(newAttachment);

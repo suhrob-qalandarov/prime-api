@@ -96,11 +96,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void updateUser_Active(Long userId) {
-        userRepository.findById(userId).ifPresent(user -> user.set_active(false));
+        userRepository.findById(userId).ifPresent(user -> user.setActive(false));
     }
 
     private void checkUserIs_ActiveAndRolesAndUse(Boolean userReq, User user, List<Long> userReq1) {
-        user.set_active(Objects.requireNonNullElse(userReq, true));
+        user.setActive(Objects.requireNonNullElse(userReq, true));
 
         if (userReq1 == null) {
             user.setRoles(new ArrayList<>(List.of(new Role("ROLE_USER"))));

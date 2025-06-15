@@ -23,7 +23,7 @@ public class AttachmentUtilServiceImpl implements AttachmentUtilService {
     @Override
     public Attachment getAttachment(Long attachmentId) {
         validateAttachmentId(attachmentId);
-        return attachmentRepository.findByIdAnd_activeTrue(attachmentId)
+        return attachmentRepository.findByIdAndActiveTrue(attachmentId)
                 .orElseThrow(() -> new EntityNotFoundException("Active attachment not found with ID: " + attachmentId));
     }
 

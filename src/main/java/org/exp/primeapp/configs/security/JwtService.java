@@ -30,7 +30,7 @@ public class JwtService {
                 .setSubject(user.getEmail())
                 .claim("email", user.getEmail())
                 .claim("id", user.getId())
-                .claim("active", user.get_active())
+                .claim("active", user.getActive())
                 .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                 .issuedAt(new Date())
                 .expiration(new Date(new Date().getTime() + 1000 * 60 * 60 * 24))
@@ -43,7 +43,7 @@ public class JwtService {
                 .setSubject(user.getEmail())
                 .claim("email", user.getEmail())
                 .claim("id", user.getId())
-                .claim("active", user.get_active()) // Active holatini qo'shish
+                .claim("active", user.getActive()) // Active holatini qo'shish
                 .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                 .issuedAt(new Date())
                 .expiration(new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 2))
@@ -93,7 +93,7 @@ public class JwtService {
                 .id(id) // ID ni qo'shish
                 .email(email)
                 .roles(authorities)
-                ._active(active) // Active ni qo'shish
+                .active(active) // Active ni qo'shish
                 .build();
     }
 }

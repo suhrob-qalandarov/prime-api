@@ -42,7 +42,7 @@ public class Runner implements CommandLineRunner {
                             .email("admin@gmail.com")
                             .password(passwordEncoder.encode("123"))
                             .phone("901234567")
-                            ._active(true)
+                            .active(true)
                             .roles(roles)
                             .build()
             );

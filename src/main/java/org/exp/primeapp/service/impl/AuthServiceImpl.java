@@ -89,7 +89,7 @@ public class AuthServiceImpl implements AuthService {
                 .email(req.getEmail())
                 .password(passwordEncoder.encode(req.getPassword()))
                 .phone(req.getPhone())
-                ._active(false)
+                .active(false)
                 .roles(roleUser)
                 .verifyCode(code)
                 .build();
@@ -111,7 +111,7 @@ public class AuthServiceImpl implements AuthService {
         String verifyCode = user.getVerifyCode();
 
         if (verifyCode != null && verifyCode.equals(req.getCode())) {
-            user.set_active(true);
+            user.setActive(true);
             userRepository.save(user);
             return new ApiResponse(true, "User registered successfully");
         } else {

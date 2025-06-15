@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category.builder()
                 .name(categoryReq.getName())
                 .attachment(attachment)
-                ._active(categoryReq.getActive())
+                .active(categoryReq.getActive())
                 .build();
 
         categoryRepository.save(category);
@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     public ApiResponse updateCategoryById(Long categoryId, CategoryReq categoryReq) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setName(categoryReq.getName());
-        category.set_active(categoryReq.getActive());
+        category.setActive(categoryReq.getActive());
         categoryRepository.save(category);
 
         return new ApiResponse(true, "Category updated successfully");
@@ -55,11 +55,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ApiResponse deactivateCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
-        category.set_active(false);
+        category.setActive(false);
         categoryRepository.save(category);
 
         List<Product> products = productRepository.findAllByCategory(category);
-        products.forEach(product -> product.set_active(false));
+        products.forEach(product -> product.setActive(false));
         productRepository.saveAll(products);
 
         return new ApiResponse(true, "Category active updated successfully");
@@ -69,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ApiResponse activateCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
-        category.set_active(true);
+        category.setActive(true);
         categoryRepository.save(category);
 
         return new ApiResponse(true, "Category activated successfully");
@@ -79,11 +79,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ApiResponse activateCategoryWithProducts(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
-        category.set_active(true);
+        category.setActive(true);
         categoryRepository.save(category);
 
         List<Product> products = productRepository.findAllByCategory(category);
-        products.forEach(product -> product.set_active(true));
+        products.forEach(product -> product.setActive(true));
         productRepository.saveAll(products);
 
         return new ApiResponse(true, "Category and category products activated successfully");
@@ -98,11 +98,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryRes> getActiveCategories() {
-        return categoryRepository.findBy_active(true).stream()
+        return categoryRepository.findByActive(true).stream()
                 .map(category -> new CategoryRes(
                         category.getId(),
                         category.getName(),
-                        category.get_active(),
+                        category.getActive(),
                         category.getAttachment() != null ? category.getAttachment().getId() : null
                 ))
                 .toList();
@@ -115,19 +115,19 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getActiveCategoriesForAdmin() {
-        return categoryRepository.findBy_active(true);
+        return categoryRepository.findByActive(true);
     }
 
     @Override
     public List<Category> getInactiveCategoriesForAdmin() {
-        return categoryRepository.findBy_active(false);
+        return categoryRepository.findByActive(false);
     }
 
     private CategoryRes convertToCategoryRes(Category category) {
         return new CategoryRes(
                 category.getId(),
                 category.getName(),
-                category.get_active(),
+                category.getActive(),
                 category.getAttachment().getId()
         );
     }

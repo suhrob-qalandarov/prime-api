@@ -62,7 +62,7 @@ public class AdminProductServiseImpl implements AdminProductService {
                 .name(req.getName())
                 .description(req.getDescription())
                 .price(req.getPrice())
-                ._active(req.getActive())
+                .active(req.getActive())
                 .status(req.getStatus())
                 .category(category)
                 .attachments(attachments)
@@ -170,11 +170,11 @@ public class AdminProductServiseImpl implements AdminProductService {
 
     @Override
     public List<Product> getActiveProductsForAdmin() {
-        return productRepository.findAllBy_active(true);
+        return productRepository.findAllByActive(true);
     }
 
     @Override
     public List<Product> getInactiveProductsForAdmin() {
-        return productRepository.findAllBy_active(false);
+        return productRepository.findAllByActive(false);
     }
 }

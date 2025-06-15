@@ -4,7 +4,6 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.exp.primeapp.models.dto.responce.AttachmentRes;
 import org.exp.primeapp.service.interfaces.attachment.AdminAttachmentService;
 import org.exp.primeapp.service.interfaces.attachment.AttachmentService;
 import org.springframework.web.bind.annotation.*;

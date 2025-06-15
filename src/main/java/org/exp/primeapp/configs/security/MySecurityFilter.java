@@ -49,7 +49,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
                         throw new IllegalArgumentException("Invalid user data from token");
                     }
 
-                    if (user.get_active() != null && !user.get_active()) {
+                    if (user.getActive() != null && !user.getActive()) {
                         log.warn("User is not active: {}", user.getUsername());
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.getWriter().write("User account is not active.");

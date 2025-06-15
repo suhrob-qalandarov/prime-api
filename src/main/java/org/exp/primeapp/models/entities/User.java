@@ -49,7 +49,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return Boolean.TRUE.equals(get_active());
+        return Boolean.TRUE.equals(getActive());
     }
 }
 

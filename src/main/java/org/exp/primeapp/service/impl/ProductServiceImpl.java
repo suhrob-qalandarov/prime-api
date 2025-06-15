@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductRes> getActiveProducts() {
-        return productRepository.findAllBy_active(true)
+        return productRepository.findAllByActive(true)
                 .stream()
                 .map(this::convertToProductRes)
                 .collect(Collectors.toList());
@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductRes> getInactiveProducts() {
-        return productRepository.findAllBy_active(false)
+        return productRepository.findAllByActive(false)
                 .stream()
                 .map(this::convertToProductRes)
                 .collect(Collectors.toList());
