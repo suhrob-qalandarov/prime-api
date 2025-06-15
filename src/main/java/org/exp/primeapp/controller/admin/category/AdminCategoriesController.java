@@ -1,7 +1,7 @@
 package org.exp.primeapp.controller.admin.category;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.models.entities.Category;
+import org.exp.primeapp.models.dto.responce.CategoryRes;
 import org.exp.primeapp.models.repo.CategoryRepository;
 import org.exp.primeapp.service.interfaces.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -20,23 +20,22 @@ import static org.exp.primeapp.utils.Const.*;
 public class AdminCategoriesController {
 
     private final CategoryService categoryService;
-    private final CategoryRepository categoryRepository;
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
+    public ResponseEntity<List<CategoryRes>> getCategories() {
+        List<CategoryRes> categories = categoryService.getAllCategories();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<Category>> getAllActiveCategories() {
-        List<Category> categories = categoryService.getActiveCategoriesForAdmin();
+    public ResponseEntity<List<CategoryRes>> getActiveCategories() {
+        List<CategoryRes> categories = categoryService.getActiveCategories();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/inactive")
-    public ResponseEntity<List<Category>> getAllInactiveCategories() {
-        List<Category> categories = categoryService.getInactiveCategoriesForAdmin();
+    public ResponseEntity<List<CategoryRes>> getInactiveCategories() {
+        List<CategoryRes> categories = categoryService.getInactiveCategories();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 

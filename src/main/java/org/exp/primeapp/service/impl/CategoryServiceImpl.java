@@ -114,13 +114,25 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getActiveCategoriesForAdmin() {
-        return categoryRepository.findByActive(true);
+    public List<CategoryRes> getInactiveCategories() {
+        return categoryRepository.findByActive(false).stream()
+                .map(category -> new CategoryRes(
+                        category.getId(),
+                        category.getName(),
+                        category.getActive(),
+                        category.getAttachment() != null ? category.getAttachment().getId() : null
+                )).toList();
     }
 
     @Override
-    public List<Category> getInactiveCategoriesForAdmin() {
-        return categoryRepository.findByActive(false);
+    public List<CategoryRes> getAllCategories() {
+        return categoryRepository.findAll().stream()
+                .map(category -> new CategoryRes(
+                        category.getId(),
+                        category.getName(),
+                        category.getActive(),
+                        category.getAttachment() != null ? category.getAttachment().getId() : null
+                )).toList();
     }
 
     private CategoryRes convertToCategoryRes(Category category) {

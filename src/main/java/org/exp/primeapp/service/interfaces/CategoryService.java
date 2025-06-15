@@ -11,7 +11,11 @@ public interface CategoryService {
 
     CategoryRes getCategoryById(Long categoryId);
 
+    List<CategoryRes> getAllCategories();
+
     List<CategoryRes> getActiveCategories();
+
+    List<CategoryRes> getInactiveCategories();
 
     ApiResponse saveCategory(CategoryReq categoryReq);
 
@@ -25,7 +29,4 @@ public interface CategoryService {
 
     Category getCategoryByIdForAdmin(Long categoryId);
 
-    List<Category> getActiveCategoriesForAdmin();
-
-    List<Category> getInactiveCategoriesForAdmin();
 }
