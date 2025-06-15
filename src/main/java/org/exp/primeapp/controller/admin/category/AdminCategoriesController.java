@@ -22,21 +22,23 @@ public class AdminCategoriesController {
     private final CategoryService categoryService;
     private final CategoryRepository categoryRepository;
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<Category>> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/all-active")
+    @GetMapping("/active")
     public ResponseEntity<List<Category>> getAllActiveCategories() {
         List<Category> categories = categoryService.getActiveCategoriesForAdmin();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/all-inactive")
+    @GetMapping("/inactive")
     public ResponseEntity<List<Category>> getAllInactiveCategories() {
         List<Category> categories = categoryService.getInactiveCategoriesForAdmin();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
+
+
 }

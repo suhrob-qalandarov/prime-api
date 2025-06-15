@@ -22,16 +22,9 @@ public class AdminAttachmentController {
     private final AttachmentUtilService attachmentUtilService;
 
     @GetMapping("/{attachmentId}")
-    public ResponseEntity<AttachmentRes> getAttachment(@PathVariable Long attachmentId) {
+    public ResponseEntity<Attachment> getAttachment(@PathVariable Long attachmentId) {
         log.debug("Fetching attachment with ID: {}", attachmentId);
-        Attachment attachment = attachmentUtilService.getAttachment(attachmentId);
-        AttachmentRes response = AttachmentRes.builder()
-                .id(attachment.getId())
-                .url(attachment.getUrl())
-                .filename(attachment.getFilename())
-                .contentType(attachment.getContentType())
-                .build();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(attachmentUtilService.getAttachment(attachmentId));
     }
 
     @PostMapping("/upload")
@@ -58,6 +51,13 @@ public class AdminAttachmentController {
     public ResponseEntity<Void> deleteAttachment(@PathVariable Long attachmentId) {
         log.debug("Deleting attachment ID: {}", attachmentId);
         adminAttachmentService.delete(attachmentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/delete-from-base/{attachmentId}")
+    public ResponseEntity<Void> deleteAttachmentFromS3(@PathVariable Long attachmentId) {
+        log.debug("Deleting attachment ID: {}", attachmentId);
+        adminAttachmentService.deleteFromS3(attachmentId);
         return ResponseEntity.noContent().build();
     }
 }

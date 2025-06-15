@@ -130,7 +130,6 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
     @Override
     public void delete(Long attachmentId) {
         Attachment attachment = attachmentUtilService.getAttachment(attachmentId);
-        String key = attachment.getUrl();
 
         try {
             attachment.setActive(false);
@@ -139,10 +138,28 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
             log.error("Failed to soft-delete attachment ID {}: {}", attachmentId, e.getMessage());
             throw new RuntimeException("Unable to soft-delete attachment in database", e);
         }
+    }
 
-        if (key != null) {
-            deleteOldS3File(key);
+    @Transactional
+    @Override
+    public void deleteFromS3(Long attachmentId) {
+        Attachment attachment = attachmentUtilService.getAttachment(attachmentId);
+        String key = attachment.getUrl();
+
+        if (attachment.getActive() || attachment.getUrl().startsWith("deleted_")) {
+            return;
         }
+
+        try {
+            attachment.setUrl("deleted_" + attachment.getUrl());
+            attachment.setActive(false);
+            attachmentRepository.save(attachment);
+        } catch (Exception e) {
+            log.error("Failed to soft-delete attachment ID {}: {}", attachmentId, e.getMessage());
+            throw new RuntimeException("Unable to soft-delete attachment in database", e);
+        }
+
+        deleteOldS3File(key);
     }
 
     private String uploadToS3(MultipartFile file) {

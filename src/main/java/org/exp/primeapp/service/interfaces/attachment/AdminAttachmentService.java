@@ -33,4 +33,6 @@ public interface AdminAttachmentService {
     int getActiveAttachmentsCount();
 
     int getInactiveAttachmentsCount();
+
+    void deleteFromS3(Long attachmentId);
 }
