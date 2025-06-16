@@ -67,10 +67,22 @@ public class AdminAttachmentsController {
         return ResponseEntity.ok(adminAttachmentService.getInactiveAttachmentsCount());
     }
 
+    @GetMapping("/deleted-count")
+    public ResponseEntity<Integer> getDeletedAttachmentsCount() {
+        log.debug("Fetching inactive attachments count");
+        return ResponseEntity.ok(0);
+    }
+
     @GetMapping("/no-linked-with-product")
     public ResponseEntity<List<AttachmentRes>> getAttachmentsNoProduct() {
         log.debug("Fetching all(active+inactive) attachments not linked to products");
         return ResponseEntity.ok(adminAttachmentService.getAttachmentsNoProduct());
+    }
+
+    @GetMapping("/no-linked-with-product/count")
+    public ResponseEntity<Integer> getAttachmentsNoProductCount() {
+        log.debug("Fetching all(active+inactive) attachments not linked to products");
+        return ResponseEntity.ok(adminAttachmentService.getAttachmentsNoProduct().size());
     }
 
     @GetMapping("/active-and-no-linked-with-product")
@@ -83,5 +95,29 @@ public class AdminAttachmentsController {
     public ResponseEntity<List<AttachmentRes>> getInactiveAttachmentsNoProduct() {
         log.debug("Fetching inactive attachments not linked to products");
         return ResponseEntity.ok(adminAttachmentService.getInactiveAttachmentsNoProduct());
+    }
+
+    @GetMapping("/linked-with-product")
+    public ResponseEntity<List<AttachmentRes>> getAttachmentsLinkedWithProduct() {
+        log.debug("Fetching all(active+inactive) attachments linked to products");
+        return ResponseEntity.ok(adminAttachmentService.getAttachmentsLinkedWithProduct());
+    }
+
+    @GetMapping("/linked-with-product/count")
+    public ResponseEntity<Integer> getAttachmentsLinkedWithProductCount() {
+        log.debug("Fetching all(active+inactive) attachments linked to products");
+        return ResponseEntity.ok(adminAttachmentService.getAttachmentsLinkedWithProduct().size());
+    }
+
+    @GetMapping("/active-and-linked-with-product")
+    public ResponseEntity<List<AttachmentRes>> getActiveAttachmentsLinkedWithProduct() {
+        log.debug("Fetching active attachments linked to products");
+        return ResponseEntity.ok(adminAttachmentService.getActiveAttachmentsLinkedWithProduct());
+    }
+
+    @GetMapping("/inactive-and-linked-with-product")
+    public ResponseEntity<List<AttachmentRes>> getInactiveAttachmentsLinkedWithProduct() {
+        log.debug("Fetching inactive attachments not linked to products");
+        return ResponseEntity.ok(adminAttachmentService.getInactiveAttachmentsLinkedWithProduct());
     }
 }

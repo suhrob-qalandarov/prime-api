@@ -26,6 +26,15 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
     @Query("SELECT a FROM Attachment a WHERE a.active = false AND NOT EXISTS (SELECT 1 FROM Product p JOIN p.attachments pa WHERE pa = a)")
     List<Attachment> findAllByActiveFalseAndNotLinkedToProduct();
 
+    @Query("SELECT a FROM Attachment a WHERE EXISTS (SELECT 1 FROM Product p JOIN p.attachments pa WHERE pa = a)")
+    List<Attachment> findAllByLinkedToProduct();
+
+    @Query("SELECT a FROM Attachment a WHERE a.active = true AND EXISTS (SELECT 1 FROM Product p JOIN p.attachments pa WHERE pa = a)")
+    List<Attachment> findAllByActiveTrueAndLinkedToProduct();
+
+    @Query("SELECT a FROM Attachment a WHERE a.active = false AND EXISTS (SELECT 1 FROM Product p JOIN p.attachments pa WHERE pa = a)")
+    List<Attachment> findAllByActiveFalseAndLinkedToProduct();
+
     @Query("SELECT COUNT(a) FROM Attachment a")
     int countAll();
 

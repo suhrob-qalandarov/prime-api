@@ -27,7 +27,7 @@ public class AdminAttachmentController {
         return ResponseEntity.ok(attachmentUtilService.getAttachment(attachmentId));
     }
 
-    @PostMapping("/upload")
+    @PostMapping
     public ResponseEntity<AttachmentRes> uploadFile(@RequestParam("file") MultipartFile file) {
         log.debug("Uploading single file: {}", file.getOriginalFilename());
         Attachment attachment = adminAttachmentService.uploadOne(file);
@@ -44,6 +44,20 @@ public class AdminAttachmentController {
     public ResponseEntity<AttachmentRes> updateFile(@PathVariable Long attachmentId, @RequestParam("file") MultipartFile file) {
         log.debug("Updating attachment ID: {}", attachmentId);
         AttachmentRes response = adminAttachmentService.update(attachmentId, file);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/activate/{attachmentId}")
+    public ResponseEntity<AttachmentRes> activate(@PathVariable Long attachmentId) {
+        log.debug("Updating attachment ID: {}", attachmentId);
+        AttachmentRes response = adminAttachmentService.activateAttachment(attachmentId);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/deactivate/{attachmentId}")
+    public ResponseEntity<AttachmentRes> deactivate(@PathVariable Long attachmentId) {
+        log.debug("Updating attachment ID: {}", attachmentId);
+        AttachmentRes response = adminAttachmentService.deactivateAttachment(attachmentId);
         return ResponseEntity.ok(response);
     }
 

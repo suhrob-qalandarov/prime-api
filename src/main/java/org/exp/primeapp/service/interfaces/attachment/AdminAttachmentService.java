@@ -28,6 +28,12 @@ public interface AdminAttachmentService {
 
     List<AttachmentRes> getInactiveAttachmentsNoProduct();
 
+    List<AttachmentRes> getAttachmentsLinkedWithProduct();
+
+    List<AttachmentRes> getActiveAttachmentsLinkedWithProduct();
+
+    List<AttachmentRes> getInactiveAttachmentsLinkedWithProduct();
+
     int getAllAttachmentsCount();
 
     int getActiveAttachmentsCount();
@@ -35,4 +41,7 @@ public interface AdminAttachmentService {
     int getInactiveAttachmentsCount();
 
     void deleteFromS3(Long attachmentId);
+
+    AttachmentRes activateAttachment(Long attachmentId);
+    AttachmentRes deactivateAttachment(Long attachmentId);
 }

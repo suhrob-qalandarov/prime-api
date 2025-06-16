@@ -59,8 +59,26 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
 
     @Override
     public List<AttachmentRes> getInactiveAttachmentsNoProduct() {
-        List<Attachment> noProduct = attachmentRepository.findAllByActiveTrueAndNotLinkedToProduct();
+        List<Attachment> noProduct = attachmentRepository.findAllByActiveFalseAndNotLinkedToProduct();
         return attachmentUtilService.convertToAttachmentResList(noProduct);
+    }
+
+    @Override
+    public List<AttachmentRes> getAttachmentsLinkedWithProduct() {
+        List<Attachment> linkedToProduct = attachmentRepository.findAllByLinkedToProduct();
+        return attachmentUtilService.convertToAttachmentResList(linkedToProduct);
+    }
+
+    @Override
+    public List<AttachmentRes> getActiveAttachmentsLinkedWithProduct() {
+        List<Attachment> linkedToProduct = attachmentRepository.findAllByActiveTrueAndLinkedToProduct();
+        return attachmentUtilService.convertToAttachmentResList(linkedToProduct);
+    }
+
+    @Override
+    public List<AttachmentRes> getInactiveAttachmentsLinkedWithProduct() {
+        List<Attachment> linkedToProduct = attachmentRepository.findAllByActiveFalseAndLinkedToProduct();
+        return attachmentUtilService.convertToAttachmentResList(linkedToProduct);
     }
 
     @Override
@@ -160,6 +178,24 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
         }
 
         deleteOldS3File(key);
+    }
+
+    @Override
+    public AttachmentRes activateAttachment(Long attachmentId) {
+        Attachment attachment = attachmentRepository.findById(attachmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Attachment not found with ID: " + attachmentId));
+        attachment.setActive(true);
+        Attachment updatedAttachment = attachmentRepository.save(attachment);
+        return attachmentUtilService.convertToAttachmentRes(updatedAttachment);
+    }
+
+    @Override
+    public AttachmentRes deactivateAttachment(Long attachmentId) {
+        Attachment attachment = attachmentRepository.findById(attachmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Attachment not found with ID: " + attachmentId));
+        attachment.setActive(false);
+        Attachment updatedAttachment = attachmentRepository.save(attachment);
+        return attachmentUtilService.convertToAttachmentRes(updatedAttachment);
     }
 
     private String uploadToS3(MultipartFile file) {

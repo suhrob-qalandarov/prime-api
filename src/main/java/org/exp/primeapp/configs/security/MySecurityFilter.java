@@ -36,7 +36,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = extractToken(request);
+        /*String token = extractToken(request);
 
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
@@ -63,7 +63,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
                 log.error("Invalid token: {}", e.getMessage());
             }
         }
-
+        */
         filterChain.doFilter(request, response);
     }
     private String extractToken(HttpServletRequest request) {
