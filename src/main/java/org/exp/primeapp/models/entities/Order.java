@@ -27,9 +27,8 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    private String shippingAddress;
 
-    private BigDecimal totalAmount;
+    private Integer totalPrice;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items = new ArrayList<>();
