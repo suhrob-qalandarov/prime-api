@@ -1,11 +1,13 @@
 package org.exp.primeapp.models.dto.responce;
 
-import lombok.Value;
+import lombok.Builder;
 
-@Value
-public class UserRes {
-    String firstName;
-    String lastName;
-    String email;
-    String phone;
+@Builder
+public record UserRes(
+        Long id,
+        String firstName,
+        String lastName,
+        String email,
+        String phone) {
+
 }

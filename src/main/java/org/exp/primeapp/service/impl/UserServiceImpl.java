@@ -3,6 +3,7 @@ package org.exp.primeapp.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.UserReq;
 import org.exp.primeapp.models.dto.request.UserUpdateReq;
+import org.exp.primeapp.models.dto.responce.ApiResponse;
 import org.exp.primeapp.models.dto.responce.UserRes;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
@@ -32,21 +33,22 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Password and confirm password do not match");
         }
 
+        User user = User.builder()
+                .firstName(userReq.getFirstName())
+                .lastName(userReq.getLastName())
+                .email(userReq.getEmail())
+                .password(passwordEncoder.encode(userReq.getPassword()))
+                .phone(userReq.getPhone())
+                .build();
 
-            User user = User.builder()
-                    .firstName(userReq.getFirstName())
-                    .lastName(userReq.getLastName())
-                    .email(userReq.getEmail())
-                    .password(passwordEncoder.encode(userReq.getPassword()))
-                    .phone(userReq.getPhone())
-                    .build();
 
-
-        checkUserIs_ActiveAndRolesAndUse(userReq.get_active(), user, userReq.getRole_ids());
+        checkUserActiveAndRolesAndUse(userReq.get_active(), user, userReq.getRole_ids());
 
 
         User savedUser = userRepository.save(user);
-        return new UserRes(savedUser.getFirstName(),
+        return new UserRes(
+                savedUser.getId(),
+                savedUser.getFirstName(),
                 savedUser.getLastName(),
                 savedUser.getEmail(),
                 savedUser.getPhone());
@@ -54,21 +56,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserRes> getAllUsers() {
-            List<User> users = userRepository.findAll();
-            return users.stream()
-                    .map(user -> new UserRes(
-                            user.getFirstName(),
-                            user.getLastName(),
-                            user.getEmail(),
-                            user.getPhone()
-                    ))
-                    .collect(Collectors.toList());
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> new UserRes(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail(),
+                        user.getPhone()
+                ))
+                .collect(Collectors.toList());
     }
 
     @Override
     public UserRes getByUserId(Long userId) {
         User foundUser = userRepository.findById(userId).orElseThrow(RuntimeException::new);
-        return new UserRes(foundUser.getFirstName(),
+        return new UserRes(
+                foundUser.getId(),
+                foundUser.getFirstName(),
                 foundUser.getLastName(),
                 foundUser.getEmail(),
                 foundUser.getPhone());
@@ -76,7 +81,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserRes updateUser(Long user_id, UserUpdateReq userReq) {
+    public ApiResponse updateUser(Long user_id, UserUpdateReq userReq) {
         User user = User.builder()
                 .firstName(userReq.getFirstName())
                 .lastName(userReq.getLastName())
@@ -84,13 +89,11 @@ public class UserServiceImpl implements UserService {
                 .phone(userReq.getPhone())
                 .build();
 
-        checkUserIs_ActiveAndRolesAndUse(userReq.get_active(), user, userReq.getRole_ids());
+        checkUserActiveAndRolesAndUse(userReq.get_active(), user, userReq.getRole_ids());
 
-        User savedUser = userRepository.save(user);
-        return new UserRes(savedUser.getFirstName(),
-                savedUser.getLastName(),
-                savedUser.getEmail(),
-                savedUser.getPhone());
+        userRepository.save(user);
+        return new ApiResponse(true, "User updated successfully");
+
     }
 
     @Transactional
@@ -99,7 +102,39 @@ public class UserServiceImpl implements UserService {
         userRepository.findById(userId).ifPresent(user -> user.setActive(false));
     }
 
-    private void checkUserIs_ActiveAndRolesAndUse(Boolean userReq, User user, List<Long> userReq1) {
+    @Override
+    public UserRes getByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return UserRes.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .build();
+    }
+
+    @Override
+    public ApiResponse activateUser(Long userId) {
+        int updated = userRepository.updateActive(true, userId);
+        if (updated > 0) {
+            return new ApiResponse(true, "Product activated successfully");
+        } else {
+            return new ApiResponse(false, "Product not found with id or already active");
+        }
+    }
+
+    @Override
+    public ApiResponse deactivateUser(Long userId) {
+        int updated = userRepository.updateActive(false, userId);
+        if (updated > 0) {
+            return new ApiResponse(true, "Product activated successfully");
+        } else {
+            return new ApiResponse(false, "Product not found with id or already active");
+        }
+    }
+
+    private void checkUserActiveAndRolesAndUse(Boolean userReq, User user, List<Long> userReq1) {
         user.setActive(Objects.requireNonNullElse(userReq, true));
 
         if (userReq1 == null) {
