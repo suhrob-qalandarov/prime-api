@@ -18,6 +18,8 @@ public interface Const {
     String REFRESH = "/refresh";
 
     String ADMIN = "/admin";
+    String USER = "/user";
+    String USERS = "/users";
 
     String CATEGORY = "/category";
     String CATEGORIES = "/categories";

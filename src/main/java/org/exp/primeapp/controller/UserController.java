@@ -30,15 +30,16 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/admin/{user_id}")
+    @GetMapping("/{user_id}")
     public ResponseEntity<UserRes> getUser(@PathVariable Long user_id) {
-        UserRes user=userService.getByUserId(user_id);
+        UserRes user = userService.getByUserId(user_id);
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/{user_id}")
-    public ResponseEntity<UserRes> updateUser(@PathVariable Long user_id,@RequestBody UserUpdateReq userReq) {
-        UserRes user=userService.updateUser(user_id,userReq);
+
+    @GetMapping("/{email}")
+    public ResponseEntity<UserRes> getUser(@PathVariable String email) {
+        UserRes user = userService.getByEmail(email);
         return ResponseEntity.ok(user);
     }
 
