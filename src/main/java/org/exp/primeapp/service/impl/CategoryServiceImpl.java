@@ -114,6 +114,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<Category> getAll() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
     public List<CategoryRes> getInactiveCategories() {
         return categoryRepository.findByActive(false).stream()
                 .map(category -> new CategoryRes(

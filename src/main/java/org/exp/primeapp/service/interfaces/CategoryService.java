@@ -29,4 +29,5 @@ public interface CategoryService {
 
     Category getCategoryByIdForAdmin(Long categoryId);
 
+    List<Category> getAll();
 }
