@@ -100,12 +100,6 @@
                     <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
                 </svg>
             </a>
-            <a href="#" class="mobile-header-icon" id="mobileCartIcon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                    <path d="M239.89,198.12l-14.26-120a16,16,0,0,0-16-14.12H176a48,48,0,0,0-96,0H46.33a16,16,0,0,0-16,14.12l-14.26,120A16,16,0,0,0,20,210.6a16.13,16.13,0,0,0,12,5.4H223.92A16.13,16.13,0,0,0,236,210.6,16,16,0,0,0,239.89,198.12ZM128,32a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32ZM32,200,46.33,80H80v24a8,8,0,0,0,16,0V80h64v24a8,8,0,0,0,16,0V80h33.75l14.17,120Z"></path>
-                </svg>
-                <span class="badge" id="mobileCartBadge">0</span>
-            </a>
         </div>
     </div>
 </div>
@@ -178,22 +172,22 @@
         <!-- 3D Product Showcase -->
         <div class="product-showcase">
             <div class="product-item product-polo" data-product="polo">
-                <img src="images/polo-t-shirt.png" alt="Polo Shirt">
+                <img src="/images/polo-t-shirt.png" alt="Polo Shirt">
             </div>
             <div class="product-item product-cap" data-product="cap">
-                <img src="images/polo-cap.png" alt="Baseball Cap">
+                <img src="/images/polo-cap.png" alt="Baseball Cap">
             </div>
             <div class="product-item product-watch" data-product="watch">
-                <img src="images/polo-watch.png" alt="Watch">
+                <img src="/images/polo-watch.png" alt="Watch">
             </div>
             <div class="product-item product-pants" data-product="pants">
-                <img src="images/polo-pants.png" alt="Pants">
+                <img src="/images/polo-pants.png" alt="Pants">
             </div>
             <div class="product-item product-wallet" data-product="wallet">
-                <img src="images/polo-wallet.png" alt="Wallet">
+                <img src="/images/polo-wallet.png" alt="Wallet">
             </div>
             <div class="product-item product-shoes" data-product="shoes">
-                <img src="images/polo-sneakers.png" alt="Shoes">
+                <img src="/images/polo-sneakers.png" alt="Shoes">
             </div>
         </div>
     </div>
@@ -216,9 +210,6 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
-                <div class="product-thumbnails-container" id="quickViewThumbnails">
-                    <!-- Thumbnails will be populated by JavaScript -->
-                </div>
             </div>
 
             <!-- Right side - Product Info -->
@@ -233,6 +224,10 @@
                 </div>
 
                 <p class="product-description" id="quickViewDescription"></p>
+
+                <div class="product-thumbnails-container" id="quickViewThumbnails">
+                    <!-- Thumbnails will be populated by JavaScript -->
+                </div>
 
                 <!-- Size Selection -->
                 <div class="size-selection" id="sizeSelectionContainer">
@@ -279,38 +274,13 @@
     </div>
 </div>
 
-<!-- Product Modal (Desktop Only) -->
-<div class="product-modal" id="productModal">
-    <div class="modal-content">
-        <button class="modal-close" id="modalClose">&times;</button>
-        <div class="modal-product-display">
-            <div class="modal-image">
-                <img id="modalImage" src="/placeholder.svg" alt="">
-            </div>
-            <div class="modal-info">
-                <h2 class="modal-title" id="modalTitle"></h2>
-                <p class="modal-description" id="modalDescription"></p>
-                <a href="#" class="btn-custom">Ko'rish</a>
-            </div>
-        </div>
-        <div class="modal-navigation">
-            <button class="nav-btn" id="prevProduct">
-                <i class="fas fa-chevron-left"></i> Oldingi
-            </button>
-            <button class="nav-btn" id="nextProduct">
-                Keyingi <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-    </div>
-</div>
-
 <!-- Categories Section -->
 <section class="category-section">
     <div class="container-fluid px-0">
         <div class="row g-0">
             <div class="col-lg-3 col-md-6 col-6">
                 <div class="category-card">
-                    <img src="images/clothes.jpeg" alt="Ko'ylaklar" class="category-img">
+                    <img src="/images/clothes.jpeg" alt="Ko'ylaklar" class="category-img">
                     <div class="category-overlay">
                         <h3 class="category-title">KO'YLAKLAR</h3>
                     </div>
@@ -318,7 +288,7 @@
             </div>
             <div class="col-lg-3 col-md-6 col-6">
                 <div class="category-card">
-                    <img src="images/jens.jpeg" alt="Shimlar" class="category-img">
+                    <img src="/images/jens.jpeg" alt="Shimlar" class="category-img">
                     <div class="category-overlay">
                         <h3 class="category-title">SHIMLAR</h3>
                     </div>
@@ -326,7 +296,7 @@
             </div>
             <div class="col-lg-3 col-md-6 col-6">
                 <div class="category-card">
-                    <img src="images/mens-shoes.jpeg" alt="Poyabzallar" class="category-img">
+                    <img src="/images/mens-shoes.jpeg" alt="Poyabzallar" class="category-img">
                     <div class="category-overlay">
                         <h3 class="category-title">POYABZALLAR</h3>
                     </div>
@@ -334,7 +304,7 @@
             </div>
             <div class="col-lg-3 col-md-6 col-6">
                 <div class="category-card">
-                    <img src="images/accessors.jpeg" alt="Aksessuarlar" class="category-img">
+                    <img src="/images/accessors.jpeg" alt="Aksessuarlar" class="category-img">
                     <div class="category-overlay">
                         <h3 class="category-title">AKSESSUARLAR</h3>
                     </div>
@@ -355,7 +325,7 @@
         <div class="products-container">
             <!-- Main Product Image -->
             <div class="main-product">
-                <img src="images/full-collection.jpeg" alt="Main Product" class="main-product-image">
+                <img src="/images/full-collection.jpeg" alt="Main Product" class="main-product-image">
             </div>
 
             <!-- Products Grid - 6 Products -->
@@ -366,7 +336,7 @@
                         <div class="discount-banner">
                             <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 19% 🔥   "></div>
                         </div>
-                        <img src="images/polo-cap.png" alt="Kepka" class="product-image">
+                        <img src="/images/polo-cap.png" alt="Kepka" class="product-image">
                         <div class="quick-view-overlay">
                             <span class="quick-view-text">QUICK VIEW</span>
                         </div>
@@ -378,8 +348,8 @@
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Kepka</h3>
                         <div class="product-thumbnails">
-                            <img src="images/polo-cap.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="images/polo-cap.png" alt="Thumbnail 2" class="product-thumbnail">
+                            <img src="/images/polo-cap.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="/images/polo-cap.png" alt="Thumbnail 2" class="product-thumbnail">
                         </div>
                         <div class="product-pricing">
                             <span class="current-price">129 000 So'm</span>
@@ -395,7 +365,7 @@
                         <div class="discount-banner">
                             <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 27% 🔥   "></div>
                         </div>
-                        <img src="images/shopper.png" alt="Shopper" class="product-image">
+                        <img src="/images/shopper.png" alt="Shopper" class="product-image">
                         <div class="quick-view-overlay">
                             <span class="quick-view-text">QUICK VIEW</span>
                         </div>
@@ -407,8 +377,8 @@
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Shopper</h3>
                         <div class="product-thumbnails">
-                            <img src="images/shopper.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="images/shopper.png" alt="Thumbnail 2" class="product-thumbnail">
+                            <img src="/images/shopper.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="/images/shopper.png" alt="Thumbnail 2" class="product-thumbnail">
                         </div>
                         <div class="product-pricing">
                             <span class="current-price">109 000 So'm</span>
@@ -424,7 +394,7 @@
                         <div class="discount-banner">
                             <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 25% 🔥   "></div>
                         </div>
-                        <img src="images/watch-2.png" alt="Soat" class="product-image">
+                        <img src="/images/watch-2.png" alt="Soat" class="product-image">
                         <div class="quick-view-overlay">
                             <span class="quick-view-text">QUICK VIEW</span>
                         </div>
@@ -436,8 +406,8 @@
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Soat</h3>
                         <div class="product-thumbnails">
-                            <img src="images/watch-2.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="images/polo-watch.png" alt="Thumbnail 2" class="product-thumbnail">
+                            <img src="/images/watch-2.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="/images/polo-watch.png" alt="Thumbnail 2" class="product-thumbnail">
                         </div>
                         <div class="product-pricing">
                             <span class="current-price">299 000 So'm</span>
@@ -453,7 +423,7 @@
                         <div class="discount-banner">
                             <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 26% 🔥   "></div>
                         </div>
-                        <img src="images/polo-wallet.png" alt="Hamyon" class="product-image">
+                        <img src="/images/polo-wallet.png" alt="Hamyon" class="product-image">
                         <div class="quick-view-overlay">
                             <span class="quick-view-text">QUICK VIEW</span>
                         </div>
@@ -465,8 +435,8 @@
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Hamyon</h3>
                         <div class="product-thumbnails">
-                            <img src="images/polo-wallet.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="images/polo-wallet.png" alt="Thumbnail 2" class="product-thumbnail">
+                            <img src="/images/polo-wallet.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="/images/polo-wallet.png" alt="Thumbnail 2" class="product-thumbnail">
                         </div>
                         <div class="product-pricing">
                             <span class="current-price">89 000 So'm</span>
@@ -482,7 +452,7 @@
                         <div class="discount-banner">
                             <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 20% 🔥   "></div>
                         </div>
-                        <img src="images/polo-sneakers.png" alt="Krossovka" class="product-image">
+                        <img src="/images/polo-sneakers.png" alt="Krossovka" class="product-image">
                         <div class="quick-view-overlay">
                             <span class="quick-view-text">QUICK VIEW</span>
                         </div>
@@ -494,8 +464,8 @@
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Krossovka</h3>
                         <div class="product-thumbnails">
-                            <img src="images/polo-sneakers.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="images/polo-sneakers.png" alt="Thumbnail 2" class="product-thumbnail">
+                            <img src="/images/polo-sneakers.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="/images/polo-sneakers.png" alt="Thumbnail 2" class="product-thumbnail">
                         </div>
                         <div class="product-pricing">
                             <span class="current-price">399 000 So'm</span>
@@ -511,7 +481,7 @@
                         <div class="discount-banner">
                             <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 20% 🔥   "></div>
                         </div>
-                        <img src="images/hero-badge.jpg" alt="T-shirt" class="product-image">
+                        <img src="/images/bmw-t-shirt.jpg" alt="T-shirt" class="product-image">
                         <div class="quick-view-overlay">
                             <span class="quick-view-text">QUICK VIEW</span>
                         </div>
@@ -523,8 +493,8 @@
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">T-shirt</h3>
                         <div class="product-thumbnails">
-                            <img src="images/hero-badge.jpg" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="images/polo-t-shirt.png" alt="Thumbnail 2" class="product-thumbnail">
+                            <img src="/images/bmw-t-shirt.jpg" alt="Thumbnail 2" class="product-thumbnail">
+                            <img src="/images/hero-badge.jpg" alt="Thumbnail 1" class="product-thumbnail">
                         </div>
                         <div class="product-pricing">
                             <span class="current-price">199 000 So'm</span>
@@ -537,6 +507,41 @@
         </div>
     </div>
 </section>
+
+<!-- Mobile Bottom Navigation (Mobile Only) -->
+<div class="mobile-bottom-nav">
+    <div class="bottom-nav-item" id="categoriesBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+            <path d="M3 9h18"></path>
+            <path d="M3 15h18"></path>
+            <path d="M9 3v18"></path>
+            <path d="M15 3v18"></path>
+        </svg>
+        <span>Kategoriyalar</span>
+    </div>
+    <div class="bottom-nav-item" id="mobileBottomCartBtn">
+        <div class="bottom-nav-icon-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                <path d="M3 6h18"></path>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <div class="bottom-nav-badge" id="bottomNavCartBadge">0</div>
+        </div>
+        <span>Savat</span>
+    </div>
+    <div class="bottom-nav-item" id="searchBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+            <path
+                    d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z">
+            </path>
+        </svg>
+        <span>Qidirish</span>
+    </div>
+</div>
 
 <!-- Footer -->
 <footer class="footer">
@@ -582,8 +587,8 @@
                     <div class="payment-methods">
                         <span>To'lov turlari:</span>
                         <div class="payment-images">
-                            <img src="images/click.webp" alt="Click" />
-                            <img src="images/payme.webp" alt="Payme" />
+                            <img src="/images/click.webp" alt="Click" />
+                            <img src="/images/payme.webp" alt="Payme" />
                         </div>
                     </div>
                 </div>
