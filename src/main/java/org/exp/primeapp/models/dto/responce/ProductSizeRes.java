@@ -5,6 +5,6 @@ import org.exp.primeapp.models.enums.Size;
 
 @Value
 public class ProductSizeRes {
-    Size sizes;
+    Size size;
     Integer amount;
 }

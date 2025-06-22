@@ -1,0 +1,2558 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime77 - Erkaklar Kiyimi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ======================================================
+           GLOBAL STYLES
+        ====================================================== */
+        :root {
+            --primary-color: #232526;
+            --secondary-color: #3b3f41;
+            --accent-color: #f8f9fb;
+            --text-color: #232526;
+            --light-color: #F5F5DC;
+            --border-color: #e9ecef;
+            --hover-color: #3b3f41;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --transition: all 0.3s ease;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            --gradient-accent: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --burgundy-color: #8B1538;
+            --burgundy-light: #A01B47;
+            --burgundy-dark: #6B0F2A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: "Montserrat", sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+            background-color: #F5F5DC;
+            line-height: 1.6;
+        }
+
+        .container-custom {
+            padding-left: 200px;
+            padding-right: 200px;
+        }
+
+        /* ======================================================
+           HEADER STYLES - DESKTOP
+        ====================================================== */
+        .top-header {
+            background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
+            color: #F5F5DC;
+            padding: 12px 0;
+            font-size: 14px;
+        }
+
+        .top-header a {
+            color: #F5F5DC;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .top-header a:hover {
+            color: #F5F5DC;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .social-icons a {
+            font-size: 16px;
+        }
+
+        .main-header {
+            background: transparent;
+            padding: 20px 0;
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            z-index: 1020;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+
+        .main-header.scrolled-up {
+            padding: 8px 0;
+            background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
+            backdrop-filter: blur(10px);
+            box-shadow: var(--box-shadow);
+            position: fixed;
+            top: 0;
+            transform: translateY(0);
+        }
+
+        .main-header.scrolled-down {
+            transform: translateY(-100%);
+            position: fixed;
+            top: 0;
+        }
+
+        .navbar-nav {
+            margin-left: -120px;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--burgundy-dark);
+            font-weight: 600;
+            padding: 5px 20px;
+            position: relative;
+            transition: var(--transition);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .main-header.scrolled-up .navbar-nav .nav-link {
+            color: var(--light-color);
+            text-shadow: none;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--burgundy-dark);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .main-header.scrolled-up .navbar-nav .nav-link::after {
+            background: var(--light-color);
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 70%;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #000000;
+        }
+
+        .main-header.scrolled-up .navbar-nav .nav-link:hover {
+            color: black;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-icon {
+            color: var(--burgundy-dark);
+            text-decoration: none;
+            cursor: pointer;
+            padding: 8px;
+            position: relative;
+        }
+
+        .header-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        .header-separator {
+            color: var(--burgundy-dark);
+            font-size: 20px;
+            margin: 0 5px;
+        }
+
+        .main-header.scrolled-up .header-separator {
+            color: var(--light-color);
+        }
+
+        /* FIXED: Cart badge positioning and styling */
+        .header-icon .badge {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border: 2px solid var(--light-color);
+            min-width: 18px;
+            line-height: 1;
+        }
+
+        .main-header.scrolled-up .header-icon {
+            color: var(--light-color);
+        }
+
+        /* ======================================================
+           3D HERO SHOWCASE STYLES
+        ====================================================== */
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            height: 650px;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            background: #F5F5DC;
+        }
+
+        .hero-3d-showcase {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .hero-content {
+            position: absolute;
+            left: 220px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            max-width: 500px;
+            color: white;
+        }
+
+        .hero-title {
+            font-size: 2.6rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--burgundy-color);
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero-text {
+            font-size: 18px;
+            margin-bottom: 35px;
+            color: var(--burgundy-color);
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .product-showcase {
+            position: absolute;
+            right: 250px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 600px;
+            height: 500px;
+        }
+
+        .product-item {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+        }
+
+        .product-item:hover {
+            transform: scale(1.1) translateZ(20px);
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+            z-index: 5;
+        }
+
+        .product-item.selected {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.8));
+            z-index: 6;
+        }
+
+        .product-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: transparent;
+        }
+
+        /* Product positioning */
+        .product-polo {
+            top: 20px;
+            left: 40px;
+            width: 200px;
+            height: 200px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .product-cap {
+            top: 80px;
+            right: 80px;
+            width: 120px;
+            height: 120px;
+            animation: float 3s ease-in-out infinite 0.5s;
+        }
+
+        .product-watch {
+            top: 250px;
+            right: 50px;
+            width: 100px;
+            height: 100px;
+            animation: float 3s ease-in-out infinite 1s;
+        }
+
+        .product-pants {
+            bottom: 80px;
+            left: 20px;
+            width: 150px;
+            height: 180px;
+            animation: float 3s ease-in-out infinite 1.5s;
+        }
+
+        .product-wallet {
+            top: 200px;
+            left: 230px;
+            width: 80px;
+            height: 60px;
+            animation: float 3s ease-in-out infinite 2s;
+        }
+
+        .product-shoes {
+            bottom: 50px;
+            right: 250px;
+            width: 140px;
+            height: 100px;
+            animation: float 3s ease-in-out infinite 2.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ======================================================
+           ENHANCED QUICK VIEW MODAL STYLES
+        ====================================================== */
+        .quick-view-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .quick-view-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .quick-view-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 1100px;
+            width: 95%;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quick-view-modal.show .quick-view-content {
+            transform: scale(1);
+        }
+
+        .quick-view-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .quick-view-close:hover {
+            background: white;
+            color: var(--burgundy-color);
+            transform: scale(1.1);
+        }
+
+        .quick-view-body {
+            display: flex;
+            padding: 40px;
+            gap: 40px;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        /* Left side - Product Images */
+        .quick-view-images {
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-product-image-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-product-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .image-navigation {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--burgundy-color);
+            transition: var(--transition);
+            opacity: 0;
+        }
+
+        .main-product-image-container:hover .image-navigation {
+            opacity: 1;
+        }
+
+        .image-navigation:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .image-nav-prev {
+            left: 10px;
+        }
+
+        .image-nav-next {
+            right: 10px;
+        }
+
+        .product-thumbnails-container {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .product-thumbnails-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .product-thumbnails-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .product-thumbnails-container::-webkit-scrollbar-thumb {
+            background: var(--burgundy-color);
+            border-radius: 3px;
+        }
+
+        .product-thumbnail-large {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            cursor: pointer;
+            transition: var(--transition);
+            background: white;
+            padding: 5px;
+            flex-shrink: 0;
+        }
+
+        .product-thumbnail-large:hover,
+        .product-thumbnail-large.active {
+            border-color: var(--burgundy-color);
+            transform: scale(1.05);
+        }
+
+        /* Right side - Product Info */
+        .quick-view-info {
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .product-category-badge {
+            display: inline-block;
+            background: var(--burgundy-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+
+        .product-price-section {
+            margin-bottom: 25px;
+        }
+
+        .product-current-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--burgundy-color);
+            margin-right: 15px;
+        }
+
+        .product-original-price {
+            font-size: 1.2rem;
+            color: #999;
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+
+        .product-discount-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .product-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Size Selection */
+        .size-selection {
+            margin-bottom: 25px;
+        }
+
+        .selection-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-color);
+        }
+
+        .size-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .size-option {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .size-option:hover,
+        .size-option.selected {
+            border-color: var(--burgundy-color);
+            background: var(--burgundy-color);
+            color: white;
+        }
+
+        .size-option.unavailable {
+            background: #f5f5f5;
+            color: #ccc;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .size-option.unavailable::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: #ccc;
+            transform: translateY(-50%) rotate(45deg);
+        }
+
+        /* Quantity and Add to Cart */
+        .quantity-cart-section {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #f8f9fa;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .quantity-btn:hover {
+            background: var(--burgundy-color);
+            color: white;
+        }
+
+        .quantity-input {
+            width: 60px;
+            height: 40px;
+            border: none;
+            text-align: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .add-to-cart-btn {
+            flex: 1;
+            background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 21, 56, 0.3);
+        }
+
+        /* Product Features */
+        .product-features {
+            border-top: 1px solid #e9ecef;
+            padding-top: 20px;
+            margin-top: auto;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .feature-icon {
+            color: var(--burgundy-color);
+            font-size: 16px;
+        }
+
+        /* Modal Styles */
+        .product-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .product-modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-product-display {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .modal-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .modal-image img {
+            max-width: 300px;
+            max-height: 300px;
+            object-fit: contain;
+        }
+
+        .modal-info {
+            flex: 1;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .modal-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .modal-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-btn {
+            background: var(--burgundy-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            background: var(--burgundy-light);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Button Styles */
+        .btn-custom {
+            background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
+            color: var(--light-color);
+            border: none;
+            padding: 15px 35px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-custom:hover {
+            color: var(--light-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(139, 21, 56, 0.4);
+        }
+
+        /* ======================================================
+           CATEGORY STYLES
+        ====================================================== */
+        .category-section {
+            padding: 0;
+            margin-top: -58px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-top: 80px;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title h2::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
+            border-radius: 2px;
+        }
+
+        .category-card {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 60px;
+            box-shadow: none;
+            transition: var(--transition);
+            height: 290px;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+        .category-card:hover {
+            box-shadow: var(--hover-shadow);
+        }
+
+        .category-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .category-card:hover .category-img {
+            transform: scale(1.2);
+        }
+
+        .category-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            transition: var(--transition);
+        }
+
+        .category-title {
+            color: #F5F5DC;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin: 0;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        /* ======================================================
+           DISCOUNT BANNER ANIMATION - FIXED CONTINUOUS MARQUEE
+        ====================================================== */
+        .discount-banner {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            height: 25px;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .discount-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            color: red;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            animation: marqueeScroll 20s linear infinite;
+            width: max-content;
+        }
+
+        .discount-text::before {
+            content: attr(data-text);
+            padding-right: 100px;
+        }
+
+        .discount-text::after {
+            content: attr(data-text);
+            padding-right: 100px;
+        }
+
+        @keyframes marqueeScroll {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* ======================================================
+           PRODUCTS SECTION STYLES - FIXED DYNAMIC GRID LAYOUT
+        ====================================================== */
+        .products-section {
+            padding: 80px 0;
+            background: #F5F5DC;
+        }
+
+        .products-container {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        /* Main product */
+        .main-product {
+            flex: 1.2;
+            max-width: 500px;
+        }
+
+        .main-product-image {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+        }
+
+        /* FIXED: Dynamic Grid layout based on product count */
+        .products-grid {
+            flex: 1;
+            display: grid;
+            gap: 20px 15px;
+            row-gap: 60px;
+            max-width: 600px;
+        }
+
+        /* 2 products: side by side, same size */
+        .products-grid.grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: 1fr;
+        }
+
+        /* 3 products: 2 top same size, 1 bottom centered same size */
+        .products-grid.grid-3 {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .products-grid.grid-3 .product-card:nth-child(3) {
+            grid-column: 1 / 3;
+            justify-self: center;
+            width: calc(50% - 7.5px);
+        }
+
+        /* 4 products: 2x2 */
+        .products-grid.grid-4 {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+
+        /* 6 products: 3x2 */
+        .products-grid.grid-6 {
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+        }
+
+        /* UPDATED: Product card styling */
+        .product-card {
+            position: relative;
+            background: transparent;
+            border-radius: 0;
+            overflow: visible;
+            box-shadow: none;
+            transition: none;
+            cursor: pointer;
+            height: fit-content;
+        }
+
+        .product-card:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* UPDATED: Image container with discount banner */
+        .product-image-container {
+            position: relative;
+            height: 190px;
+            width: 100%;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+        /* UPDATED: Image without cropping */
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: none;
+            background: white;
+            padding: 5px;
+        }
+
+        .product-card:hover .product-image {
+            transform: none;
+        }
+
+        /* UPDATED: Quick view button - Desktop only */
+        .quick-view-overlay {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .product-card:hover .quick-view-overlay {
+            bottom: 10px;
+            opacity: 1;
+        }
+
+        .quick-view-text {
+            color: #F5F5DC;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--burgundy-light);
+            padding: 6px 12px;
+            border-radius: 15px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        /* Mobile Eye Icon - UPDATED */
+        .mobile-quick-view-icon {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 35px;
+            height: 35px;
+            background: #F5F5DC;
+            color: var(--burgundy-light);
+            border: none;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .mobile-quick-view-icon:hover {
+            background: #F5F5DC;
+            transform: scale(1.1);
+        }
+
+        .mobile-quick-view-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* UPDATED: Product info with fixed positioning */
+        .product-info {
+            padding: 0;
+            text-align: left;
+            position: relative;
+            min-height: 80px;
+        }
+
+        .product-category {
+            color: #999;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 0;
+            color: var(--text-color);
+            transition: var(--transition);
+            line-height: 1.2;
+        }
+
+        /* UPDATED: Thumbnails - Desktop only, hidden on mobile */
+        .product-thumbnails {
+            position: absolute;
+            top: 60%;
+            left: 0;
+            display: flex;
+            gap: 4px;
+            margin: 6px 0 0 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .product-card:hover .product-thumbnails {
+            opacity: 1;
+        }
+
+        .product-thumbnail {
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .product-thumbnail:hover {
+            border-color: var(--burgundy-color);
+        }
+
+        /* UPDATED: Price positioning adjusted for thumbnails on desktop */
+        .product-pricing {
+            position: absolute;
+            top: 60%;
+            left: 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+            transition: all 0.2s ease;
+            margin-top: 0;
+        }
+
+        .product-card:hover .product-pricing {
+            margin-top: 30px;
+        }
+
+        .current-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--burgundy-color);
+        }
+
+        .original-price {
+            font-size: 12px;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .discount-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        /* ======================================================
+           FOOTER STYLES
+        ====================================================== */
+        .footer {
+            background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
+            color: #F5F5DC;
+            padding: 60px 0 10px;
+        }
+
+        .footer-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            position: relative;
+            padding-bottom: 8px;
+            color: #F5F5DC;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 5px;
+        }
+
+        .footer-links a {
+            color: #F5F5DC;
+            text-decoration: none;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .footer-links a:hover {
+            color: #F5F5DC;
+            opacity: 1;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #F5F5DC;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .social-link i {
+            font-size: 14px;
+            width: 20px;
+        }
+
+        .social-link:hover {
+            color: #F5F5DC;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(245, 245, 220, 0.2);
+            padding-top: 10px;
+            margin-top: 60px;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+            color: #F5F5DC;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .payment-methods {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .payment-methods span {
+            color: #F5F5DC;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .payment-images {
+            display: flex;
+            gap: 8px;
+        }
+
+        .payment-methods img {
+            height: 17px;
+            width: auto;
+        }
+
+        /* ======================================================
+           RESPONSIVE STYLES
+        ====================================================== */
+        @media (max-width: 768px) {
+            .container-custom {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .products-container {
+                flex-direction: column;
+            }
+
+            .main-product {
+                max-width: 100%;
+            }
+
+            .main-product-image {
+                height: 400px;
+            }
+
+            .products-grid.grid-2,
+            .products-grid.grid-3,
+            .products-grid.grid-4,
+            .products-grid.grid-6 {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 100%;
+            }
+
+            .products-grid.grid-3 .product-card:nth-child(3) {
+                grid-column: 1 / 3;
+                width: calc(50% - 7.5px);
+            }
+
+            .product-card {
+                max-width: 100%;
+            }
+
+            /* Hide desktop quick view on mobile */
+            .quick-view-overlay {
+                display: none !important;
+            }
+
+            /* Show mobile eye icon */
+            .mobile-quick-view-icon {
+                display: flex !important;
+            }
+
+            .quick-view-body {
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .quick-view-images,
+            .quick-view-info {
+                max-width: 100%;
+            }
+
+            .main-product-image-container {
+                height: 300px;
+            }
+
+            .quantity-cart-section {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+
+            .product-thumbnails-container {
+                justify-content: center;
+            }
+
+            /* Hide thumbnails on mobile */
+            .product-thumbnails {
+                display: none !important;
+            }
+
+            /* Reset price positioning on mobile */
+            .product-card:hover .product-pricing {
+                margin-top: 0;
+            }
+
+            /* Mobile hero adjustments */
+            .hero-content {
+                left: 20px;
+                max-width: 300px;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .product-showcase {
+                right: 20px;
+                width: 300px;
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Header - Desktop Only -->
+<div class="top-header d-none d-md-block">
+    <div class="container-custom">
+        <div class="row align-items-center">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
+                <div class="d-flex align-items-center justify-content-end">
+                    <div class="social-icons me-4">
+                        <a href="#"><i class="fab fa-telegram-plane"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    <div>
+                        <i class="fas fa-phone-alt me-2"></i>
+                        <a href="tel:+998901234567">+998 90 123 45 67</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Header - Desktop Only -->
+<header class="main-header d-none d-md-block" id="main-header">
+    <div class="container-custom">
+        <div class="row align-items-center">
+            <div class="col-lg-3">
+                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: var(--burgundy-dark);">PRIME<span style="color: #ff6b6b">77</span></h1>
+            </div>
+            <div class="col-lg-6">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="collapse navbar-collapse justify-content-start">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">KATALOG</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">BIZ HAQIMIZDA</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">KONTAKTLAR</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-lg-3">
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="header-icons">
+                        <a href="#" class="header-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
+                            </svg>
+                        </a>
+                        <span class="header-separator">|</span>
+                        <a href="#" class="header-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
+                            </svg>
+                        </a>
+                        <div class="position-relative">
+                            <a href="#" class="header-icon" id="cartIcon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M239.89,198.12l-14.26-120a16,16,0,0,0-16-14.12H176a48,48,0,0,0-96,0H46.33a16,16,0,0,0-16,14.12l-14.26,120A16,16,0,0,0,20,210.6a16.13,16.13,0,0,0,12,5.4H223.92A16.13,16.13,0,0,0,236,210.6,16,16,0,0,0,239.89,198.12ZM128,32a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32ZM32,200,46.33,80H80v24a8,8,0,0,0,16,0V80h64v24a8,8,0,0,0,16,0V80h33.75l14.17,120Z"></path>
+                                </svg>
+                                <span class="badge" id="cartBadge">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- 3D Hero Showcase Section -->
+<section class="hero-section">
+    <div class="hero-3d-showcase">
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <h1 class="hero-title">YANGI KOLLEKSIYASI</h1>
+        </div>
+
+        <!-- 3D Product Showcase -->
+        <div class="product-showcase">
+            <div class="product-item product-polo" data-product="polo">
+                <img src="../polo-t-shirt.png" alt="Polo Shirt">
+            </div>
+            <div class="product-item product-cap" data-product="cap">
+                <img src="../polo-cap.png" alt="Baseball Cap">
+            </div>
+            <div class="product-item product-watch" data-product="watch">
+                <img src="../polo-watch.png" alt="Watch">
+            </div>
+            <div class="product-item product-pants" data-product="pants">
+                <img src="../polo-pants.png" alt="Pants">
+            </div>
+            <div class="product-item product-wallet" data-product="wallet">
+                <img src="../polo-wallet.png" alt="Wallet">
+            </div>
+            <div class="product-item product-shoes" data-product="shoes">
+                <img src="../polo-sneakers.png" alt="Shoes">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Quick View Modal -->
+<div class="quick-view-modal" id="quickViewModal">
+    <div class="quick-view-content">
+        <button class="quick-view-close" id="quickViewClose">&times;</button>
+
+        <div class="quick-view-body">
+            <!-- Left side - Product Images -->
+            <div class="quick-view-images">
+                <div class="main-product-image-container">
+                    <img id="quickViewMainImage" src="/placeholder.svg" alt="" class="main-product-image">
+                    <button class="image-navigation image-nav-prev" id="imagePrev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="image-navigation image-nav-next" id="imageNext">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="product-thumbnails-container" id="quickViewThumbnails">
+                    <!-- Thumbnails will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Right side - Product Info -->
+            <div class="quick-view-info">
+                <h2 class="product-title" id="quickViewTitle"></h2>
+                <div class="product-category-badge" id="quickViewCategory"></div>
+
+                <div class="product-price-section">
+                    <span class="product-current-price" id="quickViewCurrentPrice"></span>
+                    <span class="product-original-price" id="quickViewOriginalPrice"></span>
+                    <span class="product-discount-badge" id="quickViewDiscount"></span>
+                </div>
+
+                <p class="product-description" id="quickViewDescription"></p>
+
+                <!-- Size Selection -->
+                <div class="size-selection" id="sizeSelectionContainer">
+                    <div class="selection-label">O'lcham:</div>
+                    <div class="size-options" id="quickViewSizes">
+                        <!-- Sizes will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Quantity and Add to Cart -->
+                <div class="quantity-cart-section">
+                    <div class="quantity-selector">
+                        <button class="quantity-btn" id="decreaseQty">-</button>
+                        <input type="number" class="quantity-input" id="quantityInput" value="1" min="1" max="10">
+                        <button class="quantity-btn" id="increaseQty">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" id="addToCartBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        Savatga qo'shish
+                    </button>
+                </div>
+
+                <!-- Product Features -->
+                <div class="product-features">
+                    <div class="feature-item">
+                        <i class="fas fa-truck feature-icon"></i>
+                        <span>Bepul yetkazib berish 200,000 so'mdan yuqori</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-undo feature-icon"></i>
+                        <span>30 kun ichida qaytarish</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt feature-icon"></i>
+                        <span>1 yil kafolat</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-medal feature-icon"></i>
+                        <span>Premium sifat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Modal -->
+<div class="product-modal" id="productModal">
+    <div class="modal-content">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <div class="modal-product-display">
+            <div class="modal-image">
+                <img id="modalImage" src="/placeholder.svg" alt="">
+            </div>
+            <div class="modal-info">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <p class="modal-description" id="modalDescription"></p>
+                <a href="#" class="btn-custom">Ko'rish</a>
+            </div>
+        </div>
+        <div class="modal-navigation">
+            <button class="nav-btn" id="prevProduct">
+                <i class="fas fa-chevron-left"></i> Oldingi
+            </button>
+            <button class="nav-btn" id="nextProduct">
+                Keyingi <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Section -->
+<section class="category-section">
+    <div class="container-fluid px-0">
+        <div class="row g-0">
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="category-card">
+                    <img src="../clothes.jpeg" alt="Ko'ylaklar" class="category-img">
+                    <div class="category-overlay">
+                        <h3 class="category-title">KO'YLAKLAR</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="category-card">
+                    <img src="../jens.jpeg" alt="Shimlar" class="category-img">
+                    <div class="category-overlay">
+                        <h3 class="category-title">SHIMLAR</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="category-card">
+                    <img src="../mens-shoes.jpeg" alt="Poyabzallar" class="category-img">
+                    <div class="category-overlay">
+                        <h3 class="category-title">POYABZALLAR</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="category-card">
+                    <img src="../accessors.jpeg" alt="Aksessuarlar" class="category-img">
+                    <div class="category-overlay">
+                        <h3 class="category-title">AKSESSUARLAR</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section - 6 Products -->
+<section class="products-section">
+    <div class="container-custom">
+        <div class="section-title">
+            <h2>KOLLEKSIYALAR</h2>
+            <p style="color: #666; margin-top: 10px;">Obrazimga qo'shib olaman 👀</p>
+        </div>
+
+        <div class="products-container">
+            <!-- Main Product Image -->
+            <div class="main-product">
+                <img src="../full-collection.jpeg" alt="Main Product" class="main-product-image">
+            </div>
+
+            <!-- Products Grid - 6 Products (3x2) -->
+            <div class="products-grid grid-6">
+                <!-- Product 1 -->
+                <div class="product-card" data-current-price="129000" data-original-price="160000" data-product-id="cap">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 19% 🔥   "></div>
+                        </div>
+                        <img src="../polo-cap.png" alt="Kepka" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Kepka</h3>
+                        <div class="product-thumbnails">
+                            <img src="../polo-cap.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="../polo-cap.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">129 000 So'm</span>
+                            <span class="original-price">160 000 So'm</span>
+                            <span class="discount-badge">-19%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card" data-current-price="109000" data-original-price="150000" data-product-id="shopper">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 27% 🔥   "></div>
+                        </div>
+                        <img src="../shopper.png" alt="Shopper" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Shopper</h3>
+                        <div class="product-thumbnails">
+                            <img src="../shopper.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="../shopper.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">109 000 So'm</span>
+                            <span class="original-price">150 000 So'm</span>
+                            <span class="discount-badge">-27%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card" data-current-price="299000" data-original-price="399000" data-product-id="watch">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 25% 🔥   "></div>
+                        </div>
+                        <img src="../watch-2.png" alt="Soat" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Soat</h3>
+                        <div class="product-thumbnails">
+                            <img src="../watch-2.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="../polo-watch.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">299 000 So'm</span>
+                            <span class="original-price">399 000 So'm</span>
+                            <span class="discount-badge">-25%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card" data-current-price="89000" data-original-price="120000" data-product-id="wallet">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 26% 🔥   "></div>
+                        </div>
+                        <img src="../polo-wallet.png" alt="Hamyon" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Hamyon</h3>
+                        <div class="product-thumbnails">
+                            <img src="../polo-wallet.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="../polo-wallet.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">89 000 So'm</span>
+                            <span class="original-price">120 000 So'm</span>
+                            <span class="discount-badge">-26%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="product-card" data-current-price="399000" data-original-price="499000" data-product-id="shoes">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 20% 🔥   "></div>
+                        </div>
+                        <img src="../polo-sneakers.png" alt="Krossovka" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Krossovka</h3>
+                        <div class="product-thumbnails">
+                            <img src="../polo-sneakers.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="../polo-sneakers.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">399 000 So'm</span>
+                            <span class="original-price">499 000 So'm</span>
+                            <span class="discount-badge">-20%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="product-card" data-current-price="199000" data-original-price="249000" data-product-id="tshirt">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 20% 🔥   "></div>
+                        </div>
+                        <img src="../polo-t-shirt.png" alt="T-shirt" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">T-shirt</h3>
+                        <div class="product-thumbnails">
+                            <img src="polo-t-shirt.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="polo-t-shirt.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">199 000 So'm</span>
+                            <span class="original-price">249 000 So'm</span>
+                            <span class="discount-badge">-20%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 25px; color: #F5F5DC;">PRIME<span style="color: #ff6b6b">77</span></h1>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h3 class="footer-title">KOMPANIYA</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Biz bilan bog'lanish</a></li>
+                    <li><a href="#">Biz haqimizda</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h3 class="footer-title">QO'LLAB-QUVVATLASH</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Yetkazib berish</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h3 class="footer-title">IJTIMOIY TARMOQLAR</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <i class="fab fa-telegram-plane"></i>
+                        <span>Telegram</span>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2024 Prime77. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="payment-methods">
+                        <span>To'lov turlari:</span>
+                        <div class="payment-images">
+                            <img src="click.webp" alt="Click" />
+                            <img src="payme.webp" alt="Payme" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ======================================================
+    // CART FUNCTIONALITY - FIXED
+    // ======================================================
+    let cartItems = [];
+    let cartCount = 0;
+
+    function updateCartBadge() {
+        const cartBadge = document.getElementById('cartBadge');
+        if (cartBadge) {
+            cartBadge.textContent = cartCount;
+            cartBadge.style.display = cartCount > 0 ? 'flex' : 'none';
+        }
+    }
+
+    function addToCart(productId, quantity = 1, size = null) {
+        const existingItem = cartItems.find(item =>
+            item.productId === productId && item.size === size
+        );
+
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            cartItems.push({
+                productId: productId,
+                quantity: quantity,
+                size: size,
+                addedAt: new Date()
+            });
+        }
+
+        cartCount += quantity;
+        updateCartBadge();
+
+        // Save to localStorage
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        localStorage.setItem('cartCount', cartCount.toString());
+    }
+
+    function loadCartFromStorage() {
+        const savedItems = localStorage.getItem('cartItems');
+        const savedCount = localStorage.getItem('cartCount');
+
+        if (savedItems) {
+            cartItems = JSON.parse(savedItems);
+        }
+
+        if (savedCount) {
+            cartCount = parseInt(savedCount);
+        }
+
+        updateCartBadge();
+    }
+
+    // ======================================================
+    // PRODUCT DATA WITH DETAILED INFORMATION
+    // ======================================================
+    const productData = {
+        cap: {
+            id: 'cap',
+            name: 'Premium Baseball Kepka',
+            category: 'AKSESSUARLAR',
+            description: 'Yuqori sifatli paxta materialidan tayyorlangan klassik baseball kepka. Quyosh nurlaridan himoya qiladi va har qanday kiyim bilan mos keladi. Sozlanuvchi kamar bilan.',
+            currentPrice: 129000,
+            originalPrice: 160000,
+            images: ['polo-cap.png', 'polo-cap.png', 'polo-cap.png', 'polo-cap.png'],
+            sizes: ['S', 'M', 'L', 'XL'],
+            colors: []
+        },
+        shopper: {
+            id: 'shopper',
+            name: 'Eco Shopper Sumka',
+            category: 'AKSESSUARLAR',
+            description: 'Ekologik toza materialdan tayyorlangan keng shopper sumka. Har kunlik xaridlar va ishlar uchun ideal. Kuchli va bardoshli.',
+            currentPrice: 109000,
+            originalPrice: 150000,
+            images: ['shopper.png', 'shopper.png', 'shopper.png', 'shopper.png'],
+            sizes: ['One Size'],
+            colors: []
+        },
+        watch: {
+            id: 'watch',
+            name: 'Luxury Sport Soat',
+            category: 'AKSESSUARLAR',
+            description: 'Zamonaviy dizayn va yuqori sifatli mexanizm bilan jihozlangan sport soat. Suv o\'tkazmaydigan va zarba bardosh. Har qanday kiyim bilan mos keladi.',
+            currentPrice: 299000,
+            originalPrice: 399000,
+            images: ['watch-2.png', 'polo-watch.png', 'watch-2.png', 'polo-watch.png'],
+            sizes: [],
+            colors: []
+        },
+        wallet: {
+            id: 'wallet',
+            name: 'Leather Premium Hamyon',
+            category: 'AKSESSUARLAR',
+            description: 'Haqiqiy teri materialidan tayyorlangan premium hamyon. Kompakt dizayn bilan ko\'p joylar. Kartalar va naqd pul uchun ideal.',
+            currentPrice: 89000,
+            originalPrice: 120000,
+            images: ['polo-wallet.png', 'polo-wallet.png', 'polo-wallet.png', 'polo-wallet.png'],
+            sizes: ['Standard'],
+            colors: []
+        },
+        shoes: {
+            id: 'shoes',
+            name: 'Casual Sport Krossovka',
+            category: 'POYABZALLAR',
+            description: 'Zamonaviy va qulay sport krossovkalar. Yumshoq taglik va nafas oluvchi material. Har kunlik kiyish va sport uchun ideal.',
+            currentPrice: 399000,
+            originalPrice: 499000,
+            images: ['polo-sneakers.png', 'polo-sneakers.png', 'polo-sneakers.png', 'polo-sneakers.png'],
+            sizes: ['39', '40', '41', '42', '43', '44', '45'],
+            colors: []
+        },
+        tshirt: {
+            id: 'tshirt',
+            name: 'Premium Cotton T-shirt',
+            category: 'KIYIMLAR',
+            description: 'Yuqori sifatli 100% paxta materialidan tayyorlangan t-shirt. Yumshoq va qulay. Har kunlik kiyish uchun ideal.',
+            currentPrice: 199000,
+            originalPrice: 249000,
+            images: ['polo-t-shirt.png', 'polo-t-shirt.png', 'polo-t-shirt.png', 'polo-t-shirt.png'],
+            sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+            colors: []
+        }
+    };
+
+    // ======================================================
+    // 3D PRODUCT SHOWCASE FUNCTIONALITY
+    // ======================================================
+    const products = [
+        {
+            id: 'polo',
+            name: 'Premium Polo Shirt',
+            description: 'Yuqori sifatli paxta materialidan tayyorlangan zamonaviy polo ko\'ylak. Har kunlik kiyish uchun ideal.',
+            image: 'polo-t-shirt.png'
+        },
+        {
+            id: 'cap',
+            name: 'Baseball Cap',
+            description: 'Klassik dizayndagi baseball kepka. Quyosh nurlaridan himoya qiladi va stilingizni to\'ldiradi.',
+            image: 'polo-cap.png'
+        },
+        {
+            id: 'watch',
+            name: 'Luxury Watch',
+            description: 'Zamonaviy dizayn va yuqori sifatli mexanizm. Har qanday kiyim bilan mos keladi.',
+            image: 'polo-watch.png'
+        },
+        {
+            id: 'pants',
+            name: 'Chino Pants',
+            description: 'Qulay va zamonaviy chino shimlar. Rasmiy va norasmiy kiyinish uchun mos.',
+            image: 'polo-pants.png'
+        },
+        {
+            id: 'wallet',
+            name: 'Leather Wallet',
+            description: 'Haqiqiy teri materialidan tayyorlangan hamyon. Kompakt va funksional dizayn.',
+            image: 'polo-wallet.png'
+        },
+        {
+            id: 'shoes',
+            name: 'Casual Sneakers',
+            description: 'Zamonaviy krossovkalar. Qulay va uslubli, har kunlik kiyish uchun ideal.',
+            image: 'polo-sneakers.png'
+        }
+    ];
+
+    let currentProductIndex = 0;
+    let selectedSize = 'M';
+    let selectedColor = 'black';
+    let quantity = 1;
+    let currentImageIndex = 0;
+    let currentProductImages = [];
+    let currentProductId = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCartFromStorage();
+        initializeProductShowcase();
+        initializeScrollEffects();
+        initializeQuickView();
+        calculateDiscountPercentages();
+    });
+
+    // ======================================================
+    // QUICK VIEW FUNCTIONALITY
+    // ======================================================
+    function initializeQuickView() {
+        const quickViewButtons = document.querySelectorAll('.quick-view-text');
+        const mobileQuickViewButtons = document.querySelectorAll('.mobile-quick-view-icon');
+        const quickViewModal = document.getElementById('quickViewModal');
+        const quickViewClose = document.getElementById('quickViewClose');
+
+        // Add click events to desktop quick view buttons
+        quickViewButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const productCard = button.closest('.product-card');
+                const productId = productCard.dataset.productId;
+
+                if (productData[productId]) {
+                    showQuickView(productData[productId]);
+                }
+            });
+        });
+
+        // Add click events to mobile quick view buttons
+        mobileQuickViewButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const productCard = button.closest('.product-card');
+                const productId = productCard.dataset.productId;
+
+                if (productData[productId]) {
+                    showQuickView(productData[productId]);
+                }
+            });
+        });
+
+        // Close modal events
+        quickViewClose.addEventListener('click', closeQuickView);
+        quickViewModal.addEventListener('click', (e) => {
+            if (e.target === quickViewModal) closeQuickView();
+        });
+
+        // Initialize quantity controls
+        initializeQuantityControls();
+
+        // Initialize size and color selection
+        initializeSizeColorSelection();
+
+        // Initialize add to cart
+        initializeAddToCart();
+
+        // Initialize image navigation
+        initializeImageNavigation();
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (quickViewModal.classList.contains('show')) {
+                if (e.key === 'Escape') closeQuickView();
+                if (e.key === 'ArrowLeft') navigateImage(-1);
+                if (e.key === 'ArrowRight') navigateImage(1);
+            }
+        });
+    }
+
+    function showQuickView(product) {
+        const modal = document.getElementById('quickViewModal');
+        const sizeContainer = document.getElementById('sizeSelectionContainer');
+
+        // Store current product
+        currentProductId = product.id;
+        currentProductImages = product.images;
+        currentImageIndex = 0;
+
+        // Update product information
+        document.getElementById('quickViewTitle').textContent = product.name;
+        document.getElementById('quickViewCategory').textContent = product.category;
+        document.getElementById('quickViewDescription').textContent = product.description;
+
+        // Update prices
+        document.getElementById('quickViewCurrentPrice').textContent = formatPrice(product.currentPrice);
+        document.getElementById('quickViewOriginalPrice').textContent = formatPrice(product.originalPrice);
+
+        // Calculate and show discount
+        const discountPercent = Math.round(((product.originalPrice - product.currentPrice) / product.originalPrice) * 100);
+        document.getElementById('quickViewDiscount').textContent = `-${discountPercent}%`;
+
+        // Update main image
+        document.getElementById('quickViewMainImage').src = product.images[0];
+        document.getElementById('quickViewMainImage').alt = product.name;
+
+        // Update thumbnails
+        updateThumbnails(product.images);
+
+        // Show/hide size selection based on product type
+        if (product.sizes && product.sizes.length > 0) {
+            sizeContainer.style.display = 'block';
+            updateSizes(product.sizes);
+            selectedSize = product.sizes[0];
+        } else {
+            sizeContainer.style.display = 'none';
+            selectedSize = null;
+        }
+
+        // Reset selections
+        quantity = 1;
+        document.getElementById('quantityInput').value = 1;
+
+        // Show modal
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeQuickView() {
+        const modal = document.getElementById('quickViewModal');
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+
+    function initializeImageNavigation() {
+        const prevBtn = document.getElementById('imagePrev');
+        const nextBtn = document.getElementById('imageNext');
+
+        prevBtn.addEventListener('click', () => navigateImage(-1));
+        nextBtn.addEventListener('click', () => navigateImage(1));
+    }
+
+    function navigateImage(direction) {
+        if (currentProductImages.length <= 1) return;
+
+        currentImageIndex += direction;
+
+        if (currentImageIndex < 0) {
+            currentImageIndex = currentProductImages.length - 1;
+        } else if (currentImageIndex >= currentProductImages.length) {
+            currentImageIndex = 0;
+        }
+
+        // Update main image
+        document.getElementById('quickViewMainImage').src = currentProductImages[currentImageIndex];
+
+        // Update active thumbnail
+        const thumbnails = document.querySelectorAll('.product-thumbnail-large');
+        thumbnails.forEach((thumb, index) => {
+            thumb.classList.toggle('active', index === currentImageIndex);
+        });
+    }
+
+    function updateThumbnails(images) {
+        const container = document.getElementById('quickViewThumbnails');
+        container.innerHTML = '';
+
+        images.forEach((image, index) => {
+            const thumbnail = document.createElement('img');
+            thumbnail.src = image;
+            thumbnail.alt = `Thumbnail ${index + 1}`;
+            thumbnail.className = `product-thumbnail-large ${index === 0 ? 'active' : ''}`;
+
+            thumbnail.addEventListener('click', () => {
+                currentImageIndex = index;
+                document.getElementById('quickViewMainImage').src = image;
+                container.querySelectorAll('.product-thumbnail-large').forEach(t => t.classList.remove('active'));
+                thumbnail.classList.add('active');
+            });
+
+            container.appendChild(thumbnail);
+        });
+    }
+
+    function updateSizes(sizes) {
+        const container = document.getElementById('quickViewSizes');
+        container.innerHTML = '';
+
+        sizes.forEach((size, index) => {
+            const sizeOption = document.createElement('div');
+            sizeOption.className = `size-option ${index === 0 ? 'selected' : ''}`;
+            sizeOption.dataset.size = size;
+            sizeOption.textContent = size;
+
+            sizeOption.addEventListener('click', () => {
+                container.querySelectorAll('.size-option').forEach(s => s.classList.remove('selected'));
+                sizeOption.classList.add('selected');
+                selectedSize = size;
+            });
+
+            container.appendChild(sizeOption);
+        });
+    }
+
+    function initializeQuantityControls() {
+        const decreaseBtn = document.getElementById('decreaseQty');
+        const increaseBtn = document.getElementById('increaseQty');
+        const quantityInput = document.getElementById('quantityInput');
+
+        decreaseBtn.addEventListener('click', () => {
+            if (quantity > 1) {
+                quantity--;
+                quantityInput.value = quantity;
+            }
+        });
+
+        increaseBtn.addEventListener('click', () => {
+            if (quantity < 10) {
+                quantity++;
+                quantityInput.value = quantity;
+            }
+        });
+
+        quantityInput.addEventListener('change', (e) => {
+            const value = parseInt(e.target.value);
+            if (value >= 1 && value <= 10) {
+                quantity = value;
+            } else {
+                e.target.value = quantity;
+            }
+        });
+    }
+
+    function initializeSizeColorSelection() {
+        // Size selection is handled in updateSizes function
+        // Color selection removed as requested
+    }
+
+    function initializeAddToCart() {
+        const addToCartBtn = document.getElementById('addToCartBtn');
+
+        addToCartBtn.addEventListener('click', () => {
+            if (currentProductId) {
+                // Add to cart
+                addToCart(currentProductId, quantity, selectedSize);
+
+                // Show success message
+                addToCartBtn.innerHTML = '<i class="fas fa-check"></i> Qo\'shildi!';
+                addToCartBtn.style.background = '#4CAF50';
+
+                setTimeout(() => {
+                    addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Savatga qo\'shish';
+                    addToCartBtn.style.background = '';
+                }, 2000);
+
+                console.log('Added to cart:', {
+                    productId: currentProductId,
+                    quantity: quantity,
+                    size: selectedSize
+                });
+            }
+        });
+    }
+
+    function formatPrice(price) {
+        return new Intl.NumberFormat('uz-UZ').format(price) + ' So\'m';
+    }
+
+    // ======================================================
+    // EXISTING FUNCTIONALITY
+    // ======================================================
+    function initializeProductShowcase() {
+        const productItems = document.querySelectorAll('.product-item');
+        const modal = document.getElementById('productModal');
+        const modalClose = document.getElementById('modalClose');
+        const prevBtn = document.getElementById('prevProduct');
+        const nextBtn = document.getElementById('nextProduct');
+
+        // Add click events to product items
+        productItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                currentProductIndex = index;
+                showProductModal(products[index]);
+            });
+
+            // Add hover effects
+            item.addEventListener('mouseenter', () => {
+                item.classList.add('selected');
+            });
+
+            item.addEventListener('mouseleave', () => {
+                item.classList.remove('selected');
+            });
+        });
+
+        // Modal close events
+        modalClose.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Navigation events
+        prevBtn.addEventListener('click', () => {
+            currentProductIndex = (currentProductIndex - 1 + products.length) % products.length;
+            showProductModal(products[currentProductIndex]);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentProductIndex = (currentProductIndex + 1) % products.length;
+            showProductModal(products[currentProductIndex]);
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (modal.classList.contains('show')) {
+                if (e.key === 'Escape') closeModal();
+                if (e.key === 'ArrowLeft') prevBtn.click();
+                if (e.key === 'ArrowRight') nextBtn.click();
+            }
+        });
+    }
+
+    function showProductModal(product) {
+        const modal = document.getElementById('productModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+
+        modalImage.src = product.image;
+        modalImage.alt = product.name;
+        modalTitle.textContent = product.name;
+        modalDescription.textContent = product.description;
+
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('productModal');
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+
+    // ======================================================
+    // DYNAMIC DISCOUNT CALCULATION
+    // ======================================================
+    function calculateDiscountPercentages() {
+        const productCards = document.querySelectorAll('.product-card');
+
+        productCards.forEach(card => {
+            const currentPrice = parseInt(card.dataset.currentPrice);
+            const originalPrice = parseInt(card.dataset.originalPrice);
+
+            if (currentPrice && originalPrice) {
+                const discountPercentage = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+
+                // Update discount banner text
+                const discountText = card.querySelector('.discount-text');
+                if (discountText) {
+                    const newText = `  🔥 QAYNOQ CHEGIRMA ${discountPercentage}% 🔥  `;
+                    discountText.textContent = newText;
+                    discountText.setAttribute('data-text', newText);
+                }
+
+                // Update discount badge
+                const discountBadge = card.querySelector('.discount-badge');
+                if (discountBadge) {
+                    discountBadge.textContent = `-${discountPercentage}%`;
+                }
+            }
+        });
+    }
+
+    // ======================================================
+    // SCROLL EFFECTS
+    // ======================================================
+    function initializeScrollEffects() {
+        const header = document.getElementById('main-header');
+        const logo = document.getElementById('main-logo');
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            if (scrollTop > 100) {
+                if (scrollTop > lastScrollTop) {
+                    // Scrolling down
+                    header?.classList.remove('scrolled-up');
+                    header?.classList.add('scrolled-down');
+                } else {
+                    // Scrolling up
+                    header?.classList.remove('scrolled-down');
+                    header?.classList.add('scrolled-up');
+                    // Change logo color when scrolled
+                    if (logo) {
+                        logo.style.color = '#F5F5DC';
+                    }
+                }
+            } else {
+                // At top - reset logo color
+                header?.classList.remove('scrolled-up');
+                header?.classList.remove('scrolled-down');
+                if (logo) {
+                    logo.style.color = 'var(--burgundy-dark)';
+                }
+            }
+
+            lastScrollTop = scrollTop;
+        });
+    }
+</script>
+
+</body>
+</html>

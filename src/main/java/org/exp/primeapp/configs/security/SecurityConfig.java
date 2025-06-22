@@ -41,6 +41,10 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
+                        .requestMatchers(
+                                "/index.html",
+                                "/index.html/**"
+                        ).permitAll()
                         /*.requestMatchers(
                                 API + V1 + AUTH,
                                 API + V1 + AUTH + WAY_ALL).permitAll()
@@ -80,7 +84,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:63342")); // IDE server porti
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:63342", "http://")); // IDE server porti
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true); // Agar cookie yoki token ishlatilsa

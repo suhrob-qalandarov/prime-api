@@ -31,7 +31,7 @@ public class Runner implements CommandLineRunner {
                 new Role(ROLE_USER)
         ));
 
-        if (roleRepository.findAll().isEmpty()) {
+        if (roleRepository.count() == 0) {
             roleRepository.saveAll(roles);
         }
 

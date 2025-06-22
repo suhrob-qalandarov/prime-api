@@ -12,8 +12,9 @@ public class ProductRes {
     String name;
     String description;
     Double price;
+    Integer discount;
     ProductStatus status;
-    Long categoryId;
+    String categoryName;
     List<Long> attachmentIds;
     List<ProductSizeRes> productSizes;
 }

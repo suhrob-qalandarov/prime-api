@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime77 - Erkaklar Kiyimi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Top Header (Desktop Only) -->
+<div class="top-header">
+    <div class="container-custom">
+        <div class="row align-items-center">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
+                <div class="d-flex align-items-center justify-content-end">
+                    <div class="social-icons me-4">
+                        <a href="#"><i class="fab fa-telegram-plane"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    <div>
+                        <i class="fas fa-phone-alt me-2"></i>
+                        <a href="tel:+998901234567">+998 90 123 45 67</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Header (Desktop Only) -->
+<header class="main-header" id="main-header">
+    <div class="container-custom">
+        <div class="row align-items-center">
+            <div class="col-lg-3">
+                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: var(--burgundy-dark);">PRIME<span style="color: #ff6b6b">77</span></h1>
+            </div>
+            <div class="col-lg-6">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="collapse navbar-collapse justify-content-start">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">KATALOG</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">BIZ HAQIMIZDA</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">KONTAKTLAR</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-lg-3">
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="header-icons">
+                        <a href="#" class="header-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
+                            </svg>
+                        </a>
+                        <span class="header-separator">|</span>
+                        <a href="#" class="header-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
+                            </svg>
+                        </a>
+                        <div class="position-relative">
+                            <a href="#" class="header-icon" id="cartIcon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M239.89,198.12l-14.26-120a16,16,0,0,0-16-14.12H176a48,48,0,0,0-96,0H46.33a16,16,0,0,0-16,14.12l-14.26,120A16,16,0,0,0,20,210.6a16.13,16.13,0,0,0,12,5.4H223.92A16.13,16.13,0,0,0,236,210.6,16,16,0,0,0,239.89,198.12ZM128,32a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32ZM32,200,46.33,80H80v24a8,8,0,0,0,16,0V80h64v24a8,8,0,0,0,16,0V80h33.75l14.17,120Z"></path>
+                                </svg>
+                                <span class="badge" id="cartBadge">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Mobile Header (Mobile Only) -->
+<div class="mobile-header">
+    <div class="container">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <h1 class="mobile-logo">PRIME<span>77</span></h1>
+        <div class="mobile-header-icons">
+            <a href="#" class="mobile-header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
+                </svg>
+            </a>
+            <a href="#" class="mobile-header-icon" id="mobileCartIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M239.89,198.12l-14.26-120a16,16,0,0,0-16-14.12H176a48,48,0,0,0-96,0H46.33a16,16,0,0,0-16,14.12l-14.26,120A16,16,0,0,0,20,210.6a16.13,16.13,0,0,0,12,5.4H223.92A16.13,16.13,0,0,0,236,210.6,16,16,0,0,0,239.89,198.12ZM128,32a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32ZM32,200,46.33,80H80v24a8,8,0,0,0,16,0V80h64v24a8,8,0,0,0,16,0V80h33.75l14.17,120Z"></path>
+                </svg>
+                <span class="badge" id="mobileCartBadge">0</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Sidebar (Mobile Only) -->
+<div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
+    <div class="mobile-sidebar-content">
+        <div class="mobile-sidebar-header">
+            <h2 class="mobile-sidebar-title">PRIME<span>77</span></h2>
+            <button class="mobile-sidebar-close" id="mobileSidebarClose">&times;</button>
+        </div>
+        <nav class="mobile-sidebar-nav">
+            <a href="#" class="mobile-nav-link">KATALOG</a>
+            <a href="#" class="mobile-nav-link">BIZ HAQIMIZDA</a>
+            <a href="#" class="mobile-nav-link">KONTAKTLAR</a>
+        </nav>
+        <div class="mobile-sidebar-footer">
+            <div class="mobile-contact">
+                <i class="fas fa-phone-alt"></i>
+                <span>+998 90 123 45 67</span>
+            </div>
+            <div class="mobile-social">
+                <a href="#"><i class="fab fa-telegram-plane"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cart Modal -->
+<div class="cart-modal" id="cartModal">
+    <div class="cart-modal-content">
+        <div class="cart-header">
+            <h3 class="cart-title">Savat</h3>
+            <button class="cart-close" id="cartClose">&times;</button>
+        </div>
+        <div class="cart-body" id="cartBody">
+            <div class="cart-empty" id="cartEmpty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Savat bo'sh</p>
+                <small>Mahsulotlarni qo'shish uchun "Savatga qo'shish" tugmasini bosing</small>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be populated by JavaScript -->
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Jami:</span>
+                <span class="cart-total-price" id="cartTotalPrice">0 So'm</span>
+            </div>
+            <button class="cart-checkout-btn" id="cartCheckoutBtn" disabled>
+                Buyurtma berish
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 3D Hero Showcase Section -->
+<section class="hero-section">
+    <div class="hero-3d-showcase">
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <h1 class="hero-title">YANGI KOLLEKSIYASI</h1>
+            <p class="hero-text">Zamonaviy va sifatli erkaklar kiyimi kolleksiyasi. Har bir mahsulot diqqat bilan tanlab olingan va yuqori sifat standartlariga javob beradi.</p>
+            <a href="#" class="btn-custom">Kolleksiyani ko'rish</a>
+        </div>
+
+        <!-- 3D Product Showcase -->
+        <div class="product-showcase">
+            <div class="product-item product-polo" data-product="polo">
+                <img src="images/polo-t-shirt.png" alt="Polo Shirt">
+            </div>
+            <div class="product-item product-cap" data-product="cap">
+                <img src="images/polo-cap.png" alt="Baseball Cap">
+            </div>
+            <div class="product-item product-watch" data-product="watch">
+                <img src="images/polo-watch.png" alt="Watch">
+            </div>
+            <div class="product-item product-pants" data-product="pants">
+                <img src="images/polo-pants.png" alt="Pants">
+            </div>
+            <div class="product-item product-wallet" data-product="wallet">
+                <img src="images/polo-wallet.png" alt="Wallet">
+            </div>
+            <div class="product-item product-shoes" data-product="shoes">
+                <img src="images/polo-sneakers.png" alt="Shoes">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Quick View Modal -->
+<div class="quick-view-modal" id="quickViewModal">
+    <div class="quick-view-content">
+        <button class="quick-view-close" id="quickViewClose">&times;</button>
+
+        <div class="quick-view-body">
+            <!-- Left side - Product Images -->
+            <div class="quick-view-images">
+                <div class="main-product-image-container">
+                    <img id="quickViewMainImage" src="/placeholder.svg" alt="" class="main-product-image">
+                    <button class="image-navigation image-nav-prev" id="imagePrev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="image-navigation image-nav-next" id="imageNext">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="product-thumbnails-container" id="quickViewThumbnails">
+                    <!-- Thumbnails will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Right side - Product Info -->
+            <div class="quick-view-info">
+                <h2 class="product-title" id="quickViewTitle"></h2>
+                <div class="product-category-badge" id="quickViewCategory"></div>
+
+                <div class="product-price-section">
+                    <span class="product-current-price" id="quickViewCurrentPrice"></span>
+                    <span class="product-original-price" id="quickViewOriginalPrice"></span>
+                    <span class="product-discount-badge" id="quickViewDiscount"></span>
+                </div>
+
+                <p class="product-description" id="quickViewDescription"></p>
+
+                <!-- Size Selection -->
+                <div class="size-selection" id="sizeSelectionContainer">
+                    <div class="selection-label">O'lcham:</div>
+                    <div class="size-options" id="quickViewSizes">
+                        <!-- Sizes will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Quantity and Add to Cart -->
+                <div class="quantity-cart-section">
+                    <div class="quantity-selector">
+                        <button class="quantity-btn" id="decreaseQty">-</button>
+                        <input type="number" class="quantity-input" id="quantityInput" value="1" min="1" max="10">
+                        <button class="quantity-btn" id="increaseQty">+</button>
+                    </div>
+                    <button class="add-to-cart-btn" id="addToCartBtn">
+                        <i class="fas fa-shopping-cart"></i>
+                        Savatga qo'shish
+                    </button>
+                </div>
+
+                <!-- Product Features -->
+                <div class="product-features">
+                    <div class="feature-item">
+                        <i class="fas fa-truck feature-icon"></i>
+                        <span>Bepul yetkazib berish 200,000 so'mdan yuqori</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-undo feature-icon"></i>
+                        <span>30 kun ichida qaytarish</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-shield-alt feature-icon"></i>
+                        <span>1 yil kafolat</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-medal feature-icon"></i>
+                        <span>Premium sifat</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Modal (Desktop Only) -->
+<div class="product-modal" id="productModal">
+    <div class="modal-content">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <div class="modal-product-display">
+            <div class="modal-image">
+                <img id="modalImage" src="/placeholder.svg" alt="">
+            </div>
+            <div class="modal-info">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <p class="modal-description" id="modalDescription"></p>
+                <a href="#" class="btn-custom">Ko'rish</a>
+            </div>
+        </div>
+        <div class="modal-navigation">
+            <button class="nav-btn" id="prevProduct">
+                <i class="fas fa-chevron-left"></i> Oldingi
+            </button>
+            <button class="nav-btn" id="nextProduct">
+                Keyingi <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Section -->
+<section class="category-section">
+    <div class="container-fluid px-0">
+        <div class="row g-0">
+            <div class="col-lg-3 col-md-6 col-6">
+                <div class="category-card">
+                    <img src="images/clothes.jpeg" alt="Ko'ylaklar" class="category-img">
+                    <div class="category-overlay">
+                        <h3 class="category-title">KO'YLAKLAR</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-6">
+                <div class="category-card">
+                    <img src="images/jens.jpeg" alt="Shimlar" class="category-img">
+                    <div class="category-overlay">
+                        <h3 class="category-title">SHIMLAR</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-6">
+                <div class="category-card">
+                    <img src="images/mens-shoes.jpeg" alt="Poyabzallar" class="category-img">
+                    <div class="category-overlay">
+                        <h3 class="category-title">POYABZALLAR</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-6">
+                <div class="category-card">
+                    <img src="images/accessors.jpeg" alt="Aksessuarlar" class="category-img">
+                    <div class="category-overlay">
+                        <h3 class="category-title">AKSESSUARLAR</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section - 6 Products -->
+<section class="products-section">
+    <div class="container-custom">
+        <div class="section-title">
+            <h2>KOLLEKSIYALAR</h2>
+            <p style="color: #666; margin-top: 10px;">Obrazimga qo'shib olaman 👀</p>
+        </div>
+
+        <div class="products-container">
+            <!-- Main Product Image -->
+            <div class="main-product">
+                <img src="images/full-collection.jpeg" alt="Main Product" class="main-product-image">
+            </div>
+
+            <!-- Products Grid - 6 Products -->
+            <div class="products-grid grid-6">
+                <!-- Product 1 -->
+                <div class="product-card" data-current-price="129000" data-original-price="160000" data-product-id="cap">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 19% 🔥   "></div>
+                        </div>
+                        <img src="images/polo-cap.png" alt="Kepka" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Kepka</h3>
+                        <div class="product-thumbnails">
+                            <img src="images/polo-cap.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="images/polo-cap.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">129 000 So'm</span>
+                            <span class="original-price">160 000 So'm</span>
+                            <span class="discount-badge">-19%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="product-card" data-current-price="109000" data-original-price="150000" data-product-id="shopper">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 27% 🔥   "></div>
+                        </div>
+                        <img src="images/shopper.png" alt="Shopper" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Shopper</h3>
+                        <div class="product-thumbnails">
+                            <img src="images/shopper.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="images/shopper.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">109 000 So'm</span>
+                            <span class="original-price">150 000 So'm</span>
+                            <span class="discount-badge">-27%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="product-card" data-current-price="299000" data-original-price="399000" data-product-id="watch">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 25% 🔥   "></div>
+                        </div>
+                        <img src="images/watch-2.png" alt="Soat" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Soat</h3>
+                        <div class="product-thumbnails">
+                            <img src="images/watch-2.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="images/polo-watch.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">299 000 So'm</span>
+                            <span class="original-price">399 000 So'm</span>
+                            <span class="discount-badge">-25%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="product-card" data-current-price="89000" data-original-price="120000" data-product-id="wallet">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 26% 🔥   "></div>
+                        </div>
+                        <img src="images/polo-wallet.png" alt="Hamyon" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Hamyon</h3>
+                        <div class="product-thumbnails">
+                            <img src="images/polo-wallet.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="images/polo-wallet.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">89 000 So'm</span>
+                            <span class="original-price">120 000 So'm</span>
+                            <span class="discount-badge">-26%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="product-card" data-current-price="399000" data-original-price="499000" data-product-id="shoes">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 20% 🔥   "></div>
+                        </div>
+                        <img src="images/polo-sneakers.png" alt="Krossovka" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">Krossovka</h3>
+                        <div class="product-thumbnails">
+                            <img src="images/polo-sneakers.png" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="images/polo-sneakers.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">399 000 So'm</span>
+                            <span class="original-price">499 000 So'm</span>
+                            <span class="discount-badge">-20%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product 6 -->
+                <div class="product-card" data-current-price="199000" data-original-price="249000" data-product-id="tshirt">
+                    <div class="product-image-container">
+                        <div class="discount-banner">
+                            <div class="discount-text" data-text="🔥 QAYNOQ CHEGIRMA 20% 🔥   "></div>
+                        </div>
+                        <img src="images/hero-badge.jpg" alt="T-shirt" class="product-image">
+                        <div class="quick-view-overlay">
+                            <span class="quick-view-text">QUICK VIEW</span>
+                        </div>
+                        <button class="mobile-quick-view-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">AKSESSUARLAR</div>
+                        <h3 class="product-name">T-shirt</h3>
+                        <div class="product-thumbnails">
+                            <img src="images/hero-badge.jpg" alt="Thumbnail 1" class="product-thumbnail">
+                            <img src="images/polo-t-shirt.png" alt="Thumbnail 2" class="product-thumbnail">
+                        </div>
+                        <div class="product-pricing">
+                            <span class="current-price">199 000 So'm</span>
+                            <span class="original-price">249 000 So'm</span>
+                            <span class="discount-badge">-20%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-6 mb-4">
+                <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 25px; color: #F5F5DC;">PRIME<span style="color: #ff6b6b">77</span></h1>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6 mb-4">
+                <h3 class="footer-title">KOMPANIYA</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Biz bilan bog'lanish</a></li>
+                    <li><a href="#">Biz haqimizda</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6 mb-4">
+                <h3 class="footer-title">QO'LLAB-QUVVATLASH</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Yetkazib berish</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6 mb-4">
+                <h3 class="footer-title">IJTIMOIY TARMOQLAR</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <i class="fab fa-telegram-plane"></i>
+                        <span>Telegram</span>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2024 Prime77. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 d-none d-md-block">
+                    <div class="payment-methods">
+                        <span>To'lov turlari:</span>
+                        <div class="payment-images">
+                            <img src="images/click.webp" alt="Click" />
+                            <img src="images/payme.webp" alt="Payme" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
