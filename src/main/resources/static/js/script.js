@@ -710,3 +710,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("Prime77 website initialized successfully!")
 })
+
+// Kategoriya filtrlash funksiyasi
+function initializeCategoryFilter() {
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    const productsGrid = document.getElementById('productsGrid');
+    const activeCategory = document.querySelector('.active-category');
+
+    categoryTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Active tabni o'zgartirish
+            categoryTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+
+            // Kategoriya nomini yangilash
+            const categoryName = this.textContent;
+            activeCategory.textContent = categoryName;
+
+            // Mahsulotlarni filtrlash
+            const category = this.dataset.category;
+            filterProducts(category);
+        });
+    });
+}
+
+// Mahsulotlarni filtrlash funksiyasi
+function filterProducts(category) {
+    const productCards = document.querySelectorAll('.product-card');
+
+    productCards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// DOM yuklanganda ishga tushirish
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCategoryFilter();
+
+    // Agar URL da kategoriya parametri bo'lsa
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+
+    if (categoryParam) {
+        const tab = document.querySelector(`.category-tab[data-category="${categoryParam}"]`);
+        if (tab) {
+            tab.click();
+        }
+    }
+});

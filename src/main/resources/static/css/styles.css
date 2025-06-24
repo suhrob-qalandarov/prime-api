@@ -2210,4 +2210,104 @@ body {
     .mobile-quick-view-icon {
         display: none !important;
     }
+
+    /* Katalog Sahifa Styllari */
+    .catalog-page {
+        padding: 40px 0;
+        background: #f5f5dc;
+    }
+
+    .category-navigation {
+        margin-bottom: 40px;
+    }
+
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .category-header h1 {
+        font-size: 2rem;
+        color: var(--burgundy-dark);
+        font-weight: 700;
+    }
+
+    .category-breadcrumbs {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .category-breadcrumbs .active-category {
+        color: var(--burgundy-color);
+        font-weight: 600;
+    }
+
+    .category-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .category-tab {
+        padding: 8px 16px;
+        background: #fff;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef;
+    }
+
+    .category-tab:hover,
+    .category-tab.active {
+        background: var(--burgundy-color);
+        color: white;
+        border-color: var(--burgundy-color);
+    }
+
+    .category-sale-banner {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 15px;
+        background: #fff8e1;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .category-sale-banner span {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--burgundy-color);
+        display: flex;
+        align-items: center;
+    }
+
+    .category-sale-banner span:first-child {
+        color: #ff5722;
+        font-weight: 700;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .category-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .category-tabs {
+            overflow-x: auto;
+            padding-bottom: 10px;
+            flex-wrap: nowrap;
+        }
+
+        .category-tab {
+            white-space: nowrap;
+        }
+    }
 }
