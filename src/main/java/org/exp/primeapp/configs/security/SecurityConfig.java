@@ -45,6 +45,10 @@ public class SecurityConfig {
                                 "/index.html",
                                 "/index.html/**"
                         ).permitAll()
+                        .requestMatchers(
+                                "/pages",
+                                "/pages/**"
+                        ).permitAll()
                         /*.requestMatchers(
                                 API + V1 + AUTH,
                                 API + V1 + AUTH + WAY_ALL).permitAll()

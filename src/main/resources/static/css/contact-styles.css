@@ -68,11 +68,11 @@
 /* Contact Information Section */
 .contact-info-section {
     background: var(--light-color);
-    padding: 40px 0 80px;
+    padding: 30px 0 63px;
 }
 
 .contact-section {
-    text-align: left;
+    text-align: center;
     padding: 0;
     margin-bottom: 30px;
 }
@@ -87,7 +87,7 @@
 }
 
 .contact-content {
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 /* Contact Items */
@@ -98,7 +98,7 @@
     font-weight: 500;
     color: var(--burgundy-dark);
     font-size: 16px;
-    margin-top: 5px;
+    margin-top: 0;
 }
 
 .contact-item i {
@@ -125,12 +125,12 @@
     font-weight: 600;
     color: var(--burgundy-dark);
     font-size: 16px;
-    margin-top: 5px;
+    margin-top: 0;
 }
 
 /* Working Hours */
 .working-hours {
-    margin-top: 5px;
+    margin-top: 0;
 }
 
 .working-hours span {
