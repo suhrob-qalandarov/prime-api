@@ -1,6 +1,7 @@
 package org.exp.primeapp.controller.order;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.request.CreateOrderReq;
 import org.exp.primeapp.service.interfaces.OrderService;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -19,7 +20,12 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<?> createOrder(@RequestBody CreateOrderReq request) throws InterruptedException {
+        log.info("Yangi buyurtma yaratilmoqda: userId={}, itemCount={}",
+                request.getUserId(), request.getOrderItems().size());
+
         orderService.createOrder(request.getUserId(), request.getOrderItems());
+
+        log.info("Buyurtma muvaffaqiyatli yaratildi: userId={}", request.getUserId());
         return ResponseEntity.ok().build();
     }
 }

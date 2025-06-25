@@ -1,6 +1,7 @@
 package org.exp.primeapp.service.impl.order;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.OrderItemDTO;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.enums.OrderStatus;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -26,47 +28,45 @@ public class OrderServiceImpl implements OrderService {
 
     private final ProductOutcomeRepository productOutcomeRepository;
 
+
     @Transactional
     public Order createOrder(Long userId, List<OrderItemDTO> orderItems) {
-        // 1. Foydalanuvchini topish
+        log.info("Order creation started for userId: {}", userId);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 2. Yangi Order yaratish
         Order order = new Order();
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
-        order.setTotalPrice(0); // Hozircha 0, keyin hisoblanadi
+        order.setTotalPrice(0);
 
         double totalPrice = 0.0;
 
-        // 3. OrderItemlarni qayta ishlash
         try {
-
             for (OrderItemDTO itemDTO : orderItems) {
-                // Mahsulotni topish
+                log.debug("Processing productId: {}, productSizeId: {}, quantity: {}",
+                        itemDTO.getProductId(), itemDTO.getProductSizeId(), itemDTO.getQuantity());
+
                 Product product = productRepository.findById(itemDTO.getProductId())
                         .orElseThrow(() -> new RuntimeException("Product not found"));
 
-                // ProductSize ni topish
                 ProductSize productSize = productSizeRepository.findById(itemDTO.getProductSizeId())
                         .orElseThrow(() -> new RuntimeException("Product size not found"));
 
-                // Mahsulot va o'lcham mosligini tekshirish
                 if (!productSize.getProduct().getId().equals(product.getId())) {
                     throw new RuntimeException("Product size does not belong to the specified product");
                 }
 
-                // Miqdor yetarliligini tekshirish
                 if (productSize.getAmount() < itemDTO.getQuantity()) {
+                    log.warn("Insufficient stock for product: {}, size: {}, requested: {}, available: {}",
+                            product.getName(), productSize.getSize(), itemDTO.getQuantity(), productSize.getAmount());
                     throw new RuntimeException("Insufficient stock for product: " + product.getName() + ", size: " + productSize.getSize());
                 }
 
-                // Narxni hisoblash (discountni hisobga olgan holda)
                 double itemPrice = calculateItemPrice(product);
                 totalPrice += itemPrice * itemDTO.getQuantity();
 
-                // OrderItem yaratish
                 OrderItem orderItem = new OrderItem();
                 orderItem.setOrder(order);
                 orderItem.setProduct(product);
@@ -76,27 +76,32 @@ public class OrderServiceImpl implements OrderService {
 
                 order.getItems().add(orderItem);
 
-                // ProductSize miqdorini yangilash
                 productSize.setAmount(productSize.getAmount() - itemDTO.getQuantity());
                 productSizeRepository.save(productSize);
 
-                // ProductOutcome qaydini yaratish
                 ProductOutcome outcome = new ProductOutcome();
                 outcome.setUser(user);
                 outcome.setProduct(product);
                 outcome.setAmount(itemDTO.getQuantity());
+                outcome.setProductSize(productSize);
                 productOutcomeRepository.save(outcome);
             }
+
+            order.setTotalPrice((int) totalPrice);
+            Order savedOrder = orderRepository.save(order);
+
+            log.info("Order created successfully for userId: {}, orderId: {}", userId, savedOrder.getId());
+            return savedOrder;
+
         } catch (ObjectOptimisticLockingFailureException e) {
-            throw new RuntimeException("Another user updated product stock. Please refresh and try again.");
+            log.error("Optimistic lock error while creating order for userId: {}", userId, e);
+            throw new RuntimeException("Mahsulot zaxirasi o'zgartirilgan. Iltimos, sahifani yangilang va qaytadan urinib ko'ring.");
+        } catch (RuntimeException e) {
+            log.error("Unexpected error during order creation for userId: {}", userId, e);
+            throw e;
         }
-
-        // 4. Umumiy narxni yangilash
-        order.setTotalPrice((int) totalPrice); // Integer ga aylantirish (agar kerak bo'lsa)
-
-        // 5. Orderni saqlash
-        return orderRepository.save(order);
     }
+
 
     private double calculateItemPrice(Product product) {
         double price = product.getPrice();
