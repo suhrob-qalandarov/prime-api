@@ -21,6 +21,9 @@ public interface Const {
     String USER = "/user";
     String USERS = "/users";
 
+    String SPOTLIGHT = "/spotlight";
+    String SPOTLIGHTS = "/spotlights";
+
     String CATEGORY = "/category";
     String CATEGORIES = "/categories";
     String ATTACHMENT = "/attachment";
