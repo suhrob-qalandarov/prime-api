@@ -5,7 +5,6 @@ import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.models.repo.RoleRepository;
 import org.exp.primeapp.models.repo.UserRepository;
-import org.exp.primeapp.utils.Const;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
