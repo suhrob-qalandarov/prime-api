@@ -2,13 +2,12 @@ package org.exp.primeapp.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.exp.primeapp.models.dto.request.SpotlightReq;
 import org.exp.primeapp.models.dto.responce.SpotlightRes;
 import org.exp.primeapp.service.interfaces.SpotlightService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +25,11 @@ public class SpotlightController {
     public ResponseEntity<List<SpotlightRes>> getSpotlights() {
         List<SpotlightRes> spotlights = spotlightService.getHeroSpotlights();
         return new ResponseEntity<>(spotlights, HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> saveSpotlight(@RequestBody SpotlightReq spotlightReq) {
+        spotlightService.addSpotlight(spotlightReq);
+        return ResponseEntity.ok().build();
     }
 }
