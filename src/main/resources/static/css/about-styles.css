@@ -468,7 +468,7 @@
 
 /* Active Navigation Link */
 .navbar-nav .nav-link.active {
-    color: var(--burgundy-color) !important;
+    color: black !important;
     font-weight: 700;
 }
 
