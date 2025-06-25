@@ -27,4 +27,7 @@ public class ProductSize extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @Version
+    private Integer version = 0;
 }
