@@ -1,10 +1,7 @@
 package org.exp.primeapp.models.dto.request;
 
-import lombok.Value;
+import lombok.Builder;
 
-@Value
-public class CategoryReq {
-    String name;
-    Long attachmentId;
-    Boolean active;
+@Builder
+public record CategoryReq(String name) {
 }

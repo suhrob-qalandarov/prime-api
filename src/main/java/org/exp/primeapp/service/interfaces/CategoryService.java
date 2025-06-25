@@ -13,7 +13,7 @@ public interface CategoryService {
 
     List<CategoryRes> getAllCategories();
 
-    List<CategoryRes> getActiveCategories();
+    List<CategoryRes> getCategories();
 
     List<CategoryRes> getInactiveCategories();
 

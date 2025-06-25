@@ -29,7 +29,7 @@ public class AdminCategoriesController {
 
     @GetMapping("/active")
     public ResponseEntity<List<CategoryRes>> getActiveCategories() {
-        List<CategoryRes> categories = categoryService.getActiveCategories();
+        List<CategoryRes> categories = categoryService.getCategories();
         return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
     }
 

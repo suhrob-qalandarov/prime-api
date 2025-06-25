@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
 import org.exp.primeapp.models.dto.responce.ApiResponse;
 import org.exp.primeapp.models.dto.responce.CategoryRes;
-import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.models.repo.AttachmentRepository;
@@ -27,13 +26,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public ApiResponse saveCategory(CategoryReq categoryReq) {
-        Attachment attachment = attachmentRepository.findById(categoryReq.getAttachmentId())
-                .orElseThrow(() -> new RuntimeException("Attachment not found with id: " + categoryReq.getAttachmentId()));
+/*        Attachment attachment = attachmentRepository.findById(categoryReq.getAttachmentId())
+                .orElseThrow(() -> new RuntimeException("Attachment not found with id: " + categoryReq.getAttachmentId()));*/
 
         Category category = Category.builder()
-                .name(categoryReq.getName())
-                .attachment(attachment)
-                .active(categoryReq.getActive())
+                .name(categoryReq.name())
                 .build();
 
         categoryRepository.save(category);
@@ -44,8 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ApiResponse updateCategoryById(Long categoryId, CategoryReq categoryReq) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
-        category.setName(categoryReq.getName());
-        category.setActive(categoryReq.getActive());
+        category.setName(categoryReq.name());
         categoryRepository.save(category);
 
         return new ApiResponse(true, "Category updated successfully");
@@ -97,16 +93,26 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryRes> getActiveCategories() {
+    public List<CategoryRes> getCategories() {
         return categoryRepository.findByActive(true).stream()
                 .map(category -> new CategoryRes(
                         category.getId(),
-                        category.getName(),
-                        category.getActive(),
-                        category.getAttachment() != null ? category.getAttachment().getId() : null
+                        category.getName()
                 ))
                 .toList();
     }
+
+    /*@Override
+    public List<CategoryAttachmentRes> getHeroCategories() {
+        return categoryRepository.findByActive(true).stream()
+                .map(category -> new CategoryAttachmentRes(
+                        category.getId(),
+                        category.getName(),
+                        category.getActive()
+                        //category.getAttachment() != null ? category.getAttachment().getId() : null
+                ))
+                .toList();
+    }*/
 
     @Override
     public Category getCategoryByIdForAdmin(Long categoryId) {
@@ -123,9 +129,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findByActive(false).stream()
                 .map(category -> new CategoryRes(
                         category.getId(),
-                        category.getName(),
-                        category.getActive(),
-                        category.getAttachment() != null ? category.getAttachment().getId() : null
+                        category.getName()
                 )).toList();
     }
 
@@ -134,18 +138,14 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAll().stream()
                 .map(category -> new CategoryRes(
                         category.getId(),
-                        category.getName(),
-                        category.getActive(),
-                        category.getAttachment() != null ? category.getAttachment().getId() : null
+                        category.getName()
                 )).toList();
     }
 
-    private CategoryRes convertToCategoryRes(Category category) {
+    public CategoryRes convertToCategoryRes(Category category) {
         return new CategoryRes(
                 category.getId(),
-                category.getName(),
-                category.getActive(),
-                category.getAttachment().getId()
+                category.getName()
         );
     }
 }
