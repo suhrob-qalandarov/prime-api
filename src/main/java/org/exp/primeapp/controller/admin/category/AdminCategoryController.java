@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
 import org.exp.primeapp.models.dto.responce.ApiResponse;
 import org.exp.primeapp.models.entities.Category;
-import org.exp.primeapp.service.interfaces.CategoryService;
+import org.exp.primeapp.service.interfaces.user.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

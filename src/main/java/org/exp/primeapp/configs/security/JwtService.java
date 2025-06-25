@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
-import org.exp.primeapp.models.repo.UserRepository;
+import org.exp.primeapp.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;

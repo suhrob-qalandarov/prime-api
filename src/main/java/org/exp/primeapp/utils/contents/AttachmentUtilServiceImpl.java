@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.responce.AttachmentRes;
 import org.exp.primeapp.models.entities.Attachment;
-import org.exp.primeapp.models.repo.AttachmentRepository;
+import org.exp.primeapp.repository.AttachmentRepository;
 import org.exp.primeapp.utils.AttachmentUtilService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

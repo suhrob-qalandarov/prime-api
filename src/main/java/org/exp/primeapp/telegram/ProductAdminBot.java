@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.telegram;
 
 import lombok.Data;
@@ -7,8 +8,8 @@ import org.exp.primeapp.models.dto.responce.ApiResponse;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.enums.ProductStatus;
-import org.exp.primeapp.service.interfaces.AdminProductService;
-import org.exp.primeapp.service.interfaces.CategoryService;
+import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
+import org.exp.primeapp.service.interfaces.user.CategoryService;
 import org.exp.primeapp.service.interfaces.attachment.AdminAttachmentService;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
@@ -197,3 +198,4 @@ public class ProductAdminBot extends TelegramLongPollingBot {
         return "7777304787:AAGx6_AOKvstwEUnQhqdpZv0aRFuHOj1EYY";
     }
 }
+*/

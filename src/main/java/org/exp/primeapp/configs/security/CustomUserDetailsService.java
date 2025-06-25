@@ -1,7 +1,7 @@
 package org.exp.primeapp.configs.security;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.models.repo.UserRepository;
+import org.exp.primeapp.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

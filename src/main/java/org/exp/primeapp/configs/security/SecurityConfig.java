@@ -49,34 +49,42 @@ public class SecurityConfig {
                                 "/pages",
                                 "/pages/**"
                         ).permitAll()
-                        /*.requestMatchers(
-                                API + V1 + AUTH,
-                                API + V1 + AUTH + WAY_ALL).permitAll()
+
                         .requestMatchers(
-                                "GET",
-                                API + V1 + PRODUCT,
-                                API + V1 + PRODUCT + WAY_ALL
+                               API + V1 + AUTH,
+                               API + V1 + AUTH + WAY_ALL
                         ).permitAll()
-                        .requestMatchers(
-                                "GET",
-                                API + V1 + PRODUCTS,
-                                API + V1 + PRODUCTS + BY_CATEGORY + "/{categoryId}",
-                                API + V1 + PRODUCTS + WAY_ALL
-                        ).permitAll()
-                        .requestMatchers(
-                                "GET",
-                                API + V1 + CATEGORY,
-                                API + V1 + CATEGORY + WAY_ALL
-                        ).permitAll()
-                        .requestMatchers(
-                                "GET",
-                                API + V1 + CATEGORIES,
-                                API + V1 + CATEGORIES + WAY_ALL
-                        ).permitAll()
-                        .requestMatchers(
-                                "GET",
-                                API + V1 + ATTACHMENT + WAY_ALL
-                        ).permitAll()*/
+
+                       .requestMatchers(
+                               "GET",
+                               API + V1 + PRODUCT,
+                               API + V1 + PRODUCT + WAY_ALL
+                       ).permitAll()
+
+                       .requestMatchers(
+                               "GET",
+                               API + V1 + PRODUCTS,
+                               API + V1 + PRODUCTS + BY_CATEGORY + "/{categoryId}",
+                               API + V1 + PRODUCTS + WAY_ALL
+                       ).permitAll()
+
+                       .requestMatchers(
+                               "GET",
+                               API + V1 + CATEGORY,
+                               API + V1 + CATEGORY + WAY_ALL
+                       ).permitAll()
+
+                       .requestMatchers(
+                               "GET",
+                               API + V1 + CATEGORIES,
+                               API + V1 + CATEGORIES + WAY_ALL
+                       ).permitAll()
+
+                       .requestMatchers(
+                               "GET",
+                               API + V1 + ATTACHMENT + WAY_ALL
+                       ).permitAll()
+
                         .anyRequest().permitAll()
         );
 
@@ -88,7 +96,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:63342", "http://")); // IDE server porti
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost", "http://localhost/**")); // IDE server porti
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true); // Agar cookie yoki token ishlatilsa

@@ -2,7 +2,7 @@ package org.exp.primeapp.controller.admin.user;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.entities.User;
-import org.exp.primeapp.models.repo.UserRepository;
+import org.exp.primeapp.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

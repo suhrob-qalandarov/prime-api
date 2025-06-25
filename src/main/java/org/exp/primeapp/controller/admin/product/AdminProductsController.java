@@ -2,8 +2,8 @@ package org.exp.primeapp.controller.admin.product;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.entities.Product;
-import org.exp.primeapp.models.repo.ProductRepository;
-import org.exp.primeapp.service.interfaces.AdminProductService;
+import org.exp.primeapp.repository.ProductRepository;
+import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
