@@ -47,9 +47,6 @@
                     <div class="collapse navbar-collapse justify-content-start">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="/index.html">BOSH SAHIFA</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link active" href="catalog.html">KATALOG</a>
                             </li>
                             <li class="nav-item">
@@ -119,7 +116,6 @@
             <button class="mobile-sidebar-close" id="mobileSidebarClose">&times;</button>
         </div>
         <nav class="mobile-sidebar-nav">
-            <a href="/index.html" class="mobile-nav-link">BOSH SAHIFA</a>
             <a href="catalog.html" class="mobile-nav-link">KATALOG</a>
             <a href="about.html" class="mobile-nav-link">BIZ HAQIMIZDA</a>
             <a href="contact.html" class="mobile-nav-link">KONTAKTLAR</a>
@@ -178,31 +174,44 @@
     <div class="container-custom">
         <!-- Kategoriya Navigatsiyasi -->
         <div class="category-navigation">
-            <div class="category-header">
-                <h1 class="catalog-title">KATALOG</h1>
-                <div class="category-breadcrumbs">
-                    <a href="/index.html">Asosiy</a> > <span class="active-category" id="activeCategoryName">Barcha mahsulotlar</span>
-                </div>
+
+            <div class="category-breadcrumbs">
+                <a href="/index.html">Asosiy</a> / <span class="active-category" id="activeCategoryName"></span>
             </div>
 
-            <div class="category-tabs" id="categoryTabs">
-                <div class="category-tab active" data-category-id="all">Barchasi</div>
-                <!-- Categories will be loaded dynamically -->
+            <!-- Spotlight Navigation -->
+            <div class="spotlight-categories" id="spotlightCategories">
+                <!-- Spotlights will be loaded dynamically -->
             </div>
         </div>
 
-        <!-- Product Grid -->
-        <div class="products-container">
-            <div class="catalog-products-grid" id="productsGrid">
-                <!-- Products will be loaded dynamically -->
-            </div>
+        <!-- Main Catalog Container with Sidebar -->
+        <div class="catalog-container">
+            <!-- Left Sidebar for Categories -->
+            <aside class="catalog-sidebar">
+                <div class="sidebar-content">
+                    <h3 class="sidebar-title">Kategoriyalar</h3>
+                    <div class="sidebar-categories" id="sidebarCategories">
+                        <!-- Categories will be populated here -->
+                    </div>
+                </div>
+            </aside>
 
-            <!-- No Products Message -->
-            <div class="no-products" id="noProducts" style="display: none;">
-                <div class="text-center py-5">
-                    <i class="fas fa-box-open" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
-                    <h3 style="color: var(--burgundy-dark);">Mahsulotlar topilmadi</h3>
-                    <p style="color: #666;">Bu kategoriyada hozircha mahsulotlar mavjud emas.</p>
+            <!-- Main Content Area -->
+            <div class="catalog-main-content">
+                <div class="products-container">
+                    <div class="catalog-products-grid" id="productsGrid">
+                        <!-- Products will be loaded dynamically -->
+                    </div>
+
+                    <!-- No Products Message -->
+                    <div class="no-products" id="noProducts" style="display: none;">
+                        <div class="text-center py-5">
+                            <i class="fas fa-box-open" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
+                            <h3 style="color: var(--burgundy-dark);">Mahsulotlar topilmadi</h3>
+                            <p style="color: #666;">Bu kategoriyada hozircha mahsulotlar mavjud emas.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -298,356 +307,8 @@
     </div>
 </footer>
 
+<script src="/js/api.js"></script>
 <script src="/js/script.js"></script>
-<script>
-    // ======================================================
-    // API INTEGRATION FOR CATALOG
-    // ======================================================
-
-    // Global variables
-    let categories = [];
-    let products = [];
-    let currentCategoryId = 'all';
-
-    // Configure Axios defaults
-    axios.defaults.timeout = 10000; // 10 seconds timeout
-    axios.defaults.headers.common['Content-Type'] = 'application/json';
-
-    // Add request interceptor for debugging
-    axios.interceptors.request.use(
-        config => {
-            console.log('API Request:', config.method?.toUpperCase(), config.url);
-            return config;
-        },
-        error => {
-            console.error('Request Error:', error);
-            return Promise.reject(error);
-        }
-    );
-
-    // Add response interceptor for error handling
-    axios.interceptors.response.use(
-        response => {
-            console.log('API Response:', response.status, response.config.url);
-            return response;
-        },
-        error => {
-            console.error('Response Error:', error.response?.status, error.response?.data || error.message);
-
-            // Handle different error types
-            if (error.code === 'ECONNABORTED') {
-                showErrorMessage('Server bilan bog\'lanishda vaqt tugadi');
-            } else if (error.response?.status === 404) {
-                showErrorMessage('API endpoint topilmadi');
-            } else if (error.response?.status >= 500) {
-                showErrorMessage('Server xatoligi yuz berdi');
-            } else if (!error.response) {
-                showErrorMessage('Internet aloqasini tekshiring');
-            }
-
-            return Promise.reject(error);
-        }
-    );
-
-    // API Base URL (you can change this to your actual API base URL)
-    const API_BASE_URL = 'http://192.168.1.2/';
-
-    // ======================================================
-    // API FUNCTIONS
-    // ======================================================
-
-    // Fetch categories from API
-    async function fetchCategories() {
-        try {
-            const response = await axios.get(`${API_BASE_URL}api/v1/categories`);
-            categories = response.data;
-            renderCategories();
-        } catch (error) {
-            console.error('Error fetching categories:', error);
-            // Fallback to show error message or default categories
-            showErrorMessage('Kategoriyalarni yuklashda xatolik yuz berdi');
-        }
-    }
-
-    // Fetch all products from API
-    async function fetchAllProducts() {
-        try {
-            showLoading(true);
-            const response = await axios.get(`${API_BASE_URL}api/v1/products`);
-            products = response.data;
-            renderProducts(products);
-            showLoading(false);
-        } catch (error) {
-            console.error('Error fetching products:', error);
-            showLoading(false);
-            showErrorMessage('Mahsulotlarni yuklashda xatolik yuz berdi');
-        }
-    }
-
-    // Fetch products by category from API
-    async function fetchProductsByCategory(categoryId) {
-        try {
-            showLoading(true);
-            const response = await axios.get(`${API_BASE_URL}api/v1/products/by-category/${categoryId}`);
-            products = response.data;
-            renderProducts(products);
-            showLoading(false);
-        } catch (error) {
-            console.error('Error fetching products by category:', error);
-            showLoading(false);
-            showErrorMessage('Mahsulotlarni yuklashda xatolik yuz berdi');
-        }
-    }
-
-    // ======================================================
-    // RENDER FUNCTIONS
-    // ======================================================
-
-    // Render categories
-    function renderCategories() {
-        const categoryTabs = document.getElementById('categoryTabs');
-
-        // Clear existing tabs except "Barchasi"
-        categoryTabs.innerHTML = '<div class="category-tab active" data-category-id="all">Barchasi</div>';
-
-        // Add categories from API
-        categories.forEach(category => {
-            const categoryTab = document.createElement('div');
-            categoryTab.className = 'category-tab';
-            categoryTab.setAttribute('data-category-id', category.id);
-            categoryTab.textContent = category.name;
-            categoryTabs.appendChild(categoryTab);
-        });
-
-        // Add event listeners to category tabs
-        initializeCategoryTabs();
-    }
-
-    // Render products
-    function renderProducts(productsData) {
-        const productsGrid = document.getElementById('productsGrid');
-        const noProducts = document.getElementById('noProducts');
-
-        if (!productsData || productsData.length === 0) {
-            productsGrid.style.display = 'none';
-            noProducts.style.display = 'block';
-            return;
-        }
-
-        productsGrid.style.display = 'grid';
-        noProducts.style.display = 'none';
-        productsGrid.innerHTML = '';
-
-        productsData.forEach(product => {
-            const productCard = createProductCard(product);
-            productsGrid.appendChild(productCard);
-        });
-    }
-
-    // Create product card HTML
-    function createProductCard(product) {
-        const productCard = document.createElement('div');
-        productCard.className = 'catalog-product-card';
-        productCard.setAttribute('data-product-id', product.id);
-        productCard.setAttribute('data-category', product.categoryName);
-
-        // Calculate discount percentage
-        const discountPercent = product.discount || 0;
-        const originalPrice = product.price / (1 - discountPercent / 100);
-
-        // Get main image URL
-        const mainImageUrl = getImageUrl(product.attachmentIds[0]) || 'images/placeholder.jpg';
-
-        // Get status badge
-        const statusBadge = getStatusBadge(product.status);
-
-        // Get available sizes
-        const availableSizes = product.productSizes?.filter(size => size.amount > 0) || [];
-
-        productCard.innerHTML = `
-        <div class="catalog-product-image-container">
-            ${discountPercent > 0 ? `
-                <div class="catalog-discount-banner">
-                    <div class="catalog-discount-text" data-text="🔥 QAYNOQ CHEGIRMA ${discountPercent}% 🔥   "></div>
-                </div>
-            ` : ''}
-            ${statusBadge}
-            <img src="${mainImageUrl}" alt="${product.name}" class="catalog-product-image">
-            <div class="catalog-quick-view-overlay">
-                <span class="catalog-quick-view-text">QUICK VIEW</span>
-            </div>
-            <button class="catalog-mobile-quick-view-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256">
-                    <path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path>
-                </svg>
-            </button>
-        </div>
-        <div class="catalog-product-info">
-            <div class="catalog-product-category">${product.categoryName.toUpperCase()}</div>
-            <h3 class="catalog-product-name">${product.name}</h3>
-            ${product.attachmentIds && product.attachmentIds.length > 1 ? `
-                <div class="catalog-product-thumbnails">
-                    ${product.attachmentIds.slice(0, 2).map(id => `
-                        <img src="${getImageUrl(id)}" alt="Thumbnail" class="catalog-product-thumbnail">
-                    `).join('')}
-                </div>
-            ` : ''}
-            <div class="catalog-product-pricing">
-                <span class="catalog-current-price">${formatPrice(product.price)}</span>
-                ${discountPercent > 0 ? `
-                    <span class="catalog-original-price">${formatPrice(originalPrice)}</span>
-                    <span class="catalog-discount-badge">-${discountPercent}%</span>
-                ` : ''}
-            </div>
-            ${availableSizes.length > 0 ? `
-                <div class="catalog-product-sizes">
-                    <small>Mavjud o'lchamlar: ${availableSizes.map(s => s.size).join(', ')}</small>
-                </div>
-            ` : ''}
-        </div>
-    `;
-
-        return productCard;
-    }
-
-    // ======================================================
-    // UTILITY FUNCTIONS
-    // ======================================================
-
-    // Get image URL from attachment ID
-    function getImageUrl(attachmentId) {
-        if (!attachmentId) return 'images/placeholder.jpg';
-        // You can modify this to match your actual image URL structure
-        return API_BASE_URL + `api/v1/attachment/${attachmentId}`;
-    }
-
-    // Get status badge HTML
-    function getStatusBadge(status) {
-        if (!status || status === 'NORMAL') return '';
-
-        const statusConfig = {
-            'NEW': { text: 'YANGI', class: 'status-new', color: '#4CAF50' },
-            'HOT': { text: 'ISSIQ', class: 'status-hot', color: '#FF5722' },
-            'SALE': { text: 'CHEGIRMA', class: 'status-sale', color: '#FF9800' }
-        };
-
-        const config = statusConfig[status];
-        if (!config) return '';
-
-        return `
-        <div class="product-status-badge ${config.class}" style="background: ${config.color};">
-            ${config.text}
-        </div>
-    `;
-    }
-
-    // Format price
-    function formatPrice(price) {
-        return new Intl.NumberFormat('uz-UZ').format(price) + ' So\'m';
-    }
-
-    // Show loading spinner
-    function showLoading(show) {
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const productsGrid = document.getElementById('productsGrid');
-
-        if (show) {
-            loadingSpinner.style.display = 'flex';
-            productsGrid.style.opacity = '0.5';
-        } else {
-            loadingSpinner.style.display = 'none';
-            productsGrid.style.opacity = '1';
-        }
-    }
-
-    // Show error message
-    function showErrorMessage(message) {
-        const productsGrid = document.getElementById('productsGrid');
-        productsGrid.innerHTML = `
-        <div class="col-12">
-            <div class="alert alert-danger text-center" role="alert">
-                <i class="fas fa-exclamation-triangle mb-2" style="font-size: 2rem;"></i>
-                <h4>Xatolik yuz berdi</h4>
-                <p>${message}</p>
-                <button class="btn btn-primary" onclick="location.reload()">Qayta yuklash</button>
-            </div>
-        </div>
-    `;
-    }
-
-    // ======================================================
-    // EVENT HANDLERS
-    // ======================================================
-
-    // Initialize category tabs
-    function initializeCategoryTabs() {
-        const categoryTabs = document.querySelectorAll('.category-tab');
-
-        categoryTabs.forEach(tab => {
-            tab.addEventListener('click', async () => {
-                // Remove active class from all tabs
-                categoryTabs.forEach(t => t.classList.remove('active'));
-
-                // Add active class to clicked tab
-                tab.classList.add('active');
-
-                // Get category ID
-                const categoryId = tab.getAttribute('data-category-id');
-                currentCategoryId = categoryId;
-
-                // Update active category name
-                const activeCategoryName = document.getElementById('activeCategoryName');
-                activeCategoryName.textContent = categoryId === 'all' ? 'Barcha mahsulotlar' : tab.textContent;
-
-                // Fetch products
-                if (categoryId === 'all') {
-                    await fetchAllProducts();
-                } else {
-                    await fetchProductsByCategory(categoryId);
-                }
-            });
-        });
-    }
-
-    // ======================================================
-    // INITIALIZATION
-    // ======================================================
-
-    // Initialize catalog page
-    document.addEventListener('DOMContentLoaded', async () => {
-        // Load existing functionality
-        if (typeof initializeMobileScrollEffects === 'function') {
-            initializeMobileScrollEffects();
-        }
-        if (typeof initializeDesktopScrollEffects === 'function') {
-            initializeDesktopScrollEffects();
-        }
-        if (typeof initializeMobileSidebar === 'function') {
-            initializeMobileSidebar();
-        }
-        if (typeof initializeMobileBottomNav === 'function') {
-            initializeMobileBottomNav();
-        }
-        if (typeof initializeCartModal === 'function') {
-            initializeCartModal();
-        }
-        if (typeof loadCartFromStorage === 'function') {
-            loadCartFromStorage();
-        }
-
-        // Load catalog data
-        try {
-            await Promise.all([
-                fetchCategories(),
-                fetchAllProducts()
-            ]);
-        } catch (error) {
-            console.error('Error initializing catalog:', error);
-            showErrorMessage('Sahifani yuklashda xatolik yuz berdi');
-        }
-
-        console.log('Catalog page initialized successfully!');
-    });
-</script>
+<script src="/js/catalog.js"></script>
 </body>
 </html>
