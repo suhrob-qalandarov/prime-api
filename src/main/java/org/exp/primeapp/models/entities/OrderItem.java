@@ -23,7 +23,11 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @ManyToOne
+    @JoinColumn(name = "product_size_id", nullable = false)
+    private ProductSize productSize;
+
     private Integer quantity;
 
-    private Integer price;
+    private Double price;
 }
