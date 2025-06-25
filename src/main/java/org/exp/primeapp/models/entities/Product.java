@@ -34,7 +34,10 @@ public class Product extends BaseEntity {
     @ManyToOne
     private Category category;
 
-    @OneToMany
+    @OneToOne
+    private Attachment mainImage;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "product_attachment",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -44,6 +47,14 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductSize> sizes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinTable(
+            name = "collections_products",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "collection_id")
+    )
+    private Collection collection;
 
     public void addSize(ProductSize productSize) {
         if (sizes.stream().noneMatch(ps -> ps.getSize() == productSize.getSize())) {
