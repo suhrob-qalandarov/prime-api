@@ -82,32 +82,6 @@
     border-radius: 0 3px 3px 0;
 }
 
-.barchasi-sidebar-btn {
-    background: transparent;
-    border: 2px solid var(--burgundy-color);
-    color: var(--burgundy-color);
-    padding: 12px 15px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: var(--transition);
-    margin-bottom: 15px;
-    width: 100%;
-    text-align: center;
-}
-
-.barchasi-sidebar-btn:hover {
-    background: var(--burgundy-color);
-    color: white;
-}
-
-.barchasi-sidebar-btn.active {
-    background: var(--burgundy-color);
-    color: white;
-}
-
 /* Category Navigation */
 .category-navigation {
     margin-bottom: 30px;
@@ -164,6 +138,7 @@
     padding: 10px 20px;
     border-radius: 8px;
     font-size: 14px;
+    text-transform: uppercase;
     font-weight: 500;
     cursor: pointer;
     transition: var(--transition);
@@ -178,6 +153,62 @@
     border-color: var(--burgundy-color);
     color: var(--burgundy-color);
     background: rgba(139, 21, 56, 0.05);
+}
+
+/* ERKAKLAR UCHUN Title */
+.erkaklar-uchun-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--burgundy-dark);
+    margin: 30px 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    background: transparent;
+}
+
+/* Sorting Filters */
+.sorting-filters {
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.sorting-filters-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.sorting-filter-item {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 180px;
+}
+
+.sorting-select {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--text-color);
+    background: white;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.sorting-select:hover,
+.sorting-select:focus {
+    border-color: var(--burgundy-color);
+    outline: none;
+}
+
+.sorting-select option {
+    padding: 8px;
 }
 
 /* Main Content Area */
@@ -461,7 +492,7 @@
 
 /* Active Navigation Link */
 .navbar-nav .nav-link.active {
-    color: black !important;
+    color: var(--burgundy-color) !important;
     font-weight: 700;
 }
 
@@ -566,6 +597,16 @@
     .sidebar-category-item {
         padding: 10px 12px;
         font-size: 13px;
+    }
+
+    .sorting-filters-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .sorting-filter-item {
+        min-width: 100%;
     }
 
     /* Hide desktop elements on mobile */

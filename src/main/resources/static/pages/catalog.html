@@ -116,6 +116,7 @@
             <button class="mobile-sidebar-close" id="mobileSidebarClose">&times;</button>
         </div>
         <nav class="mobile-sidebar-nav">
+            <a href="/index.html" class="mobile-nav-link">BOSH SAHIFA</a>
             <a href="catalog.html" class="mobile-nav-link">KATALOG</a>
             <a href="about.html" class="mobile-nav-link">BIZ HAQIMIZDA</a>
             <a href="contact.html" class="mobile-nav-link">KONTAKTLAR</a>
@@ -174,10 +175,12 @@
     <div class="container-custom">
         <!-- Kategoriya Navigatsiyasi -->
         <div class="category-navigation">
-
             <div class="category-breadcrumbs">
                 <a href="/index.html">Asosiy</a> / <span class="active-category" id="activeCategoryName"></span>
             </div>
+
+            <!-- ERKAKLAR UCHUN Title -->
+            <h2 class="erkaklar-uchun-title" id="erkaklarUchunTitle">ERKAKLAR UCHUN</h2>
 
             <!-- Spotlight Navigation -->
             <div class="spotlight-categories" id="spotlightCategories">
@@ -199,6 +202,33 @@
 
             <!-- Main Content Area -->
             <div class="catalog-main-content">
+                <!-- Sorting Filters -->
+                <div class="sorting-filters" id="sortingFilters">
+                    <div class="sorting-filters-container">
+                        <div class="sorting-filter-item">
+                            <select id="sortByPopularity" class="sorting-select">
+                                <option value="">Mashhurligi bo'yicha</option>
+                                <option value="popularity-high">Eng mashhur</option>
+                                <option value="popularity-low">Kam mashhur</option>
+                            </select>
+                        </div>
+                        <div class="sorting-filter-item">
+                            <select id="sortByName" class="sorting-select">
+                                <option value="">Nomi bo'yicha</option>
+                                <option value="name-asc">A-Z</option>
+                                <option value="name-desc">Z-A</option>
+                            </select>
+                        </div>
+                        <div class="sorting-filter-item">
+                            <select id="sortByPrice" class="sorting-select">
+                                <option value="">Narx bo'yicha</option>
+                                <option value="price-low">Arzon</option>
+                                <option value="price-high">Qimmat</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="products-container">
                     <div class="catalog-products-grid" id="productsGrid">
                         <!-- Products will be loaded dynamically -->
