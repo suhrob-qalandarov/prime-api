@@ -6,14 +6,17 @@ import org.exp.primeapp.models.dto.responce.ApiResponse;
 import org.exp.primeapp.models.dto.responce.CategoryRes;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
+import org.exp.primeapp.models.entities.Spotlight;
 import org.exp.primeapp.models.repo.AttachmentRepository;
 import org.exp.primeapp.models.repo.CategoryRepository;
 import org.exp.primeapp.models.repo.ProductRepository;
+import org.exp.primeapp.models.repo.SpotlightRepository;
 import org.exp.primeapp.service.interfaces.CategoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,19 +25,29 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final AttachmentRepository attachmentRepository;
+    private final SpotlightRepository spotlightRepository;
 
     @Transactional
     @Override
     public ApiResponse saveCategory(CategoryReq categoryReq) {
-/*        Attachment attachment = attachmentRepository.findById(categoryReq.getAttachmentId())
-                .orElseThrow(() -> new RuntimeException("Attachment not found with id: " + categoryReq.getAttachmentId()));*/
+        Category category;
+        Optional<Spotlight> optionalSpotlight = spotlightRepository.findById(categoryReq.spotlightId());
 
-        Category category = Category.builder()
-                .name(categoryReq.name())
-                .build();
-
+        if (optionalSpotlight.isEmpty()) {
+            category = Category.builder()
+                    .name(categoryReq.name())
+                    .spotlight(null)
+                    .active(true)
+                    .build();
+        } else {
+            Spotlight spotlight = optionalSpotlight.get();
+            category = Category.builder()
+                    .name(categoryReq.name())
+                    .spotlight(spotlight)
+                    .active(true)
+                    .build();
+        }
         categoryRepository.save(category);
-
         return new ApiResponse(true, "Category saved successfully");
     }
 
