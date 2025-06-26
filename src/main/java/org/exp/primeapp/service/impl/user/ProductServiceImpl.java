@@ -66,9 +66,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private ProductRes convertToProductRes(Product product) {
-        List<Long> attachmentIds = product.getAttachments()
+        List<String> attachmentKeys = product.getAttachments()
                 .stream()
-                .map(Attachment::getId)
+                .map(Attachment::getKey)
                 .collect(Collectors.toList());
 
         List<ProductSizeRes> productSizes = product.getSizes()
@@ -84,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
                 product.getDiscount(),
                 product.getStatus(),
                 product.getCategory().getName(),
-                attachmentIds,
+                attachmentKeys,
                 productSizes
         );
     }
