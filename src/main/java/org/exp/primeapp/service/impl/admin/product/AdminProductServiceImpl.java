@@ -12,11 +12,11 @@ import org.exp.primeapp.repository.ProductRepository;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
-
 @RequiredArgsConstructor
 public class AdminProductServiceImpl implements AdminProductService {
 
@@ -42,7 +42,7 @@ public class AdminProductServiceImpl implements AdminProductService {
             attachmentIds = List.of(1L); // fallback
         }
 
-        List<Attachment> attachments = attachmentRepository.findAllById(attachmentIds);
+        Set<Attachment> attachments = new HashSet<>(attachmentRepository.findAllById(attachmentIds));
 
         Product product = createProductFromReq(productReq, category, attachments);
         Product savedProduct = productRepository.save(product);
@@ -57,7 +57,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         return new ApiResponse(true, "Product saved successfully with ID: " + savedProduct.getId());
     }
 
-    private Product createProductFromReq(ProductReq req, Category category, List<Attachment> attachments) {
+    private Product createProductFromReq(ProductReq req, Category category, Set<Attachment> attachments) {
         Product product = Product.builder()
                 .name(req.getName())
                 .description(req.getDescription())
@@ -66,7 +66,7 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .status(req.getStatus())
                 .category(category)
                 .attachments(attachments)
-                .sizes(new ArrayList<>()) // aniq boshlang‘ich qiymat
+                .sizes(new HashSet<>()) // aniq boshlang‘ich qiymat
                 .build();
 
         // ProductSize'larni qo‘shamiz
@@ -109,7 +109,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         }
 
         if (req.getAttachmentIds() != null && !req.getAttachmentIds().isEmpty()) {
-            List<Attachment> attachments = attachmentRepository.findAllById(req.getAttachmentIds());
+            Set<Attachment> attachments = new HashSet<>(attachmentRepository.findAllById(req.getAttachmentIds()));
             product.setAttachments(attachments);
         }
 
@@ -166,7 +166,6 @@ public class AdminProductServiceImpl implements AdminProductService {
             return new ApiResponse(false, "Product not found with id or already active");
         }
     }
-
 
     @Override
     public List<Product> getActiveProductsForAdmin() {

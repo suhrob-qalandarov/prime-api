@@ -5,16 +5,16 @@ import org.exp.primeapp.models.enums.ProductStatus;
 
 import java.util.List;
 
-
-@Value
-public class ProductRes {
-    Long id;
-    String name;
-    String description;
-    Double price;
-    Integer discount;
-    ProductStatus status;
-    String categoryName;
-    List<Long> attachmentIds;
-    List<ProductSizeRes> productSizes;
+@Builder
+public record ProductRes(
+        Long id,
+        String name,
+        String description,
+        Double price,
+        Integer discount,
+        ProductStatus status,
+        String categoryName,
+        List<String> attachmentKeys,
+        List<ProductSizeRes> productSizes
+) {
 }

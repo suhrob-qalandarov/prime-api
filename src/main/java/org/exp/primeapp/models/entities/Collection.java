@@ -10,8 +10,8 @@ import org.exp.primeapp.models.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,6 +24,10 @@ import java.util.List;
 public class Collection extends BaseEntity {
 
     private String name;
+    private String description;
+
+    @OneToOne
+    private Attachment mainImage;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -31,5 +35,5 @@ public class Collection extends BaseEntity {
             joinColumns = @JoinColumn(name = "collection_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<Product> products = new ArrayList<>();
+    private Set<Product> products = new HashSet<>();
 }
