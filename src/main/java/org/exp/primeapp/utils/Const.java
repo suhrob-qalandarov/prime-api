@@ -24,6 +24,9 @@ public interface Const {
     String SPOTLIGHT = "/spotlight";
     String SPOTLIGHTS = "/spotlights";
 
+    String COLLECTION = "/collection";
+    String COLLECTIONS = "/collections";
+
     String CATEGORY = "/category";
     String CATEGORIES = "/categories";
     String ATTACHMENT = "/attachment";
