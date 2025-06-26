@@ -15,7 +15,8 @@ import org.exp.primeapp.models.base.BaseEntity;
 @NoArgsConstructor
 @Entity
 public class Attachment extends BaseEntity {
-    private String url;
+
+    private String key;
     private String filename;
     private String contentType;
 }

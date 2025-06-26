@@ -8,5 +8,5 @@ import java.io.IOException;
 @Service
 public interface AttachmentService {
 
-    void get(Long attachmentId, HttpServletResponse response) throws IOException;
+    void get(String attachmentKey, HttpServletResponse response) throws IOException;
 }

@@ -33,7 +33,7 @@ public class AdminAttachmentController {
         Attachment attachment = adminAttachmentService.uploadOne(file);
         AttachmentRes response = AttachmentRes.builder()
                 .id(attachment.getId())
-                .url(attachment.getUrl())
+                .url(attachment.getKey())
                 .filename(attachment.getFilename())
                 .contentType(attachment.getContentType())
                 .build();

@@ -33,7 +33,7 @@ public class S3ServiceImpl implements S3Service {
         }
 
         String filename = file.getOriginalFilename() != null ? file.getOriginalFilename() : file.getName();
-        String key = filename + "_" + System.currentTimeMillis();
+        String key = System.currentTimeMillis() + "_" + filename;
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)

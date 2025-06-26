@@ -124,10 +124,10 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
     public AttachmentRes update(Long attachmentId, MultipartFile file) {
         attachmentUtilService.validateFile(file);
         Attachment attachment = attachmentUtilService.getAttachment(attachmentId);
-        String oldKey = attachment.getUrl();
+        String oldKey = attachment.getKey();
         String newKey = uploadToS3(file);
 
-        attachment.setUrl(newKey);
+        attachment.setKey(newKey);
         attachment.setFilename(file.getOriginalFilename());
         attachment.setContentType(file.getContentType());
 
@@ -162,14 +162,14 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
     @Override
     public void deleteFromS3(Long attachmentId) {
         Attachment attachment = attachmentUtilService.getAttachment(attachmentId);
-        String key = attachment.getUrl();
+        String key = attachment.getKey();
 
-        if (attachment.getActive() || attachment.getUrl().startsWith("deleted_")) {
+        if (attachment.getActive() || attachment.getKey().startsWith("deleted_")) {
             return;
         }
 
         try {
-            attachment.setUrl("deleted_" + attachment.getUrl());
+            attachment.setKey("deleted_" + attachment.getKey());
             attachment.setActive(false);
             attachmentRepository.save(attachment);
         } catch (Exception e) {
@@ -212,7 +212,7 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
 
     private Attachment saveAttachment(MultipartFile file, String key) {
         Attachment newAttachment = Attachment.builder()
-                .url(key)
+                .key(key)
                 .filename(file.getOriginalFilename())
                 .contentType(file.getContentType())
                 .active(true)
