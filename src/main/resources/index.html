@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Phone Auth Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        input, button {
+            margin: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        #recaptcha-container {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<h1>📱 Firebase Phone Auth Test</h1>
+
+<div id="phone-auth">
+    <h2>SMS yuborish</h2>
+    <input type="tel" id="phone-number" placeholder="+998901234567" required>
+    <div id="recaptcha-container"></div>
+    <button onclick="sendVerificationCode()">Kodni yuborish</button>
+</div>
+
+<div id="code-verification" style="display: none;">
+    <h2>Kodni tasdiqlash</h2>
+    <input type="text" id="verification-code" placeholder="SMS kodini kiriting">
+    <button onclick="verifyCode()">Kodni tasdiqlash</button>
+</div>
+
+<p id="message"></p>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+    // Firebase konfiguratsiyasi (my-test-app-87622 uchun)
+    const firebaseConfig = {
+        apiKey: "AIzaSyDBbUss3pNWm28Kt8lMSJGRXN7yyLmQIt0",
+        authDomain: "my-test-app-87622.firebaseapp.com",
+        projectId: "my-test-app-87622",
+        storageBucket: "my-test-app-87622.firebasestorage.app",
+        messagingSenderId: "898984078955",
+        appId: "1:898984078955:web:504b4169abae107c8acb2e",
+        measurementId: "G-94FHPKFGX3"
+    };
+
+    // Boshqa loyihalar uchun firebaseConfig ni almashtiring:
+    // cedar-chemist-464213-c7 yoki sample-firebase-ai-app-7e4c1 uchun Firebase Console dan oling
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // reCAPTCHA sozlash
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        size: 'normal',
+        callback: () => {
+            document.getElementById('message').innerText = 'reCAPTCHA tasdiqlandi!';
+        },
+        'expired-callback': () => {
+            document.getElementById('message').innerText = 'reCAPTCHA muddati tugadi. Iltimos, qayta urining.';
+        }
+    });
+
+    try {
+        await recaptchaVerifier.render();
+        document.getElementById('message').innerText = 'reCAPTCHA yuklandi!';
+    } catch (error) {
+        document.getElementById('message').innerText = 'reCAPTCHA yuklanishda xato: ' + error.message;
+    }
+
+    // SMS kod yuborish
+    window.sendVerificationCode = async () => {
+        const phoneNumber = document.getElementById('phone-number').value;
+        if (!phoneNumber.match(/^\+\d{10,14}$/)) {
+            document.getElementById('message').innerText = 'Xato: Telefon raqami noto‘g‘ri formatda. Iltimos, + bilan boshlanadigan raqam kiriting (masalan, +998901234567).';
+            return;
+        }
+        try {
+            const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier);
+            window.confirmationResult = confirmationResult;
+            document.getElementById('phone-auth').style.display = 'none';
+            document.getElementById('code-verification').style.display = 'block';
+            document.getElementById('message').innerText = 'SMS kodi yuborildi!';
+        } catch (error) {
+            console.error('Xato:', error.code, error.message);
+            if (error.code === 'auth/invalid-app-credential') {
+                document.getElementById('message').innerText = 'Xato: reCAPTCHA tasdiqlanmadi yoki ilova sozlamalari noto‘g‘ri. Iltimos, sahifani yangilang yoki internet ulanishingizni tekshiring.';
+            } else if (error.code === 'auth/too-many-requests') {
+                document.getElementById('message').innerText = 'Xato: Juda ko‘p so‘rov yuborildi. Iltimos, keyinroq qayta urining yoki boshqa raqamdan foydalaning.';
+            } else {
+                document.getElementById('message').innerText = `Xato: ${error.code} - ${error.message}`;
+            }
+        }
+    };
+
+    // Kodni tasdiqlash
+    window.verifyCode = async () => {
+        const code = document.getElementById('verification-code').value;
+        try {
+            const result = await window.confirmationResult.confirm(code);
+            const user = result.user;
+            document.getElementById('message').innerText = 'Muvaffaqiyatli tasdiqlandi! User ID: ' + user.uid;
+        } catch (error) {
+            document.getElementById('message').innerText = `Xato: ${error.code} - ${error.message}`;
+        }
+    };
+</script>
+</body>
+</html>

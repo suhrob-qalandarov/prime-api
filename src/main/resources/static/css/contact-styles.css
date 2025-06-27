@@ -67,7 +67,8 @@
 
 /* Contact Information Section */
 .contact-info-section {
-    background: var(--light-color);
+    background: #f0f0f0;
+    /*background: var(--light-color);*/
     padding: 20px 0 40px;
 }
 
