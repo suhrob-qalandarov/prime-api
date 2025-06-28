@@ -167,42 +167,137 @@ function createProductCard(product) {
 // ======================================================
 
 /**
- * Initialize sorting events
+ * Initialize new filter bar events
  */
-function initializeSortingEvents() {
-    const sortByPopularity = document.getElementById("sortByPopularity")
-    const sortByName = document.getElementById("sortByName")
-    const sortByPrice = document.getElementById("sortByPrice")
+function initializeFilterEvents() {
+    // Filter dropdown toggle
+    const filterBtn = document.getElementById("filterBtn")
+    const filterDropdown = document.getElementById("filterDropdown")
 
-    sortByPopularity?.addEventListener("change", (e) => {
-        if (e.target.value) {
-            // Reset other selects
-            if (sortByName) sortByName.value = ""
-            if (sortByPrice) sortByPrice.value = ""
-            currentSortBy = e.target.value
-            sortProducts(products, currentSortBy)
+    filterBtn?.addEventListener("click", (e) => {
+        e.stopPropagation()
+        const isVisible = filterDropdown.style.display !== "none"
+        filterDropdown.style.display = isVisible ? "none" : "block"
+    })
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!filterDropdown?.contains(e.target) && !filterBtn?.contains(e.target)) {
+            filterDropdown.style.display = "none"
         }
     })
 
-    sortByName?.addEventListener("change", (e) => {
-        if (e.target.value) {
-            // Reset other selects
-            if (sortByPopularity) sortByPopularity.value = ""
-            if (sortByPrice) sortByPrice.value = ""
-            currentSortBy = e.target.value
-            sortProducts(products, currentSortBy)
-        }
+    // Size filter checkboxes
+    const sizeCheckboxes = document.querySelectorAll('input[name="size"]')
+    sizeCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+            applyFilters()
+        })
     })
 
-    sortByPrice?.addEventListener("change", (e) => {
-        if (e.target.value) {
-            // Reset other selects
-            if (sortByPopularity) sortByPopularity.value = ""
-            if (sortByName) sortByName.value = ""
-            currentSortBy = e.target.value
+    // Status filter buttons
+    const statusBtns = document.querySelectorAll(".status-filter-btn")
+    statusBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            btn.classList.toggle("active")
+            applyFilters()
+        })
+    })
+
+    // Sort select
+    const sortSelect = document.getElementById("sortSelect")
+    sortSelect?.addEventListener("change", (e) => {
+        currentSortBy = e.target.value
+        if (currentSortBy) {
             sortProducts(products, currentSortBy)
+        } else {
+            renderProducts(products)
         }
     })
+}
+
+/**
+ * Apply all active filters
+ */
+function applyFilters() {
+    let filteredProducts = [...products]
+
+    // Apply size filters
+    const selectedSizes = Array.from(document.querySelectorAll('input[name="size"]:checked')).map((cb) => cb.value)
+
+    if (selectedSizes.length > 0) {
+        filteredProducts = filteredProducts.filter((product) => {
+            return product.productSizes?.some((size) => selectedSizes.includes(size.size) && size.amount > 0)
+        })
+    }
+
+    // Apply status filters
+    const activeStatusBtns = document.querySelectorAll(".status-filter-btn.active")
+    const selectedStatuses = Array.from(activeStatusBtns).map((btn) => btn.dataset.status)
+
+    if (selectedStatuses.length > 0) {
+        filteredProducts = filteredProducts.filter((product) => selectedStatuses.includes(product.status))
+    }
+
+    // Update products count
+    updateProductsCount(filteredProducts.length)
+
+    // Apply current sorting if any
+    if (currentSortBy) {
+        sortProducts(filteredProducts, currentSortBy)
+    } else {
+        renderProducts(filteredProducts)
+    }
+}
+
+/**
+ * Update products count display
+ */
+function updateProductsCount(count) {
+    const productsCount = document.getElementById("productsCount")
+    if (productsCount) {
+        productsCount.textContent = count
+    }
+}
+
+/**
+ * Update selected category filter tag
+ */
+function updateSelectedCategoryTag(categoryName) {
+    const selectedFilters = document.getElementById("selectedFilters")
+    if (!selectedFilters) return
+
+    // Clear existing tags
+    selectedFilters.innerHTML = ""
+
+    // Add category tag if not "Barcha mahsulotlar"
+    if (categoryName && categoryName !== "Barcha mahsulotlar") {
+        const tag = document.createElement("div")
+        tag.className = "selected-filter-tag"
+        tag.innerHTML = `
+            <span>${categoryName}</span>
+            <button class="remove-filter" onclick="clearCategoryFilter()">×</button>
+        `
+        selectedFilters.appendChild(tag)
+    }
+}
+
+/**
+ * Clear category filter
+ */
+function clearCategoryFilter() {
+    // Reset to "Barcha mahsulotlar"
+    handleCategorySelection("all", "Barcha mahsulotlar")
+
+    // Update active states
+    document.querySelectorAll(".top-category-btn").forEach((btn) => {
+        btn.classList.remove("active")
+    })
+
+    const barchasiBtn = document.getElementById("barchasiTopBtn")
+    if (barchasiBtn) {
+        barchasiBtn.classList.add("active")
+    }
 }
 
 /**
@@ -282,6 +377,8 @@ async function handleCategorySelection(categoryId, categoryName) {
 
         // Update breadcrumb
         updateBreadcrumb(categoryName)
+        updateSelectedCategoryTag(categoryName)
+        updateProductsCount(products.length)
 
         // Fetch products
         if (categoryId === "all") {
@@ -344,7 +441,7 @@ async function initializeCatalog() {
         renderProducts(products)
 
         // Initialize events
-        initializeSortingEvents()
+        initializeFilterEvents()
         initializeBarchasiEvents()
 
         window.API.showLoading(false)
