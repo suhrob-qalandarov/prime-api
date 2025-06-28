@@ -5,7 +5,7 @@
 /* Catalog Page Layout */
 .catalog-page {
     background: var(--light-color);
-    padding: 140px 0 80px;
+    padding: 80px 0 80px;
     min-height: 100vh;
 }
 
@@ -36,11 +36,11 @@
 .top-category-btn {
     background: transparent;
     border: none;
-    color: var(--burgundy-light);
+    color: black;
     padding: 12px 20px;
     border-radius: 8px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 800;
     cursor: pointer;
     transition: var(--transition);
     white-space: nowrap;
@@ -66,7 +66,7 @@
 .top-category-btn.active {
     color: var(--burgundy-light);
     background: transparent;
-    font-weight: 600;
+    font-weight: 800;
 }
 
 .top-category-btn.active::after {
@@ -96,6 +96,7 @@
     margin-right: -200px;
     padding-left: 200px;
     padding-right: 200px;
+    padding-top: 20px;
     padding-bottom: 20px;
 }
 
@@ -123,7 +124,7 @@
 
 .active-category {
     color: var(--burgundy-light);
-    font-weight: 600;
+    font-weight: 900;
 }
 
 /* Simple Spotlight Navigation */
@@ -273,7 +274,6 @@
 }
 
 .filter-btn:hover {
-    background: rgba(139, 21, 56, 0.05);
     color: var(--burgundy-color);
 }
 
@@ -402,7 +402,8 @@
 
 .sort-select.has-selection:hover,
 .sort-select.has-selection:focus {
-    border-color: #dc3545;
+    border-color: var(--burgundy-color);
+    background: rgba(139, 21, 56, 0.05);
 }
 
 .sort-select option:disabled {
@@ -417,7 +418,7 @@
 }
 
 .results-info span {
-    color: var(--burgundy-color);
+    color: #666;
     font-weight: 600;
 }
 
@@ -749,7 +750,7 @@
 
 /* Active Navigation Link */
 .navbar-nav .nav-link.active {
-    color: var(--burgundy-color) !important;
+    color: black !important;
     font-weight: 700;
 }
 

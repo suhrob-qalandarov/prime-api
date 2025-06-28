@@ -203,11 +203,21 @@ function initializeFilterEvents() {
         })
     })
 
-    // Status filter buttons - fix the selector and don't move them
+    // Status filter buttons - make them work as radio buttons (only one active at a time)
     const statusBtns = document.querySelectorAll(".status-filter-btn")
     statusBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
-            btn.classList.toggle("active")
+            // If clicking the already active button, deactivate it
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active")
+            } else {
+                // Remove active class from all status buttons
+                statusBtns.forEach((otherBtn) => {
+                    otherBtn.classList.remove("active")
+                })
+                // Add active class to clicked button
+                btn.classList.add("active")
+            }
             applyFilters()
         })
     })

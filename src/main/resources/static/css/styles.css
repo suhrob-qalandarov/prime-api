@@ -80,7 +80,7 @@ body {
 }
 
 .main-header {
-    background: transparent;
+    background: #f0f0f0;
     padding: 20px 0;
     position: absolute;
     top: 40px;
@@ -188,8 +188,8 @@ body {
 
 .header-icon .badge {
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
     background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
     color: white;
     border-radius: 50%;
