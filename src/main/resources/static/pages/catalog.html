@@ -47,10 +47,10 @@
                     <div class="collapse navbar-collapse justify-content-start">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link active" href="catalog.html">KATALOG</a>
+                                <a class="nav-link" href="/index.html">BOSH SAHIFA</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/pages/collection.html">KOLLEKSIYA</a>
+                                <a class="nav-link active" href="catalog.html">KATALOG</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="about.html">BIZ HAQIMIZDA</a>
@@ -179,71 +179,60 @@
         <!-- Kategoriya Navigatsiyasi -->
         <div class="category-navigation">
             <div class="category-breadcrumbs">
-                <a href="/index.html">Asosiy</a> / <span class="active-category" id="activeCategoryName"></span>
+                <a href="/index.html">Asosiy</a> / <span class="active-category" id="activeCategoryName">Barcha mahsulotlar</span>
             </div>
 
-            <!-- ERKAKLAR UCHUN Title -->
-            <h2 class="erkaklar-uchun-title" id="erkaklarUchunTitle">ERKAKLAR UCHUN</h2>
-
-            <!-- Spotlight Navigation -->
-            <div class="spotlight-categories" id="spotlightCategories">
-                <!-- Spotlights will be loaded dynamically -->
+            <!-- Top Categories Navigation -->
+            <div class="top-categories-navigation">
+                <button class="top-category-btn active" id="barchasiTopBtn" data-category-id="all">
+                    Barcha mahsulotlar
+                </button>
+                <div class="top-categories" id="topCategories">
+                    <!-- Categories will be populated here -->
+                </div>
             </div>
         </div>
 
-        <!-- Main Catalog Container with Sidebar -->
-        <div class="catalog-container">
-            <!-- Left Sidebar for Categories -->
-            <aside class="catalog-sidebar">
-                <div class="sidebar-content">
-                    <h3 class="sidebar-title">Kategoriyalar</h3>
-                    <div class="sidebar-categories" id="sidebarCategories">
-                        <!-- Categories will be populated here -->
+        <!-- Main Content Area (Full Width) -->
+        <div class="catalog-main-content-full">
+            <!-- Sorting Filters -->
+            <div class="sorting-filters" id="sortingFilters">
+                <div class="sorting-filters-container">
+                    <div class="sorting-filter-item">
+                        <select id="sortByPopularity" class="sorting-select">
+                            <option value="">Mashhurligi bo'yicha</option>
+                            <option value="popularity-high">Eng mashhur</option>
+                            <option value="popularity-low">Kam mashhur</option>
+                        </select>
+                    </div>
+                    <div class="sorting-filter-item">
+                        <select id="sortByName" class="sorting-select">
+                            <option value="">Nomi bo'yicha</option>
+                            <option value="name-asc">A-Z</option>
+                            <option value="name-desc">Z-A</option>
+                        </select>
+                    </div>
+                    <div class="sorting-filter-item">
+                        <select id="sortByPrice" class="sorting-select">
+                            <option value="">Narx bo'yicha</option>
+                            <option value="price-low">Arzon</option>
+                            <option value="price-high">Qimmat</option>
+                        </select>
                     </div>
                 </div>
-            </aside>
+            </div>
 
-            <!-- Main Content Area -->
-            <div class="catalog-main-content">
-                <!-- Sorting Filters -->
-                <div class="sorting-filters" id="sortingFilters">
-                    <div class="sorting-filters-container">
-                        <div class="sorting-filter-item">
-                            <select id="sortByPopularity" class="sorting-select">
-                                <option value="">Mashhurligi bo'yicha</option>
-                                <option value="popularity-high">Eng mashhur</option>
-                                <option value="popularity-low">Kam mashhur</option>
-                            </select>
-                        </div>
-                        <div class="sorting-filter-item">
-                            <select id="sortByName" class="sorting-select">
-                                <option value="">Nomi bo'yicha</option>
-                                <option value="name-asc">A-Z</option>
-                                <option value="name-desc">Z-A</option>
-                            </select>
-                        </div>
-                        <div class="sorting-filter-item">
-                            <select id="sortByPrice" class="sorting-select">
-                                <option value="">Narx bo'yicha</option>
-                                <option value="price-low">Arzon</option>
-                                <option value="price-high">Qimmat</option>
-                            </select>
-                        </div>
-                    </div>
+            <div class="products-container">
+                <div class="catalog-products-grid" id="productsGrid">
+                    <!-- Products will be loaded dynamically -->
                 </div>
 
-                <div class="products-container">
-                    <div class="catalog-products-grid" id="productsGrid">
-                        <!-- Products will be loaded dynamically -->
-                    </div>
-
-                    <!-- No Products Message -->
-                    <div class="no-products" id="noProducts" style="display: none;">
-                        <div class="text-center py-5">
-                            <i class="fas fa-box-open" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
-                            <h3 style="color: var(--burgundy-dark);">Mahsulotlar topilmadi</h3>
-                            <p style="color: #666;">Bu kategoriyada hozircha mahsulotlar mavjud emas.</p>
-                        </div>
+                <!-- No Products Message -->
+                <div class="no-products" id="noProducts" style="display: none;">
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open" style="font-size: 4rem; color: #ccc; margin-bottom: 20px;"></i>
+                        <h3 style="color: var(--burgundy-dark);">Mahsulotlar topilmadi</h3>
+                        <p style="color: #666;">Bu kategoriyada hozircha mahsulotlar mavjud emas.</p>
                     </div>
                 </div>
             </div>

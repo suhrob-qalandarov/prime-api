@@ -3,11 +3,9 @@
 // ======================================================
 
 // Global variables
-let spotlights = []
+let categories = []
 let products = []
 let currentCategoryId = "all"
-let currentSpotlightId = null
-let selectedSpotlightId = null
 let currentSortBy = ""
 
 // ======================================================
@@ -15,96 +13,41 @@ let currentSortBy = ""
 // ======================================================
 
 /**
- * Render spotlight navigation buttons
+ * Render top categories navigation
  */
-function renderSpotlightCategories() {
-    const spotlightContainer = document.getElementById("spotlightCategories")
-    if (!spotlightContainer) return
+function renderTopCategories() {
+    const topCategories = document.getElementById("topCategories")
+    if (!topCategories) return
 
-    // Create simple navigation with buttons
-    const navigationHtml = `
-        <div class="spotlight-navigation">
-            ${spotlights
-        .map(
-            (spotlight) => `
-                <button class="spotlight-btn ${selectedSpotlightId === spotlight.id ? "active" : ""}" 
-                        data-spotlight-id="${spotlight.id}">
-                    ${spotlight.name}
-                </button>
-            `,
-        )
-        .join("")}
-        </div>
-    `
-
-    spotlightContainer.innerHTML = navigationHtml
-
-    // Add event listeners
-    initializeSpotlightEvents()
-    initializeSortingEvents()
-}
-
-/**
- * Render sidebar categories
- */
-function renderSidebarCategories() {
-    const sidebarCategories = document.getElementById("sidebarCategories")
-    if (!sidebarCategories) return
-
-    let categoriesToShow = []
-
-    if (currentCategoryId === "all") {
-        // Show all categories from all spotlights
-        spotlights.forEach((spotlight) => {
-            categoriesToShow = categoriesToShow.concat(spotlight.categories)
-        })
-    } else if (selectedSpotlightId) {
-        // Show categories from selected spotlight
-        const selectedSpotlight = spotlights.find((s) => s.id === selectedSpotlightId)
-        if (selectedSpotlight) {
-            categoriesToShow = selectedSpotlight.categories
-        }
-    }
-
-    // Remove duplicates if showing all categories
-    if (currentCategoryId === "all") {
-        const uniqueCategories = categoriesToShow.filter(
-            (category, index, self) => index === self.findIndex((c) => c.id === category.id),
-        )
-        categoriesToShow = uniqueCategories
-    }
-
-    const categoriesHtml = categoriesToShow
+    const categoriesHtml = categories
         .map(
             (category) => `
-            <button class="sidebar-category-item ${currentCategoryId === category.id ? "active" : ""}" 
-                    data-category-id="${category.id}" 
-                    data-spotlight-id="${selectedSpotlightId || ""}">
+            <button class="top-category-btn ${currentCategoryId === category.id ? "active" : ""}" 
+                    data-category-id="${category.id}">
                 ${category.name}
             </button>
         `,
         )
         .join("")
 
-    sidebarCategories.innerHTML = categoriesHtml
+    topCategories.innerHTML = categoriesHtml
 
     // Add event listeners to category items
-    sidebarCategories.querySelectorAll(".sidebar-category-item").forEach((item) => {
+    topCategories.querySelectorAll(".top-category-btn").forEach((item) => {
         item.addEventListener("click", async () => {
             const categoryId = Number.parseInt(item.getAttribute("data-category-id"))
-            const spotlightId = item.getAttribute("data-spotlight-id")
             const categoryName = item.textContent.trim()
 
-            await handleCategorySelection(categoryId, spotlightId ? Number.parseInt(spotlightId) : null, categoryName)
+            await handleCategorySelection(categoryId, categoryName)
 
             // Update active states
-            sidebarCategories.querySelectorAll(".sidebar-category-item").forEach((btn) => {
+            topCategories.querySelectorAll(".top-category-btn").forEach((btn) => {
                 btn.classList.remove("active")
             })
             item.classList.add("active")
 
             // Remove active from "Barcha mahsulotlar" button
-            const barchasiBtn = document.getElementById("barchasiSidebarBtn")
+            const barchasiBtn = document.getElementById("barchasiTopBtn")
             if (barchasiBtn) {
                 barchasiBtn.classList.remove("active")
             }
@@ -145,7 +88,7 @@ function createProductCard(product) {
     productCard.setAttribute("data-category", product.categoryName)
 
     // Get main image URL
-    const mainImageUrl = window.API.getImageUrl(product.attachmentIds?.[0])
+    const mainImageUrl = window.API.getImageUrl(product.attachmentKeys?.[0])
 
     // Get status configuration
     const statusConfig = window.API.getStatusConfig(product.status)
@@ -224,19 +167,6 @@ function createProductCard(product) {
 // ======================================================
 
 /**
- * Initialize spotlight events
- */
-function initializeSpotlightEvents() {
-    // Spotlight buttons
-    document.querySelectorAll(".spotlight-btn").forEach((button) => {
-        button.addEventListener("click", () => {
-            const spotlightId = Number.parseInt(button.getAttribute("data-spotlight-id"))
-            selectSpotlight(spotlightId, button)
-        })
-    })
-}
-
-/**
  * Initialize sorting events
  */
 function initializeSortingEvents() {
@@ -272,6 +202,22 @@ function initializeSortingEvents() {
             currentSortBy = e.target.value
             sortProducts(products, currentSortBy)
         }
+    })
+}
+
+/**
+ * Initialize "Barcha mahsulotlar" button events
+ */
+function initializeBarchasiEvents() {
+    const barchasiTopBtn = document.getElementById("barchasiTopBtn")
+    barchasiTopBtn?.addEventListener("click", async () => {
+        await handleCategorySelection("all", "Barcha mahsulotlar")
+
+        // Update active states
+        document.querySelectorAll(".top-category-btn").forEach((btn) => {
+            btn.classList.remove("active")
+        })
+        barchasiTopBtn.classList.add("active")
     })
 }
 
@@ -316,74 +262,26 @@ function sortProducts(productsData, sortBy) {
 }
 
 /**
- * Select spotlight and update sidebar
- */
-function selectSpotlight(spotlightId, buttonElement) {
-    selectedSpotlightId = spotlightId
-
-    // Update active states for spotlight buttons
-    document.querySelectorAll(".spotlight-btn").forEach((btn) => {
-        btn.classList.remove("active")
-    })
-    buttonElement.classList.add("active")
-
-    // Remove active from "ERKAKLAR UCHUN" button
-    const erkaklarUchunBtn = document.getElementById("erkaklarUchunBtn")
-    if (erkaklarUchunBtn) {
-        erkaklarUchunBtn.classList.remove("active")
-    }
-
-    // Update sidebar categories
-    renderSidebarCategories()
-}
-
-/**
  * Update breadcrumb based on current selection
  */
-function updateBreadcrumb() {
+function updateBreadcrumb(categoryName) {
     const activeCategoryName = document.getElementById("activeCategoryName")
     if (!activeCategoryName) return
 
-    let breadcrumbText = ""
-
-    if (selectedSpotlightId && currentCategoryId !== "all") {
-        // Show: Spotlight / Category
-        const selectedSpotlight = spotlights.find((s) => s.id === selectedSpotlightId)
-        const selectedCategory = selectedSpotlight?.categories.find((c) => c.id === currentCategoryId)
-
-        if (selectedSpotlight && selectedCategory) {
-            breadcrumbText = `${selectedSpotlight.name} / ${selectedCategory.name}`
-        }
-    } else if (selectedSpotlightId) {
-        // Show: Spotlight
-        const selectedSpotlight = spotlights.find((s) => s.id === selectedSpotlightId)
-        if (selectedSpotlight) {
-            breadcrumbText = selectedSpotlight.name
-        }
-    } else if (currentCategoryId !== "all") {
-        // Show: Category only
-        const allCategories = spotlights.flatMap((s) => s.categories)
-        const selectedCategory = allCategories.find((c) => c.id === currentCategoryId)
-        if (selectedCategory) {
-            breadcrumbText = selectedCategory.name
-        }
-    }
-
-    activeCategoryName.textContent = breadcrumbText
+    activeCategoryName.textContent = categoryName || "Barcha mahsulotlar"
 }
 
 /**
  * Handle category selection
  */
-async function handleCategorySelection(categoryId, spotlightId, categoryName) {
+async function handleCategorySelection(categoryId, categoryName) {
     try {
         window.API.showLoading(true)
 
         currentCategoryId = categoryId
-        currentSpotlightId = spotlightId
 
         // Update breadcrumb
-        updateBreadcrumb()
+        updateBreadcrumb(categoryName)
 
         // Fetch products
         if (categoryId === "all") {
@@ -426,30 +324,28 @@ async function initializeCatalog() {
     try {
         window.API.showLoading(true)
 
-        // Load spotlight categories and all products in parallel
-        const [spotlightData, productsData] = await Promise.all([
-            window.API.fetchSpotlightCategories(),
+        // Load categories and all products in parallel
+        const [categoriesData, productsData] = await Promise.all([
+            window.API.fetchCategories(),
             window.API.fetchAllProducts(),
         ])
 
-        spotlights = spotlightData
+        categories = categoriesData
         products = productsData
 
-        // Set initial state - "ERKAKLAR UCHUN" active
+        // Set initial state - "Barcha mahsulotlar" active
         currentCategoryId = "all"
-        selectedSpotlightId = null
 
         // Update initial breadcrumb
-        const activeCategoryName = document.getElementById("activeCategoryName")
-        if (activeCategoryName) {
-            activeCategoryName.textContent = "Erkaklar uchun"
-        }
+        updateBreadcrumb("Barcha mahsulotlar")
 
         // Render components
-        renderSpotlightCategories()
-        renderSidebarCategories() // Show all categories initially
+        renderTopCategories()
         renderProducts(products)
-        updateBreadcrumb() // Set initial breadcrumb
+
+        // Initialize events
+        initializeSortingEvents()
+        initializeBarchasiEvents()
 
         window.API.showLoading(false)
         console.log("Catalog initialized successfully!")
@@ -487,11 +383,8 @@ function initializeSearch() {
                 if (currentCategoryId === "all") {
                     renderProducts(products)
                 } else {
-                    handleCategorySelection(
-                        currentCategoryId,
-                        currentSpotlightId,
-                        document.getElementById("activeCategoryName")?.textContent || "",
-                    )
+                    const selectedCategory = categories.find((c) => c.id === currentCategoryId)
+                    handleCategorySelection(currentCategoryId, selectedCategory?.name || "")
                 }
             }
         }, 300)
@@ -549,7 +442,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Export functions for global access
 window.CatalogAPI = {
     initializeCatalog,
-    renderSpotlightCategories,
+    renderTopCategories,
     renderProducts,
     handleCategorySelection,
     openProductQuickView,

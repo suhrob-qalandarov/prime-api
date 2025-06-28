@@ -3,51 +3,51 @@
 // ======================================================
 
 // Import Axios library
-const axios = window.axios;
+const axios = window.axios
 
 // API Base URL - Updated to correct URL
-const API_BASE_URL = 'http://192.168.1.2/';
+const API_BASE_URL = "http://10.10.1.235/"
 
 // Configure Axios defaults (Axios is already loaded via CDN in HTML)
-if (typeof axios !== 'undefined') {
-    axios.defaults.timeout = 10000; // 10 seconds timeout
-    axios.defaults.headers.common['Content-Type'] = 'application/json';
+if (typeof axios !== "undefined") {
+    axios.defaults.timeout = 10000 // 10 seconds timeout
+    axios.defaults.headers.common["Content-Type"] = "application/json"
 
     // Add request interceptor for debugging
     axios.interceptors.request.use(
-        config => {
-            console.log('API Request:', config.method?.toUpperCase(), config.url);
-            return config;
+        (config) => {
+            console.log("API Request:", config.method?.toUpperCase(), config.url)
+            return config
         },
-        error => {
-            console.error('Request Error:', error);
-            return Promise.reject(error);
-        }
-    );
+        (error) => {
+            console.error("Request Error:", error)
+            return Promise.reject(error)
+        },
+    )
 
     // Add response interceptor for error handling
     axios.interceptors.response.use(
-        response => {
-            console.log('API Response:', response.status, response.config.url);
-            return response;
+        (response) => {
+            console.log("API Response:", response.status, response.config.url)
+            return response
         },
-        error => {
-            console.error('Response Error:', error.response?.status, error.response?.data || error.message);
+        (error) => {
+            console.error("Response Error:", error.response?.status, error.response?.data || error.message)
 
             // Handle different error types
-            if (error.code === 'ECONNABORTED') {
-                showErrorMessage('Server bilan bog\'lanishda vaqt tugadi');
+            if (error.code === "ECONNABORTED") {
+                showErrorMessage("Server bilan bog'lanishda vaqt tugadi")
             } else if (error.response?.status === 404) {
-                showErrorMessage('API endpoint topilmadi');
+                showErrorMessage("API endpoint topilmadi")
             } else if (error.response?.status >= 500) {
-                showErrorMessage('Server xatoligi yuz berdi');
+                showErrorMessage("Server xatoligi yuz berdi")
             } else if (!error.response) {
-                showErrorMessage('Internet aloqasini tekshiring');
+                showErrorMessage("Internet aloqasini tekshiring")
             }
 
-            return Promise.reject(error);
-        }
-    );
+            return Promise.reject(error)
+        },
+    )
 }
 
 // ======================================================
@@ -60,11 +60,11 @@ if (typeof axios !== 'undefined') {
  */
 async function fetchAllProducts() {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/products`);
-        return response.data;
+        const response = await axios.get(`${API_BASE_URL}api/v1/products`)
+        return response.data
     } catch (error) {
-        console.error('Error fetching all products:', error);
-        throw error;
+        console.error("Error fetching all products:", error)
+        throw error
     }
 }
 
@@ -75,25 +75,25 @@ async function fetchAllProducts() {
  */
 async function fetchProductsByCategory(categoryId) {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/products/${categoryId}`);
-        return response.data;
+        const response = await axios.get(`${API_BASE_URL}api/v1/products/by-category/${categoryId}`)
+        return response.data
     } catch (error) {
-        console.error('Error fetching products by category:', error);
-        throw error;
+        console.error("Error fetching products by category:", error)
+        throw error
     }
 }
 
 /**
- * Fetch spotlight categories for catalog
- * @returns {Promise<Array>} Array of spotlight categories
+ * Fetch all categories from API
+ * @returns {Promise<Array>} Array of categories
  */
-async function fetchSpotlightCategories() {
+async function fetchCategories() {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/spotlights/catalog`);
-        return response.data;
+        const response = await axios.get(`${API_BASE_URL}api/v1/categories`)
+        return response.data
     } catch (error) {
-        console.error('Error fetching spotlight categories:', error);
-        throw error;
+        console.error("Error fetching categories:", error)
+        throw error
     }
 }
 
@@ -104,11 +104,11 @@ async function fetchSpotlightCategories() {
  */
 async function fetchProductById(productId) {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/products/${productId}`);
-        return response.data;
+        const response = await axios.get(`${API_BASE_URL}api/v1/products/${productId}`)
+        return response.data
     } catch (error) {
-        console.error('Error fetching product by ID:', error);
-        throw error;
+        console.error("Error fetching product by ID:", error)
+        throw error
     }
 }
 
@@ -120,12 +120,12 @@ async function fetchProductById(productId) {
 async function searchProducts(query) {
     try {
         const response = await axios.get(`${API_BASE_URL}api/v1/products/search`, {
-            params: { q: query }
-        });
-        return response.data;
+            params: { q: query },
+        })
+        return response.data
     } catch (error) {
-        console.error('Error searching products:', error);
-        throw error;
+        console.error("Error searching products:", error)
+        throw error
     }
 }
 
@@ -139,8 +139,8 @@ async function searchProducts(query) {
  * @returns {string} Image URL
  */
 function getImageUrl(attachmentId) {
-    if (!attachmentId) return '/placeholder.svg?height=350&width=280';
-    return `${API_BASE_URL}api/v1/attachment/${attachmentId}`;
+    if (!attachmentId) return "/placeholder.svg?height=350&width=280"
+    return `${API_BASE_URL}api/v1/attachment/${attachmentId}`
 }
 
 /**
@@ -149,8 +149,8 @@ function getImageUrl(attachmentId) {
  * @returns {string} Formatted price
  */
 function formatPrice(price) {
-    if (!price) return '0 So\'m';
-    return new Intl.NumberFormat('uz-UZ').format(price) + ' So\'m';
+    if (!price) return "0 So'm"
+    return new Intl.NumberFormat("uz-UZ").format(price) + " So'm"
 }
 
 /**
@@ -160,8 +160,8 @@ function formatPrice(price) {
  * @returns {number} Discount percentage
  */
 function calculateDiscountPercentage(originalPrice, currentPrice) {
-    if (!originalPrice || !currentPrice || originalPrice <= currentPrice) return 0;
-    return Math.round((1 - currentPrice / originalPrice) * 100);
+    if (!originalPrice || !currentPrice || originalPrice <= currentPrice) return 0
+    return Math.round((1 - currentPrice / originalPrice) * 100)
 }
 
 /**
@@ -171,12 +171,12 @@ function calculateDiscountPercentage(originalPrice, currentPrice) {
  */
 function getStatusConfig(status) {
     const statusConfigs = {
-        'NEW': { text: 'YANGI', class: 'status-new', color: '#4CAF50' },
-        'HOT': { text: 'ISSIQ', class: 'status-hot', color: '#FF5722' },
-        'SALE': { text: 'CHEGIRMA', class: 'status-sale', color: '#FF9800' }
-    };
+        NEW: { text: "YANGI", class: "status-new", color: "#4CAF50" },
+        HOT: { text: "ISSIQ", class: "status-hot", color: "#FF5722" },
+        SALE: { text: "CHEGIRMA", class: "status-sale", color: "#FF9800" },
+    }
 
-    return statusConfigs[status] || null;
+    return statusConfigs[status] || null
 }
 
 /**
@@ -184,15 +184,15 @@ function getStatusConfig(status) {
  * @param {boolean} show - Show or hide spinner
  */
 function showLoading(show) {
-    const loadingSpinner = document.getElementById('loadingSpinner');
-    const productsGrid = document.getElementById('productsGrid');
+    const loadingSpinner = document.getElementById("loadingSpinner")
+    const productsGrid = document.getElementById("productsGrid")
 
     if (show) {
-        if (loadingSpinner) loadingSpinner.style.display = 'flex';
-        if (productsGrid) productsGrid.style.opacity = '0.5';
+        if (loadingSpinner) loadingSpinner.style.display = "flex"
+        if (productsGrid) productsGrid.style.opacity = "0.5"
     } else {
-        if (loadingSpinner) loadingSpinner.style.display = 'none';
-        if (productsGrid) productsGrid.style.opacity = '1';
+        if (loadingSpinner) loadingSpinner.style.display = "none"
+        if (productsGrid) productsGrid.style.opacity = "1"
     }
 }
 
@@ -201,7 +201,7 @@ function showLoading(show) {
  * @param {string} message - Error message
  */
 function showErrorMessage(message) {
-    const productsGrid = document.getElementById('productsGrid');
+    const productsGrid = document.getElementById("productsGrid")
     if (productsGrid) {
         productsGrid.innerHTML = `
             <div class="col-12">
@@ -212,7 +212,7 @@ function showErrorMessage(message) {
                     <button class="btn btn-primary" onclick="location.reload()">Qayta yuklash</button>
                 </div>
             </div>
-        `;
+        `
     }
 }
 
@@ -221,7 +221,7 @@ function showErrorMessage(message) {
  * @param {string} message - Success message
  */
 function showSuccessNotification(message) {
-    showNotification(message, 'success');
+    showNotification(message, "success")
 }
 
 /**
@@ -229,13 +229,13 @@ function showSuccessNotification(message) {
  * @param {string} message - Notification message
  * @param {string} type - Notification type (success, error, info)
  */
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
+function showNotification(message, type = "info") {
+    const notification = document.createElement("div")
     notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+        background: ${type === "success" ? "#4CAF50" : type === "error" ? "#f44336" : "#2196F3"};
         color: white;
         padding: 15px 20px;
         border-radius: 8px;
@@ -245,24 +245,24 @@ function showNotification(message, type = 'info') {
         transform: translateX(100%);
         transition: transform 0.3s ease;
         max-width: 300px;
-    `;
-    notification.textContent = message;
-    document.body.appendChild(notification);
+    `
+    notification.textContent = message
+    document.body.appendChild(notification)
 
     // Animate in
     setTimeout(() => {
-        notification.style.transform = 'translateX(0)';
-    }, 100);
+        notification.style.transform = "translateX(0)"
+    }, 100)
 
     // Remove after 3 seconds
     setTimeout(() => {
-        notification.style.transform = 'translateX(100%)';
+        notification.style.transform = "translateX(100%)"
         setTimeout(() => {
             if (document.body.contains(notification)) {
-                document.body.removeChild(notification);
+                document.body.removeChild(notification)
             }
-        }, 300);
-    }, 3000);
+        }, 300)
+    }, 3000)
 }
 
 /**
@@ -272,22 +272,22 @@ function showNotification(message, type = 'info') {
  * @returns {Function} Debounced function
  */
 function debounce(func, wait) {
-    let timeout;
+    let timeout
     return function executedFunction(...args) {
         const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+            clearTimeout(timeout)
+            func(...args)
+        }
+        clearTimeout(timeout)
+        timeout = setTimeout(later, wait)
+    }
 }
 
 // Export functions for use in other files
 window.API = {
     fetchAllProducts,
     fetchProductsByCategory,
-    fetchSpotlightCategories,
+    fetchCategories,
     fetchProductById,
     searchProducts,
     getImageUrl,
@@ -298,5 +298,5 @@ window.API = {
     showErrorMessage,
     showSuccessNotification,
     showNotification,
-    debounce
-};
+    debounce,
+}
