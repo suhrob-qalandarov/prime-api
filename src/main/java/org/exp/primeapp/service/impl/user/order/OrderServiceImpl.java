@@ -11,6 +11,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -19,22 +20,18 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-
     private final UserRepository userRepository;
-
     private final ProductRepository productRepository;
-
     private final ProductSizeRepository productSizeRepository;
-
     private final ProductOutcomeRepository productOutcomeRepository;
 
 
     @Transactional
     public Order createOrder(Long userId, List<OrderItemDTO> orderItems) {
-        log.info("Order creation started for userId: {}", userId);
+        log.info("Buyurtma yaratish jarayoni boshlandi. Foydalanuvchi ID: {}", userId);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Foydalanuvchi topilmadi"));
 
         Order order = new Order();
         order.setUser(user);
@@ -42,64 +39,57 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(0);
 
         double totalPrice = 0.0;
+        List<OrderItem> orderItemsList = new ArrayList<>();
 
         try {
             for (OrderItemDTO itemDTO : orderItems) {
-                log.debug("Processing productId: {}, productSizeId: {}, quantity: {}",
+                log.debug("Mahsulotni qayta ishlash. ProductID: {}, ProductSizeID: {}, Quantity: {}",
                         itemDTO.getProductId(), itemDTO.getProductSizeId(), itemDTO.getQuantity());
 
-                Product product = productRepository.findById(itemDTO.getProductId())
-                        .orElseThrow(() -> new RuntimeException("Product not found"));
-
-                ProductSize productSize = productSizeRepository.findById(itemDTO.getProductSizeId())
-                        .orElseThrow(() -> new RuntimeException("Product size not found"));
-
-                if (!productSize.getProduct().getId().equals(product.getId())) {
-                    throw new RuntimeException("Product size does not belong to the specified product");
-                }
-
-                if (productSize.getAmount() < itemDTO.getQuantity()) {
-                    log.warn("Insufficient stock for product: {}, size: {}, requested: {}, available: {}",
-                            product.getName(), productSize.getSize(), itemDTO.getQuantity(), productSize.getAmount());
-                    throw new RuntimeException("Insufficient stock for product: " + product.getName() + ", size: " + productSize.getSize());
-                }
+                Product product = fetchProduct(itemDTO.getProductId());
+                ProductSize productSize = fetchAndValidateProductSize(itemDTO.getProductSizeId(), product.getId(), itemDTO.getQuantity());
 
                 double itemPrice = calculateItemPrice(product);
                 totalPrice += itemPrice * itemDTO.getQuantity();
 
-                OrderItem orderItem = new OrderItem();
-                orderItem.setOrder(order);
-                orderItem.setProduct(product);
-                orderItem.setProductSize(productSize);
-                orderItem.setQuantity(itemDTO.getQuantity());
-                orderItem.setPrice(itemPrice);
+                OrderItem orderItem = createOrderItem(order, product, productSize, itemDTO.getQuantity(), itemPrice);
+                orderItemsList.add(orderItem);
 
-                order.getItems().add(orderItem);
-
-                productSize.setAmount(productSize.getAmount() - itemDTO.getQuantity());
-                productSizeRepository.save(productSize);
-
-                ProductOutcome outcome = new ProductOutcome();
-                outcome.setUser(user);
-                outcome.setProduct(product);
-                outcome.setAmount(itemDTO.getQuantity());
-                outcome.setProductSize(productSize);
-                productOutcomeRepository.save(outcome);
+                updateStockAndLogOutcome(productSize, itemDTO.getQuantity(), user, product);
             }
 
+            order.setItems(orderItemsList);
             order.setTotalPrice((int) totalPrice);
             Order savedOrder = orderRepository.save(order);
 
-            log.info("Order created successfully for userId: {}, orderId: {}", userId, savedOrder.getId());
+            log.info("Buyurtma muvaffaqiyatli yaratildi. UserId: {}, OrderId: {}", userId, savedOrder.getId());
             return savedOrder;
 
         } catch (ObjectOptimisticLockingFailureException e) {
-            log.error("Optimistic lock error while creating order for userId: {}", userId, e);
+            log.error("Optimistik qulf xatosi. UserId: {}", userId, e);
             throw new RuntimeException("Mahsulot zaxirasi o'zgartirilgan. Iltimos, sahifani yangilang va qaytadan urinib ko'ring.");
         } catch (RuntimeException e) {
-            log.error("Unexpected error during order creation for userId: {}", userId, e);
+            log.error("Kutilmagan xato. Buyurtma yaratishda xatolik. UserId: {}", userId, e);
             throw e;
         }
+    }
+
+    private Product fetchProduct(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Mahsulot topilmadi"));
+    }
+
+    private ProductSize fetchAndValidateProductSize(Long productSizeId, Long productId, int quantity) {
+        ProductSize productSize = productSizeRepository.findById(productSizeId)
+                .orElseThrow(() -> new RuntimeException("Mahsulot hajmi topilmadi"));
+
+        if (!productSize.getProduct().getId().equals(productId)) {
+            throw new RuntimeException("Mahsulot hajmi ko'rsatilgan mahsulotga tegishli emas");
+        }
+        if (productSize.getAmount() < quantity) {
+            throw new RuntimeException("Zaxirada mahsulot yetarli emas: " + productSize.getSize());
+        }
+        return productSize;
     }
 
 
@@ -111,5 +101,26 @@ public class OrderServiceImpl implements OrderService {
         }
         return price;
     }
-}
 
+    private OrderItem createOrderItem(Order order, Product product, ProductSize productSize, int quantity, double price) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrder(order);
+        orderItem.setProduct(product);
+        orderItem.setProductSize(productSize);
+        orderItem.setQuantity(quantity);
+        orderItem.setPrice(price);
+        return orderItem;
+    }
+
+    private void updateStockAndLogOutcome(ProductSize productSize, int quantity, User user, Product product) {
+        productSize.setAmount(productSize.getAmount() - quantity);
+        productSizeRepository.save(productSize);
+
+        ProductOutcome outcome = new ProductOutcome();
+        outcome.setUser(user);
+        outcome.setProduct(product);
+        outcome.setAmount(quantity);
+        outcome.setProductSize(productSize);
+        productOutcomeRepository.save(outcome);
+    }
+}
