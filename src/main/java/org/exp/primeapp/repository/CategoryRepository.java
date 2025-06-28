@@ -11,4 +11,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findByActive(boolean active);
 
+    List<Category> findAllBySpotlightId(Long spotlightId);
 }

@@ -124,6 +124,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<CategoryRes> getSpotlightCategories(Long spotlightId) {
+        return categoryRepository.findAllBySpotlightId(spotlightId).stream()
+                .map(category -> new CategoryRes(
+                        category.getId(),
+                        category.getName()))
+                .toList();
+    }
+
+    @Override
     public List<CategoryRes> getInactiveCategories() {
         return categoryRepository.findByActive(false).stream()
                 .map(category -> new CategoryRes(

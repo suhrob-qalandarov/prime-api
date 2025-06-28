@@ -1,8 +1,9 @@
-package org.exp.primeapp.controller.user.category;
+package org.exp.primeapp.controller.user.spotlight;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.responce.CategoryRes;
-import org.exp.primeapp.service.interfaces.user.CategoryService;
+import org.exp.primeapp.service.interfaces.user.SpotlightService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,22 +15,17 @@ import java.util.List;
 
 import static org.exp.primeapp.utils.Const.*;
 
+@Slf4j
 @RestController
-@RequestMapping(API + V1 + CATEGORIES)
 @RequiredArgsConstructor
-public class CategoriesController {
+@RequestMapping(API + V1 + SPOTLIGHT)
+public class SpotlightController {
 
-    private final CategoryService categoryService;
+    private final SpotlightService spotlightService;
 
-    @GetMapping
-    public ResponseEntity<List<CategoryRes>> getCategories() {
-        List<CategoryRes> categories = categoryService.getCategories();
-        return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/by-spotlight/{spotlightId}")
+    @GetMapping("/categories/{spotlightId}")
     public ResponseEntity <List<CategoryRes>> getCategoriesBySpotlightId(@PathVariable Long spotlightId) {
-        List<CategoryRes> categories = categoryService.getSpotlightCategories(spotlightId);
+        List<CategoryRes> categories = spotlightService.getSpotlightCategories(spotlightId);
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 }

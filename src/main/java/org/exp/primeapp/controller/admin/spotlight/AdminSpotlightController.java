@@ -18,7 +18,7 @@ import static org.exp.primeapp.utils.Const.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(API + V1 + ADMIN + SPOTLIGHT)
-public class SpotlightController {
+public class AdminSpotlightController {
 
     private final SpotlightService spotlightService;
     private final AdminSpotlightService adminSpotlightService;

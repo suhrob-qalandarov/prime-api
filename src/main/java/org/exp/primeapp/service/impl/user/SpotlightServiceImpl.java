@@ -2,6 +2,7 @@ package org.exp.primeapp.service.impl.user;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.CatalogSpotlightRes;
+import org.exp.primeapp.models.dto.responce.CategoryRes;
 import org.exp.primeapp.models.dto.responce.SpotlightRes;
 import org.exp.primeapp.models.entities.Spotlight;
 import org.exp.primeapp.repository.SpotlightRepository;
@@ -33,7 +34,7 @@ public class SpotlightServiceImpl implements SpotlightService {
                 .map(spotlight -> new SpotlightRes(
                         spotlight.getId(),
                         spotlight.getName(),
-                        spotlight.getImage().getId()
+                        spotlight.getImage().getKey()
                 )).toList();
     }
 
@@ -48,12 +49,17 @@ public class SpotlightServiceImpl implements SpotlightService {
                 )).toList();
     }
 
+    @Override
+    public List<CategoryRes> getSpotlightCategories(Long spotlightId) {
+        return categoryServiceImpl.getSpotlightCategories(spotlightId);
+    }
+
 
     private SpotlightRes mapToResponse(Spotlight spotlight) {
         return SpotlightRes.builder()
                 .id(spotlight.getId())
                 .name(spotlight.getName())
-                .imageId(spotlight.getImage().getId())
+                .imageKey(spotlight.getImage().getKey())
                 .build();
     }
 }

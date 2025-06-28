@@ -30,4 +30,6 @@ public interface CategoryService {
     Category getCategoryByIdForAdmin(Long categoryId);
 
     List<Category> getAll();
+
+    List<CategoryRes> getSpotlightCategories(Long spotlightId);
 }

@@ -58,7 +58,7 @@ public class AttachmentUtilServiceImpl implements AttachmentUtilService {
     public AttachmentRes convertToAttachmentRes(Attachment attachment) {
         return AttachmentRes.builder()
                 .id(attachment.getId())
-                .url(attachment.getKey())
+                .key(attachment.getKey())
                 .filename(attachment.getFilename())
                 .contentType(attachment.getContentType())
                 .build();

@@ -6,6 +6,6 @@ import lombok.Builder;
 public record SpotlightRes(
         Long id,
         String name,
-        Long imageId
+        String imageKey
 ) {
 }
