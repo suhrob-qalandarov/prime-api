@@ -195,29 +195,64 @@
 
         <!-- Main Content Area (Full Width) -->
         <div class="catalog-main-content-full">
-            <!-- Sorting Filters -->
-            <div class="sorting-filters" id="sortingFilters">
-                <div class="sorting-filters-container">
-                    <div class="sorting-filter-item">
-                        <select id="sortByPopularity" class="sorting-select">
-                            <option value="">Mashhurligi bo'yicha</option>
-                            <option value="popularity-high">Eng mashhur</option>
-                            <option value="popularity-low">Kam mashhur</option>
-                        </select>
+            <!-- New Filter Bar Design -->
+            <div class="filter-bar" id="filterBar">
+                <div class="filter-bar-top">
+                    <!-- Left side - Filters button -->
+                    <div class="filter-left">
+                        <button class="filter-btn" id="filterBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 21V14" stroke="#1F1F1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 10V3" stroke="#1F1F1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 21V12" stroke="#1F1F1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 8V3" stroke="#1F1F1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20 21V16" stroke="#1F1F1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20 12V3" stroke="#1F1F1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M1 14H7" stroke="#1F1F1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M9 8H15" stroke="#1F1F1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M17 16H23" stroke="#1F1F1F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            Filterlar
+                        </button>
+
+                        <!-- Filter Dropdown -->
+                        <div class="filter-dropdown" id="filterDropdown" style="display: none;">
+                            <div class="filter-section">
+                                <h4>O'lcham</h4>
+                                <div class="size-filters">
+                                    <label class="size-filter-item">
+                                        <input type="checkbox" value="XL" name="size">
+                                        <span>XL (bo'y 176-187)</span>
+                                    </label>
+                                    <label class="size-filter-item">
+                                        <input type="checkbox" value="L" name="size">
+                                        <span>L (bo'y 163-175)</span>
+                                    </label>
+                                    <label class="size-filter-item">
+                                        <input type="checkbox" value="M" name="size">
+                                        <span>M (oversize)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="sorting-filter-item">
-                        <select id="sortByName" class="sorting-select">
-                            <option value="">Nomi bo'yicha</option>
+
+                    <!-- Middle - Status filters -->
+                    <div class="filter-middle">
+                        <button class="status-filter-btn" data-status="SALE">Sale</button>
+                        <button class="status-filter-btn" data-status="NEW">New</button>
+                        <button class="status-filter-btn" data-status="HOT">Hot</button>
+                    </div>
+
+                    <!-- Right side - Sort dropdown -->
+                    <div class="filter-right">
+                        <select id="sortSelect" class="sort-select">
+                            <option value="">Saralash</option>
+                            <option value="price-low">Avval arzoni</option>
+                            <option value="price-high">Avval qimmati</option>
                             <option value="name-asc">A-Z</option>
                             <option value="name-desc">Z-A</option>
                         </select>
                     </div>
-                    <div class="sorting-filter-item">
-                        <select id="sortByPrice" class="sorting-select">
-                            <option value="">Narx bo'yicha</option>
-                            <option value="price-low">Arzon</option>
-                            <option value="price-high">Qimmat</option>
-                        </select>
+                </div>
+
+                <!-- Bottom - Results and selected filters -->
+                <div class="filter-bar-bottom">
+                    <div class="results-info">
+                        <span>Mahsulotlar topildi: <span id="productsCount">0</span></span>
+                    </div>
+                    <div class="selected-filters" id="selectedFilters">
+                        <!-- Selected category will appear here -->
                     </div>
                 </div>
             </div>
