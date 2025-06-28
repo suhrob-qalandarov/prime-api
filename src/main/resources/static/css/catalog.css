@@ -5,7 +5,7 @@
 /* Catalog Page Layout */
 .catalog-page {
     background: var(--light-color);
-    padding: 80px 0 80px;
+    padding: 70px 0 80px;
     min-height: 100vh;
 }
 
