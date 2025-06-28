@@ -187,15 +187,23 @@ function initializeFilterEvents() {
         }
     })
 
-    // Size filter checkboxes
-    const sizeCheckboxes = document.querySelectorAll('input[name="size"]')
-    sizeCheckboxes.forEach((checkbox) => {
-        checkbox.addEventListener("change", () => {
+    // Size filter buttons (updated to work like status buttons)
+    const sizeFilterItems = document.querySelectorAll(".size-filter-item")
+    sizeFilterItems.forEach((item) => {
+        item.addEventListener("click", (e) => {
+            e.preventDefault()
+            item.classList.toggle("active")
+
+            // Close dropdown after selection
+            filterDropdown.style.display = "none"
+
+            // Apply filters and update selected filters display
             applyFilters()
+            updateSelectedFilters()
         })
     })
 
-    // Status filter buttons
+    // Status filter buttons - fix the selector and don't move them
     const statusBtns = document.querySelectorAll(".status-filter-btn")
     statusBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -208,6 +216,14 @@ function initializeFilterEvents() {
     const sortSelect = document.getElementById("sortSelect")
     sortSelect?.addEventListener("change", (e) => {
         currentSortBy = e.target.value
+
+        // Add/remove has-selection class for styling
+        if (e.target.value && e.target.value !== "") {
+            e.target.classList.add("has-selection")
+        } else {
+            e.target.classList.remove("has-selection")
+        }
+
         if (currentSortBy) {
             sortProducts(products, currentSortBy)
         } else {
@@ -217,13 +233,66 @@ function initializeFilterEvents() {
 }
 
 /**
- * Apply all active filters
+ * Update all selected filters display
+ */
+function updateSelectedFilters() {
+    const selectedFilters = document.getElementById("selectedFilters")
+    if (!selectedFilters) return
+
+    // Clear existing filter tags (except category)
+    const existingFilterTags = selectedFilters.querySelectorAll(".size-filter-tag")
+    existingFilterTags.forEach((tag) => tag.remove())
+
+    // Add size filter tags only (not status filters)
+    const activeSizeItems = document.querySelectorAll(".size-filter-item.active")
+    activeSizeItems.forEach((item) => {
+        const sizeText = item.querySelector("span").textContent.trim()
+        const tag = document.createElement("div")
+        tag.className = "selected-filter-tag size-filter-tag"
+        tag.innerHTML = `
+      <span>${sizeText}</span>
+      <button class="remove-filter" data-size-text="${sizeText}">×</button>
+    `
+
+        // Add click event to remove button
+        const removeBtn = tag.querySelector(".remove-filter")
+        removeBtn.addEventListener("click", () => {
+            removeSizeFilter(sizeText)
+        })
+
+        selectedFilters.appendChild(tag)
+    })
+}
+
+/**
+ * Remove specific size filter
+ */
+function removeSizeFilter(sizeText) {
+    const sizeItems = document.querySelectorAll(".size-filter-item")
+    sizeItems.forEach((item) => {
+        const span = item.querySelector("span")
+        if (span && span.textContent.trim() === sizeText) {
+            item.classList.remove("active")
+        }
+    })
+
+    applyFilters()
+    updateSelectedFilters()
+}
+
+/**
+ * Apply all active filters (updated for new size filter system)
  */
 function applyFilters() {
     let filteredProducts = [...products]
 
-    // Apply size filters
-    const selectedSizes = Array.from(document.querySelectorAll('input[name="size"]:checked')).map((cb) => cb.value)
+    // Apply size filters (updated logic)
+    const activeSizeItems = document.querySelectorAll(".size-filter-item.active")
+    const selectedSizes = Array.from(activeSizeItems).map((item) => {
+        const sizeText = item.querySelector("span").textContent.trim()
+        // Extract size letter (XL, L, M) from text like "XL (bo'y 176-187)"
+        return sizeText.split(" ")[0]
+    })
 
     if (selectedSizes.length > 0) {
         filteredProducts = filteredProducts.filter((product) => {
@@ -267,10 +336,13 @@ function updateSelectedCategoryTag(categoryName) {
     const selectedFilters = document.getElementById("selectedFilters")
     if (!selectedFilters) return
 
-    // Clear existing tags
-    selectedFilters.innerHTML = ""
+    // Clear existing category tags
+    const existingCategoryTags = selectedFilters.querySelectorAll(
+        ".selected-filter-tag:not(.size-filter-tag):not(.status-filter-tag)",
+    )
+    existingCategoryTags.forEach((tag) => tag.remove())
 
-    // Add category tag if not "Barcha mahsulotlar"
+    // Add category tag if not "Barcha mahsulotlar" (add at the beginning)
     if (categoryName && categoryName !== "Barcha mahsulotlar") {
         const tag = document.createElement("div")
         tag.className = "selected-filter-tag"
@@ -278,7 +350,7 @@ function updateSelectedCategoryTag(categoryName) {
             <span>${categoryName}</span>
             <button class="remove-filter" onclick="clearCategoryFilter()">×</button>
         `
-        selectedFilters.appendChild(tag)
+        selectedFilters.insertBefore(tag, selectedFilters.firstChild)
     }
 }
 
@@ -378,7 +450,6 @@ async function handleCategorySelection(categoryId, categoryName) {
         // Update breadcrumb
         updateBreadcrumb(categoryName)
         updateSelectedCategoryTag(categoryName)
-        updateProductsCount(products.length)
 
         // Fetch products
         if (categoryId === "all") {
@@ -386,6 +457,9 @@ async function handleCategorySelection(categoryId, categoryName) {
         } else {
             products = await window.API.fetchProductsByCategory(categoryId)
         }
+
+        // Update products count
+        updateProductsCount(products.length)
 
         // Apply current sorting if any
         if (currentSortBy) {
@@ -443,6 +517,15 @@ async function initializeCatalog() {
         // Initialize events
         initializeFilterEvents()
         initializeBarchasiEvents()
+
+        // Disable "Saralash" option in sort select
+        const sortSelect = document.getElementById("sortSelect")
+        if (sortSelect) {
+            const defaultOption = sortSelect.querySelector('option[value=""]')
+            if (defaultOption) {
+                defaultOption.disabled = true
+            }
+        }
 
         window.API.showLoading(false)
         console.log("Catalog initialized successfully!")
@@ -544,3 +627,7 @@ window.CatalogAPI = {
     handleCategorySelection,
     openProductQuickView,
 }
+
+// Make functions globally available
+window.removeSizeFilter = removeSizeFilter
+window.clearCategoryFilter = clearCategoryFilter
