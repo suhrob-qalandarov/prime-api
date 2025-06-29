@@ -487,12 +487,193 @@ async function handleCategorySelection(categoryId, categoryName) {
 }
 
 /**
- * Open product quick view (placeholder function)
+ * Open product quick view modal with full product information
  */
-function openProductQuickView(productId) {
-    console.log("Opening quick view for product:", productId)
-    window.API.showNotification("Quick view funksiyasi tez orada qo'shiladi", "info")
+async function openProductQuickView(productId) {
+    try {
+        // Show loading
+        window.API.showLoading(true)
+
+        // Fetch product details
+        const product = await window.API.fetchProductById(productId)
+
+        if (!product) {
+            window.API.showErrorMessage("Mahsulot ma'lumotlari topilmadi")
+            return
+        }
+
+        // Create modal if it doesn't exist
+        let modal = document.getElementById("productQuickViewModal")
+        if (!modal) {
+            modal = createQuickViewModal()
+            document.body.appendChild(modal)
+        }
+
+        // Populate modal with product data
+        populateQuickViewModal(modal, product)
+
+        // Show modal
+        modal.classList.add("show")
+        document.body.style.overflow = "hidden"
+
+        window.API.showLoading(false)
+    } catch (error) {
+        console.error("Error opening quick view:", error)
+        window.API.showLoading(false)
+        window.API.showErrorMessage("Mahsulot ma'lumotlarini yuklashda xatolik yuz berdi")
+    }
 }
+
+/**
+ * Create quick view modal HTML structure
+ */
+function createQuickViewModal() {
+    const modal = document.createElement("div")
+    modal.id = "productQuickViewModal"
+    modal.className = "product-quick-view-modal"
+
+    modal.innerHTML = `
+        <div class="quick-view-content">
+            <button class="quick-view-close" onclick="closeQuickViewModal()">&times;</button>
+            <div class="quick-view-body">
+                <div class="quick-view-images">
+                    <div class="main-product-image-container">
+                        <img src="/placeholder.svg" alt="" class="main-product-image" id="quickViewMainImage">
+                    </div>
+                    <div class="product-thumbnails-container" id="quickViewThumbnails">
+                        <!-- Thumbnails will be populated here -->
+                    </div>
+                </div>
+                <div class="quick-view-info">
+                    <div class="product-category-badge" id="quickViewCategory"></div>
+                    <h2 class="product-title" id="quickViewTitle"></h2>
+                    <div class="product-price-section" id="quickViewPricing">
+                        <!-- Pricing will be populated here -->
+                    </div>
+                    <div class="product-description" id="quickViewDescription">
+                        <!-- Description will be populated here -->
+                    </div>
+                    <div class="product-sizes-info" id="quickViewSizes">
+                        <!-- Sizes will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    `
+
+    // Add click outside to close
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            closeQuickViewModal()
+        }
+    })
+
+    return modal
+}
+
+/**
+ * Populate quick view modal with product data
+ */
+function populateQuickViewModal(modal, product) {
+    // Get all image URLs
+    const imageUrls = product.attachmentKeys?.map((key) => window.API.getImageUrl(key)) || []
+    const mainImageUrl = imageUrls[0] || window.API.getImageUrl(null)
+
+    // Set main image
+    const mainImage = modal.querySelector("#quickViewMainImage")
+    mainImage.src = mainImageUrl
+    mainImage.alt = product.name
+
+    // Create thumbnails
+    const thumbnailsContainer = modal.querySelector("#quickViewThumbnails")
+    thumbnailsContainer.innerHTML = ""
+
+    if (imageUrls.length > 1) {
+        imageUrls.forEach((imageUrl, index) => {
+            const thumbnail = document.createElement("img")
+            thumbnail.src = imageUrl
+            thumbnail.alt = `${product.name} ${index + 1}`
+            thumbnail.className = `product-thumbnail-large ${index === 0 ? "active" : ""}`
+            thumbnail.addEventListener("click", () => {
+                // Update main image
+                mainImage.src = imageUrl
+
+                // Update active thumbnail
+                thumbnailsContainer.querySelectorAll(".product-thumbnail-large").forEach((thumb) => {
+                    thumb.classList.remove("active")
+                })
+                thumbnail.classList.add("active")
+            })
+            thumbnailsContainer.appendChild(thumbnail)
+        })
+    }
+
+    // Set category
+    const categoryBadge = modal.querySelector("#quickViewCategory")
+    categoryBadge.textContent = product.categoryName?.toUpperCase() || "MAHSULOT"
+
+    // Set title
+    const title = modal.querySelector("#quickViewTitle")
+    title.textContent = product.name
+
+    // Set pricing
+    const pricingContainer = modal.querySelector("#quickViewPricing")
+    const discountPercent = product.discount || 0
+    const hasDiscount = product.status === "SALE" && discountPercent > 0
+    const originalPrice = hasDiscount ? product.price / (1 - discountPercent / 100) : product.price
+
+    pricingContainer.innerHTML = `
+        <span class="product-current-price">${window.API.formatPrice(product.price)}</span>
+        ${
+        hasDiscount
+            ? `
+            <span class="product-original-price">${window.API.formatPrice(originalPrice)}</span>
+            <span class="product-discount-badge">-${discountPercent}%</span>
+        `
+            : ""
+    }
+    `
+
+    // Set description
+    const description = modal.querySelector("#quickViewDescription")
+    description.textContent = product.description || "Bu mahsulot haqida qo'shimcha ma'lumot mavjud emas."
+
+    // Set sizes
+    const sizesContainer = modal.querySelector("#quickViewSizes")
+    const availableSizes = product.productSizes?.filter((size) => size.amount > 0) || []
+
+    if (availableSizes.length > 0) {
+        sizesContainer.innerHTML = `
+            <div class="sizes-label">Mavjud o'lchamlar:</div>
+            <div class="sizes-list">
+                ${availableSizes
+            .map(
+                (size) => `
+                    <span class="size-item">${size.size}</span>
+                `,
+            )
+            .join("")}
+            </div>
+        `
+        sizesContainer.style.display = "block"
+    } else {
+        sizesContainer.style.display = "none"
+    }
+}
+
+/**
+ * Close quick view modal
+ */
+function closeQuickViewModal() {
+    const modal = document.getElementById("productQuickViewModal")
+    if (modal) {
+        modal.classList.remove("show")
+        document.body.style.overflow = ""
+    }
+}
+
+// Make closeQuickViewModal globally available
+window.closeQuickViewModal = closeQuickViewModal
 
 // ======================================================
 // INITIALIZATION
