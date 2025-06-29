@@ -6,7 +6,6 @@
     --burgundy-dark: #8b1538;
     --burgundy-light: #a91d47;
     --burgundy-color: #8b1538;
-    --light-color: var(--light-color);
     --text-color: #333333;
     --transition: all 0.3s ease;
 }
@@ -36,9 +35,9 @@
 .quick-view-content {
     background: white;
     border-radius: 16px;
-    width: 800px;
-    height: 85vh;
-    max-height: 700px;
+    width: 1000px;
+    height: 90vh;
+    max-height: none;
     overflow: hidden;
     position: relative;
     transform: translateX(100%);
@@ -85,7 +84,7 @@
 /* Images Section */
 .quick-view-images {
     flex: 1;
-    max-width: 400px;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -119,17 +118,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: var(--transition);
-}
-
-.product-image-item:hover img {
-    transform: scale(1.05);
 }
 
 /* Info Section */
 .quick-view-info {
     flex: 1;
-    max-width: 400px;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -287,29 +281,6 @@
     color: #999;
     cursor: not-allowed;
     border-color: #e0e0e0;
-}
-
-.color-options {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-}
-
-.color-option {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #ddd;
-    cursor: pointer;
-    transition: var(--transition);
-    background-size: cover;
-    background-position: center;
-}
-
-.color-option:hover,
-.color-option.selected {
-    border-color: #333;
-    transform: scale(1.1);
 }
 
 .quantity-cart-section {
