@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
-import org.exp.primeapp.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -23,7 +23,9 @@ import static org.exp.primeapp.utils.Const.TOKEN_PREFIX;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
-    private final UserRepository userRepository;
+
+    @Value("${jwt.secret.key}")
+    private String secretKey;
 
     public String generateToken(User user) {
         return TOKEN_PREFIX + Jwts.builder()
@@ -66,16 +68,8 @@ public class JwtService {
     }
 
     public SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor("qwertyasdfghzxcvbnqwertyasdfghjk".getBytes());
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
-
-    /*
-        @Value("${jwt.secret.key}")
-        private String secretKey;
-        public SecretKey getSecretKey() {
-            return Keys.hmacShaKeyFor(secretKey.getBytes());
-        }
-     */
 
     public User getUserObject(String token) {
         Claims claims = Jwts.parser()
