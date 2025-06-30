@@ -115,6 +115,7 @@ function getFallbackModalHTML() {
                         </div>
                         
                         <div class="option-group">
+                            <div class="available-quantity" id="availableQuantity" style="display: none;"></div>
                             <label class="option-label">Miqdori:</label>
                             <div class="quantity-cart-section">
                                 <div class="quantity-selector">
@@ -143,9 +144,8 @@ function getFallbackModalHTML() {
                     </div>
                     
                     <div class="payment-methods">
-                        <span>To'lov:</span>
-                        <img src="/placeholder.svg?height=20&width=40&text=Click" alt="Click" />
-                        <img src="/placeholder.svg?height=20&width=40&text=Payme" alt="Payme" />
+                        <img src="/placeholder.svg?height=24&width=60&text=Click" alt="Click" />
+                        <img src="/placeholder.svg?height=24&width=60&text=Payme" alt="Payme" />
                     </div>
                 </div>
             </div>
@@ -155,10 +155,11 @@ function getFallbackModalHTML() {
 }
 
 /**
- * Initialize quantity controls
+ * CHANGED: Enhanced quantity controls with size-based validation
  */
 function initializeQuantityControls(modal) {
     let currentQuantity = 1
+    let maxQuantity = 10 // Default max quantity
     const decreaseBtn = modal.querySelector("#decreaseQty")
     const increaseBtn = modal.querySelector("#increaseQty")
     const quantityDisplay = modal.querySelector("#quantityDisplay")
@@ -167,23 +168,26 @@ function initializeQuantityControls(modal) {
         if (quantityDisplay) {
             quantityDisplay.textContent = currentQuantity
         }
-        if (decreaseBtn && !decreaseBtn.disabled) {
+        // FIXED: Properly enable/disable buttons based on current quantity and limits
+        if (decreaseBtn) {
             decreaseBtn.disabled = currentQuantity <= 1
         }
-        if (increaseBtn && !increaseBtn.disabled) {
-            increaseBtn.disabled = currentQuantity >= 10
+        if (increaseBtn) {
+            increaseBtn.disabled = currentQuantity >= maxQuantity
         }
     }
 
+    // FIXED: Decrease button functionality
     decreaseBtn?.addEventListener("click", () => {
-        if (currentQuantity > 1 && !decreaseBtn.disabled) {
+        if (currentQuantity > 1) {
             currentQuantity--
             updateQuantityDisplay()
         }
     })
 
+    // FIXED: Increase button with max quantity validation
     increaseBtn?.addEventListener("click", () => {
-        if (currentQuantity < 10 && !increaseBtn.disabled) {
+        if (currentQuantity < maxQuantity) {
             currentQuantity++
             updateQuantityDisplay()
         }
@@ -195,6 +199,16 @@ function initializeQuantityControls(modal) {
     // Store reference for reset
     modal._resetQuantity = () => {
         currentQuantity = 1
+        updateQuantityDisplay()
+    }
+
+    // CHANGED: Store function to update max quantity based on selected size
+    modal._updateMaxQuantity = (newMaxQuantity) => {
+        maxQuantity = newMaxQuantity
+        // If current quantity exceeds new max, reduce it
+        if (currentQuantity > maxQuantity) {
+            currentQuantity = maxQuantity
+        }
         updateQuantityDisplay()
     }
 
@@ -247,7 +261,25 @@ function showCopySuccess(copyLinkSection) {
 }
 
 /**
- * Populate quick view modal with product data
+ * CHANGED: Update available quantity display and set max quantity for controls
+ */
+function updateAvailableQuantity(modal, selectedSize) {
+    const availableQuantityElement = modal.querySelector("#availableQuantity")
+    if (availableQuantityElement && selectedSize) {
+        availableQuantityElement.textContent = `Mavjud: ${selectedSize.amount} ta`
+        availableQuantityElement.style.display = "block"
+
+        // CHANGED: Update max quantity for quantity controls
+        if (modal._updateMaxQuantity) {
+            modal._updateMaxQuantity(selectedSize.amount)
+        }
+    } else if (availableQuantityElement) {
+        availableQuantityElement.style.display = "none"
+    }
+}
+
+/**
+ * CHANGED: Enhanced populate function with corrected pricing logic
  */
 function populateQuickViewModal(modal, product) {
     // Store product ID for copy link functionality
@@ -289,23 +321,24 @@ function populateQuickViewModal(modal, product) {
         titleElement.textContent = product.name
     }
 
-    // Set pricing
+    // CHANGED: Fixed pricing calculation and display - backend sends original price
     const pricingContainer = modal.querySelector("#quickViewPricing")
     if (pricingContainer) {
         const discountPercent = product.discount || 0
         const hasDiscount = product.status === "SALE" && discountPercent > 0
-        const originalPrice = hasDiscount ? product.price / (1 - discountPercent / 100) : product.price
+        const originalPrice = product.price // Backend sends original price
+        const discountedPrice = hasDiscount ? originalPrice * (1 - discountPercent / 100) : originalPrice
 
         if (hasDiscount) {
+            // CHANGED: Show discounted price, original price, and discount % all in one line
             pricingContainer.innerHTML = `
-        <span class="product-current-price">${window.API.formatPrice(product.price)}</span>
-        <span class="product-price-divider">|</span>
+        <span class="product-current-price">${window.API.formatPrice(discountedPrice)}</span>
         <span class="product-original-price">${window.API.formatPrice(originalPrice)}</span>
         <span class="product-discount-badge">-${discountPercent}%</span>
       `
         } else {
             pricingContainer.innerHTML = `
-        <span class="product-current-price">${window.API.formatPrice(product.price)}</span>
+        <span class="product-current-price">${window.API.formatPrice(originalPrice)}</span>
       `
         }
     }
@@ -316,7 +349,7 @@ function populateQuickViewModal(modal, product) {
         descriptionElement.textContent = product.description || "Bu mahsulot haqida qo'shimcha ma'lumot mavjud emas."
     }
 
-    // Set sizes with quantity display
+    // Set sizes without quantity display
     const sizesGroup = modal.querySelector("#quickViewSizesGroup")
     const sizesContainer = modal.querySelector("#quickViewSizes")
     const allSizes = product.productSizes || []
@@ -331,23 +364,33 @@ function populateQuickViewModal(modal, product) {
             const isAvailable = sizeData.amount > 0
             sizeOption.className = `size-option ${index === 0 && isAvailable ? "selected" : ""} ${!isAvailable ? "disabled" : ""}`
 
-            // Create size display with quantity on the side
-            sizeOption.innerHTML = `
-        <span>${sizeData.size}</span>
-        <span class="size-quantity">(${sizeData.amount})</span>
-      `
+            // Only show size name, no quantity
+            sizeOption.textContent = sizeData.size
 
             if (isAvailable) {
                 sizeOption.addEventListener("click", () => {
                     sizesContainer.querySelectorAll(".size-option").forEach((s) => s.classList.remove("selected"))
                     sizeOption.classList.add("selected")
+
+                    // CHANGED: Update available quantity display and max quantity
+                    updateAvailableQuantity(modal, sizeData)
                 })
             }
 
             sizesContainer.appendChild(sizeOption)
         })
+
+        // Show quantity for initially selected size
+        const firstAvailableSize = allSizes.find((size) => size.amount > 0)
+        if (firstAvailableSize) {
+            updateAvailableQuantity(modal, firstAvailableSize)
+        }
     } else if (sizesGroup) {
         sizesGroup.style.display = "none"
+        // CHANGED: If no sizes, set default max quantity
+        if (modal._updateMaxQuantity) {
+            modal._updateMaxQuantity(10)
+        }
     }
 
     // Disable quantity controls if no available sizes
@@ -369,7 +412,10 @@ function populateQuickViewModal(modal, product) {
     } else {
         // Enable quantity controls
         quantityControls.forEach((control) => {
-            control.disabled = false
+            if (control.id !== "decreaseQty") {
+                // Don't force enable decrease button
+                control.disabled = false
+            }
             if (control.id === "quantityDisplay") {
                 control.style.opacity = "1"
             }
