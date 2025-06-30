@@ -485,7 +485,7 @@
     color: #28a745;
 }
 
-.payment-methods {
+.quick-view-payment-methods {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -494,11 +494,11 @@
     padding-top: 16px;
 }
 
-.payment-methods span {
+.quick-view-payment-methods span {
     display: none;
 }
 
-.payment-methods img {
+.quick-view-payment-methods img {
     height: 24px;
     width: auto;
     border-radius: 4px;

@@ -524,7 +524,7 @@
 /* Product Image Container - Clean Design */
 .catalog-product-image-container {
     position: relative;
-    height: 350px;
+    height: 400px;
     width: 100%;
     overflow: hidden;
     margin-bottom: 15px;
@@ -565,7 +565,7 @@
     top: 0;
     left: 0;
     height: 100%;
-    color: white;
+    color: var(--light-color);
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -593,10 +593,10 @@
     bottom: -50px; /* START FROM BOTTOM */
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--light-color);
     color: var(--burgundy-color);
     border: none;
-    padding: 12px 30px; /* EXTENDED PADDING */
+    padding: 8px 50px; /* EXTENDED PADDING */
     border-radius: 25px;
     font-size: 11px; /* MADE SMALLER */
     font-weight: 600;
@@ -612,7 +612,7 @@
 }
 
 .catalog-product-card:hover .catalog-quick-view-btn {
-    bottom: 15px; /* ANIMATE TO VISIBLE POSITION */
+    bottom: 25px; /* ANIMATE TO VISIBLE POSITION */
     opacity: 1;
 }
 
@@ -661,14 +661,14 @@
     min-height: 120px;
 }
 
-.catalog-product-category {
+/*.catalog-product-category {
     color: #999;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 5px;
     font-weight: 600;
-}
+}*/
 
 /* Product Name - HOVER WITH PRICE */
 .catalog-product-name {
@@ -714,8 +714,8 @@
 }
 
 .catalog-discount-badge {
-    background: #4caf50;
-    color: white;
+    background: rgba(177, 220, 112, 0.8);
+    color: black;
     padding: 4px 8px;
     border-radius: 12px;
     font-size: 11px;

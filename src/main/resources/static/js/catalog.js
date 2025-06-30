@@ -234,6 +234,9 @@ function createProductCard(product) {
     // Show category name only when "Barcha mahsulotlar" is selected
     const showCategoryName = currentCategoryId === "all"
 
+    //${showCategoryName ? `<div class="catalog-product-category">${product.categoryName.toUpperCase()}</div>` : ""}
+
+
     productCard.innerHTML = `
       <div class="catalog-product-image-container">
           ${
@@ -257,7 +260,6 @@ function createProductCard(product) {
           </button>
       </div>
       <div class="catalog-product-info">
-          ${showCategoryName ? `<div class="catalog-product-category">${product.categoryName.toUpperCase()}</div>` : ""}
           <h3 class="catalog-product-name">${product.name}</h3>
           <div class="catalog-product-pricing">
               <span class="catalog-current-price">${window.API.formatPrice(displayPrice)}</span>
