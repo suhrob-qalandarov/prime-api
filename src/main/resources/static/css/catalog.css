@@ -42,7 +42,7 @@
     font-size: 14px;
     font-weight: 800;
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.3s ease; /* ADDED ANIMATION */
     white-space: nowrap;
     text-transform: uppercase;
     position: relative;
@@ -61,6 +61,7 @@
     width: 70%;
     height: 2px;
     background: var(--burgundy-light);
+    animation: underlineSlide 0.3s ease forwards; /* ADDED ANIMATION */
 }
 
 .top-category-btn.active {
@@ -78,6 +79,19 @@
     width: 70%;
     height: 2px;
     background: var(--burgundy-light);
+    animation: underlineSlide 0.3s ease forwards; /* ADDED ANIMATION */
+}
+
+/* UNDERLINE ANIMATION */
+@keyframes underlineSlide {
+    0% {
+        width: 0%;
+        opacity: 0;
+    }
+    100% {
+        width: 70%;
+        opacity: 1;
+    }
 }
 
 .top-categories {
@@ -294,6 +308,7 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     z-index: 1000;
     margin-top: 8px;
+    display: none; /* HIDDEN BY DEFAULT */
 }
 
 .filter-section h4 {
@@ -518,18 +533,18 @@
     box-shadow: none;
 }
 
-/* Product Image - Full Coverage */
+/* Product Image - NO ZOOM ANIMATION */
 .catalog-product-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: var(--transition);
+    transition: none; /* REMOVED ZOOM ANIMATION */
     padding: 0;
     border-radius: 15px;
 }
 
 .catalog-product-card:hover .catalog-product-image {
-    transform: scale(1.02);
+    transform: none; /* NO SCALING ON HOVER */
 }
 
 /* Discount Banner - Only for SALE status */
@@ -572,35 +587,38 @@
     padding-right: 100px;
 }
 
-/* Quick View Button - Bottom of Image */
+/* Quick View Button - SMALLER FONT */
 .catalog-quick-view-btn {
     position: absolute;
-    bottom: 10px;
+    bottom: -50px; /* START FROM BOTTOM */
     left: 50%;
     transform: translateX(-50%);
     background: rgba(255, 255, 255, 0.95);
     color: var(--burgundy-color);
     border: none;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 11px;
+    padding: 12px 30px; /* EXTENDED PADDING */
+    border-radius: 25px;
+    font-size: 11px; /* MADE SMALLER */
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: var(--transition);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 10;
     opacity: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    width: 80%; /* EXTENDED WIDTH */
+    max-width: 200px;
 }
 
 .catalog-product-card:hover .catalog-quick-view-btn {
+    bottom: 15px; /* ANIMATE TO VISIBLE POSITION */
     opacity: 1;
 }
 
 .catalog-quick-view-btn:hover {
     background: white;
-    transform: translateX(-50%) translateY(-2px);
+    transform: translateX(-50%) translateY(-3px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -652,17 +670,19 @@
     font-weight: 600;
 }
 
+/* Product Name - HOVER WITH PRICE */
 .catalog-product-name {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 10px;
     color: var(--text-color);
-    transition: var(--transition);
+    transition: color 0.3s ease;
     line-height: 1.3;
+    cursor: pointer;
 }
 
 .catalog-product-card:hover .catalog-product-name {
-    color: var(--burgundy-color);
+    color: var(--burgundy-light); /* HOVER TO BURGUNDY-LIGHT */
 }
 
 /* Product Pricing */
@@ -674,10 +694,17 @@
     margin-top: 10px;
 }
 
+/* Current Price - SMALLER AND BLACK, HOVER WITH NAME */
 .catalog-current-price {
-    font-size: 16px;
+    font-size: 14px; /* MADE SMALLER */
     font-weight: 700;
-    color: var(--burgundy-color);
+    color: black; /* CHANGED TO BLACK */
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.catalog-product-card:hover .catalog-current-price {
+    color: var(--burgundy-light); /* HOVER TO BURGUNDY-LIGHT */
 }
 
 .catalog-original-price {
@@ -721,11 +748,14 @@
     background: #ff9800;
 }
 
-/* Product Sizes */
+/* Product Sizes - REMOVED/HIDDEN */
 .catalog-product-sizes {
-    margin-top: 5px;
-    font-size: 11px;
-    color: #666;
+    display: none; /* HIDDEN AVAILABLE SIZES */
+}
+
+/* Available sizes - REMOVED */
+.available-sizes {
+    display: none; /* HIDDEN COMPLETELY */
 }
 
 /* No Products */
@@ -870,7 +900,7 @@
     }
 
     .catalog-current-price {
-        font-size: 14px;
+        font-size: 13px; /* SMALLER ON MOBILE */
     }
 
     .catalog-original-price {
@@ -910,7 +940,13 @@
     }
 
     .catalog-current-price {
-        font-size: 13px;
+        font-size: 12px; /* EVEN SMALLER ON EXTRA SMALL */
+    }
+
+    .catalog-quick-view-btn {
+        width: 90%;
+        padding: 10px 20px;
+        font-size: 10px; /* SMALLER ON MOBILE */
     }
 }
 
