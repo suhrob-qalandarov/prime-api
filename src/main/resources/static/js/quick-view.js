@@ -73,6 +73,9 @@ async function createQuickViewModal() {
     // Add copy link functionality
     initializeCopyLink(modal)
 
+    // Initialize mobile carousel
+    initializeMobileCarousel(modal)
+
     return modal
 }
 
@@ -84,9 +87,21 @@ function getFallbackModalHTML() {
     <div class="quick-view-content">
         <button class="quick-view-close" onclick="closeQuickViewModal()">&times;</button>
         <div class="quick-view-body">
+            <!-- Desktop Images -->
             <div class="quick-view-images" id="quickViewImages">
                 <!-- Images will be populated here -->
             </div>
+            
+            <!-- Mobile Image Carousel -->
+            <div class="mobile-image-carousel" id="mobileImageCarousel">
+                <div class="mobile-images-container" id="mobileImagesContainer">
+                    <!-- Mobile images will be populated here -->
+                </div>
+                <div class="mobile-image-dots" id="mobileImageDots">
+                    <!-- Dots will be populated here -->
+                </div>
+            </div>
+            
             <div class="quick-view-info">
                 <div class="quick-view-header">
                     <h2 class="quick-view-title">Quickview</h2>
@@ -155,11 +170,149 @@ function getFallbackModalHTML() {
 }
 
 /**
- * CHANGED: Enhanced quantity controls with size-based validation
+ * Enhanced mobile carousel initialization
+ */
+function initializeMobileCarousel(modal) {
+    const carousel = modal.querySelector("#mobileImageCarousel")
+    const container = modal.querySelector("#mobileImagesContainer")
+    const dotsContainer = modal.querySelector("#mobileImageDots")
+
+    if (!carousel || !container || !dotsContainer) {
+        console.error("Mobile carousel elements not found") // Debug log
+        return
+    }
+
+    console.log("Initializing mobile carousel") // Debug log
+
+    let currentIndex = 0
+    const totalImages = 0
+    let startX = 0
+    let currentX = 0
+    let isDragging = false
+
+    // Store carousel state
+    modal._carouselState = {
+        currentIndex: 0,
+        totalImages: 0,
+        updateCarousel: (index) => {
+            console.log("Updating carousel to index:", index, "of", totalImages) // Debug log
+
+            if (index < 0 || index >= totalImages) return
+
+            currentIndex = index
+            modal._carouselState.currentIndex = currentIndex
+
+            // Update transform - show 2 images at a time
+            const translateX = -(currentIndex * 50) // 50% per image since we show 2 at a time
+            container.style.transform = `translateX(${translateX}%)`
+
+            console.log("Applied transform:", `translateX(${translateX}%)`) // Debug log
+
+            // Update dots
+            const dots = dotsContainer.querySelectorAll(".mobile-dot")
+            dots.forEach((dot, i) => {
+                dot.classList.toggle("active", i === currentIndex)
+            })
+        },
+    }
+
+    // Touch events for swipe
+    container.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX
+        isDragging = true
+        container.style.transition = "none"
+    })
+
+    container.addEventListener("touchmove", (e) => {
+        if (!isDragging) return
+
+        currentX = e.touches[0].clientX
+        const diffX = currentX - startX
+        const currentTranslateX = -(currentIndex * 50)
+        const newTranslateX = currentTranslateX + (diffX / container.offsetWidth) * 100
+
+        container.style.transform = `translateX(${newTranslateX}%)`
+    })
+
+    container.addEventListener("touchend", (e) => {
+        if (!isDragging) return
+
+        isDragging = false
+        container.style.transition = "transform 0.3s ease"
+
+        const diffX = currentX - startX
+        const threshold = 50 // Minimum swipe distance
+
+        if (Math.abs(diffX) > threshold) {
+            if (diffX > 0 && currentIndex > 0) {
+                // Swipe right - go to previous
+                modal._carouselState.updateCarousel(currentIndex - 1)
+            } else if (diffX < 0 && currentIndex < totalImages - 1) {
+                // Swipe left - go to next
+                modal._carouselState.updateCarousel(currentIndex + 1)
+            } else {
+                // Snap back to current
+                modal._carouselState.updateCarousel(currentIndex)
+            }
+        } else {
+            // Snap back to current
+            modal._carouselState.updateCarousel(currentIndex)
+        }
+    })
+
+    // Mouse events for desktop testing
+    container.addEventListener("mousedown", (e) => {
+        startX = e.clientX
+        isDragging = true
+        container.style.transition = "none"
+        e.preventDefault()
+    })
+
+    container.addEventListener("mousemove", (e) => {
+        if (!isDragging) return
+
+        currentX = e.clientX
+        const diffX = currentX - startX
+        const currentTranslateX = -(currentIndex * 50)
+        const newTranslateX = currentTranslateX + (diffX / container.offsetWidth) * 100
+
+        container.style.transform = `translateX(${newTranslateX}%)`
+    })
+
+    container.addEventListener("mouseup", (e) => {
+        if (!isDragging) return
+
+        isDragging = false
+        container.style.transition = "transform 0.3s ease"
+
+        const diffX = currentX - startX
+        const threshold = 50
+
+        if (Math.abs(diffX) > threshold) {
+            if (diffX > 0 && currentIndex > 0) {
+                modal._carouselState.updateCarousel(currentIndex - 1)
+            } else if (diffX < 0 && currentIndex < totalImages - 1) {
+                modal._carouselState.updateCarousel(currentIndex + 1)
+            } else {
+                modal._carouselState.updateCarousel(currentIndex)
+            }
+        } else {
+            modal._carouselState.updateCarousel(currentIndex)
+        }
+    })
+
+    // Prevent context menu on long press
+    container.addEventListener("contextmenu", (e) => {
+        e.preventDefault()
+    })
+}
+
+/**
+ * Enhanced quantity controls with size-based validation
  */
 function initializeQuantityControls(modal) {
     let currentQuantity = 1
-    let maxQuantity = 10 // Default max quantity
+    let maxQuantity = 10
     const decreaseBtn = modal.querySelector("#decreaseQty")
     const increaseBtn = modal.querySelector("#increaseQty")
     const quantityDisplay = modal.querySelector("#quantityDisplay")
@@ -168,7 +321,6 @@ function initializeQuantityControls(modal) {
         if (quantityDisplay) {
             quantityDisplay.textContent = currentQuantity
         }
-        // FIXED: Properly enable/disable buttons based on current quantity and limits
         if (decreaseBtn) {
             decreaseBtn.disabled = currentQuantity <= 1
         }
@@ -177,7 +329,6 @@ function initializeQuantityControls(modal) {
         }
     }
 
-    // FIXED: Decrease button functionality
     decreaseBtn?.addEventListener("click", () => {
         if (currentQuantity > 1) {
             currentQuantity--
@@ -185,7 +336,6 @@ function initializeQuantityControls(modal) {
         }
     })
 
-    // FIXED: Increase button with max quantity validation
     increaseBtn?.addEventListener("click", () => {
         if (currentQuantity < maxQuantity) {
             currentQuantity++
@@ -193,26 +343,21 @@ function initializeQuantityControls(modal) {
         }
     })
 
-    // Initial state
     updateQuantityDisplay()
 
-    // Store reference for reset
     modal._resetQuantity = () => {
         currentQuantity = 1
         updateQuantityDisplay()
     }
 
-    // CHANGED: Store function to update max quantity based on selected size
     modal._updateMaxQuantity = (newMaxQuantity) => {
         maxQuantity = newMaxQuantity
-        // If current quantity exceeds new max, reduce it
         if (currentQuantity > maxQuantity) {
             currentQuantity = maxQuantity
         }
         updateQuantityDisplay()
     }
 
-    // Store current quantity getter
     modal._getCurrentQuantity = () => currentQuantity
 }
 
@@ -231,7 +376,6 @@ function initializeCopyLink(modal) {
                 showCopySuccess(copyLinkSection)
             })
             .catch(() => {
-                // Fallback for older browsers
                 const textArea = document.createElement("textarea")
                 textArea.value = productLink
                 document.body.appendChild(textArea)
@@ -261,7 +405,7 @@ function showCopySuccess(copyLinkSection) {
 }
 
 /**
- * CHANGED: Update available quantity display and set max quantity for controls
+ * Update available quantity display and set max quantity for controls
  */
 function updateAvailableQuantity(modal, selectedSize) {
     const availableQuantityElement = modal.querySelector("#availableQuantity")
@@ -269,7 +413,6 @@ function updateAvailableQuantity(modal, selectedSize) {
         availableQuantityElement.textContent = `Mavjud: ${selectedSize.amount} ta`
         availableQuantityElement.style.display = "block"
 
-        // CHANGED: Update max quantity for quantity controls
         if (modal._updateMaxQuantity) {
             modal._updateMaxQuantity(selectedSize.amount)
         }
@@ -279,34 +422,84 @@ function updateAvailableQuantity(modal, selectedSize) {
 }
 
 /**
- * CHANGED: Enhanced populate function with corrected pricing logic
+ * Enhanced populate function with better mobile carousel support
  */
 function populateQuickViewModal(modal, product) {
-    // Store product ID for copy link functionality
     modal.setAttribute("data-product-id", product.id)
 
-    // Get all image URLs
     const imageUrls = product.attachmentKeys?.map((key) => window.API.getImageUrl(key)) || []
 
-    // Populate images
+    // FIXED: Ensure we have at least one image
+    const imagesToShow = imageUrls.length > 0 ? imageUrls : [window.API.getImageUrl(null)]
+
+    // Populate desktop images
     const imagesContainer = modal.querySelector("#quickViewImages")
     if (imagesContainer) {
         imagesContainer.innerHTML = ""
-
-        if (imageUrls.length > 0) {
-            imageUrls.forEach((imageUrl, index) => {
-                const imageItem = document.createElement("div")
-                imageItem.className = "product-image-item"
-                imageItem.innerHTML = `<img src="${imageUrl}" alt="${product.name} ${index + 1}">`
-                imagesContainer.appendChild(imageItem)
-            })
-        } else {
-            // Add placeholder if no images
+        imagesToShow.forEach((imageUrl, index) => {
             const imageItem = document.createElement("div")
             imageItem.className = "product-image-item"
-            imageItem.innerHTML = `<img src="${window.API.getImageUrl(null)}" alt="${product.name}">`
+            imageItem.innerHTML = `<img src="${imageUrl}" alt="${product.name} ${index + 1}" loading="lazy">`
             imagesContainer.appendChild(imageItem)
+        })
+    }
+
+    // FIXED: Populate mobile carousel with proper error handling
+    const mobileContainer = modal.querySelector("#mobileImagesContainer")
+    const mobileDotsContainer = modal.querySelector("#mobileImageDots")
+
+    if (mobileContainer && mobileDotsContainer) {
+        console.log("Populating mobile carousel with", imagesToShow.length, "images") // Debug log
+
+        mobileContainer.innerHTML = ""
+        mobileDotsContainer.innerHTML = ""
+
+        // Create mobile images
+        imagesToShow.forEach((imageUrl, index) => {
+            const imageItem = document.createElement("div")
+            imageItem.className = "mobile-image-item"
+
+            const img = document.createElement("img")
+            img.src = imageUrl
+            img.alt = `${product.name} ${index + 1}`
+            img.loading = "lazy"
+
+            // FIXED: Add error handling for images
+            img.onerror = function () {
+                console.log("Image failed to load:", imageUrl)
+                this.src = window.API.getImageUrl(null) // Fallback image
+            }
+
+            img.onload = () => {
+                console.log("Image loaded successfully:", imageUrl) // Debug log
+            }
+
+            imageItem.appendChild(img)
+            mobileContainer.appendChild(imageItem)
+        })
+
+        // Create dots
+        imagesToShow.forEach((_, index) => {
+            const dot = document.createElement("div")
+            dot.className = `mobile-dot ${index === 0 ? "active" : ""}`
+            dot.addEventListener("click", () => {
+                console.log("Dot clicked:", index) // Debug log
+                if (modal._carouselState) {
+                    modal._carouselState.updateCarousel(index)
+                }
+            })
+            mobileDotsContainer.appendChild(dot)
+        })
+
+        // FIXED: Update carousel state with proper total count
+        if (modal._carouselState) {
+            modal._carouselState.totalImages = imagesToShow.length
+            modal._carouselState.currentIndex = 0
+            modal._carouselState.updateCarousel(0)
+            console.log("Carousel state updated:", modal._carouselState) // Debug log
         }
+    } else {
+        console.error("Mobile carousel containers not found") // Debug log
     }
 
     // Set category
@@ -321,16 +514,15 @@ function populateQuickViewModal(modal, product) {
         titleElement.textContent = product.name
     }
 
-    // CHANGED: Fixed pricing calculation and display - backend sends original price
+    // Set pricing
     const pricingContainer = modal.querySelector("#quickViewPricing")
     if (pricingContainer) {
         const discountPercent = product.discount || 0
         const hasDiscount = product.status === "SALE" && discountPercent > 0
-        const originalPrice = product.price // Backend sends original price
+        const originalPrice = product.price
         const discountedPrice = hasDiscount ? originalPrice * (1 - discountPercent / 100) : originalPrice
 
         if (hasDiscount) {
-            // CHANGED: Show discounted price, original price, and discount % all in one line
             pricingContainer.innerHTML = `
         <span class="product-current-price">${window.API.formatPrice(discountedPrice)}</span>
         <span class="product-original-price">${window.API.formatPrice(originalPrice)}</span>
@@ -349,7 +541,7 @@ function populateQuickViewModal(modal, product) {
         descriptionElement.textContent = product.description || "Bu mahsulot haqida qo'shimcha ma'lumot mavjud emas."
     }
 
-    // Set sizes without quantity display
+    // Set sizes
     const sizesGroup = modal.querySelector("#quickViewSizesGroup")
     const sizesContainer = modal.querySelector("#quickViewSizes")
     const allSizes = product.productSizes || []
@@ -364,15 +556,12 @@ function populateQuickViewModal(modal, product) {
             const isAvailable = sizeData.amount > 0
             sizeOption.className = `size-option ${index === 0 && isAvailable ? "selected" : ""} ${!isAvailable ? "disabled" : ""}`
 
-            // Only show size name, no quantity
             sizeOption.textContent = sizeData.size
 
             if (isAvailable) {
                 sizeOption.addEventListener("click", () => {
                     sizesContainer.querySelectorAll(".size-option").forEach((s) => s.classList.remove("selected"))
                     sizeOption.classList.add("selected")
-
-                    // CHANGED: Update available quantity display and max quantity
                     updateAvailableQuantity(modal, sizeData)
                 })
             }
@@ -380,25 +569,22 @@ function populateQuickViewModal(modal, product) {
             sizesContainer.appendChild(sizeOption)
         })
 
-        // Show quantity for initially selected size
         const firstAvailableSize = allSizes.find((size) => size.amount > 0)
         if (firstAvailableSize) {
             updateAvailableQuantity(modal, firstAvailableSize)
         }
     } else if (sizesGroup) {
         sizesGroup.style.display = "none"
-        // CHANGED: If no sizes, set default max quantity
         if (modal._updateMaxQuantity) {
             modal._updateMaxQuantity(10)
         }
     }
 
-    // Disable quantity controls if no available sizes
+    // Handle quantity controls
     const quantityControls = modal.querySelectorAll("#decreaseQty, #increaseQty, #quantityDisplay")
     const addToCartBtn = modal.querySelector("#addToCartBtn")
 
     if (!hasAvailableSizes && allSizes.length > 0) {
-        // Disable quantity controls if product has sizes but none available
         quantityControls.forEach((control) => {
             control.disabled = true
             if (control.id === "quantityDisplay") {
@@ -410,10 +596,8 @@ function populateQuickViewModal(modal, product) {
             addToCartBtn.textContent = "MAVJUD EMAS"
         }
     } else {
-        // Enable quantity controls
         quantityControls.forEach((control) => {
             if (control.id !== "decreaseQty") {
-                // Don't force enable decrease button
                 control.disabled = false
             }
             if (control.id === "quantityDisplay") {
@@ -426,7 +610,6 @@ function populateQuickViewModal(modal, product) {
         }
     }
 
-    // Reset quantity
     if (modal._resetQuantity) {
         modal._resetQuantity()
     }

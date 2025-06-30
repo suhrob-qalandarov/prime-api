@@ -81,15 +81,15 @@
     overflow: hidden;
 }
 
-/* Images Section - Further reduced padding */
+/* Images Section - Desktop */
 .quick-view-images {
     flex: 1;
     max-width: 500px;
     display: flex;
     flex-direction: column;
-    padding: 4px 4px 4px 2px; /* CHANGED: Left padding further reduced from 4px to 2px, other paddings reduced from 8px to 4px */
+    padding: 4px 4px 4px 2px;
     overflow-y: auto;
-    gap: 10px; /* CHANGED: Reduced gap from 12px to 10px */
+    gap: 10px;
 }
 
 .quick-view-images::-webkit-scrollbar {
@@ -122,13 +122,73 @@
     background: #f8f9fa;
 }
 
+/* FIXED: Mobile Image Carousel - Show on mobile */
+.mobile-image-carousel {
+    display: none;
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    background: #f8f9fa; /* Added background for debugging */
+}
+
+.mobile-images-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+    touch-action: pan-x;
+}
+
+.mobile-image-item {
+    flex: 0 0 50%; /* Show 2 images at a time */
+    height: 100%;
+    padding: 0 4px;
+    box-sizing: border-box; /* FIXED: Added box-sizing */
+}
+
+.mobile-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #f8f9fa;
+    border-radius: 12px;
+    display: block; /* FIXED: Ensure images display as block */
+}
+
+/* CHANGED: Mobile Image Dots Indicator */
+.mobile-image-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 0 16px;
+}
+
+.mobile-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mobile-dot.active {
+    background: var(--burgundy-color);
+    transform: scale(1.2);
+}
+
 /* Info Section */
 .quick-view-info {
     flex: 1;
-    max-width: 580px; /* CHANGED: Increased from 550px to 580px for even wider info section */
+    max-width: 580px;
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden; /* CHANGED: Added overflow hidden for proper scrolling */
 }
 
 /* Sticky Header */
@@ -139,6 +199,7 @@
     z-index: 5;
     padding: 20px 24px 16px;
     border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0; /* CHANGED: Prevent header from shrinking */
 }
 
 .quick-view-title {
@@ -148,11 +209,12 @@
     margin: 0;
 }
 
-/* Scrollable Content */
+/* CHANGED: Scrollable Content - Now properly scrollable */
 .quick-view-content-scroll {
     flex: 1;
     overflow-y: auto;
     padding: 10px 14px;
+    height: 0; /* CHANGED: Force height calculation for flex child */
 }
 
 .quick-view-content-scroll::-webkit-scrollbar {
@@ -186,13 +248,12 @@
     line-height: 1.2;
 }
 
-/* CHANGED: Updated pricing section for better inline display */
 .product-price-section {
     display: flex;
     align-items: center;
-    gap: 8px; /* CHANGED: Reduced gap from 12px to 8px for tighter spacing */
+    gap: 8px;
     margin-bottom: 16px;
-    flex-wrap: nowrap; /* CHANGED: Prevent wrapping to keep everything in one line */
+    flex-wrap: nowrap;
 }
 
 .product-current-price {
@@ -207,7 +268,7 @@
 }
 
 .product-original-price {
-    font-size: 16px; /* CHANGED: Increased from 14px to 16px for better visibility */
+    font-size: 16px;
     color: #999;
     text-decoration: line-through;
 }
@@ -219,7 +280,7 @@
     border-radius: 12px;
     font-size: 12px;
     font-weight: 600;
-    white-space: nowrap; /* CHANGED: Prevent text wrapping */
+    white-space: nowrap;
 }
 
 .product-description {
@@ -288,7 +349,6 @@
     border-color: #e0e0e0;
 }
 
-/* Available quantity display */
 .available-quantity {
     font-size: 13px;
     color: #666;
@@ -444,17 +504,27 @@
     border-radius: 4px;
 }
 
-/* Mobile Responsive */
+/* CHANGED: Mobile Responsive - Completely different layout */
 @media (max-width: 768px) {
+    /* FIXED: Show mobile carousel */
+    .mobile-image-carousel {
+        display: block !important; /* Force display on mobile */
+        margin: 16px;
+        margin-bottom: 0;
+    }
+
     .product-quick-view-modal {
         justify-content: center;
         padding: 10px;
+        align-items: flex-end; /* CHANGED: Align to bottom for mobile */
     }
 
     .quick-view-content {
-        width: 95%;
-        height: 85vh;
-        transform: translateY(100%);
+        width: 100%;
+        height: 90vh;
+        border-radius: 16px 16px 0 0; /* CHANGED: Only top corners rounded */
+        transform: translateY(100%); /* CHANGED: Slide up from bottom */
+        flex-direction: column; /* CHANGED: Stack vertically */
     }
 
     .product-quick-view-modal.show .quick-view-content {
@@ -463,15 +533,39 @@
 
     .quick-view-body {
         flex-direction: column;
+        height: 100%;
+        overflow-y: auto; /* CHANGED: Make entire body scrollable */
     }
 
-    .quick-view-images,
+    /* CHANGED: Hide desktop images on mobile */
+    .quick-view-images {
+        display: none;
+    }
+
+    /* CHANGED: Show mobile carousel */
+    .mobile-image-carousel {
+        margin: 16px;
+        margin-bottom: 0;
+    }
+
     .quick-view-info {
         max-width: 100%;
+        flex: 1;
+        margin: 0 16px;
+        overflow: visible; /* CHANGED: Allow natural flow on mobile */
     }
 
-    .product-image-item {
-        height: 250px;
+    .quick-view-header {
+        position: relative; /* CHANGED: Not sticky on mobile */
+        padding: 16px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .quick-view-content-scroll {
+        overflow: visible; /* CHANGED: No separate scrolling on mobile */
+        padding: 0;
+        height: auto; /* CHANGED: Auto height on mobile */
+        flex: none;
     }
 
     .product-title-large {
@@ -483,12 +577,26 @@
         align-items: stretch;
     }
 
-    .quick-view-images {
-        padding: 3px 3px 3px 1px; /* CHANGED: Mobile left padding further reduced from 3px to 1px */
-    }
-
-    /* CHANGED: Allow wrapping on mobile for pricing */
     .product-price-section {
         flex-wrap: wrap;
+    }
+
+    /* CHANGED: Mobile close button positioning */
+    .quick-view-close {
+        top: 12px;
+        right: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+    }
+}
+
+/* CHANGED: Extra small devices */
+@media (max-width: 576px) {
+    .mobile-image-carousel {
+        height: 250px; /* Smaller on very small screens */
+    }
+
+    .quick-view-content {
+        height: 95vh; /* More height on small screens */
     }
 }
