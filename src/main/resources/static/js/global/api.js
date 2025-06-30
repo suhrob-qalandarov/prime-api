@@ -6,7 +6,7 @@
 const axios = window.axios
 
 // API Base URL - Updated to correct URL
-const API_BASE_URL = "http://10.10.1.235/"
+const API_BASE_URL = "http://192.168.1.2/"
 
 // Configure Axios defaults (Axios is already loaded via CDN in HTML)
 if (typeof axios !== "undefined") {
@@ -104,7 +104,7 @@ async function fetchCategories() {
  */
 async function fetchProductById(productId) {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/products/${productId}`)
+        const response = await axios.get(`${API_BASE_URL}api/v1/product/${productId}`)
         return response.data
     } catch (error) {
         console.error("Error fetching product by ID:", error)
@@ -139,7 +139,7 @@ async function searchProducts(query) {
  * @returns {string} Image URL
  */
 function getImageUrl(attachmentId) {
-    if (!attachmentId) return "/placeholder.svg?height=350&width=280"
+    if (!attachmentId) return "/images/default/box.jpeg"
     return `${API_BASE_URL}api/v1/attachment/${attachmentId}`
 }
 
@@ -171,9 +171,9 @@ function calculateDiscountPercentage(originalPrice, currentPrice) {
  */
 function getStatusConfig(status) {
     const statusConfigs = {
-        NEW: { text: "YANGI", class: "status-new", color: "#4CAF50" },
-        HOT: { text: "ISSIQ", class: "status-hot", color: "#FF5722" },
-        SALE: { text: "CHEGIRMA", class: "status-sale", color: "#FF9800" },
+        NEW: { text: status, class: "status-new", color: "#4CAF50" },
+        HOT: { text: status, class: "status-hot", color: "#FF5722" },
+        SALE: { text: status, class: "status-sale", color: "#FF9800" },
     }
 
     return statusConfigs[status] || null

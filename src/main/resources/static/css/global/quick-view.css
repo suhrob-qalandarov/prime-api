@@ -274,8 +274,8 @@
 }
 
 .product-discount-badge {
-    background: #e8f5e8;
-    color: #2d5a2d;
+    background: rgba(177, 220, 112, 0.8);
+    color: black;
     padding: 4px 8px;
     border-radius: 12px;
     font-size: 12px;

@@ -5,7 +5,7 @@
 /**
  * Discount calculation utilities for reuse across the application
  */
-const DiscountUtils = {
+let DiscountUtils = {
     /**
      * Calculate discount information for a product
      * @param {Object} product - Product object with price, discount, and status
