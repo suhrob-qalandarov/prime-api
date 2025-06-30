@@ -144,8 +144,8 @@ function getFallbackModalHTML() {
                     
                     <div class="payment-methods">
                         <span>To'lov:</span>
-                        <img src="/images/click.webp" alt="Click" />
-                        <img src="/images/payme.webp" alt="Payme" />
+                        <img src="/placeholder.svg?height=20&width=40&text=Click" alt="Click" />
+                        <img src="/placeholder.svg?height=20&width=40&text=Payme" alt="Payme" />
                     </div>
                 </div>
             </div>
@@ -167,23 +167,23 @@ function initializeQuantityControls(modal) {
         if (quantityDisplay) {
             quantityDisplay.textContent = currentQuantity
         }
-        if (decreaseBtn) {
+        if (decreaseBtn && !decreaseBtn.disabled) {
             decreaseBtn.disabled = currentQuantity <= 1
         }
-        if (increaseBtn) {
+        if (increaseBtn && !increaseBtn.disabled) {
             increaseBtn.disabled = currentQuantity >= 10
         }
     }
 
     decreaseBtn?.addEventListener("click", () => {
-        if (currentQuantity > 1) {
+        if (currentQuantity > 1 && !decreaseBtn.disabled) {
             currentQuantity--
             updateQuantityDisplay()
         }
     })
 
     increaseBtn?.addEventListener("click", () => {
-        if (currentQuantity < 10) {
+        if (currentQuantity < 10 && !increaseBtn.disabled) {
             currentQuantity++
             updateQuantityDisplay()
         }
@@ -320,6 +320,7 @@ function populateQuickViewModal(modal, product) {
     const sizesGroup = modal.querySelector("#quickViewSizesGroup")
     const sizesContainer = modal.querySelector("#quickViewSizes")
     const allSizes = product.productSizes || []
+    const hasAvailableSizes = allSizes.some((size) => size.amount > 0)
 
     if (allSizes.length > 0 && sizesGroup && sizesContainer) {
         sizesGroup.style.display = "block"
@@ -329,7 +330,12 @@ function populateQuickViewModal(modal, product) {
             const sizeOption = document.createElement("div")
             const isAvailable = sizeData.amount > 0
             sizeOption.className = `size-option ${index === 0 && isAvailable ? "selected" : ""} ${!isAvailable ? "disabled" : ""}`
-            sizeOption.textContent = `${sizeData.size} (${sizeData.amount})`
+
+            // Create size display with quantity on the side
+            sizeOption.innerHTML = `
+        <span>${sizeData.size}</span>
+        <span class="size-quantity">(${sizeData.amount})</span>
+      `
 
             if (isAvailable) {
                 sizeOption.addEventListener("click", () => {
@@ -342,6 +348,36 @@ function populateQuickViewModal(modal, product) {
         })
     } else if (sizesGroup) {
         sizesGroup.style.display = "none"
+    }
+
+    // Disable quantity controls if no available sizes
+    const quantityControls = modal.querySelectorAll("#decreaseQty, #increaseQty, #quantityDisplay")
+    const addToCartBtn = modal.querySelector("#addToCartBtn")
+
+    if (!hasAvailableSizes && allSizes.length > 0) {
+        // Disable quantity controls if product has sizes but none available
+        quantityControls.forEach((control) => {
+            control.disabled = true
+            if (control.id === "quantityDisplay") {
+                control.style.opacity = "0.5"
+            }
+        })
+        if (addToCartBtn) {
+            addToCartBtn.disabled = true
+            addToCartBtn.textContent = "MAVJUD EMAS"
+        }
+    } else {
+        // Enable quantity controls
+        quantityControls.forEach((control) => {
+            control.disabled = false
+            if (control.id === "quantityDisplay") {
+                control.style.opacity = "1"
+            }
+        })
+        if (addToCartBtn) {
+            addToCartBtn.disabled = false
+            addToCartBtn.textContent = "SAVATGA"
+        }
     }
 
     // Reset quantity
