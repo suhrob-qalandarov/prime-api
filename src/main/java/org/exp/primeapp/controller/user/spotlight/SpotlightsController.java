@@ -26,7 +26,6 @@ public class SpotlightsController {
     @GetMapping()
     public ResponseEntity<List<SpotlightRes>> getSpotlights() {
         List<SpotlightRes> spotlights = spotlightService.getHeroSpotlights();
-        System.out.println(spotlights);
         return new ResponseEntity<>(spotlights, HttpStatus.ACCEPTED);
     }
 
