@@ -85,6 +85,11 @@ public class SecurityConfig {
                                API + V1 + ATTACHMENT + WAY_ALL
                        ).permitAll()
 
+                        .requestMatchers(
+                                "GET",
+                                API + V1 + SPOTLIGHTS + WAY_ALL
+                        ).permitAll()
+
                         .anyRequest().permitAll()
         );
 

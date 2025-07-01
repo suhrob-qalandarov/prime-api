@@ -284,42 +284,32 @@
     </div>
 </div>
 
-<!-- Categories Section -->
+<!-- Categories Section - UPDATED FOR DYNAMIC SPOTLIGHT LOADING -->
 <section class="category-section">
     <div class="container-fluid px-0">
-        <div class="row g-0">
-            <div class="col-lg-3 col-md-6 col-6">
-                <div class="category-card">
-                    <img src="/images/clothes.jpeg" alt="Ko'ylaklar" class="category-img">
-                    <div class="category-overlay">
-                        <h3 class="category-title">KO'YLAKLAR</h3>
-                    </div>
+        <!-- Loading State -->
+        <div class="category-loading" id="categoryLoading" style="display: none;">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Yuklanmoqda...</span>
                 </div>
+                <p class="mt-3">Spotlight kategoriyalar yuklanmoqda...</p>
             </div>
-            <div class="col-lg-3 col-md-6 col-6">
-                <div class="category-card">
-                    <img src="/images/jens.jpeg" alt="Shimlar" class="category-img">
-                    <div class="category-overlay">
-                        <h3 class="category-title">SHIMLAR</h3>
-                    </div>
-                </div>
+        </div>
+
+        <!-- Error State -->
+        <div class="category-error" id="categoryError" style="display: none;">
+            <div class="text-center py-5">
+                <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+                <h4 class="mt-3">Backend bilan bog'lanishda xatolik</h4>
+                <p class="text-muted">Backend serverga ulanib bo'lmadi. Server ishlab turganini tekshiring.</p>
+                <button class="btn btn-primary" onclick="loadCategories()">Qayta urinish</button>
             </div>
-            <div class="col-lg-3 col-md-6 col-6">
-                <div class="category-card">
-                    <img src="/images/mens-shoes.jpeg" alt="Poyabzallar" class="category-img">
-                    <div class="category-overlay">
-                        <h3 class="category-title">POYABZALLAR</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 col-6">
-                <div class="category-card">
-                    <img src="/images/accessors.jpeg" alt="Aksessuarlar" class="category-img">
-                    <div class="category-overlay">
-                        <h3 class="category-title">AKSESSUARLAR</h3>
-                    </div>
-                </div>
-            </div>
+        </div>
+
+        <!-- Spotlight Categories Container - Will be populated dynamically -->
+        <div class="row g-0" id="categoriesContainer">
+            <!-- Spotlight categories will be loaded here dynamically -->
         </div>
     </div>
 </section>
@@ -607,6 +597,7 @@
     </div>
 </footer>
 
+<script src="js/global/api.js"></script>
 <script src="js/global/script.js"></script>
 </body>
 </html>

@@ -176,6 +176,210 @@ function initializeMobileBottomNav() {
 }
 
 // ======================================================
+// CATEGORY LOADING FUNCTIONALITY - NEW
+// ======================================================
+
+// loadCategories funksiyasini spotlight API bilan ishlash uchun yangilang:
+async function loadCategories() {
+    const categoriesContainer = document.getElementById("categoriesContainer")
+    const categoryLoading = document.getElementById("categoryLoading")
+    const categoryError = document.getElementById("categoryError")
+
+    try {
+        // Loading holatini ko'rsatish
+        categoryLoading.style.display = "block"
+        categoryError.style.display = "none"
+        categoriesContainer.style.display = "none"
+
+        console.log("Loading spotlight categories from API...")
+
+        // API dan spotlight kategoriyalarni olish
+        const spotlights = await window.API.fetchSpotlightCategories()
+
+        // Loading holatini yashirish
+        categoryLoading.style.display = "none"
+
+        if (!spotlights || spotlights.length === 0) {
+            throw new Error("Spotlight kategoriyalar topilmadi")
+        }
+
+        // Mavjud kontentni tozalash
+        categoriesContainer.innerHTML = ""
+
+        // Spotlight kategoriyalarni render qilish
+        spotlights.forEach((spotlight, index) => {
+            const categoryCard = createSpotlightCard(spotlight, index)
+            categoriesContainer.appendChild(categoryCard)
+        })
+
+        // Kategoriyalar konteynerini ko'rsatish
+        categoriesContainer.style.display = "flex"
+
+        console.log(`Successfully loaded ${spotlights.length} spotlight categories`)
+    } catch (error) {
+        console.error("Error loading spotlight categories:", error)
+
+        // Loading holatini yashirish
+        categoryLoading.style.display = "none"
+
+        // Error holatini ko'rsatish
+        categoryError.style.display = "block"
+
+        // API ishlamasa fallback kategoriyalarni yuklash
+        loadFallbackCategories()
+    }
+}
+
+// Spotlight card yaratish funksiyasini qo'shing:
+function createSpotlightCard(spotlight, index) {
+    const colDiv = document.createElement("div")
+    colDiv.className = "col-lg-3 col-md-6 col-6"
+
+    const categoryCard = document.createElement("div")
+    categoryCard.className = "category-card"
+    categoryCard.setAttribute("data-spotlight-id", spotlight.id)
+
+    // imageKey dan rasm URL olish
+    const imageUrl = spotlight.imageKey ? window.API.getImageUrl(spotlight.imageKey) : "/images/default/category.jpeg"
+
+    categoryCard.innerHTML = `
+        <img src="${imageUrl}" alt="${spotlight.name}" class="category-img" loading="lazy">
+        <div class="category-overlay">
+            <h3 class="category-title">${spotlight.name.toUpperCase()}</h3>
+        </div>
+    `
+
+    // Click event listener qo'shish
+    categoryCard.addEventListener("click", () => {
+        handleSpotlightClick(spotlight)
+    })
+
+    // Rasm yuklashda xatolik bo'lsa fallback rasm
+    const img = categoryCard.querySelector(".category-img")
+    img.onerror = function () {
+        console.log("Spotlight image failed to load:", imageUrl)
+        this.src = "/images/default/category.jpeg"
+    }
+
+    colDiv.appendChild(categoryCard)
+    return colDiv
+}
+
+// Spotlight click handler funksiyasini qo'shing:
+function handleSpotlightClick(spotlight) {
+    console.log("Spotlight clicked:", spotlight)
+
+    // Bu yerda navigation logic qo'shishingiz mumkin
+    // Masalan: window.location.href = `/spotlight/${spotlight.id}`
+
+    // Hozircha notification ko'rsatamiz
+    window.API.showSuccessNotification(`${spotlight.name} spotlight tanlandi`)
+}
+
+/**
+ * Create a category card element
+ * @param {Object} category - Category data from API
+ * @param {number} index - Category index
+ * @returns {HTMLElement} Category card element
+ */
+// function createCategoryCard(category, index) {
+//   const colDiv = document.createElement("div")
+//   colDiv.className = "col-lg-3 col-md-6 col-6"
+
+//   const categoryCard = document.createElement("div")
+//   categoryCard.className = "category-card"
+//   categoryCard.setAttribute("data-category-id", category.id)
+
+//   // Get image URL from imageKey
+//   const imageUrl = category.imageKey ? window.API.getImageUrl(category.imageKey) : "/images/default/category.jpeg"
+
+//   categoryCard.innerHTML = `
+//         <img src="${imageUrl}" alt="${category.name}" class="category-img" loading="lazy">
+//         <div class="category-overlay">
+//             <h3 class="category-title">${category.name.toUpperCase()}</h3>
+//         </div>
+//     `
+
+//   // Add click event listener
+//   categoryCard.addEventListener("click", () => {
+//     handleCategoryClick(category)
+//   })
+
+//   // Add error handling for image
+//   const img = categoryCard.querySelector(".category-img")
+//   img.onerror = function () {
+//     console.log("Category image failed to load:", imageUrl)
+//     this.src = "/images/default/category.jpeg"
+//   }
+
+//   colDiv.appendChild(categoryCard)
+//   return colDiv
+// }
+
+/**
+ * Handle category card click
+ * @param {Object} category - Category data
+ */
+// function handleCategoryClick(category) {
+//   console.log("Category clicked:", category)
+
+//   // You can add navigation logic here
+//   // For example: window.location.href = `/catalog?category=${category.id}`
+
+//   // Show notification for now
+//   window.API.showSuccessNotification(`${category.name} kategoriyasi tanlandi`)
+// }
+
+/**
+ * Load fallback categories if API fails
+ */
+function loadFallbackCategories() {
+    const categoriesContainer = document.getElementById("categoriesContainer")
+
+    const fallbackCategories = [
+        { id: 1, name: "Ko'ylaklar", imageKey: null },
+        { id: 2, name: "Shimlar", imageKey: null },
+        { id: 3, name: "Poyabzallar", imageKey: null },
+        { id: 4, name: "Aksessuarlar", imageKey: null },
+    ]
+
+    const fallbackImages = [
+        "/images/clothes.jpeg",
+        "/images/jens.jpeg",
+        "/images/mens-shoes.jpeg",
+        "/images/accessors.jpeg",
+    ]
+
+    categoriesContainer.innerHTML = ""
+
+    fallbackCategories.forEach((category, index) => {
+        const colDiv = document.createElement("div")
+        colDiv.className = "col-lg-3 col-md-6 col-6"
+
+        const categoryCard = document.createElement("div")
+        categoryCard.className = "category-card"
+        categoryCard.setAttribute("data-category-id", category.id)
+
+        categoryCard.innerHTML = `
+            <img src="${fallbackImages[index]}" alt="${category.name}" class="category-img">
+            <div class="category-overlay">
+                <h3 class="category-title">${category.name.toUpperCase()}</h3>
+            </div>
+        `
+
+        categoryCard.addEventListener("click", () => {
+            handleSpotlightClick(category)
+        })
+
+        colDiv.appendChild(categoryCard)
+        categoriesContainer.appendChild(colDiv)
+    })
+
+    categoriesContainer.style.display = "flex"
+    console.log("Fallback categories loaded")
+}
+
+// ======================================================
 // CART FUNCTIONALITY
 // ======================================================
 let cartItems = []
@@ -691,14 +895,17 @@ function loadCartFromStorage() {
 document.addEventListener("DOMContentLoaded", () => {
     // Initialize all components
     initializeResponsiveHeaders()
-    initializeMobileScrollEffects() // Updated function
+    initializeMobileScrollEffects()
     initializeMobileSidebar()
-    initializeMobileBottomNav() // New function
+    initializeMobileBottomNav()
     initializeCartModal()
     initializeQuickViewModal()
     initializeProductInteractions()
     initializeHeroProductInteractions()
     loadCartFromStorage()
+
+    // Load categories from API
+    loadCategories()
 
     // Handle window resize
     window.addEventListener("resize", () => {
@@ -711,54 +918,5 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Prime77 website initialized successfully!")
 })
 
-// Kategoriya filtrlash funksiyasi
-function initializeCategoryFilter() {
-    const categoryTabs = document.querySelectorAll('.category-tab');
-    const productsGrid = document.getElementById('productsGrid');
-    const activeCategory = document.querySelector('.active-category');
-
-    categoryTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            // Active tabni o'zgartirish
-            categoryTabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-
-            // Kategoriya nomini yangilash
-            const categoryName = this.textContent;
-            activeCategory.textContent = categoryName;
-
-            // Mahsulotlarni filtrlash
-            const category = this.dataset.category;
-            filterProducts(category);
-        });
-    });
-}
-
-// Mahsulotlarni filtrlash funksiyasi
-function filterProducts(category) {
-    const productCards = document.querySelectorAll('.product-card');
-
-    productCards.forEach(card => {
-        if (category === 'all' || card.dataset.category === category) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-// DOM yuklanganda ishga tushirish
-document.addEventListener('DOMContentLoaded', function() {
-    initializeCategoryFilter();
-
-    // Agar URL da kategoriya parametri bo'lsa
-    const urlParams = new URLSearchParams(window.location.search);
-    const categoryParam = urlParams.get('category');
-
-    if (categoryParam) {
-        const tab = document.querySelector(`.category-tab[data-category="${categoryParam}"]`);
-        if (tab) {
-            tab.click();
-        }
-    }
-});
+// Make loadCategories globally available for retry button
+window.loadCategories = loadCategories
