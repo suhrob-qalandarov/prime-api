@@ -2,52 +2,15 @@
 // GLOBAL API CONFIGURATION AND FUNCTIONS
 // ======================================================
 
-// Import Axios library
-const axios = window.axios
-
 // API Base URL - Updated to correct URL
-const API_BASE_URL = "http://192.168.1.2/"
+const API_BASE_URL = "http://localhost/" //192.168.1.2
 
-// Configure Axios defaults (Axios is already loaded via CDN in HTML)
-if (typeof axios !== "undefined") {
-    axios.defaults.timeout = 10000 // 10 seconds timeout
-    axios.defaults.headers.common["Content-Type"] = "application/json"
-
-    // Add request interceptor for debugging
-    axios.interceptors.request.use(
-        (config) => {
-            console.log("API Request:", config.method?.toUpperCase(), config.url)
-            return config
-        },
-        (error) => {
-            console.error("Request Error:", error)
-            return Promise.reject(error)
-        },
-    )
-
-    // Add response interceptor for error handling
-    axios.interceptors.response.use(
-        (response) => {
-            console.log("API Response:", response.status, response.config.url)
-            return response
-        },
-        (error) => {
-            console.error("Response Error:", error.response?.status, error.response?.data || error.message)
-
-            // Handle different error types
-            if (error.code === "ECONNABORTED") {
-                showErrorMessage("Server bilan bog'lanishda vaqt tugadi")
-            } else if (error.response?.status === 404) {
-                showErrorMessage("API endpoint topilmadi")
-            } else if (error.response?.status >= 500) {
-                showErrorMessage("Server xatoligi yuz berdi")
-            } else if (!error.response) {
-                showErrorMessage("Internet aloqasini tekshiring")
-            }
-
-            return Promise.reject(error)
-        },
-    )
+// Configure fetch defaults
+const defaultFetchOptions = {
+    headers: {
+        "Content-Type": "application/json",
+    },
+    timeout: 10000, // 10 seconds timeout
 }
 
 // ======================================================
@@ -55,13 +18,47 @@ if (typeof axios !== "undefined") {
 // ======================================================
 
 /**
+ * Fetch spotlight categories from API
+ * @returns {Promise<Array>} Array of spotlight categories
+ */
+async function fetchSpotlightCategories() {
+    try {
+        console.log("Fetching spotlight categories from:", `${API_BASE_URL}api/v1/spotlights`)
+
+        const response = await fetch(`${API_BASE_URL}api/v1/spotlights`, {
+            method: "GET",
+            ...defaultFetchOptions,
+        })
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const data = await response.json()
+        console.log("Spotlight categories fetched successfully:", data)
+        return data
+    } catch (error) {
+        console.error("Error fetching spotlight categories:", error)
+        throw error
+    }
+}
+
+/**
  * Fetch all products from API
  * @returns {Promise<Array>} Array of products
  */
 async function fetchAllProducts() {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/products`)
-        return response.data
+        const response = await fetch(`${API_BASE_URL}api/v1/products`, {
+            method: "GET",
+            ...defaultFetchOptions,
+        })
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        return await response.json()
     } catch (error) {
         console.error("Error fetching all products:", error)
         throw error
@@ -75,8 +72,16 @@ async function fetchAllProducts() {
  */
 async function fetchProductsByCategory(categoryId) {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/products/by-category/${categoryId}`)
-        return response.data
+        const response = await fetch(`${API_BASE_URL}api/v1/products/by-category/${categoryId}`, {
+            method: "GET",
+            ...defaultFetchOptions,
+        })
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        return await response.json()
     } catch (error) {
         console.error("Error fetching products by category:", error)
         throw error
@@ -89,8 +94,16 @@ async function fetchProductsByCategory(categoryId) {
  */
 async function fetchCategories() {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/categories`)
-        return response.data
+        const response = await fetch(`${API_BASE_URL}api/v1/categories`, {
+            method: "GET",
+            ...defaultFetchOptions,
+        })
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        return await response.json()
     } catch (error) {
         console.error("Error fetching categories:", error)
         throw error
@@ -104,8 +117,16 @@ async function fetchCategories() {
  */
 async function fetchProductById(productId) {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/product/${productId}`)
-        return response.data
+        const response = await fetch(`${API_BASE_URL}api/v1/product/${productId}`, {
+            method: "GET",
+            ...defaultFetchOptions,
+        })
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        return await response.json()
     } catch (error) {
         console.error("Error fetching product by ID:", error)
         throw error
@@ -119,10 +140,16 @@ async function fetchProductById(productId) {
  */
 async function searchProducts(query) {
     try {
-        const response = await axios.get(`${API_BASE_URL}api/v1/products/search`, {
-            params: { q: query },
+        const response = await fetch(`${API_BASE_URL}api/v1/products/search?q=${encodeURIComponent(query)}`, {
+            method: "GET",
+            ...defaultFetchOptions,
         })
-        return response.data
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        return await response.json()
     } catch (error) {
         console.error("Error searching products:", error)
         throw error
@@ -184,15 +211,15 @@ function getStatusConfig(status) {
  * @param {boolean} show - Show or hide spinner
  */
 function showLoading(show) {
-    const loadingSpinner = document.getElementById("loadingSpinner")
-    const productsGrid = document.getElementById("productsGrid")
+    const loadingSpinner = document.getElementById("categoryLoading")
+    const categoriesContainer = document.getElementById("categoriesContainer")
 
     if (show) {
-        if (loadingSpinner) loadingSpinner.style.display = "flex"
-        if (productsGrid) productsGrid.style.opacity = "0.5"
+        if (loadingSpinner) loadingSpinner.style.display = "block"
+        if (categoriesContainer) categoriesContainer.style.opacity = "0.5"
     } else {
         if (loadingSpinner) loadingSpinner.style.display = "none"
-        if (productsGrid) productsGrid.style.opacity = "1"
+        if (categoriesContainer) categoriesContainer.style.opacity = "1"
     }
 }
 
@@ -201,18 +228,16 @@ function showLoading(show) {
  * @param {string} message - Error message
  */
 function showErrorMessage(message) {
-    const productsGrid = document.getElementById("productsGrid")
-    if (productsGrid) {
-        productsGrid.innerHTML = `
-            <div class="col-12">
-                <div class="alert alert-danger text-center" role="alert">
-                    <i class="fas fa-exclamation-triangle mb-2" style="font-size: 2rem;"></i>
-                    <h4>Xatolik yuz berdi</h4>
-                    <p>${message}</p>
-                    <button class="btn btn-primary" onclick="location.reload()">Qayta yuklash</button>
-                </div>
-            </div>
-        `
+    const categoryError = document.getElementById("categoryError")
+    const categoriesContainer = document.getElementById("categoriesContainer")
+
+    if (categoryError) {
+        categoryError.style.display = "block"
+        categoryError.querySelector("p").textContent = message
+    }
+
+    if (categoriesContainer) {
+        categoriesContainer.style.display = "none"
     }
 }
 
@@ -285,6 +310,7 @@ function debounce(func, wait) {
 
 // Export functions for use in other files
 window.API = {
+    fetchSpotlightCategories,
     fetchAllProducts,
     fetchProductsByCategory,
     fetchCategories,

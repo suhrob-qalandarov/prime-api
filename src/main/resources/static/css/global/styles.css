@@ -882,7 +882,7 @@ body {
 
 .product-item.selected {
     transform: scale(1.2);
-    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.8));
+    filter: drop-shadow(0 0 30px var(--light-color));
     z-index: 6;
 }
 
@@ -951,10 +951,10 @@ body {
 }
 
 .brunello-logo {
-    top: 220px;
+    top: 210px;
     right: 185px;
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 140px;
     animation: float 3s ease-in-out infinite 0.8s;
 }
 
@@ -975,10 +975,10 @@ body {
 }
 
 .moncler-logo {
-    bottom: 80px;
+    bottom: 70px;
     right: 245px;
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     animation: float 3s ease-in-out infinite 0.8s;
 }
 
