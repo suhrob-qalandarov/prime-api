@@ -3,7 +3,7 @@ package org.exp.primeapp.service.impl.admin.attachment;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.exp.primeapp.models.dto.responce.AttachmentRes;
+import org.exp.primeapp.models.dto.responce.global.AttachmentRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.repository.AttachmentRepository;
 import org.exp.primeapp.service.interfaces.admin.attachment.AdminAttachmentService;
@@ -28,21 +28,9 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
     private final AttachmentUtilService attachmentUtilService;
 
     @Override
-    public List<AttachmentRes> getAllAttachments() {
+    public List<AttachmentRes> getAttachments() {
         List<Attachment> all = attachmentRepository.findAll();
         return attachmentUtilService.convertToAttachmentResList(all);
-    }
-
-    @Override
-    public List<AttachmentRes> getActiveAttachments() {
-        List<Attachment> active = attachmentRepository.findAllByActiveTrue();
-        return attachmentUtilService.convertToAttachmentResList(active);
-    }
-
-    @Override
-    public List<AttachmentRes> getInactiveAttachments() {
-        List<Attachment> inactive = attachmentRepository.findAllByActiveFalse();
-        return attachmentUtilService.convertToAttachmentResList(inactive);
     }
 
     @Override
@@ -51,49 +39,11 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
         return attachmentUtilService.convertToAttachmentResList(noProduct);
     }
 
-    @Override
-    public List<AttachmentRes> getActiveAttachmentsNoProduct() {
-        List<Attachment> noProduct = attachmentRepository.findAllByActiveTrueAndNotLinkedToProduct();
-        return attachmentUtilService.convertToAttachmentResList(noProduct);
-    }
-
-    @Override
-    public List<AttachmentRes> getInactiveAttachmentsNoProduct() {
-        List<Attachment> noProduct = attachmentRepository.findAllByActiveFalseAndNotLinkedToProduct();
-        return attachmentUtilService.convertToAttachmentResList(noProduct);
-    }
 
     @Override
     public List<AttachmentRes> getAttachmentsLinkedWithProduct() {
         List<Attachment> linkedToProduct = attachmentRepository.findAllByLinkedToProduct();
         return attachmentUtilService.convertToAttachmentResList(linkedToProduct);
-    }
-
-    @Override
-    public List<AttachmentRes> getActiveAttachmentsLinkedWithProduct() {
-        List<Attachment> linkedToProduct = attachmentRepository.findAllByActiveTrueAndLinkedToProduct();
-        return attachmentUtilService.convertToAttachmentResList(linkedToProduct);
-    }
-
-    @Override
-    public List<AttachmentRes> getInactiveAttachmentsLinkedWithProduct() {
-        List<Attachment> linkedToProduct = attachmentRepository.findAllByActiveFalseAndLinkedToProduct();
-        return attachmentUtilService.convertToAttachmentResList(linkedToProduct);
-    }
-
-    @Override
-    public int getAllAttachmentsCount() {
-        return attachmentRepository.countAll();
-    }
-
-    @Override
-    public int getActiveAttachmentsCount() {
-        return attachmentRepository.countAllByActiveTrue();
-    }
-
-    @Override
-    public int getInactiveAttachmentsCount() {
-        return attachmentRepository.countAllByActiveFalse();
     }
 
     @Transactional
@@ -181,19 +131,19 @@ public class AdminAttachmentServiceImpl implements AdminAttachmentService {
     }
 
     @Override
-    public AttachmentRes activateAttachment(Long attachmentId) {
+    public AttachmentRes toggleAttachmentActiveStatus(Long attachmentId) {
         Attachment attachment = attachmentRepository.findById(attachmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Attachment not found with ID: " + attachmentId));
-        attachment.setActive(true);
-        Attachment updatedAttachment = attachmentRepository.save(attachment);
-        return attachmentUtilService.convertToAttachmentRes(updatedAttachment);
-    }
+        Boolean active = attachment.getActive();
 
-    @Override
-    public AttachmentRes deactivateAttachment(Long attachmentId) {
-        Attachment attachment = attachmentRepository.findById(attachmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Attachment not found with ID: " + attachmentId));
-        attachment.setActive(false);
+        if (active) {
+            attachment.setActive(false);
+            log.info("Attachment deactivated {}", attachment.getId());
+        } else {
+            attachment.setActive(true);
+            log.info("Attachment activated {}", attachment.getId());
+        }
+
         Attachment updatedAttachment = attachmentRepository.save(attachment);
         return attachmentUtilService.convertToAttachmentRes(updatedAttachment);
     }

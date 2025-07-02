@@ -1,6 +1,6 @@
 package org.exp.primeapp.service.interfaces.admin.attachment;
 
-import org.exp.primeapp.models.dto.responce.AttachmentRes;
+import org.exp.primeapp.models.dto.responce.global.AttachmentRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,32 +16,13 @@ public interface AdminAttachmentService {
 
     void delete(Long attachmentId);
 
-    List<AttachmentRes> getAllAttachments();
-
-    List<AttachmentRes> getActiveAttachments();
-
-    List<AttachmentRes> getInactiveAttachments();
+    List<AttachmentRes> getAttachments();
 
     List<AttachmentRes> getAttachmentsNoProduct();
 
-    List<AttachmentRes> getActiveAttachmentsNoProduct();
-
-    List<AttachmentRes> getInactiveAttachmentsNoProduct();
-
     List<AttachmentRes> getAttachmentsLinkedWithProduct();
-
-    List<AttachmentRes> getActiveAttachmentsLinkedWithProduct();
-
-    List<AttachmentRes> getInactiveAttachmentsLinkedWithProduct();
-
-    int getAllAttachmentsCount();
-
-    int getActiveAttachmentsCount();
-
-    int getInactiveAttachmentsCount();
 
     void deleteFromS3(Long attachmentId);
 
-    AttachmentRes activateAttachment(Long attachmentId);
-    AttachmentRes deactivateAttachment(Long attachmentId);
+    AttachmentRes toggleAttachmentActiveStatus(Long attachmentId);
 }

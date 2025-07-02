@@ -1,6 +1,6 @@
 package org.exp.primeapp.utils;
 
-import org.exp.primeapp.models.dto.responce.AttachmentRes;
+import org.exp.primeapp.models.dto.responce.global.AttachmentRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.springframework.web.multipart.MultipartFile;
 

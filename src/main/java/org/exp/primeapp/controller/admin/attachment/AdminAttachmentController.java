@@ -2,7 +2,7 @@ package org.exp.primeapp.controller.admin.attachment;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.exp.primeapp.models.dto.responce.AttachmentRes;
+import org.exp.primeapp.models.dto.responce.global.AttachmentRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.service.interfaces.admin.attachment.AdminAttachmentService;
 import org.exp.primeapp.utils.AttachmentUtilService;
@@ -47,17 +47,10 @@ public class AdminAttachmentController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/activate/{attachmentId}")
+    @PostMapping("/toggle/{attachmentId}")
     public ResponseEntity<AttachmentRes> activate(@PathVariable Long attachmentId) {
         log.debug("Updating attachment ID: {}", attachmentId);
-        AttachmentRes response = adminAttachmentService.activateAttachment(attachmentId);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/deactivate/{attachmentId}")
-    public ResponseEntity<AttachmentRes> deactivate(@PathVariable Long attachmentId) {
-        log.debug("Updating attachment ID: {}", attachmentId);
-        AttachmentRes response = adminAttachmentService.deactivateAttachment(attachmentId);
+        AttachmentRes response = adminAttachmentService.toggleAttachmentActiveStatus(attachmentId);
         return ResponseEntity.ok(response);
     }
 
