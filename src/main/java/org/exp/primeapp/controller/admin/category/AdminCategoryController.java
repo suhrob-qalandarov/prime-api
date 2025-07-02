@@ -2,7 +2,6 @@ package org.exp.primeapp.controller.admin.category;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
-import org.exp.primeapp.models.dto.responce.ApiResponse;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.service.interfaces.user.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -19,41 +18,35 @@ public class AdminCategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createCategory(@RequestBody CategoryReq categoryReq) {
-        ApiResponse apiResponse = categoryService.saveCategory(categoryReq);
-        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+    public ResponseEntity<Void> createCategory(@RequestBody CategoryReq categoryReq) {
+        categoryService.saveCategory(categoryReq);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{categoryId}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long categoryId) {
-        Category category = categoryService.getCategoryByIdForAdmin(categoryId);
+        Category category = categoryService.getCategoryById(categoryId);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<ApiResponse> updateCategory(
+    public ResponseEntity<Void> updateCategory(
             @PathVariable Long categoryId,
             @RequestBody CategoryReq categoryReq
     ) {
-        ApiResponse apiResponse = categoryService.updateCategoryById(categoryId,categoryReq);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        categoryService.updateCategoryById(categoryId,categoryReq);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/activate/{categoryId}")
-    public ResponseEntity<ApiResponse> activateCategory(@PathVariable Long categoryId) {
-        ApiResponse apiResponse = categoryService.activateCategory(categoryId);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    @PatchMapping("/toggle/{categoryId}")
+    public ResponseEntity<Void> toggleCategory(@PathVariable Long categoryId) {
+        categoryService.toggleCategoryActiveStatus(categoryId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/activate-with-products/{categoryId}")
-    public ResponseEntity<ApiResponse> activateCategoryWithProducts(@PathVariable Long categoryId) {
-        ApiResponse apiResponse = categoryService.activateCategoryWithProducts(categoryId);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/deactivate/{categoryId}")
-    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long categoryId) {
-        ApiResponse apiResponse = categoryService.deactivateCategory(categoryId);
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    @PatchMapping("/toggle-with-products/{categoryId}")
+    public ResponseEntity<Void> toggleCategoryWithProducts(@PathVariable Long categoryId) {
+        categoryService.toggleCategoryActiveStatusWithProductActiveStatus(categoryId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

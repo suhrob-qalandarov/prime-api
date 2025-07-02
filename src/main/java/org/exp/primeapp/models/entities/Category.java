@@ -17,6 +17,8 @@ public class Category extends BaseEntity {
 
     private String name;
 
+    private Integer orderNumber;
+
     @ManyToOne
     @JoinColumn(name = "spotlight_id")
     private Spotlight spotlight;

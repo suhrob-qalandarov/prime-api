@@ -1,7 +1,7 @@
 package org.exp.primeapp.controller.user.category;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.models.dto.responce.CategoryRes;
+import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.service.interfaces.user.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class CategoryController {
 
     @GetMapping("/{categoryId}")
     public ResponseEntity<CategoryRes> getCategoryById(@PathVariable Long categoryId) {
-        CategoryRes categoryRes = categoryService.getCategoryById(categoryId);
+        CategoryRes categoryRes = categoryService.getCategoryResById(categoryId);
         return new ResponseEntity<>(categoryRes, HttpStatus.OK);
     }
 }

@@ -1,35 +1,32 @@
 package org.exp.primeapp.service.interfaces.user;
 
 import org.exp.primeapp.models.dto.request.CategoryReq;
-import org.exp.primeapp.models.dto.responce.ApiResponse;
-import org.exp.primeapp.models.dto.responce.CategoryRes;
+import org.exp.primeapp.models.dto.responce.user.CategoryRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
 import org.exp.primeapp.models.entities.Category;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CategoryService {
 
-    CategoryRes getCategoryById(Long categoryId);
+    Category getCategoryById(Long categoryId);
 
-    List<CategoryRes> getAllCategories();
+    CategoryRes getCategoryResById(Long categoryId);
 
-    List<CategoryRes> getCategories();
+    List<Category> getCategories();
 
-    List<CategoryRes> getInactiveCategories();
+    List<CategoryRes> getResCategories();
 
-    ApiResponse saveCategory(CategoryReq categoryReq);
+    void saveCategory(CategoryReq categoryReq);
 
-    ApiResponse updateCategoryById(Long categoryId, CategoryReq categoryReq);
+    void updateCategoryById(Long categoryId, CategoryReq categoryReq);
 
-    ApiResponse deactivateCategory(Long categoryId);
+    void toggleCategoryActiveStatus(Long categoryId);
 
-    ApiResponse activateCategory(Long categoryId);
+    void toggleCategoryActiveStatusWithProductActiveStatus(Long categoryId);
 
-    ApiResponse activateCategoryWithProducts(Long categoryId);
-
-    Category getCategoryByIdForAdmin(Long categoryId);
-
-    List<Category> getAll();
+    List<AdminCategoryRes> updateCategoryOrder(Map<Long, Integer> categoryOrderMap);
 
     List<CategoryRes> getSpotlightCategories(Long spotlightId);
 }

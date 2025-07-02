@@ -2,8 +2,8 @@ package org.exp.primeapp.service.impl.user;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
-import org.exp.primeapp.models.dto.responce.ApiResponse;
-import org.exp.primeapp.models.dto.responce.CategoryRes;
+import org.exp.primeapp.models.dto.responce.user.CategoryRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.models.entities.Spotlight;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -25,9 +26,35 @@ public class CategoryServiceImpl implements CategoryService {
     private final ProductRepository productRepository;
     private final SpotlightRepository spotlightRepository;
 
+    public List<CategoryRes> getResCategories() {
+        return categoryRepository.findByActive(true).stream()
+                .map(category -> new CategoryRes(
+                        category.getId(),
+                        category.getName()
+                ))
+                .toList();
+    }
+
+    @Override
+    public CategoryRes getCategoryResById(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+        return convertToCategoryRes(category);
+    }
+
+    @Override
+    public List<Category> getCategories() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
+    public Category getCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+    }
+
     @Transactional
     @Override
-    public ApiResponse saveCategory(CategoryReq categoryReq) {
+    public void saveCategory(CategoryReq categoryReq) {
         Category category;
         Optional<Spotlight> optionalSpotlight = spotlightRepository.findById(categoryReq.spotlightId());
 
@@ -46,21 +73,38 @@ public class CategoryServiceImpl implements CategoryService {
                     .build();
         }
         categoryRepository.save(category);
-        return new ApiResponse(true, "Category saved successfully");
+        System.out.println("Category saved successfully");
     }
 
     @Override
-    public ApiResponse updateCategoryById(Long categoryId, CategoryReq categoryReq) {
+    public void updateCategoryById(Long categoryId, CategoryReq categoryReq) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setName(categoryReq.name());
         categoryRepository.save(category);
 
-        return new ApiResponse(true, "Category updated successfully");
+        System.out.println("Category updated successfully");
+    }
+
+    public void toggleCategoryActiveStatus(Long categoryId) {
+        categoryRepository.toggleCategoryActiveStatus(categoryId);
     }
 
     @Transactional
     @Override
-    public ApiResponse deactivateCategory(Long categoryId) {
+    public void toggleCategoryActiveStatusWithProductActiveStatus(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow();
+        Boolean active = category.getActive();
+
+        if (active) {
+            deactivateCategoryWithProducts(categoryId);
+
+        } else {
+            activateCategoryWithProducts(categoryId);
+        }
+    }
+
+    @Transactional
+    public void deactivateCategoryWithProducts(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setActive(false);
         categoryRepository.save(category);
@@ -69,22 +113,11 @@ public class CategoryServiceImpl implements CategoryService {
         products.forEach(product -> product.setActive(false));
         productRepository.saveAll(products);
 
-        return new ApiResponse(true, "Category active updated successfully");
+        System.out.println("Category active updated successfully");
     }
 
     @Transactional
-    @Override
-    public ApiResponse activateCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
-        category.setActive(true);
-        categoryRepository.save(category);
-
-        return new ApiResponse(true, "Category activated successfully");
-    }
-
-    @Transactional
-    @Override
-    public ApiResponse activateCategoryWithProducts(Long categoryId) {
+    public void activateCategoryWithProducts(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setActive(true);
         categoryRepository.save(category);
@@ -93,34 +126,7 @@ public class CategoryServiceImpl implements CategoryService {
         products.forEach(product -> product.setActive(true));
         productRepository.saveAll(products);
 
-        return new ApiResponse(true, "Category and category products activated successfully");
-    }
-
-    @Override
-    public CategoryRes getCategoryById(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
-        return convertToCategoryRes(category);
-    }
-
-    @Override
-    public List<CategoryRes> getCategories() {
-        return categoryRepository.findByActive(true).stream()
-                .map(category -> new CategoryRes(
-                        category.getId(),
-                        category.getName()
-                ))
-                .toList();
-    }
-
-    @Override
-    public Category getCategoryByIdForAdmin(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
-    }
-
-    @Override
-    public List<Category> getAll() {
-        return categoryRepository.findAll();
+        System.out.println("Category and category products activated successfully");
     }
 
     @Override
@@ -133,21 +139,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryRes> getInactiveCategories() {
-        return categoryRepository.findByActive(false).stream()
-                .map(category -> new CategoryRes(
-                        category.getId(),
-                        category.getName()
-                )).toList();
-    }
+    public List<AdminCategoryRes> updateCategoryOrder(Map<Long, Integer> categoryOrderMap) {
+        List<Category> categories = categoryRepository.findAllById(categoryOrderMap.keySet());
 
-    @Override
-    public List<CategoryRes> getAllCategories() {
-        return categoryRepository.findAll().stream()
-                .map(category -> new CategoryRes(
-                        category.getId(),
-                        category.getName()
-                )).toList();
+        for (Category category : categories) {
+            Integer newOrder = categoryOrderMap.get(category.getId());
+            category.setOrderNumber(newOrder);
+        }
+
+        return categoryRepository.saveAll(categories).stream().map(this::convertToAdminCategoryRes).toList();
     }
 
     public CategoryRes convertToCategoryRes(Category category) {
@@ -156,4 +156,13 @@ public class CategoryServiceImpl implements CategoryService {
                 category.getName()
         );
     }
+
+    public AdminCategoryRes convertToAdminCategoryRes(Category category) {
+        return new AdminCategoryRes(
+                category.getId(),
+                category.getName(),
+                category.getActive()
+        );
+    }
+
 }
