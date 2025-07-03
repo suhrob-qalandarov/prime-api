@@ -2,6 +2,7 @@ package org.exp.primeapp.service.impl.user;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
 import org.exp.primeapp.models.entities.Category;
@@ -45,6 +46,26 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<Category> getCategories() {
         return categoryRepository.findAll();
+    }
+
+    @Transactional
+    public AdminCategoryDashboardRes getCategoryDashboardRes() {
+        List<AdminCategoryRes> categoryResList = categoryRepository.findAllByOrderByOrderNumberAsc().stream().map(this::convertToAdminCategoryRes).toList();
+        List<AdminCategoryRes> activeCategorResList = categoryRepository.findAllByActiveTrueOrderByOrderNumberAsc().stream().map(this::convertToAdminCategoryRes).toList();
+        List<AdminCategoryRes> inactiveCategoryResList = categoryRepository.findAllByActiveFalseOrderByOrderNumberAsc().stream().map(this::convertToAdminCategoryRes).toList();
+
+        long allCategoryCount = categoryRepository.count();
+        long activeCategoryCount = categoryRepository.countByActiveTrue();
+        long inactiveCategoryCount = categoryRepository.countByActiveFalse();
+
+        return AdminCategoryDashboardRes.builder()
+                .count(allCategoryCount)
+                .activeCount(activeCategoryCount)
+                .inactiveCount(inactiveCategoryCount)
+                .categoryResList(categoryResList)
+                .activeCategoryResList(activeCategorResList)
+                .inactiveCategoryResList(inactiveCategoryResList)
+                .build();
     }
 
     @Override
@@ -161,6 +182,7 @@ public class CategoryServiceImpl implements CategoryService {
         return new AdminCategoryRes(
                 category.getId(),
                 category.getName(),
+                category.getOrderNumber(),
                 category.getActive()
         );
     }

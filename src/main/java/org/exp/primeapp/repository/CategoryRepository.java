@@ -13,6 +13,18 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
+    List<Category> findAllByOrderByOrderNumberAsc();
+
+    List<Category> findAllByActiveTrueOrderByOrderNumberAsc();
+
+    List<Category> findAllByActiveFalseOrderByOrderNumberAsc();
+
+    long count();
+
+    long countByActiveTrue();
+
+    long countByActiveFalse();
+
     List<Category> findByActive(boolean active);
 
     List<Category> findAllBySpotlightId(Long spotlightId);

@@ -1,6 +1,7 @@
 package org.exp.primeapp.service.interfaces.user;
 
 import org.exp.primeapp.models.dto.request.CategoryReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
 import org.exp.primeapp.models.entities.Category;
@@ -13,6 +14,8 @@ public interface CategoryService {
     Category getCategoryById(Long categoryId);
 
     CategoryRes getCategoryResById(Long categoryId);
+
+    AdminCategoryDashboardRes getCategoryDashboardRes();
 
     List<Category> getCategories();
 
