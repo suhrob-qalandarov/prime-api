@@ -26,4 +26,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId AND p.active = :active")
     List<Product> findByActiveAndCategoryId(@Param("categoryId") Long categoryId, @Param("active") Boolean active);
 
+
+    long countByActive(Boolean active);
 }
