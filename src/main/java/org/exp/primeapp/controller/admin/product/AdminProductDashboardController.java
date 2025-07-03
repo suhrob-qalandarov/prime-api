@@ -2,6 +2,7 @@ package org.exp.primeapp.controller.admin.product;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
+import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
 import org.exp.primeapp.service.interfaces.user.ProductService;
 import org.exp.primeapp.utils.Const;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,11 @@ import static org.exp.primeapp.utils.Const.*;
 @RequiredArgsConstructor
 public class AdminProductDashboardController {
 
-    private final ProductService productService;
+    private final AdminProductService adminProductService;
 
     @GetMapping
     public ResponseEntity<AdminProductDashboardRes> adminProductDashboard() {
-        AdminProductDashboardRes adminProductDashboardRes = productService.getProductDashboarRes();
+        AdminProductDashboardRes adminProductDashboardRes = adminProductService.getProductDashboarRes();
         return ResponseEntity.ok(adminProductDashboardRes);
     }
 }

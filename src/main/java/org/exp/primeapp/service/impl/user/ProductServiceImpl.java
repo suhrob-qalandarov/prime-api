@@ -1,8 +1,6 @@
 package org.exp.primeapp.service.impl.user;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
-import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
 import org.exp.primeapp.models.dto.responce.user.ProductRes;
 import org.exp.primeapp.models.dto.responce.user.ProductSizeRes;
 import org.exp.primeapp.models.entities.Attachment;
@@ -10,7 +8,6 @@ import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.repository.ProductRepository;
 import org.exp.primeapp.service.interfaces.user.ProductService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,35 +25,6 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(this::convertToProductRes)
                 .collect(toList());
-    }
-
-    @Override
-    @Transactional
-    public AdminProductDashboardRes getProductDashboarRes() {
-        List<AdminProductRes> productResList = productRepository.findAll().stream().map(this::convertToAdminProductRes).toList();
-        List<AdminProductRes> productResByActive = productRepository.findAllByActive(true).stream().map(this::convertToAdminProductRes).toList();
-        List<AdminProductRes> productResByInactive = productRepository.findAllByActive(false).stream().map(this::convertToAdminProductRes).toList();
-
-        long count = productRepository.count();
-        long countedByActive = productRepository.countByActive(true);
-        long countedByInactive = productRepository.countByActive(false);
-
-        return AdminProductDashboardRes.builder()
-                .count(count)
-                .activeCount(countedByActive)
-                .inactiveCount(countedByInactive)
-                .productResList(productResList)
-                .ActiveProductResList(productResByActive)
-                .InactiveProductResList(productResByInactive)
-                .build();
-    }
-
-    private AdminProductRes convertToAdminProductRes(Product product) {
-        return new AdminProductRes(
-                product.getId(),
-                product.getName(),
-                product.getActive()
-        );
     }
 
     @Override

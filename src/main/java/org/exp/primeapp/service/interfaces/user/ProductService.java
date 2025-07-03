@@ -1,6 +1,5 @@
 package org.exp.primeapp.service.interfaces.user;
 
-import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.user.ProductRes;
 
 import java.util.List;
@@ -18,5 +17,4 @@ public interface ProductService {
 
     List<ProductRes> getAllProducts();
 
-    AdminProductDashboardRes getProductDashboarRes();
 }
