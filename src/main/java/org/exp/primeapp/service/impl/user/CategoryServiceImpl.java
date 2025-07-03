@@ -68,14 +68,17 @@ public class CategoryServiceImpl implements CategoryService {
                 .build();
     }
 
+    @Transactional
     @Override
     public Category getCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+        Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+        category.setSpotlightName(category.getSpotlight().getName());
+        return category;
     }
 
     @Transactional
     @Override
-    public void saveCategory(CategoryReq categoryReq) {
+    public AdminCategoryRes saveCategory(CategoryReq categoryReq) {
         Category category;
         Optional<Spotlight> optionalSpotlight = spotlightRepository.findById(categoryReq.spotlightId());
 
@@ -93,17 +96,19 @@ public class CategoryServiceImpl implements CategoryService {
                     .active(true)
                     .build();
         }
-        categoryRepository.save(category);
+        Category saved = categoryRepository.save(category);
         System.out.println("Category saved successfully");
+        return convertToAdminCategoryRes(saved);
     }
 
+    @Transactional
     @Override
-    public void updateCategoryById(Long categoryId, CategoryReq categoryReq) {
+    public AdminCategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setName(categoryReq.name());
-        categoryRepository.save(category);
-
+        Category saved = categoryRepository.save(category);
         System.out.println("Category updated successfully");
+        return convertToAdminCategoryRes(saved);
     }
 
     public void toggleCategoryActiveStatus(Long categoryId) {
@@ -159,13 +164,14 @@ public class CategoryServiceImpl implements CategoryService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public List<AdminCategoryRes> updateCategoryOrder(Map<Long, Integer> categoryOrderMap) {
         List<Category> categories = categoryRepository.findAllById(categoryOrderMap.keySet());
 
         for (Category category : categories) {
             Integer newOrder = categoryOrderMap.get(category.getId());
-            category.setOrderNumber(newOrder);
+            category.setOrder(newOrder);
         }
 
         return categoryRepository.saveAll(categories).stream().map(this::convertToAdminCategoryRes).toList();
@@ -182,7 +188,7 @@ public class CategoryServiceImpl implements CategoryService {
         return new AdminCategoryRes(
                 category.getId(),
                 category.getName(),
-                category.getOrderNumber(),
+                category.getOrder(),
                 category.getActive()
         );
     }

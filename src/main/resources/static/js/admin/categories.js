@@ -338,6 +338,10 @@ async function showEditCategoryModal(categoryId) {
     }
 }
 
+function setCategoryOrderModal() {
+
+}
+
 // Show view category modal
 async function showViewCategoryModal(categoryId) {
     try {
@@ -607,6 +611,17 @@ function clearSearch() {
     document.getElementById("search-input").value = ""
     filteredCategories = [...allCategories]
     filterCategories()
+}
+
+// Show categories modal
+async function showCategoriesModal() {
+    try {
+        const activeCategories = await apiRequest("/api/v1/admin/categories")
+        showCategoriesListModal("Kategoriyalar", activeCategories || [])
+    } catch (error) {
+        console.error("Error loading active categories:", error)
+        showNotification("error", "Kategoriyalarni yuklashda xatolik")
+    }
 }
 
 // Show active categories modal

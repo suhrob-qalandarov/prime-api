@@ -2,6 +2,7 @@ package org.exp.primeapp.controller.user.spotlight;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.exp.primeapp.models.dto.responce.admin.CategorySpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.SpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.CatalogSpotlightRes;
 import org.exp.primeapp.service.interfaces.user.SpotlightService;
@@ -26,7 +27,13 @@ public class SpotlightsController {
     @GetMapping()
     public ResponseEntity<List<SpotlightRes>> getSpotlights() {
         List<SpotlightRes> spotlights = spotlightService.getHeroSpotlights();
-        return new ResponseEntity<>(spotlights, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(spotlights, HttpStatus.valueOf("RETRIEVED"));
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<List<CategorySpotlightRes>> getSpotlightsForCategory() {
+        List<CategorySpotlightRes> spotlights = spotlightService.getSpotlightsForCategory();
+        return new ResponseEntity<>(spotlights, HttpStatus.valueOf("RETRIEVED"));
     }
 
     @GetMapping("/catalog")

@@ -2,6 +2,7 @@ package org.exp.primeapp.controller.admin.category;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.service.interfaces.user.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,9 @@ public class AdminCategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Void> createCategory(@RequestBody CategoryReq categoryReq) {
-        categoryService.saveCategory(categoryReq);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<AdminCategoryRes> createCategory(@RequestBody CategoryReq categoryReq) {
+        AdminCategoryRes adminCategoryRes = categoryService.saveCategory(categoryReq);
+        return new ResponseEntity<>(adminCategoryRes, HttpStatus.CREATED);
     }
 
     @GetMapping("/{categoryId}")
@@ -30,12 +31,12 @@ public class AdminCategoryController {
     }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<Void> updateCategory(
+    public ResponseEntity<AdminCategoryRes> updateCategory(
             @PathVariable Long categoryId,
             @RequestBody CategoryReq categoryReq
     ) {
-        categoryService.updateCategoryById(categoryId,categoryReq);
-        return new ResponseEntity<>(HttpStatus.OK);
+        AdminCategoryRes categoryRes = categoryService.updateCategoryById(categoryId,categoryReq);
+        return new ResponseEntity<>(categoryRes, HttpStatus.valueOf("UPDATED"));
     }
 
     @PatchMapping("/toggle/{categoryId}")

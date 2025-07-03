@@ -21,9 +21,9 @@ public interface CategoryService {
 
     List<CategoryRes> getResCategories();
 
-    void saveCategory(CategoryReq categoryReq);
+    AdminCategoryRes saveCategory(CategoryReq categoryReq);
 
-    void updateCategoryById(Long categoryId, CategoryReq categoryReq);
+    AdminCategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq);
 
     void toggleCategoryActiveStatus(Long categoryId);
 

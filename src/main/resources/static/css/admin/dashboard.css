@@ -601,12 +601,12 @@ body {
 }
 
 .form-control {
-    padding: 1rem;
-    border: 2px solid var(--gray-200);
+    padding: 0.5rem;
+    border: 2px solid var(--gray-400);
     border-radius: var(--border-radius-sm);
     font-size: 0.95rem;
     transition: var(--transition);
-    background: white;
+    background: var(--gray-100);
 }
 
 .form-control:focus {
@@ -617,7 +617,7 @@ body {
 }
 
 .form-control::placeholder {
-    color: var(--gray-400);
+    color: black;
 }
 
 /* File Upload */
