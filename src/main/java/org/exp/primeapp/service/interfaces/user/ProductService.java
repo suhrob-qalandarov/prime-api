@@ -1,6 +1,6 @@
 package org.exp.primeapp.service.interfaces.user;
 
-import org.exp.primeapp.models.dto.responce.ProductRes;
+import org.exp.primeapp.models.dto.responce.user.ProductRes;
 
 import java.util.List;
 

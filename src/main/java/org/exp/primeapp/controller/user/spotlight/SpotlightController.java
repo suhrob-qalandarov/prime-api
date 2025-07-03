@@ -2,7 +2,7 @@ package org.exp.primeapp.controller.user.spotlight;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.exp.primeapp.models.dto.responce.CategoryRes;
+import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.service.interfaces.user.SpotlightService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

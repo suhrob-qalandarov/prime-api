@@ -2,7 +2,7 @@ package org.exp.primeapp.controller.user;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.UserReq;
-import org.exp.primeapp.models.dto.responce.UserRes;
+import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.service.interfaces.user.UserService;
 import org.springframework.http.ResponseEntity;

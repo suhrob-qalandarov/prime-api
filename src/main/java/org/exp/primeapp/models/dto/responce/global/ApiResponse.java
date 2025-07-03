@@ -1,4 +1,4 @@
-package org.exp.primeapp.models.dto.responce;
+package org.exp.primeapp.models.dto.responce.global;
 
 import lombok.*;
 

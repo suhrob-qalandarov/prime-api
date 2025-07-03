@@ -2,8 +2,8 @@ package org.exp.primeapp.service.interfaces.user;
 
 import org.exp.primeapp.models.dto.request.UserReq;
 import org.exp.primeapp.models.dto.request.UserUpdateReq;
-import org.exp.primeapp.models.dto.responce.ApiResponse;
-import org.exp.primeapp.models.dto.responce.UserRes;
+import org.exp.primeapp.models.dto.responce.global.ApiResponse;
+import org.exp.primeapp.models.dto.responce.user.UserRes;
 
 import java.util.List;
 

@@ -22,7 +22,6 @@ public class AdminProductsController {
     private final ProductRepository productRepository;
     private final AdminProductService adminProductService;
 
-    @GetMapping("/all")
     public ResponseEntity<List<Product>> getAllCategories() {
         List<Product> products = productRepository.findAll();
         return new ResponseEntity<>(products, HttpStatus.ACCEPTED);

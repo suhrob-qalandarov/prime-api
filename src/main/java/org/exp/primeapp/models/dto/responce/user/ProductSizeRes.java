@@ -1,7 +1,6 @@
-package org.exp.primeapp.models.dto.responce;
+package org.exp.primeapp.models.dto.responce.user;
 
 import lombok.Builder;
-import lombok.Value;
 import org.exp.primeapp.models.enums.Size;
 
 @Builder

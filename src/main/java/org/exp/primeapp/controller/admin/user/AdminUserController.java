@@ -2,7 +2,7 @@ package org.exp.primeapp.controller.admin.user;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.UserUpdateReq;
-import org.exp.primeapp.models.dto.responce.ApiResponse;
+import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.repository.UserRepository;
 import org.exp.primeapp.service.interfaces.user.UserService;

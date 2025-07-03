@@ -2,8 +2,8 @@ package org.exp.primeapp.controller.user.collection;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.models.dto.responce.CollectionProductRes;
-import org.exp.primeapp.models.dto.responce.HeroCollectionRes;
+import org.exp.primeapp.models.dto.responce.user.CollectionProductRes;
+import org.exp.primeapp.models.dto.responce.user.HeroCollectionRes;
 import org.exp.primeapp.service.interfaces.user.CollectionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

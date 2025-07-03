@@ -1,7 +1,7 @@
 package org.exp.primeapp.service.interfaces.user;
 
-import org.exp.primeapp.models.dto.responce.CollectionProductRes;
-import org.exp.primeapp.models.dto.responce.HeroCollectionRes;
+import org.exp.primeapp.models.dto.responce.user.CollectionProductRes;
+import org.exp.primeapp.models.dto.responce.user.HeroCollectionRes;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,9 +1,9 @@
 package org.exp.primeapp.service.impl.user;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.models.dto.responce.CatalogSpotlightRes;
-import org.exp.primeapp.models.dto.responce.CategoryRes;
-import org.exp.primeapp.models.dto.responce.SpotlightRes;
+import org.exp.primeapp.models.dto.responce.user.CatalogSpotlightRes;
+import org.exp.primeapp.models.dto.responce.user.CategoryRes;
+import org.exp.primeapp.models.dto.responce.user.SpotlightRes;
 import org.exp.primeapp.models.entities.Spotlight;
 import org.exp.primeapp.repository.SpotlightRepository;
 import org.exp.primeapp.service.interfaces.user.SpotlightService;

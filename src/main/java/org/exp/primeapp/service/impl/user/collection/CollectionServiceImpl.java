@@ -2,8 +2,8 @@ package org.exp.primeapp.service.impl.user.collection;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.base.BaseEntity;
-import org.exp.primeapp.models.dto.responce.CollectionProductRes;
-import org.exp.primeapp.models.dto.responce.HeroCollectionRes;
+import org.exp.primeapp.models.dto.responce.user.CollectionProductRes;
+import org.exp.primeapp.models.dto.responce.user.HeroCollectionRes;
 import org.exp.primeapp.models.entities.Collection;
 import org.exp.primeapp.models.mapper.CollectionMapper;
 import org.exp.primeapp.repository.CollectionRepository;

@@ -1,6 +1,6 @@
 package org.exp.primeapp.models.mapper;
 
-import org.exp.primeapp.models.dto.responce.CollectionProductRes;
+import org.exp.primeapp.models.dto.responce.user.CollectionProductRes;
 import org.exp.primeapp.models.entities.Collection;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

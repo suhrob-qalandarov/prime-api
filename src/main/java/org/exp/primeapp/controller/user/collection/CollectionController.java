@@ -1,7 +1,7 @@
 package org.exp.primeapp.controller.user.collection;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.models.dto.responce.CollectionProductRes;
+import org.exp.primeapp.models.dto.responce.user.CollectionProductRes;
 import org.exp.primeapp.service.interfaces.user.CollectionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

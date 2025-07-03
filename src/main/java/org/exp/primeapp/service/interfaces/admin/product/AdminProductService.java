@@ -1,7 +1,7 @@
 package org.exp.primeapp.service.interfaces.admin.product;
 
 import org.exp.primeapp.models.dto.request.ProductReq;
-import org.exp.primeapp.models.dto.responce.ApiResponse;
+import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.entities.Product;
 import org.springframework.stereotype.Service;
 

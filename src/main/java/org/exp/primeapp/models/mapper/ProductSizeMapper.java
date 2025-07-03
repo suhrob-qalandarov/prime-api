@@ -1,6 +1,6 @@
 package org.exp.primeapp.models.mapper;
 
-import org.exp.primeapp.models.dto.responce.ProductSizeRes;
+import org.exp.primeapp.models.dto.responce.user.ProductSizeRes;
 import org.exp.primeapp.models.entities.ProductSize;
 import org.mapstruct.Mapper;
 
