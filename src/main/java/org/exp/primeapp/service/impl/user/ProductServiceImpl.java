@@ -10,7 +10,8 @@ import org.exp.primeapp.service.interfaces.user.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll()
                 .stream()
                 .map(this::convertToProductRes)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @Override
@@ -31,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllByActive(true)
                 .stream()
                 .map(this::convertToProductRes)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @Override
@@ -39,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAllByActive(false)
                 .stream()
                 .map(this::convertToProductRes)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @Override
@@ -47,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByActiveAndCategoryId(categoryId, true)
                 .stream()
                 .map(this::convertToProductRes)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @Override
@@ -55,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByActiveAndCategoryId(categoryId, false)
                 .stream()
                 .map(this::convertToProductRes)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     @Override
@@ -69,12 +70,12 @@ public class ProductServiceImpl implements ProductService {
         List<String> attachmentKeys = product.getAttachments()
                 .stream()
                 .map(Attachment::getKey)
-                .collect(Collectors.toList());
+                .collect(toList());
 
         List<ProductSizeRes> productSizes = product.getSizes()
                 .stream()
                 .map(size -> new ProductSizeRes(size.getSize(), size.getAmount()))
-                .collect(Collectors.toList());
+                .collect(toList());
 
         return new ProductRes(
                 product.getId(),

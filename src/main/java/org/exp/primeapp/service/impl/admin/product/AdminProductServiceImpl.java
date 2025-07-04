@@ -3,6 +3,8 @@ package org.exp.primeapp.service.impl.admin.product;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.repository.AttachmentRepository;
@@ -24,6 +26,36 @@ public class AdminProductServiceImpl implements AdminProductService {
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
     private final ProductIncomeRepository productIncomeRepository;
+
+
+    @Override
+    @org.springframework.transaction.annotation.Transactional
+    public AdminProductDashboardRes getProductDashboarRes() {
+        List<AdminProductRes> productResList = productRepository.findAll().stream().map(this::convertToAdminProductRes).toList();
+        List<AdminProductRes> productResByActive = productRepository.findAllByActive(true).stream().map(this::convertToAdminProductRes).toList();
+        List<AdminProductRes> productResByInactive = productRepository.findAllByActive(false).stream().map(this::convertToAdminProductRes).toList();
+
+        long count = productRepository.count();
+        long countedByActive = productRepository.countByActive(true);
+        long countedByInactive = productRepository.countByActive(false);
+
+        return AdminProductDashboardRes.builder()
+                .count(count)
+                .activeCount(countedByActive)
+                .inactiveCount(countedByInactive)
+                .productResList(productResList)
+                .ActiveProductResList(productResByActive)
+                .InactiveProductResList(productResByInactive)
+                .build();
+    }
+
+    private AdminProductRes convertToAdminProductRes(Product product) {
+        return new AdminProductRes(
+                product.getId(),
+                product.getName(),
+                product.getActive()
+        );
+    }
 
     @Override
     public Product getProductById(Long productId) {
