@@ -174,22 +174,36 @@
         </div>
 
         <div class="table-card">
-            <div class="card-header">
-                <h3>Buyurtmalar ro'yxati</h3>
-                <div class="card-actions">
-                    <select class="form-select form-select-sm me-2" id="status-filter" onchange="filterCategories()" style="width: auto; display: inline-block;">
-                        <option value="all">Barchasi</option>
-                        <option value="active">Faol</option>
-                        <option value="active">Bog'lanilgan</option>
-                        <option value="inactive">Nofaol</option>
-                    </select>
-                    <button class="card-action" onclick="loadCategories()">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                </div>
-            </div>
             <div class="card-body">
-
+                <div class="row p-2">
+                    <div class="col-3">
+                        <div class="card">
+                            <div class="card-header">NEW</div>
+                            <div class="card-body">
+                                <ul style="min-height: 300px" class="list-group" id="NEW" ondragover="handleDragOver(event)"
+                                    ondrop="handleDrop(event, 'NEW')"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 offset-1">
+                        <div class="card">
+                            <div class="card-header">INPROGRESS</div>
+                            <div class="card-body">
+                                <ul style="min-height: 300px" class="list-group" id="IN_PROGRESS" ondragover="handleDragOver(event)"
+                                    ondrop="handleDrop(event, 'IN_PROGRESS')"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3 offset-1">
+                        <div class="card">
+                            <div class="card-header">COMPLETED</div>
+                            <div class="card-body">
+                                <ul style="min-height: 300px" class="list-group" id="COMPLETED" ondragover="handleDragOver(event)"
+                                    ondrop="handleDrop(event, 'COMPLETED')"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

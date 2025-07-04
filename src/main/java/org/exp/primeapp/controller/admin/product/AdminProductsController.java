@@ -1,6 +1,7 @@
 package org.exp.primeapp.controller.admin.product;
 
 import lombok.RequiredArgsConstructor;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.repository.ProductRepository;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
@@ -21,6 +22,12 @@ public class AdminProductsController {
 
     private final ProductRepository productRepository;
     private final AdminProductService adminProductService;
+
+    @GetMapping
+    public ResponseEntity<AdminProductDashboardRes> adminProductDashboard() {
+        AdminProductDashboardRes adminProductDashboardRes = adminProductService.getProductDashboarRes();
+        return ResponseEntity.ok(adminProductDashboardRes);
+    }
 
     public ResponseEntity<List<Product>> getAllCategories() {
         List<Product> products = productRepository.findAll();

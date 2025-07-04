@@ -4,7 +4,7 @@ package org.exp.primeapp.telegram;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
-import org.exp.primeapp.models.dto.responce.ApiResponse;
+import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.enums.ProductStatus;

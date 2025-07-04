@@ -29,7 +29,7 @@ public class AdminProductServiceImpl implements AdminProductService {
 
 
     @Override
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public AdminProductDashboardRes getProductDashboarRes() {
         List<AdminProductRes> productResList = productRepository.findAll().stream().map(this::convertToAdminProductRes).toList();
         List<AdminProductRes> productResByActive = productRepository.findAllByActive(true).stream().map(this::convertToAdminProductRes).toList();
@@ -49,11 +49,17 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .build();
     }
 
-    private AdminProductRes convertToAdminProductRes(Product product) {
+    @Transactional
+    public AdminProductRes convertToAdminProductRes(Product product) {
         return new AdminProductRes(
                 product.getId(),
                 product.getName(),
-                product.getActive()
+                product.getActive(),
+                product.getStatus().name(),
+                product.getCategory().getName(),
+                product.getAttachments().size(),
+                product.getCollection().getName(),
+                product.getSizes().size()
         );
     }
 

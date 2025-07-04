@@ -6,7 +6,7 @@ import lombok.Builder;
 public record AdminCategoryRes(
         Long id,
         String name,
-        String imageKey,
+        //String imageKey,
         String spotlightName,
         Long order,
         Boolean active

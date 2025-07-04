@@ -5,7 +5,6 @@ import org.exp.primeapp.models.dto.request.CategoryReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
-import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.models.entities.Spotlight;
@@ -99,8 +98,6 @@ public class CategoryServiceImpl implements CategoryService {
     public AdminCategoryRes saveCategory(CategoryReq categoryReq) {
         Category category;
         Optional<Spotlight> optionalSpotlight = spotlightRepository.findById(categoryReq.spotlightId());
-        //Optional<Attachment> optionalAttachment = attachmentRepository.findById(categoryReq.imageId());
-        //if (optionalAttachment.isEmpty()) return null;
         long count = categoryRepository.count();
 
         if (optionalSpotlight.isEmpty()) {
@@ -128,7 +125,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public AdminCategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
+        Spotlight spotlight = spotlightRepository.findById(categoryReq.spotlightId()).orElseThrow(RuntimeException::new);
         category.setName(categoryReq.name());
+        category.setSpotlight(spotlight);
         category.setSpotlightName(category.getSpotlight().getName());
         Category saved = categoryRepository.save(category);
         System.out.println("Category updated successfully");
@@ -212,7 +211,6 @@ public class CategoryServiceImpl implements CategoryService {
         return new AdminCategoryRes(
                 category.getId(),
                 category.getName(),
-                category.getImage().getKey(),
                 category.getSpotlightName(),
                 category.getOrderNumber(),
                 category.getActive()

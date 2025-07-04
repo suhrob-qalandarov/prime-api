@@ -33,7 +33,6 @@ function initializeCategoriesPanel() {
     setupSidebar()
     setupEventListeners()
     setupSearchInput()
-    setupImageUploadToggle()
 }
 
 // Setup sidebar
@@ -76,33 +75,6 @@ function setupEventListeners() {
     window.refreshData = refreshData
     window.toggleFullscreen = toggleFullscreen
     window.logout = logout
-    window.removePreview = removePreview
-
-    // Setup file upload
-    setupCategoryFileUpload()
-}
-
-// Setup image upload toggle
-function setupImageUploadToggle() {
-    setTimeout(() => {
-        const enableImageUpload = document.getElementById("enable-image-upload")
-        const imageUploadSection = document.getElementById("image-upload-section")
-
-        if (enableImageUpload && imageUploadSection) {
-            enableImageUpload.addEventListener("change", function () {
-                if (this.checked) {
-                    imageUploadSection.style.display = "block"
-                } else {
-                    imageUploadSection.style.display = "none"
-                    const fileInput = document.getElementById("category-file-input")
-                    const filePreview = document.getElementById("category-file-preview")
-                    if (fileInput) fileInput.value = ""
-                    if (filePreview) filePreview.innerHTML = ""
-                    updateCategoryImagePreview()
-                }
-            })
-        }
-    }, 100)
 }
 
 // API request with token
@@ -163,40 +135,26 @@ function getMockData(url) {
             activeCount: 6,
             inactiveCount: 2,
             categoryResList: [
-                {
-                    id: 1,
-                    name: "Elektronika",
-                    spotlightName: "ELECTRONICS",
-                    order: 1,
-                    active: true,
-                    imageKey: "electronics-img-key",
-                },
-                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true, imageKey: null },
-                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true, imageKey: "books-img-key" },
-                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true, imageKey: null },
-                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true, imageKey: "home-img-key" },
-                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true, imageKey: null },
-                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false, imageKey: null },
-                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false, imageKey: "beauty-img-key" },
+                { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
+                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
+                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
+                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
+                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
+                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
+                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
+                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
             ],
             activeCategoryResList: [
-                {
-                    id: 1,
-                    name: "Elektronika",
-                    spotlightName: "ELECTRONICS",
-                    order: 1,
-                    active: true,
-                    imageKey: "electronics-img-key",
-                },
-                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true, imageKey: null },
-                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true, imageKey: "books-img-key" },
-                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true, imageKey: null },
-                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true, imageKey: "home-img-key" },
-                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true, imageKey: null },
+                { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
+                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
+                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
+                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
+                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
+                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
             ],
             inactiveCategoryResList: [
-                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false, imageKey: null },
-                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false, imageKey: "beauty-img-key" },
+                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
+                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
             ],
         }
     }
@@ -214,53 +172,7 @@ function getMockData(url) {
         ]
     }
 
-    if (url.includes("/api/v1/admin/attachment/with-key/")) {
-        const key = url.split("/").pop()
-        return {
-            id: 1,
-            key: key,
-            filename: `${key}.jpg`,
-            contentType: "image/jpeg",
-            active: true,
-            createdAt: "2024-01-15T10:30:00",
-            updatedAt: "2024-01-15T10:30:00",
-            createdBy: "admin",
-            updatedBy: "admin",
-        }
-    }
-
     return null
-}
-
-// Upload image file
-async function uploadImageFile(file) {
-    try {
-        const formData = new FormData()
-        formData.append("file", file)
-
-        const response = await fetch(`${API_BASE_URL}/api/v1/admin/attachment`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-            body: formData,
-        })
-
-        if (!response.ok) {
-            throw new Error("Image upload failed")
-        }
-
-        return await response.json()
-    } catch (error) {
-        console.error("Error uploading image:", error)
-        // Mock response for demo
-        return {
-            id: Date.now(),
-            key: `mock-key-${Date.now()}`,
-            filename: file.name,
-            contentType: file.type,
-        }
-    }
 }
 
 // Load categories dashboard data (single API call)
@@ -282,7 +194,7 @@ async function loadCategoriesDashboard() {
             inactiveCategories = dashboardData.inactiveCategoryResList || []
             filteredCategories = [...allCategories]
 
-            // Update statistics (removed categories with images)
+            // Update statistics
             updateCategoryStats()
 
             // Render table
@@ -300,7 +212,7 @@ async function loadCategoriesDashboard() {
     }
 }
 
-// Update category statistics (removed categories with images)
+// Update category statistics
 function updateCategoryStats() {
     if (dashboardData) {
         console.log("Updating stats:", dashboardData)
@@ -394,10 +306,6 @@ async function showAddCategoryModal() {
     document.getElementById("category-form").reset()
     document.getElementById("category-id").value = ""
     document.getElementById("category-active").checked = true
-    document.getElementById("enable-image-upload").checked = false
-    document.getElementById("image-upload-section").style.display = "none"
-    document.getElementById("category-file-preview").innerHTML = ""
-    updateCategoryImagePreview()
 
     // Populate spotlight select
     await populateSpotlightSelect("category-spotlight")
@@ -431,17 +339,6 @@ async function showEditCategoryModal(categoryId) {
         // Populate spotlight select with current selection
         await populateSpotlightSelect("category-spotlight", category.spotlightId)
 
-        // Handle image if exists
-        if (category.imageKey) {
-            document.getElementById("enable-image-upload").checked = true
-            document.getElementById("image-upload-section").style.display = "block"
-            // Load and display existing image
-            loadCategoryImage(category.imageKey)
-        } else {
-            document.getElementById("enable-image-upload").checked = false
-            document.getElementById("image-upload-section").style.display = "none"
-        }
-
         const modal = new bootstrap.Modal(document.getElementById("categoryModal"))
         modal.show()
     } catch (error) {
@@ -450,17 +347,7 @@ async function showEditCategoryModal(categoryId) {
     }
 }
 
-// Load category image for editing
-async function loadCategoryImage(imageKey) {
-    try {
-        const imageUrl = `${API_BASE_URL}/api/v1/attachment/${imageKey}`
-        updateCategoryImagePreview(imageUrl)
-    } catch (error) {
-        console.error("Error loading category image:", error)
-    }
-}
-
-// Show view category modal with improved layout
+// Show view category modal
 async function showViewCategoryModal(categoryId) {
     try {
         // Find category in local data first
@@ -476,7 +363,7 @@ async function showViewCategoryModal(categoryId) {
             return
         }
 
-        // Populate view modal - right side details
+        // Populate view modal
         document.getElementById("view-category-id").textContent = category.id
         document.getElementById("view-category-name").textContent = category.name
         document.getElementById("view-category-spotlight").textContent = category.spotlightName || "-"
@@ -491,62 +378,12 @@ async function showViewCategoryModal(categoryId) {
         document.getElementById("view-category-updated-at").textContent = formatDate(new Date())
         document.getElementById("view-category-updated-by").textContent = "Admin"
 
-        // Handle image display - left side
-        const imageContainer = document.getElementById("view-category-image")
-        const imageDetails = document.getElementById("view-image-details")
-
-        if (category.imageKey) {
-            try {
-                // Load image details using the new API endpoint
-                const imageData = await apiRequest(`/api/v1/admin/attachment/with-key/${category.imageKey}`)
-
-                if (imageData) {
-                    // Display image
-                    const imageUrl = `${API_BASE_URL}/api/v1/attachment/${category.imageKey}`
-                    imageContainer.innerHTML = `
-                        <img src="${imageUrl}" 
-                             class="img-fluid rounded" 
-                             alt="Category Image"
-                             style="width: 100%; height: 200px; object-fit: cover;">
-                    `
-
-                    // Display image details
-                    document.getElementById("view-image-filename").textContent = imageData.filename || "-"
-                    document.getElementById("view-image-type").textContent = imageData.contentType || "-"
-                    document.getElementById("view-image-created").textContent = formatDate(imageData.createdAt)
-                    imageDetails.style.display = "block"
-                } else {
-                    showNoImagePlaceholder(imageContainer)
-                    imageDetails.style.display = "none"
-                }
-            } catch (error) {
-                console.error("Error loading image details:", error)
-                showNoImagePlaceholder(imageContainer)
-                imageDetails.style.display = "none"
-            }
-        } else {
-            showNoImagePlaceholder(imageContainer)
-            imageDetails.style.display = "none"
-        }
-
         const modal = new bootstrap.Modal(document.getElementById("viewCategoryModal"))
         modal.show()
     } catch (error) {
         console.error("Error viewing category:", error)
         showNotification("error", "Kategoriya ma'lumotlarini yuklashda xatolik")
     }
-}
-
-// Show no image placeholder
-function showNoImagePlaceholder(container) {
-    container.innerHTML = `
-        <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
-            <div class="text-center">
-                <i class="fas fa-image fa-3x text-muted mb-3"></i>
-                <div class="text-muted">Rasm mavjud emas</div>
-            </div>
-        </div>
-    `
 }
 
 // Show order categories modal
@@ -631,14 +468,13 @@ function updateOrderNumbers() {
     })
 }
 
-// Save category with image upload support
+// Save category (simplified without image handling)
 async function saveCategory() {
     try {
         const categoryId = document.getElementById("category-id").value
         const name = document.getElementById("category-name").value.trim()
         const spotlightId = document.getElementById("category-spotlight").value
         const isActive = document.getElementById("category-active").checked
-        const enableImageUpload = document.getElementById("enable-image-upload").checked
 
         if (!name) {
             showNotification("warning", "Kategoriya nomini kiriting")
@@ -653,19 +489,7 @@ async function saveCategory() {
         const categoryData = {
             name: name,
             spotlightId: Number.parseInt(spotlightId),
-            imageId : categoryData.imageId,
             active: isActive,
-        }
-
-        // Handle image upload if enabled
-        if (enableImageUpload) {
-            const fileInput = document.getElementById("category-file-input")
-            if (fileInput && fileInput.files.length > 0) {
-                const uploadResult = await uploadImageFile(fileInput.files[0])
-                if (uploadResult && uploadResult.key) {
-                    categoryData.imageKey = uploadResult.key
-                }
-            }
         }
 
         let response
@@ -911,96 +735,6 @@ function clearSearch() {
         searchInput.value = ""
     }
     filterCategories()
-}
-
-// Setup category file upload
-function setupCategoryFileUpload() {
-    const uploadArea = document.getElementById("category-file-upload-area")
-    const fileInput = document.getElementById("category-file-input")
-    const preview = document.getElementById("category-file-preview")
-
-    if (!uploadArea || !fileInput || !preview) return
-
-    uploadArea.addEventListener("click", () => fileInput.click())
-
-    uploadArea.addEventListener("dragover", (e) => {
-        e.preventDefault()
-        uploadArea.classList.add("dragover")
-    })
-
-    uploadArea.addEventListener("dragleave", () => {
-        uploadArea.classList.remove("dragover")
-    })
-
-    uploadArea.addEventListener("drop", (e) => {
-        e.preventDefault()
-        uploadArea.classList.remove("dragover")
-        const files = e.dataTransfer.files
-        if (files.length > 0) {
-            fileInput.files = files
-            handleCategoryFilePreview(files[0], preview)
-        }
-    })
-
-    fileInput.addEventListener("change", (e) => {
-        if (e.target.files.length > 0) {
-            handleCategoryFilePreview(e.target.files[0], preview)
-        }
-    })
-}
-
-// Handle category file preview
-function handleCategoryFilePreview(file, preview) {
-    preview.innerHTML = ""
-
-    if (file.type.startsWith("image/")) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            const previewItem = document.createElement("div")
-            previewItem.className = "preview-item"
-            previewItem.innerHTML = `
-                <img src="${e.target.result}" alt="Preview">
-                <button type="button" class="preview-remove" onclick="removePreview(this)">
-                    <i class="fas fa-times"></i>
-                </button>
-            `
-            preview.appendChild(previewItem)
-            updateCategoryImagePreview(e.target.result)
-        }
-        reader.readAsDataURL(file)
-    }
-}
-
-// Remove preview
-function removePreview(button) {
-    button.parentElement.remove()
-    const fileInput = document.getElementById("category-file-input")
-    if (fileInput) fileInput.value = ""
-    updateCategoryImagePreview()
-}
-
-// Update category image preview
-function updateCategoryImagePreview(imageSrc = null) {
-    const previewContainer = document.getElementById("category-image-preview")
-    if (!previewContainer) return
-
-    if (imageSrc) {
-        previewContainer.innerHTML = `
-            <img src="${imageSrc}" 
-                 class="img-fluid rounded" 
-                 alt="Category Image"
-                 style="max-height: 200px; object-fit: contain;">
-        `
-    } else {
-        previewContainer.innerHTML = `
-            <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
-                <div class="text-center">
-                    <i class="fas fa-image fa-3x text-muted mb-3"></i>
-                    <div class="text-muted">Rasm tanlanmagan</div>
-                </div>
-            </div>
-        `
-    }
 }
 
 // Utility functions
