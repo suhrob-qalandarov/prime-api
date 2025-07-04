@@ -171,7 +171,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         for (Category category : categories) {
             Integer newOrder = categoryOrderMap.get(category.getId());
-            category.setOrder(newOrder);
+            category.setOrderNumber(newOrder);
         }
 
         return categoryRepository.saveAll(categories).stream().map(this::convertToAdminCategoryRes).toList();
@@ -188,7 +188,7 @@ public class CategoryServiceImpl implements CategoryService {
         return new AdminCategoryRes(
                 category.getId(),
                 category.getName(),
-                category.getOrder(),
+                category.getOrderNumber(),
                 category.getActive()
         );
     }
