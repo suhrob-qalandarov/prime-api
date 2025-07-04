@@ -10,6 +10,8 @@ public interface AttachmentUtilService {
 
     Attachment getAttachment(Long attachmentId);
 
+    Attachment getAttachmentWithKey(String attachmentKey);
+
     void validateFile(MultipartFile file);
 
     void validateAttachmentId(Long attachmentId);

@@ -43,4 +43,6 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 
     @Query("SELECT COUNT(a) FROM Attachment a WHERE a.active = false")
     int countAllByActiveFalse();
+
+    Attachment findByKey(String key);
 }

@@ -145,20 +145,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="stats-card info">
-                <div class="stats-icon">
-                    <i class="fas fa-image"></i>
-                </div>
-                <div class="stats-content">
-                    <div class="stats-number" id="categories-with-images">0</div>
-                    <div class="stats-label">Rasmli kategoriyalar</div>
-                    <div class="stats-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+3%</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Categories Management -->
@@ -198,8 +184,8 @@
                     </div>
                 </div>
 
-                <!-- Categories Table -->
-                <div class="table-container">
+                <!-- Categories Table with Scrollable Container -->
+                <div class="table-container scrollable-table">
                     <table class="modern-table">
                         <thead>
                         <tr>
@@ -323,54 +309,70 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <!-- Image Section - Left Side -->
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label class="form-label">ID</label>
-                            <p id="view-category-id" class="form-text">-</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Nomi</label>
-                            <p id="view-category-name" class="form-text">-</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Spotlight</label>
-                            <p id="view-category-spotlight" class="form-text">-</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tartib raqam</label>
-                            <p id="view-category-order" class="form-text">-</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Holati</label>
-                            <div id="view-category-status">-</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">Yaratilgan</label>
-                            <p id="view-category-created-at" class="form-text">-</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Yaratuvchi</label>
-                            <p id="view-category-created-by" class="form-text">-</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Yangilangan</label>
-                            <p id="view-category-updated-at" class="form-text">-</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Yangilovchi</label>
-                            <p id="view-category-updated-by" class="form-text">-</p>
+                            <label class="form-label">Rasm</label>
+                            <div id="view-category-image" class="category-image-container">
+                                <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
+                                    <div class="text-center">
+                                        <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                                        <div class="text-muted">Rasm mavjud emas</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="view-image-details" class="mt-2" style="display: none;">
+                                <small class="text-muted">
+                                    <div><strong>Fayl nomi:</strong> <span id="view-image-filename">-</span></div>
+                                    <div><strong>Turi:</strong> <span id="view-image-type">-</span></div>
+                                    <div><strong>Yaratilgan:</strong> <span id="view-image-created">-</span></div>
+                                </small>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Rasm</label>
-                    <div id="view-category-image">
-                        <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
-                            <div class="text-center">
-                                <i class="fas fa-image fa-3x text-muted mb-3"></i>
-                                <div class="text-muted">Rasm mavjud emas</div>
+
+                    <!-- Details Section - Right Side -->
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">ID</label>
+                                    <p id="view-category-id" class="form-text">-</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Nomi</label>
+                                    <p id="view-category-name" class="form-text">-</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Spotlight</label>
+                                    <p id="view-category-spotlight" class="form-text">-</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Tartib raqam</label>
+                                    <p id="view-category-order" class="form-text">-</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Holati</label>
+                                    <div id="view-category-status">-</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Yaratilgan</label>
+                                    <p id="view-category-created-at" class="form-text">-</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Yaratuvchi</label>
+                                    <p id="view-category-created-by" class="form-text">-</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Yangilangan</label>
+                                    <p id="view-category-updated-at" class="form-text">-</p>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Yangilovchi</label>
+                                    <p id="view-category-updated-by" class="form-text">-</p>
+                                </div>
                             </div>
                         </div>
                     </div>

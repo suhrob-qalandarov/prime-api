@@ -99,14 +99,14 @@ public class CategoryServiceImpl implements CategoryService {
     public AdminCategoryRes saveCategory(CategoryReq categoryReq) {
         Category category;
         Optional<Spotlight> optionalSpotlight = spotlightRepository.findById(categoryReq.spotlightId());
-        Optional<Attachment> optionalAttachment = attachmentRepository.findById(categoryReq.imageId());
+        //Optional<Attachment> optionalAttachment = attachmentRepository.findById(categoryReq.imageId());
+        //if (optionalAttachment.isEmpty()) return null;
         long count = categoryRepository.count();
 
         if (optionalSpotlight.isEmpty()) {
             category = Category.builder()
                     .name(categoryReq.name())
-                    .image(optionalAttachment.get())
-                    .spotlight(null)
+                    .active(categoryReq.active())
                     .orderNumber(++count)
                     .build();
         } else {
@@ -114,6 +114,7 @@ public class CategoryServiceImpl implements CategoryService {
             category = Category.builder()
                     .name(categoryReq.name())
                     .spotlight(spotlight)
+                    .active(categoryReq.active())
                     .spotlightName(spotlight.getName())
                     .orderNumber(++count)
                     .build();

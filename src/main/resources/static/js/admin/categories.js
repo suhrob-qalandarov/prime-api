@@ -163,26 +163,40 @@ function getMockData(url) {
             activeCount: 6,
             inactiveCount: 2,
             categoryResList: [
-                { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
-                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
-                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
-                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
-                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
-                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
-                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
-                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
+                {
+                    id: 1,
+                    name: "Elektronika",
+                    spotlightName: "ELECTRONICS",
+                    order: 1,
+                    active: true,
+                    imageKey: "electronics-img-key",
+                },
+                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true, imageKey: null },
+                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true, imageKey: "books-img-key" },
+                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true, imageKey: null },
+                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true, imageKey: "home-img-key" },
+                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true, imageKey: null },
+                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false, imageKey: null },
+                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false, imageKey: "beauty-img-key" },
             ],
             activeCategoryResList: [
-                { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
-                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
-                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
-                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
-                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
-                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
+                {
+                    id: 1,
+                    name: "Elektronika",
+                    spotlightName: "ELECTRONICS",
+                    order: 1,
+                    active: true,
+                    imageKey: "electronics-img-key",
+                },
+                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true, imageKey: null },
+                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true, imageKey: "books-img-key" },
+                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true, imageKey: null },
+                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true, imageKey: "home-img-key" },
+                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true, imageKey: null },
             ],
             inactiveCategoryResList: [
-                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
-                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
+                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false, imageKey: null },
+                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false, imageKey: "beauty-img-key" },
             ],
         }
     }
@@ -200,7 +214,53 @@ function getMockData(url) {
         ]
     }
 
+    if (url.includes("/api/v1/admin/attachment/with-key/")) {
+        const key = url.split("/").pop()
+        return {
+            id: 1,
+            key: key,
+            filename: `${key}.jpg`,
+            contentType: "image/jpeg",
+            active: true,
+            createdAt: "2024-01-15T10:30:00",
+            updatedAt: "2024-01-15T10:30:00",
+            createdBy: "admin",
+            updatedBy: "admin",
+        }
+    }
+
     return null
+}
+
+// Upload image file
+async function uploadImageFile(file) {
+    try {
+        const formData = new FormData()
+        formData.append("file", file)
+
+        const response = await fetch(`${API_BASE_URL}/api/v1/admin/attachment`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+            body: formData,
+        })
+
+        if (!response.ok) {
+            throw new Error("Image upload failed")
+        }
+
+        return await response.json()
+    } catch (error) {
+        console.error("Error uploading image:", error)
+        // Mock response for demo
+        return {
+            id: Date.now(),
+            key: `mock-key-${Date.now()}`,
+            filename: file.name,
+            contentType: file.type,
+        }
+    }
 }
 
 // Load categories dashboard data (single API call)
@@ -222,7 +282,7 @@ async function loadCategoriesDashboard() {
             inactiveCategories = dashboardData.inactiveCategoryResList || []
             filteredCategories = [...allCategories]
 
-            // Update statistics
+            // Update statistics (removed categories with images)
             updateCategoryStats()
 
             // Render table
@@ -240,17 +300,13 @@ async function loadCategoriesDashboard() {
     }
 }
 
-// Update category statistics
+// Update category statistics (removed categories with images)
 function updateCategoryStats() {
     if (dashboardData) {
         console.log("Updating stats:", dashboardData)
         animateCounter("total-categories", dashboardData.count || 0)
         animateCounter("active-categories", dashboardData.activeCount || 0)
         animateCounter("inactive-categories", dashboardData.inactiveCount || 0)
-
-        // Calculate categories with images (using spotlightName as indicator)
-        const categoriesWithImages = allCategories.filter((cat) => cat.spotlightName).length
-        animateCounter("categories-with-images", categoriesWithImages)
     }
 }
 
@@ -273,7 +329,7 @@ function renderCategoriesTable(categories) {
         .map(
             (category) => `
         <tr class="fade-in">
-        <td><strong>T-${category.order}</strong></td>
+            <td><strong>T-${category.order}</strong></td>
             <td>${category.id}</td>
             <td class="fw-bold">${category.name}</td>
             <td class="text-uppercase fw-light fs-8 text-secondary">${category.spotlightName || "-"}</td>
@@ -375,6 +431,17 @@ async function showEditCategoryModal(categoryId) {
         // Populate spotlight select with current selection
         await populateSpotlightSelect("category-spotlight", category.spotlightId)
 
+        // Handle image if exists
+        if (category.imageKey) {
+            document.getElementById("enable-image-upload").checked = true
+            document.getElementById("image-upload-section").style.display = "block"
+            // Load and display existing image
+            loadCategoryImage(category.imageKey)
+        } else {
+            document.getElementById("enable-image-upload").checked = false
+            document.getElementById("image-upload-section").style.display = "none"
+        }
+
         const modal = new bootstrap.Modal(document.getElementById("categoryModal"))
         modal.show()
     } catch (error) {
@@ -383,7 +450,17 @@ async function showEditCategoryModal(categoryId) {
     }
 }
 
-// Show view category modal
+// Load category image for editing
+async function loadCategoryImage(imageKey) {
+    try {
+        const imageUrl = `${API_BASE_URL}/api/v1/attachment/${imageKey}`
+        updateCategoryImagePreview(imageUrl)
+    } catch (error) {
+        console.error("Error loading category image:", error)
+    }
+}
+
+// Show view category modal with improved layout
 async function showViewCategoryModal(categoryId) {
     try {
         // Find category in local data first
@@ -399,7 +476,7 @@ async function showViewCategoryModal(categoryId) {
             return
         }
 
-        // Populate view modal
+        // Populate view modal - right side details
         document.getElementById("view-category-id").textContent = category.id
         document.getElementById("view-category-name").textContent = category.name
         document.getElementById("view-category-spotlight").textContent = category.spotlightName || "-"
@@ -414,12 +491,62 @@ async function showViewCategoryModal(categoryId) {
         document.getElementById("view-category-updated-at").textContent = formatDate(new Date())
         document.getElementById("view-category-updated-by").textContent = "Admin"
 
+        // Handle image display - left side
+        const imageContainer = document.getElementById("view-category-image")
+        const imageDetails = document.getElementById("view-image-details")
+
+        if (category.imageKey) {
+            try {
+                // Load image details using the new API endpoint
+                const imageData = await apiRequest(`/api/v1/admin/attachment/with-key/${category.imageKey}`)
+
+                if (imageData) {
+                    // Display image
+                    const imageUrl = `${API_BASE_URL}/api/v1/attachment/${category.imageKey}`
+                    imageContainer.innerHTML = `
+                        <img src="${imageUrl}" 
+                             class="img-fluid rounded" 
+                             alt="Category Image"
+                             style="width: 100%; height: 200px; object-fit: cover;">
+                    `
+
+                    // Display image details
+                    document.getElementById("view-image-filename").textContent = imageData.filename || "-"
+                    document.getElementById("view-image-type").textContent = imageData.contentType || "-"
+                    document.getElementById("view-image-created").textContent = formatDate(imageData.createdAt)
+                    imageDetails.style.display = "block"
+                } else {
+                    showNoImagePlaceholder(imageContainer)
+                    imageDetails.style.display = "none"
+                }
+            } catch (error) {
+                console.error("Error loading image details:", error)
+                showNoImagePlaceholder(imageContainer)
+                imageDetails.style.display = "none"
+            }
+        } else {
+            showNoImagePlaceholder(imageContainer)
+            imageDetails.style.display = "none"
+        }
+
         const modal = new bootstrap.Modal(document.getElementById("viewCategoryModal"))
         modal.show()
     } catch (error) {
         console.error("Error viewing category:", error)
         showNotification("error", "Kategoriya ma'lumotlarini yuklashda xatolik")
     }
+}
+
+// Show no image placeholder
+function showNoImagePlaceholder(container) {
+    container.innerHTML = `
+        <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
+            <div class="text-center">
+                <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                <div class="text-muted">Rasm mavjud emas</div>
+            </div>
+        </div>
+    `
 }
 
 // Show order categories modal
@@ -504,12 +631,14 @@ function updateOrderNumbers() {
     })
 }
 
-// Save category
+// Save category with image upload support
 async function saveCategory() {
     try {
         const categoryId = document.getElementById("category-id").value
         const name = document.getElementById("category-name").value.trim()
         const spotlightId = document.getElementById("category-spotlight").value
+        const isActive = document.getElementById("category-active").checked
+        const enableImageUpload = document.getElementById("enable-image-upload").checked
 
         if (!name) {
             showNotification("warning", "Kategoriya nomini kiriting")
@@ -524,15 +653,28 @@ async function saveCategory() {
         const categoryData = {
             name: name,
             spotlightId: Number.parseInt(spotlightId),
+            imageId : categoryData.imageId,
+            active: isActive,
+        }
+
+        // Handle image upload if enabled
+        if (enableImageUpload) {
+            const fileInput = document.getElementById("category-file-input")
+            if (fileInput && fileInput.files.length > 0) {
+                const uploadResult = await uploadImageFile(fileInput.files[0])
+                if (uploadResult && uploadResult.key) {
+                    categoryData.imageKey = uploadResult.key
+                }
+            }
         }
 
         let response
         let newCategory
 
         if (categoryId) {
-            // Update existing category
+            // Update existing category - using PUT method as requested
             response = await apiRequest(`/api/v1/admin/category/${categoryId}`, {
-                method: "PATCH",
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(categoryData),
             })
@@ -550,7 +692,7 @@ async function saveCategory() {
         if (newCategory) {
             showNotification("success", "Kategoriya muvaffaqiyatli saqlandi")
 
-            // Update local data instead of full refresh
+            // Update local data properly
             if (categoryId) {
                 // Update existing category in local arrays
                 updateCategoryInLocalData(newCategory)
@@ -559,7 +701,10 @@ async function saveCategory() {
                 addCategoryToLocalData(newCategory)
             }
 
-            // Re-render table
+            // Update filtered categories based on current filter
+            applyCurrentFilter()
+
+            // Re-render table and update stats
             renderCategoriesTable(filteredCategories)
             updateCategoryStats()
 
@@ -601,6 +746,9 @@ async function saveCategoryOrder() {
                 }
             })
 
+            // Update filtered categories
+            applyCurrentFilter()
+
             showNotification("success", "Kategoriyalar tartibi yangilandi")
 
             // Re-render table
@@ -615,7 +763,7 @@ async function saveCategoryOrder() {
     }
 }
 
-// Toggle category active status
+// Toggle category active status with proper local data update
 async function toggleCategory(categoryId) {
     try {
         const response = await apiRequest(`/api/v1/admin/category/toggle/${categoryId}`, {
@@ -623,25 +771,29 @@ async function toggleCategory(categoryId) {
         })
 
         if (response === "OK" || response === 200) {
-            // Move category between active and inactive arrays
+            // Find category in all categories
             const categoryIndex = allCategories.findIndex((cat) => cat.id === categoryId)
             if (categoryIndex !== -1) {
                 const category = allCategories[categoryIndex]
+                const wasActive = category.active
                 category.active = !category.active
 
-                if (category.active) {
-                    // Move from inactive to active
-                    const inactiveIndex = inactiveCategories.findIndex((cat) => cat.id === categoryId)
-                    if (inactiveIndex !== -1) {
-                        inactiveCategories.splice(inactiveIndex, 1)
-                        activeCategories.push(category)
-                    }
-                } else {
+                // Move category between active and inactive arrays
+                if (wasActive) {
                     // Move from active to inactive
                     const activeIndex = activeCategories.findIndex((cat) => cat.id === categoryId)
                     if (activeIndex !== -1) {
-                        activeCategories.splice(activeIndex, 1)
-                        inactiveCategories.push(category)
+                        const [movedCategory] = activeCategories.splice(activeIndex, 1)
+                        movedCategory.active = false
+                        inactiveCategories.push(movedCategory)
+                    }
+                } else {
+                    // Move from inactive to active
+                    const inactiveIndex = inactiveCategories.findIndex((cat) => cat.id === categoryId)
+                    if (inactiveIndex !== -1) {
+                        const [movedCategory] = inactiveCategories.splice(inactiveIndex, 1)
+                        movedCategory.active = true
+                        activeCategories.push(movedCategory)
                     }
                 }
 
@@ -649,9 +801,14 @@ async function toggleCategory(categoryId) {
                 if (dashboardData) {
                     dashboardData.activeCount = activeCategories.length
                     dashboardData.inactiveCount = inactiveCategories.length
+                    dashboardData.activeCategoryResList = [...activeCategories]
+                    dashboardData.inactiveCategoryResList = [...inactiveCategories]
                 }
 
-                // Re-render and update stats
+                // Update filtered categories based on current filter
+                applyCurrentFilter()
+
+                // Re-render and update stats without page refresh
                 renderCategoriesTable(filteredCategories)
                 updateCategoryStats()
 
@@ -667,7 +824,6 @@ async function toggleCategory(categoryId) {
 // Helper functions for local data management
 function addCategoryToLocalData(newCategory) {
     allCategories.push(newCategory)
-    filteredCategories.push(newCategory)
 
     if (newCategory.active) {
         activeCategories.push(newCategory)
@@ -677,7 +833,12 @@ function addCategoryToLocalData(newCategory) {
         if (dashboardData) dashboardData.inactiveCount++
     }
 
-    if (dashboardData) dashboardData.count++
+    if (dashboardData) {
+        dashboardData.count++
+        dashboardData.categoryResList = [...allCategories]
+        dashboardData.activeCategoryResList = [...activeCategories]
+        dashboardData.inactiveCategoryResList = [...inactiveCategories]
+    }
 }
 
 function updateCategoryInLocalData(updatedCategory) {
@@ -689,29 +850,39 @@ function updateCategoryInLocalData(updatedCategory) {
     }
 
     updateInArray(allCategories)
-    updateInArray(filteredCategories)
     updateInArray(activeCategories)
     updateInArray(inactiveCategories)
+
+    // Update dashboard data
+    if (dashboardData) {
+        dashboardData.categoryResList = [...allCategories]
+        dashboardData.activeCategoryResList = [...activeCategories]
+        dashboardData.inactiveCategoryResList = [...inactiveCategories]
+    }
 }
 
-// Filter categories
-function filterCategories() {
+// Apply current filter to update filteredCategories
+function applyCurrentFilter() {
     const statusFilter = document.getElementById("status-filter")?.value || "all"
 
     switch (statusFilter) {
         case "all":
-            filteredCategories = dashboardData ? dashboardData.categoryResList : allCategories
+            filteredCategories = [...allCategories]
             break
         case "active":
-            filteredCategories = dashboardData ? dashboardData.activeCategoryResList : activeCategories
+            filteredCategories = [...activeCategories]
             break
         case "inactive":
-            filteredCategories = dashboardData ? dashboardData.inactiveCategoryResList : inactiveCategories
+            filteredCategories = [...inactiveCategories]
             break
         default:
-            filteredCategories = allCategories
+            filteredCategories = [...allCategories]
     }
+}
 
+// Filter categories
+function filterCategories() {
+    applyCurrentFilter()
     renderCategoriesTable(filteredCategories)
 }
 

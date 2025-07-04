@@ -28,6 +28,11 @@ public class AttachmentUtilServiceImpl implements AttachmentUtilService {
     }
 
     @Override
+    public Attachment getAttachmentWithKey(String attachmentKey) {
+        return attachmentRepository.findByKey(attachmentKey);
+    }
+
+    @Override
     public void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("File cannot be null or empty");

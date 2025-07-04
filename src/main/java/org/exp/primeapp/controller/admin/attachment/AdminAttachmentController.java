@@ -27,6 +27,12 @@ public class AdminAttachmentController {
         return ResponseEntity.ok(attachmentUtilService.getAttachment(attachmentId));
     }
 
+    @GetMapping("/with-key/{attachmentKey}")
+    public ResponseEntity<Attachment> getAttachmentWithKey(@PathVariable String attachmentKey) {
+        log.debug("Fetching attachment with ID: {}", attachmentKey);
+        return ResponseEntity.ok(attachmentUtilService.getAttachmentWithKey(attachmentKey));
+    }
+
     @PostMapping
     public ResponseEntity<AttachmentRes> uploadFile(@RequestParam("file") MultipartFile file) {
         log.debug("Uploading single file: {}", file.getOriginalFilename());
