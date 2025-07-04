@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Just Store</title>
+    <title>Kategoriyalar - Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="/css/admin/dashboard.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="/css/admin/pages/categories.css" rel="stylesheet">
 </head>
 <body>
 <!-- Sidebar -->
@@ -22,46 +21,39 @@
     </div>
 
     <nav class="sidebar-nav">
-        <a href="/pages/admin/dashboard.html" class="nav-link">
+        <a href="dashboard.html" class="nav-link">
             <div class="nav-icon">
                 <i class="fas fa-chart-line"></i>
             </div>
             <span>Dashboard</span>
             <div class="nav-indicator"></div>
         </a>
-        <a href="/pages/admin/orders.html" class="nav-link">
+        <a href="orders.html" class="nav-link">
             <div class="nav-icon">
-                <i class="fas fa-tags"></i>
+                <i class="fas fa-shopping-cart"></i>
             </div>
             <span>Buyurtmalar</span>
             <div class="nav-indicator"></div>
         </a>
-        <a href="/pages/admin/categories.html" class="nav-link active">
+        <a href="categories.html" class="nav-link active">
             <div class="nav-icon">
                 <i class="fas fa-tags"></i>
             </div>
             <span>Kategoriyalar</span>
             <div class="nav-indicator"></div>
         </a>
-        <a href="/pages/admin/admin-products.html" class="nav-link">
+        <a href="products.html" class="nav-link">
             <div class="nav-icon">
                 <i class="fas fa-box-open"></i>
             </div>
             <span>Mahsulotlar</span>
             <div class="nav-indicator"></div>
         </a>
-        <a href="/pages/admin/admin-users.html" class="nav-link">
+        <a href="users.html" class="nav-link">
             <div class="nav-icon">
                 <i class="fas fa-users"></i>
             </div>
             <span>Foydalanuvchilar</span>
-            <div class="nav-indicator"></div>
-        </a>
-        <a href="/pages/admin/admin-files.html" class="nav-link">
-            <div class="nav-icon">
-                <i class="fas fa-cloud-upload-alt"></i>
-            </div>
-            <span>Fayllar</span>
             <div class="nav-indicator"></div>
         </a>
     </nav>
@@ -104,21 +96,17 @@
                 <button class="header-btn" onclick="toggleFullscreen()">
                     <i class="fas fa-expand"></i>
                 </button>
-                <a href="/index.html" class="header-btn">
-                    <i class="fas fa-external-link-alt"></i>
-                    <span>Saytga o'tish</span>
-                </a>
             </div>
         </div>
     </header>
 
     <!-- Categories Content -->
     <div class="tab-content active">
-        <!-- Stats Grid -->
+        <!-- Statistics Cards -->
         <div class="stats-grid">
             <div class="stats-card primary">
                 <div class="stats-icon">
-                    <i class="fas fa-tags"></i>
+                    <i class="fas fa-list"></i>
                 </div>
                 <div class="stats-content">
                     <div class="stats-number" id="total-categories">0</div>
@@ -157,70 +145,68 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Action Buttons -->
-        <div class="card-header mb-4" style="background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
-            <div class="d-flex gap-3 align-items-center justify-content-between p-3">
-                <div class="d-flex gap-3">
-                    <button class="btn btn-primary d-flex align-items-center gap-2" onclick="showAddCategoryModal()">
-                        <i class="fas fa-plus"></i>
-                        <span>Qo'shish</span>
-                    </button>
+            <div class="stats-card info">
+                <div class="stats-icon">
+                    <i class="fas fa-image"></i>
                 </div>
-                <div class="d-flex gap-3">
-                    <button class="btn btn-success d-flex align-items-center gap-2" onclick="setCategoryOrderModal()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-list" viewBox="0 0 16 16">
-                            <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
-                            <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
-                        </svg>
-                        <span>Tartiblash</span>
-                    </button>
-                </div>
-                <div class="d-flex gap-2 align-items-right">
-                    <input type="text" class="form-control" id="search-input" placeholder="Kategoriya nomi bo'yicha qidirish..." style="width: 300px;">
-                    <button class="btn btn-outline-primary" onclick="searchCategories()">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button class="btn btn-outline-secondary" onclick="clearSearch()">
-                        <i class="fas fa-times"></i>
-                    </button>
+                <div class="stats-content">
+                    <div class="stats-number" id="categories-with-images">0</div>
+                    <div class="stats-label">Rasmli kategoriyalar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+3%</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Categories Table -->
-        <div class="table-card">
+        <!-- Categories Management -->
+        <div class="table-card full-width">
             <div class="card-header">
-                <button class="card-action" onclick="loadCategories()">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
                 <h3>Kategoriyalar ro'yxati</h3>
                 <div class="card-actions">
-                    <button class="btn d-flex align-items-center gap-2" onclick="showCategoriesModal()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database-fill-check" viewBox="0 0 16 16">
-                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M8 1c-1.573 0-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4s.875 1.755 1.904 2.223C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777C13.125 5.755 14 5.007 14 4s-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1"/>
-                            <path d="M2 7v-.839c.457.432 1.004.751 1.49.972C4.722 7.693 6.318 8 8 8s3.278-.307 4.51-.867c.486-.22 1.033-.54 1.49-.972V7c0 .424-.155.802-.411 1.133a4.51 4.51 0 0 0-4.815 1.843A12 12 0 0 1 8 10c-1.573 0-3.022-.289-4.096-.777C2.875 8.755 2 8.007 2 7m6.257 3.998L8 11c-1.682 0-3.278-.307-4.51-.867-.486-.22-1.033-.54-1.49-.972V10c0 1.007.875 1.755 1.904 2.223C4.978 12.711 6.427 13 8 13h.027a4.55 4.55 0 0 1 .23-2.002m-.002 3L8 14c-1.682 0-3.278-.307-4.51-.867-.486-.22-1.033-.54-1.49-.972V13c0 1.007.875 1.755 1.904 2.223C4.978 15.711 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.5 4.5 0 0 1-1.3-1.905"/>
-                        </svg>
-                        <span>Barcha kategoriyalar</span>
+                    <button class="btn btn-primary" onclick="showAddCategoryModal()">
+                        <i class="fas fa-plus"></i> Qo'shish
                     </button>
-                    <button class="btn d-flex align-items-center gap-2" onclick="showActiveCategoriesModal()">
-                        <i class="fas fa-eye"></i>
-                        <span>Faol kategoriyalar</span>
-                    </button>
-                    <button class="btn d-flex align-items-center gap-2" onclick="showInactiveCategoriesModal()">
-                        <i class="fas fa-eye-slash"></i>
-                        <span>Nofaol kategoriyalar</span>
+                    <button class="btn btn-secondary" onclick="showOrderCategoriesModal()">
+                        <i class="fas fa-sort"></i> Tartiblash
                     </button>
                 </div>
             </div>
+
             <div class="card-body">
+                <!-- Search and Filter -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <select class="form-select" id="status-filter" onchange="filterCategories()">
+                            <option value="all">Barcha kategoriyalar</option>
+                            <option value="active">Faol kategoriyalar</option>
+                            <option value="inactive">Nofaol kategoriyalar</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search-input" placeholder="Kategoriya qidirish...">
+                            <button class="btn btn-outline-secondary" onclick="searchCategories()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="clearSearch()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Table -->
                 <div class="table-container">
                     <table class="modern-table">
                         <thead>
                         <tr>
+                            <th>Tartib raqam</th>
                             <th>ID</th>
                             <th>Nomi</th>
+                            <th>Spotlight</th>
                             <th>Holati</th>
                             <th>Yaratilgan</th>
                             <th>Amallar</th>
@@ -228,7 +214,12 @@
                         </thead>
                         <tbody id="categories-table">
                         <tr>
-                            <td colspan="5" class="text-center text-muted">Yuklanmoqda...</td>
+                            <td colspan="7" class="text-center">
+                                <div class="loading-state">
+                                    <div class="loading-spinner"></div>
+                                    <p>Yuklanmoqda...</p>
+                                </div>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -239,62 +230,72 @@
 </div>
 
 <!-- Add/Edit Category Modal -->
-<div class="modal fade" id="categoryModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content modern-modal">
             <div class="modal-header">
                 <h5 class="modal-title" id="categoryModalTitle">Kategoriya qo'shish</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form id="category-form" class="modern-form">
                     <input type="hidden" id="category-id">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Kategoriya nomi *</label>
-                                <input type="text" class="form-control" id="category-name" required>
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="enable-image-upload">
-                                    <label class="form-check-label" for="enable-image-upload">
-                                        Rasm qo'shish
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group" id="image-upload-section" style="display: none;">
-                                <label class="form-label">Rasm yuklash</label>
-                                <div class="file-upload-area" id="category-file-upload-area">
-                                    <div class="upload-icon">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                    </div>
-                                    <div class="upload-text">
-                                        <p>Rasm yuklash uchun bosing</p>
-                                        <span>PNG, JPG, JPEG (Max: 10MB)</span>
-                                    </div>
-                                    <input type="file" id="category-file-input" accept="image/*" hidden>
-                                </div>
-                                <div class="uploaded-preview" id="category-file-preview"></div>
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="category-active" checked>
-                                    <label class="form-check-label" for="category-active">
-                                        Faol
-                                    </label>
-                                </div>
-                            </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Kategoriya nomi</label>
+                        <input type="text" class="form-control" id="category-name" placeholder="Kategoriya nomini kiriting" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Spotlight</label>
+                        <select class="form-select" id="category-spotlight" required>
+                            <option value="">Spotlight tanlang</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="category-active" checked>
+                            <label for="category-active">
+                                <div class="toggle-slider"></div>
+                            </label>
+                            <span class="toggle-label">Faol kategoriya</span>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Rasm ko'rinishi</label>
-                                <div id="category-image-preview" class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
-                                        <div class="text-center">
-                                            <i class="fas fa-image fa-3x text-muted mb-3"></i>
-                                            <div class="text-muted">Rasm tanlanmagan</div>
-                                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="enable-image-upload">
+                            <label for="enable-image-upload">
+                                <div class="toggle-slider"></div>
+                            </label>
+                            <span class="toggle-label">Rasm yuklash</span>
+                        </div>
+                    </div>
+
+                    <div id="image-upload-section" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Kategoriya rasmi</label>
+                            <div class="file-upload-area" id="category-file-upload-area">
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <div class="upload-text">
+                                    <p>Rasm yuklash uchun bosing yoki shu yerga tashlang</p>
+                                    <span>PNG, JPG, JPEG (Max: 5MB)</span>
+                                </div>
+                                <input type="file" id="category-file-input" accept="image/*" style="display: none;">
+                            </div>
+                            <div id="category-file-preview" class="uploaded-preview"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Rasm ko'rinishi</label>
+                            <div id="category-image-preview">
+                                <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
+                                    <div class="text-center">
+                                        <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                                        <div class="text-muted">Rasm tanlanmagan</div>
                                     </div>
                                 </div>
                             </div>
@@ -305,7 +306,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
                 <button type="button" class="btn btn-primary" onclick="saveCategory()">
-                    <i class="fas fa-save"></i>
                     <span id="save-btn-text">Saqlash</span>
                 </button>
             </div>
@@ -314,61 +314,64 @@
 </div>
 
 <!-- View Category Modal -->
-<div class="modal fade" id="viewCategoryModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal fade" id="viewCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content modern-modal">
             <div class="modal-header">
                 <h5 class="modal-title">Kategoriya ma'lumotlari</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="text-center">
-                            <div id="view-category-image" class="mb-3">
-                                <!-- Category image will be loaded here -->
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">ID</label>
+                            <p id="view-category-id" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nomi</label>
+                            <p id="view-category-name" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Spotlight</label>
+                            <p id="view-category-spotlight" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tartib raqam</label>
+                            <p id="view-category-order" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Holati</label>
+                            <div id="view-category-status">-</div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="category-details">
-                            <h6 class="mb-3">Kategoriya ma'lumotlari</h6>
-                            <table class="table table-borderless">
-                                <tbody>
-                                <tr>
-                                    <td><strong>ID:</strong></td>
-                                    <td id="view-category-id">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Nomi:</strong></td>
-                                    <td id="view-category-name">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Holati:</strong></td>
-                                    <td id="view-category-status">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Rasm ID:</strong></td>
-                                    <td id="view-category-attachment-id">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Yaratilgan:</strong></td>
-                                    <td id="view-category-created-at">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Yaratuvchi:</strong></td>
-                                    <td id="view-category-created-by">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Yangilangan:</strong></td>
-                                    <td id="view-category-updated-at">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Yangilovchi:</strong></td>
-                                    <td id="view-category-updated-by">-</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="form-group">
+                            <label class="form-label">Yaratilgan</label>
+                            <p id="view-category-created-at" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Yaratuvchi</label>
+                            <p id="view-category-created-by" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Yangilangan</label>
+                            <p id="view-category-updated-at" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Yangilovchi</label>
+                            <p id="view-category-updated-by" class="form-text">-</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rasm</label>
+                    <div id="view-category-image">
+                        <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 200px;">
+                            <div class="text-center">
+                                <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                                <div class="text-muted">Rasm mavjud emas</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -380,78 +383,31 @@
     </div>
 </div>
 
-<!-- Categories List Modal -->
-<div class="modal fade" id="categoriesListModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+<!-- Order Categories Modal -->
+<div class="modal fade" id="orderCategoriesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content modern-modal">
             <div class="modal-header">
-                <h5 class="modal-title" id="categoriesListModalTitle">Kategoriyalar</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title">Kategoriyalar tartibini o'zgartirish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <div class="table-container">
-                    <table class="modern-table">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nomi</th>
-                            <th>Holati</th>
-                            <th>Amallar</th>
-                        </tr>
-                        </thead>
-                        <tbody id="categories-list-table">
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">Yuklanmoqda...</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <p class="text-muted mb-3">Kategoriyalarni suda-suda tortib tartiblang:</p>
+                <div id="order-categories-list" class="order-list">
+                    <!-- Dynamic content -->
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                <button type="button" class="btn btn-primary" onclick="saveCategoryOrder()">
+                    Saqlash
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // DOM ready event listener qo'shish
-    document.addEventListener("DOMContentLoaded", function() {
-        console.log("DOM loaded, setting up image upload toggle...");
-
-        // Image upload toggle setup with delay
-        setTimeout(function() {
-            const enableImageUpload = document.getElementById("enable-image-upload");
-            const imageUploadSection = document.getElementById("image-upload-section");
-
-            console.log("Enable image upload element:", enableImageUpload);
-            console.log("Image upload section:", imageUploadSection);
-
-            if (enableImageUpload && imageUploadSection) {
-                enableImageUpload.addEventListener("change", function() {
-                    console.log("Toggle changed:", this.checked);
-                    if (this.checked) {
-                        imageUploadSection.style.display = "block";
-                        console.log("Image upload section shown");
-                    } else {
-                        imageUploadSection.style.display = "none";
-                        document.getElementById("category-file-input").value = "";
-                        document.getElementById("category-file-preview").innerHTML = "";
-                        // Call updateCategoryImagePreview if it exists
-                        if (typeof updateCategoryImagePreview === 'function') {
-                            updateCategoryImagePreview();
-                        }
-                        console.log("Image upload section hidden");
-                    }
-                });
-                console.log("Event listener added successfully");
-            } else {
-                console.error("Elements not found!");
-            }
-        }, 500);
-    });
-</script>
 <script src="/js/admin/categories.js"></script>
 </body>
 </html>
