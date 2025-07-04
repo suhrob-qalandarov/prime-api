@@ -36,7 +36,7 @@ public class AdminCategoryController {
             @RequestBody CategoryReq categoryReq
     ) {
         AdminCategoryRes categoryRes = categoryService.updateCategoryById(categoryId,categoryReq);
-        return new ResponseEntity<>(categoryRes, HttpStatus.valueOf("UPDATED"));
+        return new ResponseEntity<>(categoryRes, HttpStatus.OK);
     }
 
     @PatchMapping("/toggle/{categoryId}")

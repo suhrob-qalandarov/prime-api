@@ -1,8 +1,6 @@
 package org.exp.primeapp.models.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.exp.primeapp.models.base.BaseEntity;
@@ -18,7 +16,10 @@ public class Category extends BaseEntity {
 
     private String name;
 
-    private Integer orderNumber;
+    private Long orderNumber;
+
+    @OneToOne
+    private Attachment image;
 
     @ManyToOne
     @JoinColumn(name = "spotlight_id")

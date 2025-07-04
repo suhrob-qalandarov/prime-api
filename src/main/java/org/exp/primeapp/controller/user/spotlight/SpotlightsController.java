@@ -27,13 +27,13 @@ public class SpotlightsController {
     @GetMapping()
     public ResponseEntity<List<SpotlightRes>> getSpotlights() {
         List<SpotlightRes> spotlights = spotlightService.getHeroSpotlights();
-        return new ResponseEntity<>(spotlights, HttpStatus.valueOf("RETRIEVED"));
+        return new ResponseEntity<>(spotlights, HttpStatus.OK);
     }
 
     @GetMapping("/category")
     public ResponseEntity<List<CategorySpotlightRes>> getSpotlightsForCategory() {
         List<CategorySpotlightRes> spotlights = spotlightService.getSpotlightsForCategory();
-        return new ResponseEntity<>(spotlights, HttpStatus.valueOf("RETRIEVED"));
+        return new ResponseEntity<>(spotlights, HttpStatus.OK);
     }
 
     @GetMapping("/catalog")

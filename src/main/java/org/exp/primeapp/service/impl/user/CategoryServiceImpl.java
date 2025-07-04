@@ -5,9 +5,11 @@ import org.exp.primeapp.models.dto.request.CategoryReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
+import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.models.entities.Spotlight;
+import org.exp.primeapp.repository.AttachmentRepository;
 import org.exp.primeapp.repository.CategoryRepository;
 import org.exp.primeapp.repository.ProductRepository;
 import org.exp.primeapp.repository.SpotlightRepository;
@@ -26,6 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final SpotlightRepository spotlightRepository;
+    private final AttachmentRepository attachmentRepository;
 
     public List<CategoryRes> getResCategories() {
         return categoryRepository.findByActive(true).stream()
@@ -50,9 +53,24 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     public AdminCategoryDashboardRes getCategoryDashboardRes() {
-        List<AdminCategoryRes> categoryResList = categoryRepository.findAllByOrderByOrderNumberAsc().stream().map(this::convertToAdminCategoryRes).toList();
-        List<AdminCategoryRes> activeCategorResList = categoryRepository.findAllByActiveTrueOrderByOrderNumberAsc().stream().map(this::convertToAdminCategoryRes).toList();
-        List<AdminCategoryRes> inactiveCategoryResList = categoryRepository.findAllByActiveFalseOrderByOrderNumberAsc().stream().map(this::convertToAdminCategoryRes).toList();
+        List<AdminCategoryRes> categoryResList = categoryRepository.findAllByOrderByOrderNumberAsc().stream()
+                .map(category -> {
+                    category.setSpotlightName(category.getSpotlight().getName());
+                    return convertToAdminCategoryRes(category);
+                })
+                .toList();
+        List<AdminCategoryRes> activeCategoryResList = categoryRepository.findAllByActiveTrueOrderByOrderNumberAsc().stream()
+                .map(category -> {
+                    category.setSpotlightName(category.getSpotlight().getName());
+                    return convertToAdminCategoryRes(category);
+                })
+                .toList();
+        List<AdminCategoryRes> inactiveCategoryResList = categoryRepository.findAllByActiveFalseOrderByOrderNumberAsc().stream()
+                .map(category -> {
+                    category.setSpotlightName(category.getSpotlight().getName());
+                    return convertToAdminCategoryRes(category);
+                })
+                .toList();
 
         long allCategoryCount = categoryRepository.count();
         long activeCategoryCount = categoryRepository.countByActiveTrue();
@@ -63,7 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .activeCount(activeCategoryCount)
                 .inactiveCount(inactiveCategoryCount)
                 .categoryResList(categoryResList)
-                .activeCategoryResList(activeCategorResList)
+                .activeCategoryResList(activeCategoryResList)
                 .inactiveCategoryResList(inactiveCategoryResList)
                 .build();
     }
@@ -81,19 +99,23 @@ public class CategoryServiceImpl implements CategoryService {
     public AdminCategoryRes saveCategory(CategoryReq categoryReq) {
         Category category;
         Optional<Spotlight> optionalSpotlight = spotlightRepository.findById(categoryReq.spotlightId());
+        Optional<Attachment> optionalAttachment = attachmentRepository.findById(categoryReq.imageId());
+        long count = categoryRepository.count();
 
         if (optionalSpotlight.isEmpty()) {
             category = Category.builder()
                     .name(categoryReq.name())
+                    .image(optionalAttachment.get())
                     .spotlight(null)
-                    .active(true)
+                    .orderNumber(++count)
                     .build();
         } else {
             Spotlight spotlight = optionalSpotlight.get();
             category = Category.builder()
                     .name(categoryReq.name())
                     .spotlight(spotlight)
-                    .active(true)
+                    .spotlightName(spotlight.getName())
+                    .orderNumber(++count)
                     .build();
         }
         Category saved = categoryRepository.save(category);
@@ -106,6 +128,7 @@ public class CategoryServiceImpl implements CategoryService {
     public AdminCategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setName(categoryReq.name());
+        category.setSpotlightName(category.getSpotlight().getName());
         Category saved = categoryRepository.save(category);
         System.out.println("Category updated successfully");
         return convertToAdminCategoryRes(saved);
@@ -166,11 +189,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public List<AdminCategoryRes> updateCategoryOrder(Map<Long, Integer> categoryOrderMap) {
+    public List<AdminCategoryRes> updateCategoryOrder(Map<Long, Long> categoryOrderMap) {
         List<Category> categories = categoryRepository.findAllById(categoryOrderMap.keySet());
 
         for (Category category : categories) {
-            Integer newOrder = categoryOrderMap.get(category.getId());
+            Long newOrder = categoryOrderMap.get(category.getId());
             category.setOrderNumber(newOrder);
         }
 
@@ -188,6 +211,8 @@ public class CategoryServiceImpl implements CategoryService {
         return new AdminCategoryRes(
                 category.getId(),
                 category.getName(),
+                category.getImage().getKey(),
+                category.getSpotlightName(),
                 category.getOrderNumber(),
                 category.getActive()
         );

@@ -34,8 +34,8 @@ public class AdminCategoriesController {
     }
 
     @PatchMapping("/order")
-    public ResponseEntity<List<AdminCategoryRes>> updateCategoriesOrder(@RequestBody Map<Long, Integer> categoryOrderMap) {
+    public ResponseEntity<List<AdminCategoryRes>> updateCategoriesOrder(@RequestBody Map<Long, Long> categoryOrderMap) {
         List<AdminCategoryRes> updatedCategories = categoryService.updateCategoryOrder(categoryOrderMap);
-        return new ResponseEntity<>(updatedCategories, HttpStatus.valueOf("ORDER_UPDATED"));
+        return new ResponseEntity<>(updatedCategories, HttpStatus.OK);
     }
 }

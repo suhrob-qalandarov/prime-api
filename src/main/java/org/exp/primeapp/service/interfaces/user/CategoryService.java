@@ -29,7 +29,7 @@ public interface CategoryService {
 
     void toggleCategoryActiveStatusWithProductActiveStatus(Long categoryId);
 
-    List<AdminCategoryRes> updateCategoryOrder(Map<Long, Integer> categoryOrderMap);
+    List<AdminCategoryRes> updateCategoryOrder(Map<Long, Long> categoryOrderMap);
 
     List<CategoryRes> getSpotlightCategories(Long spotlightId);
 }
