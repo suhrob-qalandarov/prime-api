@@ -49,6 +49,11 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .build();
     }
 
+    @Override
+    public void toggleProductUpdate(Long productId) {
+        productRepository.toggleProductUpdateStatus(productId);
+    }
+
     @Transactional
     public AdminProductRes convertToAdminProductRes(Product product) {
         return new AdminProductRes(
@@ -194,16 +199,6 @@ public class AdminProductServiceImpl implements AdminProductService {
         }
     }
 
-    @Transactional
-    @Override
-    public ApiResponse activateProduct(Long productId) {
-        int affected = productRepository.updateActive(true, productId);
-        if (affected > 0) {
-            return new ApiResponse(true, "Product activated successfully");
-        } else {
-            return new ApiResponse(false, "Product not found with id or already active");
-        }
-    }
 
     @Override
     public List<Product> getActiveProductsForAdmin() {
