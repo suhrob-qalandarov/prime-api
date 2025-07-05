@@ -19,11 +19,12 @@ public interface AdminProductService {
 
     ApiResponse deactivateProduct(Long productId);
 
-    ApiResponse activateProduct(Long productId);
 
     List<Product> getActiveProductsForAdmin();
 
     List<Product> getInactiveProductsForAdmin();
 
     AdminProductDashboardRes getProductDashboarRes();
+
+    void toggleProductUpdate(Long productId);
 }
