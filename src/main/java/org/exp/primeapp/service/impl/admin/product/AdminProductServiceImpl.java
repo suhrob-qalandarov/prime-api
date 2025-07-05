@@ -59,6 +59,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         return new AdminProductRes(
                 product.getId(),
                 product.getName(),
+                product.getDiscount(),
                 product.getActive(),
                 product.getStatus().name(),
                 product.getCategory().getName(),
@@ -105,11 +106,12 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .name(req.getName())
                 .description(req.getDescription())
                 .price(req.getPrice())
+                .discount(req.getDiscount())
                 .active(req.getActive())
                 .status(req.getStatus())
                 .category(category)
                 .attachments(attachments)
-                .sizes(new HashSet<>()) // aniq boshlang‘ich qiymat
+                .sizes(new HashSet<>())
                 .build();
 
         // ProductSize'larni qo‘shamiz
@@ -166,6 +168,10 @@ public class AdminProductServiceImpl implements AdminProductService {
 
         if (req.getPrice() != null) {
             product.setPrice(req.getPrice());
+        }
+
+        if (req.getDiscount() != null) {
+            product.setDiscount(req.getDiscount());
         }
 
         if (req.getStatus() != null) {
