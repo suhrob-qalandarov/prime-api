@@ -189,33 +189,24 @@
         <div class="category-navigation">
             <div class="category-breadcrumbs">
                 <a href="/index.html">Asosiy</a> /
-                <!-- UPDATED: Spotlight Select Box -->
+                <!-- UPDATED: Custom Spotlight Button -->
                 <div class="spotlight-selector-container">
-                    <select class="spotlight-selector" id="spotlightSelector">
-                        <option value="">Spotlight tanlang...</option>
+                    <select class="spotlight-selector filter-style" id="spotlightSelector">
+                        <option value="all">Barchasi</option>
                     </select>
-                    <i class="fas fa-chevron-down spotlight-selector-icon"></i>
+                    <button class="spotlight-custom-btn" id="spotlightCustomBtn">
+                        Barchasi
+                    </button>
+                    <div class="spotlight-custom-dropdown" id="spotlightCustomDropdown" style="display: none;">
+                        <!-- Dropdown items will be populated here -->
+                    </div>
                 </div>
             </div>
 
-            <!-- Top Categories Navigation - Updated to show selected spotlight categories -->
+            <!-- Top Categories Navigation -->
             <div class="top-categories-navigation">
-                <div class="spotlight-info" id="spotlightInfo" style="display: none;">
-                    <h3 class="spotlight-title" id="spotlightTitle"></h3>
-                    <p class="spotlight-description">Quyidagi kategoriyalardan birini tanlang:</p>
-                </div>
-
                 <div class="top-categories" id="topCategories">
-                    <!-- Categories will be populated here based on selected spotlight -->
-                </div>
-
-                <!-- No Selection State -->
-                <div class="no-spotlight-selected" id="noSpotlightSelected">
-                    <div class="no-selection-message">
-                        <i class="fas fa-lightbulb"></i>
-                        <h4>Spotlight tanlang</h4>
-                        <p>Mahsulotlarni ko'rish uchun yuqoridan spotlight tanlang</p>
-                    </div>
+                    <!-- Categories will be populated here -->
                 </div>
             </div>
         </div>

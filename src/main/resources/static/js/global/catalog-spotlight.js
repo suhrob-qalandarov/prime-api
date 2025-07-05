@@ -1,4 +1,4 @@
-// Product catalog functionality - only product-related changes
+// Product catalog functionality - FIXED VERSION
 
 document.addEventListener("DOMContentLoaded", async () => {
     // Wait for API to be available
@@ -40,104 +40,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     initializeFilterEvents()
 
     console.log("Spotlight Catalog initialized successfully!")
-
-    // Remove image zoom functionality
-    const productImages = document.querySelectorAll(".product-image")
-
-    productImages.forEach((image) => {
-        // Remove any existing zoom event listeners
-        image.removeEventListener("click", zoomImage)
-
-        // Add simple click handler without zoom
-        image.addEventListener("click", function () {
-            // Just trigger quick view instead of zoom
-            const productCard = this.closest(".product-card")
-            const quickViewBtn = productCard.querySelector(".quick-view-btn")
-            if (quickViewBtn) {
-                quickViewBtn.click()
-            }
-        })
-    })
-
-    // Quick view button functionality
-    const quickViewBtns = document.querySelectorAll(".quick-view-btn")
-
-    quickViewBtns.forEach((btn) => {
-        btn.addEventListener("click", function (e) {
-            e.stopPropagation()
-            const productId = this.dataset.productId
-            openQuickView(productId)
-        })
-    })
-
-    // Product hover effects for name and price
-    const productCards = document.querySelectorAll(".product-card")
-
-    productCards.forEach((card) => {
-        const productName = card.querySelector(".product-name")
-        const productPrice = card.querySelector(".product-price")
-
-        // Add click handlers for name and price
-        if (productName) {
-            productName.addEventListener("click", () => {
-                const quickViewBtn = card.querySelector(".quick-view-btn")
-                if (quickViewBtn) {
-                    quickViewBtn.click()
-                }
-            })
-        }
-
-        if (productPrice) {
-            productPrice.addEventListener("click", () => {
-                const quickViewBtn = card.querySelector(".quick-view-btn")
-                if (quickViewBtn) {
-                    quickViewBtn.click()
-                }
-            })
-        }
-    })
 })
 
-// Remove zoom image function
-function zoomImage() {
-    // This function is now disabled
-    return false
-}
-
-// Quick view modal opener
-function openQuickView(productId) {
-    // Your existing quick view logic here
+// Quick view modal opener - FIXED
+function openProductQuickView(productId) {
     console.log("Opening quick view for product:", productId)
 
     // Trigger quick view modal
-    const showQuickView = window.showQuickView // Declare the variable before using it
-    if (typeof showQuickView === "function") {
-        showQuickView(productId)
+    if (typeof window.showQuickView === "function") {
+        window.showQuickView(productId)
+    } else {
+        console.error("showQuickView function not found")
     }
 }
 
-// Filter and sort functionality (unchanged)
-function filterProducts(category) {
-    const products = document.querySelectorAll(".product-card")
-
-    products.forEach((product) => {
-        if (category === "all" || product.dataset.category === category) {
-            product.style.display = "block"
-        } else {
-            product.style.display = "none"
-        }
-    })
-}
-
 // ======================================================
-// GLOBAL VARIABLES
+// GLOBAL VARIABLES - UPDATED
 // ======================================================
 let spotlights = []
+let allCategories = []
 let currentSpotlight = null
 let currentCategories = []
 let products = []
 let currentCategoryId = null
 let currentSortBy = ""
+let isAllCategoriesMode = true
 
 // ======================================================
 // SPOTLIGHT API FUNCTIONS
@@ -149,7 +76,10 @@ let currentSortBy = ""
  */
 async function fetchSpotlightCategories() {
     try {
-        console.log("Fetching spotlight categories from:", `${window.API_BASE_URL || "http://localhost/"}api/v1/spotlights/catalog`)
+        console.log(
+            "Fetching spotlight categories from:",
+            `${window.API_BASE_URL || "http://localhost/"}api/v1/spotlights/catalog`,
+        )
 
         const response = await fetch(`${window.API_BASE_URL || "http://localhost/"}api/v1/spotlights/catalog`, {
             method: "GET",
@@ -172,27 +102,34 @@ async function fetchSpotlightCategories() {
 }
 
 // ======================================================
-// INITIALIZATION FUNCTIONS
+// INITIALIZATION FUNCTIONS - UPDATED
 // ======================================================
 
 /**
- * Initialize spotlight catalog page
+ * Initialize spotlight catalog page - UPDATED
  */
 async function initializeSpotlightCatalog() {
     try {
         window.API.showLoading(true)
 
-        // Load spotlights from API
-        spotlights = await fetchSpotlightCategories()
+        // Load spotlights and all categories
+        const [spotlightsData, categoriesData] = await Promise.all([
+            fetchSpotlightCategories(),
+            window.API.fetchCategories(),
+        ])
 
-        // Populate spotlight selector
-        populateSpotlightSelector()
+        spotlights = spotlightsData
+        allCategories = categoriesData
 
-        // Initialize spotlight selector events
-        initializeSpotlightSelector()
+        // Populate custom spotlight dropdown
+        populateCustomSpotlightDropdown()
 
-        // Show initial state (no spotlight selected)
-        showNoSpotlightState()
+        // Initialize custom spotlight dropdown events
+        initializeCustomSpotlightDropdown()
+
+        // Show all categories by default and auto-select "Barcha kategoriyalar"
+        await handleAllCategoriesSelection()
+        await autoSelectAllProducts() // NEW: Auto-select all products
 
         window.API.showLoading(false)
         console.log("Spotlight catalog initialized successfully!")
@@ -200,82 +137,121 @@ async function initializeSpotlightCatalog() {
         console.error("Error initializing spotlight catalog:", error)
         window.API.showLoading(false)
         window.API.showErrorMessage("Sahifani yuklashda xatolik yuz berdi")
-
-        // Show fallback state
         showErrorState()
     }
 }
 
 /**
- * Populate spotlight selector dropdown
+ * Populate custom spotlight dropdown - NEW
  */
-function populateSpotlightSelector() {
-    const spotlightSelector = document.getElementById("spotlightSelector")
-    if (!spotlightSelector) return
+function populateCustomSpotlightDropdown() {
+    const spotlightCustomDropdown = document.getElementById("spotlightCustomDropdown")
+    if (!spotlightCustomDropdown) return
 
-    // Clear existing options except the first one
-    spotlightSelector.innerHTML = '<option value="">Spotlight tanlang...</option>'
+    // Clear existing items
+    spotlightCustomDropdown.innerHTML = ""
+
+    // Add "Barchasi" option
+    const allItem = document.createElement("div")
+    allItem.className = "spotlight-dropdown-item selected"
+    allItem.setAttribute("data-value", "all")
+    allItem.textContent = "Barchasi"
+    spotlightCustomDropdown.appendChild(allItem)
 
     // Add spotlight options
-    spotlights.forEach(spotlight => {
-        const option = document.createElement("option")
-        option.value = spotlight.id
-        option.textContent = spotlight.name
-        spotlightSelector.appendChild(option)
+    spotlights.forEach((spotlight) => {
+        const item = document.createElement("div")
+        item.className = "spotlight-dropdown-item"
+        item.setAttribute("data-value", spotlight.id)
+        item.textContent = spotlight.name
+        spotlightCustomDropdown.appendChild(item)
     })
 
-    console.log(`Populated ${spotlights.length} spotlights in selector`)
+    console.log(`Populated ${spotlights.length} spotlights in custom dropdown`)
 }
 
 /**
- * Initialize spotlight selector events
+ * Initialize custom spotlight dropdown events - NEW
  */
-function initializeSpotlightSelector() {
-    const spotlightSelector = document.getElementById("spotlightSelector")
-    if (!spotlightSelector) return
+function initializeCustomSpotlightDropdown() {
+    const spotlightCustomBtn = document.getElementById("spotlightCustomBtn")
+    const spotlightCustomDropdown = document.getElementById("spotlightCustomDropdown")
 
-    spotlightSelector.addEventListener("change", async (e) => {
-        const selectedSpotlightId = e.target.value
+    if (!spotlightCustomBtn || !spotlightCustomDropdown) return
 
-        if (!selectedSpotlightId) {
-            // No spotlight selected
-            showNoSpotlightState()
-            return
+    // Toggle dropdown on button click
+    spotlightCustomBtn.addEventListener("click", (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const isVisible = spotlightCustomDropdown.style.display === "block"
+        spotlightCustomDropdown.style.display = isVisible ? "none" : "block"
+        spotlightCustomBtn.classList.toggle("active", !isVisible)
+    })
+
+    // Handle dropdown item clicks
+    spotlightCustomDropdown.addEventListener("click", async (e) => {
+        const item = e.target.closest(".spotlight-dropdown-item")
+        if (!item) return
+
+        const selectedValue = item.getAttribute("data-value")
+        const selectedText = item.textContent
+
+        // Update button text
+        spotlightCustomBtn.textContent = selectedText
+
+        // Update selected state
+        spotlightCustomDropdown.querySelectorAll(".spotlight-dropdown-item").forEach((i) => {
+            i.classList.remove("selected")
+        })
+        item.classList.add("selected")
+
+        // Close dropdown
+        spotlightCustomDropdown.style.display = "none"
+        spotlightCustomBtn.classList.remove("active")
+
+        // Handle selection
+        if (selectedValue === "all") {
+            await handleAllCategoriesSelection()
+            clearSpotlightFilter()
+        } else {
+            const selectedSpotlight = spotlights.find((s) => s.id.toString() === selectedValue)
+            if (selectedSpotlight) {
+                await handleSpotlightSelection(selectedSpotlight)
+                updateSpotlightFilter(selectedSpotlight.name)
+            }
         }
+    })
 
-        // Find selected spotlight
-        const selectedSpotlight = spotlights.find(s => s.id.toString() === selectedSpotlightId)
-        if (!selectedSpotlight) {
-            console.error("Selected spotlight not found:", selectedSpotlightId)
-            return
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!spotlightCustomDropdown.contains(e.target) && !spotlightCustomBtn.contains(e.target)) {
+            spotlightCustomDropdown.style.display = "none"
+            spotlightCustomBtn.classList.remove("active")
         }
-
-        // Handle spotlight selection
-        await handleSpotlightSelection(selectedSpotlight)
     })
 }
 
 // ======================================================
-// SPOTLIGHT HANDLING FUNCTIONS
+// SPOTLIGHT HANDLING FUNCTIONS - UPDATED
 // ======================================================
 
 /**
- * Handle spotlight selection
+ * Handle spotlight selection - UPDATED
  */
 async function handleSpotlightSelection(spotlight) {
     try {
         window.API.showLoading(true)
 
+        isAllCategoriesMode = false
         currentSpotlight = spotlight
         currentCategories = spotlight.categories || []
 
         console.log("Selected spotlight:", spotlight)
         console.log("Available categories:", currentCategories)
 
-        // Update UI
-        showSpotlightInfo(spotlight)
+        // Render spotlight categories (without "Barcha kategoriyalar" button)
         renderSpotlightCategories(currentCategories)
-        hideNoSpotlightState()
 
         // Clear products initially
         clearProducts()
@@ -302,7 +278,7 @@ function showSpotlightInfo(spotlight) {
 }
 
 /**
- * Render spotlight categories
+ * Render spotlight categories - UPDATED
  */
 function renderSpotlightCategories(categories) {
     const topCategories = document.getElementById("topCategories")
@@ -320,7 +296,7 @@ function renderSpotlightCategories(categories) {
     }
 
     // Create category buttons
-    categories.forEach(category => {
+    categories.forEach((category) => {
         const categoryBtn = document.createElement("button")
         categoryBtn.className = "top-category-btn"
         categoryBtn.setAttribute("data-category-id", category.id)
@@ -331,7 +307,7 @@ function renderSpotlightCategories(categories) {
             await handleCategorySelection(category)
 
             // Update active states
-            topCategories.querySelectorAll(".top-category-btn").forEach(btn => {
+            topCategories.querySelectorAll(".top-category-btn").forEach((btn) => {
                 btn.classList.remove("active")
             })
             categoryBtn.classList.add("active")
@@ -344,7 +320,7 @@ function renderSpotlightCategories(categories) {
 }
 
 /**
- * Handle category selection within spotlight
+ * Handle category selection - UPDATED
  */
 async function handleCategorySelection(category) {
     try {
@@ -370,7 +346,7 @@ async function handleCategorySelection(category) {
             renderProducts(products)
         }
 
-        // Update selected filters display
+        // Update selected filters display - keep spotlight filter
         updateSelectedCategoryTag(category.name)
 
         window.API.showLoading(false)
@@ -382,7 +358,7 @@ async function handleCategorySelection(category) {
 }
 
 // ======================================================
-// UI STATE FUNCTIONS
+// UI STATE FUNCTIONS - UPDATED
 // ======================================================
 
 /**
@@ -463,7 +439,7 @@ function clearProducts() {
 // ======================================================
 
 /**
- * Render products
+ * Render products - UPDATED with proper quick view
  */
 function renderProducts(productsData) {
     const productsGrid = document.getElementById("productsGrid")
@@ -482,6 +458,62 @@ function renderProducts(productsData) {
     productsData.forEach((product) => {
         const productCard = createProductCard(product)
         if (productsGrid) productsGrid.appendChild(productCard)
+    })
+
+    // Re-initialize quick view buttons after rendering
+    initializeQuickViewButtons()
+}
+
+/**
+ * Initialize quick view buttons - NEW
+ */
+function initializeQuickViewButtons() {
+    const quickViewBtns = document.querySelectorAll(".catalog-quick-view-btn")
+    const mobileQuickViewBtns = document.querySelectorAll(".catalog-mobile-quick-view-icon")
+
+    quickViewBtns.forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation()
+            const productId = this.dataset.productId
+            openProductQuickView(productId)
+        })
+    })
+
+    mobileQuickViewBtns.forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation()
+            const productId = this.getAttribute("onclick").match(/\d+/)[0]
+            openProductQuickView(productId)
+        })
+    })
+
+    // Product hover effects for name and price
+    const productCards = document.querySelectorAll(".catalog-product-card")
+
+    productCards.forEach((card) => {
+        const productName = card.querySelector(".catalog-product-name")
+        const productPrice = card.querySelector(".catalog-product-pricing")
+
+        // Add click handlers for name and price
+        if (productName) {
+            productName.addEventListener("click", () => {
+                const quickViewBtn = card.querySelector(".catalog-quick-view-btn")
+                if (quickViewBtn) {
+                    const productId = quickViewBtn.dataset.productId
+                    openProductQuickView(productId)
+                }
+            })
+        }
+
+        if (productPrice) {
+            productPrice.addEventListener("click", () => {
+                const quickViewBtn = card.querySelector(".catalog-quick-view-btn")
+                if (quickViewBtn) {
+                    const productId = quickViewBtn.dataset.productId
+                    openProductQuickView(productId)
+                }
+            })
+        }
     })
 }
 
@@ -525,7 +557,7 @@ function createProductCard(product) {
     }
           ${statusBadge}
           <img src="${mainImageUrl}" alt="${product.name}" class="catalog-product-image">
-          <button class="catalog-quick-view-btn" onclick="openProductQuickView(${product.id})">
+          <button class="catalog-quick-view-btn" data-product-id="${product.id}">
               Quick View
           </button>
           <button class="catalog-mobile-quick-view-icon" onclick="openProductQuickView(${product.id})">
@@ -768,7 +800,7 @@ function clearAllFilters() {
 }
 
 // ======================================================
-// UTILITY FUNCTIONS
+// UTILITY FUNCTIONS - UPDATED
 // ======================================================
 
 /**
@@ -788,9 +820,9 @@ function updateSelectedCategoryTag(categoryName) {
     const selectedFilters = document.getElementById("selectedFilters")
     if (!selectedFilters) return
 
-    // Clear existing category tags
+    // Clear existing category tags (but keep spotlight tags)
     const existingCategoryTags = selectedFilters.querySelectorAll(
-        ".selected-filter-tag:not(.size-filter-tag):not(.status-filter-tag)"
+        ".selected-filter-tag:not(.size-filter-tag):not(.status-filter-tag):not(.spotlight-filter-tag)",
     )
     existingCategoryTags.forEach((tag) => tag.remove())
 
@@ -802,7 +834,7 @@ function updateSelectedCategoryTag(categoryName) {
         <span>${categoryName}</span>
         <button class="remove-filter" onclick="clearCategoryFilter()">×</button>
     `
-        selectedFilters.insertBefore(tag, selectedFilters.firstChild)
+        selectedFilters.appendChild(tag)
     }
 }
 
@@ -914,6 +946,193 @@ function initializeSearch() {
     }
 }
 
+/**
+ * Handle "Barchasi" (All categories) selection - UPDATED
+ */
+async function handleAllCategoriesSelection() {
+    try {
+        window.API.showLoading(true)
+
+        isAllCategoriesMode = true
+        currentSpotlight = null
+        currentCategories = allCategories
+
+        console.log("Showing all categories:", allCategories)
+
+        // Render all categories with "Barcha kategoriyalar" button
+        renderAllCategories(allCategories)
+
+        // Clear products initially
+        clearProducts()
+
+        window.API.showLoading(false)
+    } catch (error) {
+        console.error("Error handling all categories selection:", error)
+        window.API.showLoading(false)
+        window.API.showErrorMessage("Kategoriyalarni yuklashda xatolik yuz berdi")
+    }
+}
+
+/**
+ * Render all categories with "Barcha kategoriyalar" button - UPDATED
+ */
+function renderAllCategories(categories) {
+    const topCategories = document.getElementById("topCategories")
+    if (!topCategories) return
+
+    topCategories.innerHTML = ""
+
+    // Add "Barcha kategoriyalar" button first
+    const allCategoriesBtn = document.createElement("button")
+    allCategoriesBtn.className = "top-category-btn"
+    allCategoriesBtn.setAttribute("data-category-id", "all")
+    allCategoriesBtn.textContent = "Barcha kategoriyalar"
+
+    // Add click event for all products
+    allCategoriesBtn.addEventListener("click", async () => {
+        await handleAllProductsSelection()
+
+        // Update active states
+        topCategories.querySelectorAll(".top-category-btn").forEach((btn) => {
+            btn.classList.remove("active")
+        })
+        allCategoriesBtn.classList.add("active")
+    })
+
+    topCategories.appendChild(allCategoriesBtn)
+
+    // Add individual category buttons
+    if (categories && categories.length > 0) {
+        categories.forEach((category) => {
+            const categoryBtn = document.createElement("button")
+            categoryBtn.className = "top-category-btn"
+            categoryBtn.setAttribute("data-category-id", category.id)
+            categoryBtn.textContent = category.name
+
+            // Add click event
+            categoryBtn.addEventListener("click", async () => {
+                await handleCategorySelection(category)
+
+                // Update active states
+                topCategories.querySelectorAll(".top-category-btn").forEach((btn) => {
+                    btn.classList.remove("active")
+                })
+                categoryBtn.classList.add("active")
+            })
+
+            topCategories.appendChild(categoryBtn)
+        })
+    }
+
+    console.log(`Rendered ${categories.length} categories with "Barcha kategoriyalar" button`)
+}
+
+/**
+ * Handle "Barcha kategoriyalar" button selection - UPDATED
+ */
+async function handleAllProductsSelection() {
+    try {
+        window.API.showLoading(true)
+
+        currentCategoryId = null
+
+        console.log("Loading all products")
+
+        // Fetch all products
+        products = await window.API.fetchAllProducts()
+
+        // Update products count
+        updateProductsCount(products.length)
+
+        // Clear filters when showing all products
+        clearAllFilters()
+
+        // Render products
+        if (currentSortBy) {
+            sortProducts(products, currentSortBy)
+        } else {
+            renderProducts(products)
+        }
+
+        // Update selected filters display
+        updateSelectedCategoryTag("Barcha kategoriyalar")
+
+        window.API.showLoading(false)
+    } catch (error) {
+        console.error("Error handling all products selection:", error)
+        window.API.showLoading(false)
+        window.API.showErrorMessage("Barcha mahsulotlarni yuklashda xatolik yuz berdi")
+    }
+}
+
+/**
+ * Auto-select all products on page load - NEW
+ */
+async function autoSelectAllProducts() {
+    try {
+        // Auto-click "Barcha kategoriyalar" button
+        const allCategoriesBtn = document.querySelector('[data-category-id="all"]')
+        if (allCategoriesBtn) {
+            allCategoriesBtn.click()
+        }
+    } catch (error) {
+        console.error("Error auto-selecting all products:", error)
+    }
+}
+
+/**
+ * Update spotlight filter display - UPDATED
+ */
+function updateSpotlightFilter(spotlightName) {
+    const selectedFilters = document.getElementById("selectedFilters")
+    if (!selectedFilters) return
+
+    // Clear existing spotlight tags
+    const existingSpotlightTags = selectedFilters.querySelectorAll(".spotlight-filter-tag")
+    existingSpotlightTags.forEach((tag) => tag.remove())
+
+    // Add spotlight tag
+    if (spotlightName) {
+        const tag = document.createElement("div")
+        tag.className = "selected-filter-tag spotlight-filter-tag"
+        tag.innerHTML = `
+        <span>Spotlight: ${spotlightName}</span>
+        <button class="remove-filter" onclick="clearSpotlightFilter()">×</button>
+    `
+        selectedFilters.insertBefore(tag, selectedFilters.firstChild)
+    }
+}
+
+/**
+ * Clear spotlight filter - UPDATED
+ */
+function clearSpotlightFilter() {
+    const selectedFilters = document.getElementById("selectedFilters")
+    if (selectedFilters) {
+        const spotlightTags = selectedFilters.querySelectorAll(".spotlight-filter-tag")
+        spotlightTags.forEach((tag) => tag.remove())
+    }
+
+    // Reset custom spotlight button to "Barchasi"
+    const spotlightCustomBtn = document.getElementById("spotlightCustomBtn")
+    const spotlightCustomDropdown = document.getElementById("spotlightCustomDropdown")
+
+    if (spotlightCustomBtn) {
+        spotlightCustomBtn.textContent = "Barchasi"
+    }
+
+    if (spotlightCustomDropdown) {
+        // Update selected state in dropdown
+        spotlightCustomDropdown.querySelectorAll(".spotlight-dropdown-item").forEach((item) => {
+            item.classList.remove("selected")
+        })
+        const allItem = spotlightCustomDropdown.querySelector('[data-value="all"]')
+        if (allItem) {
+            allItem.classList.add("selected")
+        }
+    }
+}
+
 // Export functions for global access
 window.SpotlightCatalogAPI = {
     initializeSpotlightCatalog,
@@ -928,3 +1147,5 @@ window.SpotlightCatalogAPI = {
 // Make functions globally available
 window.clearCategoryFilter = clearCategoryFilter
 window.removeSizeFilter = removeSizeFilter
+window.clearSpotlightFilter = clearSpotlightFilter
+window.openProductQuickView = openProductQuickView
