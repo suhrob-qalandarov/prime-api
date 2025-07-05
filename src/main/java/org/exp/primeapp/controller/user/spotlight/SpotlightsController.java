@@ -39,6 +39,6 @@ public class SpotlightsController {
     @GetMapping("/catalog")
     public ResponseEntity<List<CatalogSpotlightRes>> getCatalogSpotlights() {
         List<CatalogSpotlightRes> catalogSpotlights = spotlightService.getCatalogSpotlightsWithCategories();
-        return new ResponseEntity<>(catalogSpotlights, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(catalogSpotlights, HttpStatus.OK);
     }
 }
