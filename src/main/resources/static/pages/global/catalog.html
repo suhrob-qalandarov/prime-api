@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/global/styles.css">
     <link rel="stylesheet" href="/css/global/catalog.css">
+    <link rel="stylesheet" href="/css/global/catalog-spotlight.css">
     <link rel="stylesheet" href="/css/global/quick-view.css">
 </head>
 
@@ -187,16 +188,34 @@
         <!-- Kategoriya Navigatsiyasi -->
         <div class="category-navigation">
             <div class="category-breadcrumbs">
-                <a href="/index.html">Asosiy</a> / <span class="active-category" id="activeCategoryName">Barcha mahsulotlar</span>
+                <a href="/index.html">Asosiy</a> /
+                <!-- UPDATED: Spotlight Select Box -->
+                <div class="spotlight-selector-container">
+                    <select class="spotlight-selector" id="spotlightSelector">
+                        <option value="">Spotlight tanlang...</option>
+                    </select>
+                    <i class="fas fa-chevron-down spotlight-selector-icon"></i>
+                </div>
             </div>
 
-            <!-- Top Categories Navigation -->
+            <!-- Top Categories Navigation - Updated to show selected spotlight categories -->
             <div class="top-categories-navigation">
-                <button class="top-category-btn active" id="barchasiTopBtn" data-category-id="all">
-                    Barcha mahsulotlar
-                </button>
+                <div class="spotlight-info" id="spotlightInfo" style="display: none;">
+                    <h3 class="spotlight-title" id="spotlightTitle"></h3>
+                    <p class="spotlight-description">Quyidagi kategoriyalardan birini tanlang:</p>
+                </div>
+
                 <div class="top-categories" id="topCategories">
-                    <!-- Categories will be populated here -->
+                    <!-- Categories will be populated here based on selected spotlight -->
+                </div>
+
+                <!-- No Selection State -->
+                <div class="no-spotlight-selected" id="noSpotlightSelected">
+                    <div class="no-selection-message">
+                        <i class="fas fa-lightbulb"></i>
+                        <h4>Spotlight tanlang</h4>
+                        <p>Mahsulotlarni ko'rish uchun yuqoridan spotlight tanlang</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -258,7 +277,7 @@
                         <span>Mahsulotlar topildi: <span id="productsCount">0</span></span>
                     </div>
                     <div class="selected-filters" id="selectedFilters">
-                        <!-- Selected category will appear here -->
+                        <!-- Selected filters will appear here -->
                     </div>
                 </div>
             </div>
@@ -372,7 +391,7 @@
 
 <script src="/js/api.js"></script>
 <script src="/js/global/script.js"></script>
-<script src="/js/global/catalog.js"></script>
+<script src="/js/global/catalog-spotlight.js"></script>
 <script src="/js/global/quick-view.js"></script>
 <script src="/js/util/discount.js"></script>
 </body>
