@@ -36,10 +36,10 @@ public class AdminProductController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/activate/{productId}")
-    public ResponseEntity<ApiResponse> activateProduct(@PathVariable Long productId) {
-        ApiResponse response = adminProductService.activateProduct(productId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    @PatchMapping("/toggle/{productId}")
+    public ResponseEntity<Void> activateProduct(@PathVariable Long productId) {
+        adminProductService.toggleProductUpdate(productId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/deactivate/{productId}")
