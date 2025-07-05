@@ -28,4 +28,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
     long countByActive(Boolean active);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Product p SET p.active = CASE WHEN p.active = true THEN false ELSE true END WHERE p.id = :productId")
+    void toggleProductUpdateStatus(@Param("productId") Long productId);
 }
