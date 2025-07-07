@@ -3,7 +3,7 @@
 // ======================================================
 
 // API Base URL - Updated to correct URL
-const API_BASE_URL = "http://13.61.34.28//" //192.168.1.2
+const API_BASE_URL = "http://13.61.34.28/" //192.168.1.2
 
 // Configure fetch defaults
 const defaultFetchOptions = {
