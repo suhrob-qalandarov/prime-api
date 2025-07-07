@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Just Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/admin/css/dashboard.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <i class="fas fa-crown"></i>
+        </div>
+        <h4 class="logo-text">Just Admin</h4>
+        <p class="logo-subtitle">Control Panel</p>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="/desktop/pagesop/pages/admin/dashboard.html" class="nav-link active">
+            <div class="nav-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <span>Dashboard</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="/desktop/pagesop/pages/admin/orders.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-tags"></i>
+            </div>
+            <span>Buyurtmalar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="/desktop/pagesop/pages/admin/categories.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-tags"></i>
+            </div>
+            <span>Kategoriyalar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="/desktop/pagesop/pages/admin/admin-products.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-box-open"></i>
+            </div>
+            <span>Mahsulotlar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="/desktop/pagesop/pages/admin/admin-users.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <span>Foydalanuvchilar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="/desktop/pagesop/pages/admin/admin-files.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <span>Fayllar</span>
+            <div class="nav-indicator"></div>
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-profile">
+            <div class="user-avatar">
+                <i class="fas fa-user-crown"></i>
+            </div>
+            <div class="user-info">
+                <div class="user-name">Admin</div>
+                <div class="user-role">Super Admin</div>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Chiqish</span>
+        </button>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-left">
+            <button class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="breadcrumb">
+                <h1>Dashboard</h1>
+                <p>Boshqaruv paneli</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-actions">
+                <button class="header-btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="header-btn" onclick="toggleFullscreen()">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <a href="/index.html" class="header-btn">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span>Saytga o'tish</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="tab-content active">
+        <div class="stats-grid">
+
+            <div class="stats-card primary">
+                <div class="stats-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
+                        <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+                    </svg>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="total-orders">0</div>
+                    <div class="stats-label">Buyurtmalar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12%</span>
+                    </div>
+                </div>
+                <div class="stats-chart">
+                    <div class="chart-bar" style="height: 60%"></div>
+                    <div class="chart-bar" style="height: 80%"></div>
+                    <div class="chart-bar" style="height: 40%"></div>
+                    <div class="chart-bar" style="height: 90%"></div>
+                    <div class="chart-bar" style="height: 70%"></div>
+                </div>
+            </div>
+
+
+
+            <div class="stats-card primary">
+                <div class="stats-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="total-categories">0</div>
+                    <div class="stats-label">Kategoriyalar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12%</span>
+                    </div>
+                </div>
+                <div class="stats-chart">
+                    <div class="chart-bar" style="height: 60%"></div>
+                    <div class="chart-bar" style="height: 80%"></div>
+                    <div class="chart-bar" style="height: 40%"></div>
+                    <div class="chart-bar" style="height: 90%"></div>
+                    <div class="chart-bar" style="height: 70%"></div>
+                </div>
+            </div>
+
+            <div class="stats-card success">
+                <div class="stats-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="total-products">0</div>
+                    <div class="stats-label">Mahsulotlar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8%</span>
+                    </div>
+                </div>
+                <div class="stats-chart">
+                    <div class="chart-bar" style="height: 70%"></div>
+                    <div class="chart-bar" style="height: 50%"></div>
+                    <div class="chart-bar" style="height: 90%"></div>
+                    <div class="chart-bar" style="height: 60%"></div>
+                    <div class="chart-bar" style="height: 80%"></div>
+                </div>
+            </div>
+
+            <div class="stats-card warning">
+                <div class="stats-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="total-users">0</div>
+                    <div class="stats-label">Foydalanuvchilar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+15%</span>
+                    </div>
+                </div>
+                <div class="stats-chart">
+                    <div class="chart-bar" style="height: 80%"></div>
+                    <div class="chart-bar" style="height: 60%"></div>
+                    <div class="chart-bar" style="height: 70%"></div>
+                    <div class="chart-bar" style="height: 90%"></div>
+                    <div class="chart-bar" style="height: 50%"></div>
+                </div>
+            </div>
+
+            <div class="stats-card info">
+                <div class="stats-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="total-attachments">0</div>
+                    <div class="stats-label">Fayllar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+5%</span>
+                    </div>
+                </div>
+                <div class="stats-chart">
+                    <div class="chart-bar" style="height: 50%"></div>
+                    <div class="chart-bar" style="height: 70%"></div>
+                    <div class="chart-bar" style="height: 60%"></div>
+                    <div class="chart-bar" style="height: 80%"></div>
+                    <div class="chart-bar" style="height: 90%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>So'nggi kategoriyalar</h3>
+                    <button class="card-action" onclick="loadCategories()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="recent-categories" class="recent-items">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Yuklanmoqda...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3>So'nggi mahsulotlar</h3>
+                    <button class="card-action" onclick="loadProducts()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="recent-products" class="recent-items">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Yuklanmoqda...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/admin/js/common/dashboard.js"></script>
+</body>
+</html>

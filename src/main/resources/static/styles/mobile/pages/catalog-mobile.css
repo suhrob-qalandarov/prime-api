@@ -1,0 +1,485 @@
+/* ======================================================
+   MOBILE CATALOG SPECIFIC STYLES
+====================================================== */
+
+/* Mobile Category Navigation */
+.mobile-category-navigation {
+    padding: 15px 0;
+}
+
+.mobile-category-breadcrumbs-centered {
+    text-align: center;
+    font-size: 16px;
+    color: var(--burgundy-dark);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.mobile-category-breadcrumbs-centered a {
+    color: var(--burgundy-dark);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.mobile-category-breadcrumbs-centered a:hover {
+    color: var(--burgundy-light);
+}
+
+/* Mobile Select Boxes Row */
+.mobile-select-boxes-row {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+/* Mobile Spotlight Selector */
+.mobile-spotlight-selector-container {
+    position: relative;
+    width: 100%;
+}
+
+.mobile-spotlight-selector.filter-style {
+    display: none;
+}
+
+.mobile-spotlight-custom-btn {
+    background: var(--light-color);
+    color: #333;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 10px 30px 10px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.mobile-spotlight-custom-btn:focus {
+    border-color: var(--burgundy-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139, 21, 56, 0.1);
+}
+
+.mobile-spotlight-custom-btn::after {
+    content: "▼";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    transition: transform 0.2s ease;
+}
+
+.mobile-spotlight-custom-btn.active::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Mobile Spotlight Custom Dropdown */
+.mobile-spotlight-custom-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 4px;
+}
+
+.mobile-spotlight-dropdown-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s ease;
+    font-size: 14px;
+    color: #333;
+}
+
+.mobile-spotlight-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.mobile-spotlight-dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.mobile-spotlight-dropdown-item.selected {
+    background-color: rgba(139, 21, 56, 0.1);
+    color: var(--burgundy-dark);
+    font-weight: 500;
+}
+
+/* Mobile Categories Selector */
+.mobile-categories-selector-container {
+    position: relative;
+    width: 100%;
+}
+
+.mobile-categories-selector {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 10px 30px 10px 15px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #333;
+    cursor: pointer;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-categories-selector:hover {
+    border-color: #ccc;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.mobile-categories-selector:focus {
+    border-color: var(--burgundy-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139, 21, 56, 0.1);
+}
+
+.mobile-categories-selector:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.mobile-categories-selector-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    pointer-events: none;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+/* Mobile Filter Bar */
+.mobile-filter-bar {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-filter-bar-top {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.mobile-filter-left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.mobile-filter-btn {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.mobile-filter-btn:hover {
+    border-color: var(--burgundy-color);
+    color: var(--burgundy-color);
+}
+
+/* Mobile Filter Dropdown */
+.mobile-filter-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    margin-top: 4px;
+    padding: 15px;
+}
+
+.mobile-filter-section h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--burgundy-dark);
+}
+
+.mobile-size-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mobile-size-filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.mobile-size-filter-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+}
+
+.mobile-size-filter-item.active {
+    background-color: rgba(139, 21, 56, 0.1);
+    border-radius: 4px;
+    padding: 6px 8px;
+}
+
+/* Mobile Status Filter Buttons */
+.mobile-filter-middle {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mobile-status-filter-btn {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mobile-status-filter-btn:hover {
+    border-color: var(--burgundy-color);
+    color: var(--burgundy-color);
+}
+
+.mobile-status-filter-btn.active {
+    background: var(--burgundy-color);
+    border-color: var(--burgundy-color);
+    color: white;
+}
+
+/* Mobile Sort Container */
+.mobile-filter-bar-middle {
+    margin-bottom: 15px;
+}
+
+.mobile-sort-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.mobile-sort-select-compact {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+    transition: all 0.2s ease;
+}
+
+.mobile-sort-select-compact:hover {
+    border-color: #ccc;
+}
+
+.mobile-sort-select-compact:focus {
+    border-color: var(--burgundy-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139, 21, 56, 0.1);
+}
+
+.mobile-sort-select-compact.has-selection {
+    border-color: var(--burgundy-color);
+    background-color: rgba(139, 21, 56, 0.05);
+}
+
+/* Mobile Filter Bar Bottom */
+.mobile-filter-bar-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mobile-selected-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mobile-selected-filters .selected-filter-tag {
+    background: rgba(139, 21, 56, 0.1);
+    border: 1px solid var(--burgundy-color);
+    color: var(--burgundy-dark);
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mobile-selected-filters .remove-filter {
+    background: var(--burgundy-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Mobile Products Container */
+.mobile-products-container {
+    padding: 0;
+}
+
+.mobile-catalog-products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 0;
+}
+
+.mobile-no-products {
+    text-align: center;
+    padding: 30px 15px;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 576px) {
+    .mobile-category-breadcrumbs-centered {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .mobile-select-boxes-row {
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+
+    .mobile-spotlight-custom-btn,
+    .mobile-categories-selector {
+        font-size: 13px;
+        padding: 8px 25px 8px 12px;
+    }
+
+    .mobile-filter-bar {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+    .mobile-filter-left {
+        gap: 8px;
+    }
+
+    .mobile-filter-middle {
+        gap: 6px;
+    }
+
+    .mobile-status-filter-btn {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+
+    .mobile-sort-select-compact {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    .mobile-catalog-products-grid {
+        gap: 12px;
+    }
+}
+
+/* Mobile Spotlight Filter Tag */
+.mobile-selected-filters .spotlight-filter-tag {
+    background: rgba(139, 21, 56, 0.1) !important;
+    border: 1px solid var(--burgundy-color) !important;
+    color: var(--burgundy-dark) !important;
+}
+
+.mobile-selected-filters .spotlight-filter-tag .remove-filter {
+    background: var(--burgundy-color) !important;
+    color: white !important;
+}
+
+.mobile-selected-filters .spotlight-filter-tag .remove-filter:hover {
+    background: var(--burgundy-dark) !important;
+}
+
+/* Animation for mobile spotlight selection */
+@keyframes mobileSpotlightFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobile-select-boxes-row {
+    animation: mobileSpotlightFadeIn 0.5s ease-out;
+}
+
+/* Mobile Loading State */
+.mobile-catalog-page .loading-spinner {
+    padding: 20px;
+}
+
+/* Mobile Focus styles for accessibility */
+.mobile-spotlight-custom-btn:focus,
+.mobile-categories-selector:focus {
+    outline: 2px solid var(--burgundy-color);
+    outline-offset: 2px;
+}
+
+/* Mobile Smooth transitions */
+.mobile-spotlight-custom-btn,
+.mobile-spotlight-dropdown-item,
+.mobile-categories-selector,
+.mobile-status-filter-btn,
+.mobile-sort-select-compact {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
