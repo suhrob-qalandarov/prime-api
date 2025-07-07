@@ -78,10 +78,10 @@ async function fetchSpotlightCategories() {
     try {
         console.log(
             "Fetching spotlight categories from:",
-            `${window.API_BASE_URL}/api/v1/spotlights/catalog`,
+            `${API_BASE_URL}/api/v1/spotlights/catalog`,
         )
 
-        const response = await fetch(`${window.API_BASE_URL}/api/v1/spotlights/catalog`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/spotlights/catalog`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
