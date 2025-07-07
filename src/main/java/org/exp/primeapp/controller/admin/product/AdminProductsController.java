@@ -23,7 +23,7 @@ public class AdminProductsController {
     private final ProductRepository productRepository;
     private final AdminProductService adminProductService;
 
-    @GetMapping
+    @GetMapping(DASHBOARD)
     public ResponseEntity<AdminProductDashboardRes> adminProductDashboard() {
         AdminProductDashboardRes adminProductDashboardRes = adminProductService.getProductDashboarRes();
         return ResponseEntity.ok(adminProductDashboardRes);

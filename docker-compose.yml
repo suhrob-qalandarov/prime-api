@@ -2,10 +2,10 @@ version: '3.8'
 services:
   web_app:
     build:
-      context: ../test projects
+      context: .
       dockerfile: Dockerfile
     ports:
-      - "80:8080"
+      - "80:80"
     env_file:
       - .env
     environment:
@@ -14,9 +14,11 @@ services:
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     depends_on:
-      - web_db
+      web_db:
+        condition: service_healthy
     networks:
       - app-network
+    restart: unless-stopped
 
   web_db:
     image: postgres:latest
@@ -30,6 +32,12 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SPRING_DATASOURCE_USERNAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 networks:
   app-network:

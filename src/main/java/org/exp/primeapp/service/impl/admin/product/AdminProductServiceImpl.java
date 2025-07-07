@@ -49,11 +49,17 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .build();
     }
 
+    @Override
+    public void toggleProductUpdate(Long productId) {
+        productRepository.toggleProductUpdateStatus(productId);
+    }
+
     @Transactional
     public AdminProductRes convertToAdminProductRes(Product product) {
         return new AdminProductRes(
                 product.getId(),
                 product.getName(),
+                product.getDiscount(),
                 product.getActive(),
                 product.getStatus().name(),
                 product.getCategory().getName(),
@@ -100,11 +106,12 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .name(req.getName())
                 .description(req.getDescription())
                 .price(req.getPrice())
+                .discount(req.getDiscount())
                 .active(req.getActive())
                 .status(req.getStatus())
                 .category(category)
                 .attachments(attachments)
-                .sizes(new HashSet<>()) // aniq boshlang‘ich qiymat
+                .sizes(new HashSet<>())
                 .build();
 
         // ProductSize'larni qo‘shamiz
@@ -163,6 +170,10 @@ public class AdminProductServiceImpl implements AdminProductService {
             product.setPrice(req.getPrice());
         }
 
+        if (req.getDiscount() != null) {
+            product.setDiscount(req.getDiscount());
+        }
+
         if (req.getStatus() != null) {
             product.setStatus(req.getStatus());
         }
@@ -194,16 +205,6 @@ public class AdminProductServiceImpl implements AdminProductService {
         }
     }
 
-    @Transactional
-    @Override
-    public ApiResponse activateProduct(Long productId) {
-        int affected = productRepository.updateActive(true, productId);
-        if (affected > 0) {
-            return new ApiResponse(true, "Product activated successfully");
-        } else {
-            return new ApiResponse(false, "Product not found with id or already active");
-        }
-    }
 
     @Override
     public List<Product> getActiveProductsForAdmin() {

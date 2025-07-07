@@ -11,6 +11,7 @@ public class ProductReq {
     String name;
     String description;
     Double price;
+    Integer discount;
     Boolean active;
     ProductStatus status;
     Long categoryId;

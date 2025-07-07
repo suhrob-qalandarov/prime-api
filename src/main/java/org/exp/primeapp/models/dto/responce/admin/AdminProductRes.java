@@ -10,6 +10,7 @@ import lombok.*;
 public class AdminProductRes {
     Long id;
     String name;
+    Integer discount;
     Boolean active;
     String status;
     String categoryName;
