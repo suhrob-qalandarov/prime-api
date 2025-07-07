@@ -10,7 +10,7 @@ let uploadedAttachments = []
 const bootstrap = window.bootstrap
 
 // API Base URL
-//const API_BASE_URL = "http://localhost"
+const API_BASE_URL = "http://13.61.34.28/"
 
 // Initialize products panel
 document.addEventListener("DOMContentLoaded", () => {

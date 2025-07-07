@@ -3,7 +3,7 @@
 // ======================================================
 
 // API Base URL - Updated to correct URL
-const API_BASE_URL = "http://13.61.34.28/" //192.168.1.2
+const API_BASE_URL = "http://13.61.34.28" //192.168.1.2
 
 // Configure fetch defaults
 const defaultFetchOptions = {
@@ -23,9 +23,9 @@ const defaultFetchOptions = {
  */
 async function fetchSpotlightCategories() {
     try {
-        console.log("Fetching spotlight categories from:", `${API_BASE_URL}api/v1/spotlights`)
+        console.log("Fetching spotlight categories from:", `${API_BASE_URL}/api/v1/spotlights`)
 
-        const response = await fetch(`${API_BASE_URL}api/v1/spotlights`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/spotlights`, {
             method: "GET",
             ...defaultFetchOptions,
         })
@@ -49,7 +49,7 @@ async function fetchSpotlightCategories() {
  */
 async function fetchAllProducts() {
     try {
-        const response = await fetch(`${API_BASE_URL}api/v1/products`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/products`, {
             method: "GET",
             ...defaultFetchOptions,
         })
@@ -72,7 +72,7 @@ async function fetchAllProducts() {
  */
 async function fetchProductsByCategory(categoryId) {
     try {
-        const response = await fetch(`${API_BASE_URL}api/v1/products/by-category/${categoryId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/products/by-category/${categoryId}`, {
             method: "GET",
             ...defaultFetchOptions,
         })
@@ -94,7 +94,7 @@ async function fetchProductsByCategory(categoryId) {
  */
 async function fetchCategories() {
     try {
-        const response = await fetch(`${API_BASE_URL}api/v1/categories`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/categories`, {
             method: "GET",
             ...defaultFetchOptions,
         })
@@ -117,7 +117,7 @@ async function fetchCategories() {
  */
 async function fetchProductById(productId) {
     try {
-        const response = await fetch(`${API_BASE_URL}api/v1/product/${productId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/product/${productId}`, {
             method: "GET",
             ...defaultFetchOptions,
         })
@@ -140,7 +140,7 @@ async function fetchProductById(productId) {
  */
 async function searchProducts(query) {
     try {
-        const response = await fetch(`${API_BASE_URL}api/v1/products/search?q=${encodeURIComponent(query)}`, {
+        const response = await fetch(`${API_BASE_URL}/api/v1/products/search?q=${encodeURIComponent(query)}`, {
             method: "GET",
             ...defaultFetchOptions,
         })
@@ -167,7 +167,7 @@ async function searchProducts(query) {
  */
 function getImageUrl(attachmentId) {
     if (!attachmentId) return "/images/default/box.jpeg"
-    return `${API_BASE_URL}api/v1/attachment/${attachmentId}`
+    return `${API_BASE_URL}/api/v1/attachment/${attachmentId}`
 }
 
 /**

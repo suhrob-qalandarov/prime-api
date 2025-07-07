@@ -2,7 +2,7 @@
 const SockJS = require("sockjs-client")
 const Stomp = require("stompjs")
 
-const socket = new SockJS("http://localhost/ws")
+const socket = new SockJS("http://13.61.34.28/ws")
 const stompClient = Stomp.over(socket)
 let movingOrderId = null
 const bootstrap = window.bootstrap
