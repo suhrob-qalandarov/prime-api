@@ -8,7 +8,7 @@ let filteredCategories = []
 const bootstrap = window.bootstrap
 
 // API Base URL
-const API_BASE_URL = "http://13.61.34.28"
+//const API_BASE_URL = "http://13.61.34.28"
 
 // Initialize categories panel
 document.addEventListener("DOMContentLoaded", () => {
