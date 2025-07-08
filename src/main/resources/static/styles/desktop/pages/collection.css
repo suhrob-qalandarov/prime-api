@@ -1,0 +1,18 @@
+/* Active Navigation Link */
+.navbar-nav .nav-link.active {
+    color: black !important;
+    font-weight: 700;
+}
+
+.navbar-nav .nav-link.active::after {
+    width: 70%;
+    background: var(--burgundy-light);
+}
+
+.main-header.scrolled-up .navbar-nav .nav-link.active {
+    color: var(--light-color) !important;
+}
+
+.main-header.scrolled-up .navbar-nav .nav-link.active::after {
+    background: var(--light-color);
+}

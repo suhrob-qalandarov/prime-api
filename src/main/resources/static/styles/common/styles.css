@@ -927,7 +927,7 @@ body {
 }
 
 .zegna-logo {
-    top: 190px;
+    top: 170px;
     right: 80px;
     width: 100px;
     height: 100px;
@@ -951,11 +951,11 @@ body {
 }
 
 .brunello-logo {
-    top: 210px;
-    right: 185px;
-    width: 150px;
-    height: 140px;
-    animation: float 3s ease-in-out infinite 0.8s;
+    top: 170px;
+    right: 150px;
+    width: 200px;
+    height: 200px;
+    animation: float 4s ease-in-out infinite 0.8s;
 }
 
 .burberry-logo {
@@ -979,7 +979,7 @@ body {
     right: 245px;
     width: 140px;
     height: 140px;
-    animation: float 3s ease-in-out infinite 0.8s;
+    animation: float 4s ease-in-out infinite 0.7s;
 }
 
 .dolce-gabbana-logo {

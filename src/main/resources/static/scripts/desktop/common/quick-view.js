@@ -51,7 +51,7 @@ async function createQuickViewModal() {
 
     try {
         // Load modal HTML from external file
-        const response = await fetch("quick-view-modal.html")
+        const response = await fetch(`${window.API_BASE_URL || ""}/assets/modals/desktop/quick-view-modal.html`)
         const modalHTML = await response.text()
         modal.innerHTML = modalHTML
     } catch (error) {
@@ -368,7 +368,7 @@ function initializeCopyLink(modal) {
     const copyLinkSection = modal.querySelector("#copyLinkSection")
     copyLinkSection?.addEventListener("click", () => {
         const productId = modal.getAttribute("data-product-id")
-        const productLink = `${window.API_BASE_URL || "https://api.prime77.uz"}/api/v1/product/${productId}`
+        const productLink = `${window.API_BASE_URL || "https://prime77.uz"}/api/v1/product/${productId}`
 
         navigator.clipboard
             .writeText(productLink)

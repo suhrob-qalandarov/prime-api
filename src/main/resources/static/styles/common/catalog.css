@@ -786,7 +786,7 @@
 
 .navbar-nav .nav-link.active::after {
     width: 70%;
-    background: var(--burgundy-color);
+    background: var(--burgundy-light);
 }
 
 .main-header.scrolled-up .navbar-nav .nav-link.active {
