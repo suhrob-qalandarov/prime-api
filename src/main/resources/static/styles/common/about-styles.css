@@ -4,7 +4,7 @@
 
 /* Page Header */
 .page-header {
-    background: var(--light-color);
+    background: #f0f0f0;
     padding: 140px 0 30px;
     margin-top: 0;
 }
@@ -461,7 +461,7 @@
 
 .btn-outline:hover {
     background: white;
-    color: var(--burgundy-color);
+    color: var(--burgundy-light);
     transform: translateY(-3px);
     box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
 }
@@ -474,7 +474,7 @@
 
 .navbar-nav .nav-link.active::after {
     width: 70%;
-    background: var(--burgundy-color);
+    background: var(--burgundy-light);
 }
 
 .main-header.scrolled-up .navbar-nav .nav-link.active {

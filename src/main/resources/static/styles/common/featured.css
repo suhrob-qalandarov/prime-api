@@ -1,0 +1,40 @@
+/* ======================================================
+   PRODUCT STYLES
+====================================================== */
+.featured-tabs {
+    display: flex;
+    background: var(--light-color);
+    justify-content: center;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.featured-tab {
+    padding: 12px 25px;
+    border: 2px solid var(--border-color);
+    background-color: transparent;
+    color: var(--text-color);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    border-radius: 30px;
+}
+
+.featured-tab:hover {
+    border-color: var(--burgundy-light);
+}
+
+.featured-tab.active {
+    color: var(--burgundy-light);
+    border-color: var(--burgundy-light);
+}
+
+.featured-content {
+    display: none;
+}
+
+.featured-content.active {
+    display: block;
+}

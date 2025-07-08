@@ -831,7 +831,7 @@ function initializeProductInteractions() {
     })
 
     // Product thumbnail hover effects (desktop only)
-    if (window.innerWidth > 768) {
+    /*if (window.innerWidth > 768) {
         document.querySelectorAll(".product-thumbnail").forEach((thumbnail) => {
             thumbnail.addEventListener("click", (e) => {
                 e.preventDefault()
@@ -842,7 +842,7 @@ function initializeProductInteractions() {
                 }
             })
         })
-    }
+    }*/
 }
 
 // ======================================================

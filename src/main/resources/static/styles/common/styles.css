@@ -134,7 +134,7 @@ body {
     left: 50%;
     width: 0;
     height: 2px;
-    background: var(--burgundy-dark);
+    background: var(--burgundy-light);
     transition: all 0.3s ease;
     transform: translateX(-50%);
     border-radius: 2px;
@@ -899,15 +899,15 @@ body {
     left: 40px;
     width: 200px;
     height: 200px;
-    animation: float 3.7s ease-in-out infinite;
+    animation: float 4s ease-in-out infinite 0.6s;
 }
 
 .polo-logo {
-    top: 20px;
-    right: -10px;
-    width: 120px;
-    height: 120px;
-    animation: float 3s ease-in-out infinite 0.5s;
+    top: 15px;
+    right: -20px;
+    width: 140px;
+    height: 140px;
+    animation: float 4s ease-in-out infinite 0.6s;
 }
 
 .levis-logo {
@@ -927,11 +927,11 @@ body {
 }
 
 .zegna-logo {
-    top: 170px;
-    right: 80px;
-    width: 100px;
-    height: 100px;
-    animation: float 3s ease-in-out infinite 1s;
+    top: 160px;
+    right: 40px;
+    width: 120px;
+    height: 125px;
+    animation: float 3s ease-in-out infinite 1.2s;
 }
 
 .hermes-logo {
@@ -939,7 +939,7 @@ body {
     left: 50px;
     width: 150px;
     height: 180px;
-    animation: float 3s ease-in-out infinite 1.5s;
+    animation: float 5s ease-in-out infinite 1.5s;
 }
 
 .versace-medusa-logo {
@@ -960,7 +960,7 @@ body {
 
 .burberry-logo {
     bottom: 40px;
-    right: 75px;
+    right: 85px;
     width: 120px;
     height: 120px;
     animation: float 3s ease-in-out infinite 0.8s;
@@ -975,19 +975,19 @@ body {
 }
 
 .moncler-logo {
-    bottom: 70px;
-    right: 245px;
-    width: 140px;
-    height: 140px;
+    bottom: 60px;
+    right: 240px;
+    width: 150px;
+    height: 150px;
     animation: float 4s ease-in-out infinite 0.7s;
 }
 
 .dolce-gabbana-logo {
-    top: 80px;
+    top: 70px;
     left: 0;
-    width: 180px;
-    height: 190px;
-    animation: float 3s ease-in-out infinite 2s;
+    width: 190px;
+    height: 205px;
+    animation: float 4s ease-in-out infinite 1s;
 }
 
 .louboutin-logo {
@@ -995,7 +995,7 @@ body {
     left: 250px;
     width: 120px;
     height: 90px;
-    animation: float 3s ease-in-out infinite 2.5s;
+    animation: float 6s ease-in-out infinite 0.9s;
 }
 
 @keyframes float {
@@ -1775,7 +1775,7 @@ body {
     line-height: 1.2;
 }
 
-.product-thumbnails {
+/*.product-thumbnails {
     position: absolute;
     top: 60%;
     left: 0;
@@ -1789,9 +1789,9 @@ body {
 
 .product-card:hover .product-thumbnails {
     opacity: 1;
-}
+}*/
 
-.product-thumbnail {
+/*.product-thumbnail {
     width: 24px;
     height: 24px;
     border-radius: 3px;
@@ -1806,7 +1806,7 @@ body {
 
 .product-thumbnail:hover {
     border-color: var(--burgundy-color);
-}
+}*/
 
 .product-pricing {
     position: absolute;
@@ -2213,9 +2213,9 @@ body {
         display: flex !important;
     }
 
-    .product-thumbnails {
+/*    .product-thumbnails {
         display: none !important;
-    }
+    }*/
 
     .product-card:hover .product-pricing {
         margin-top: 0;
