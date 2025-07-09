@@ -1,4 +1,4 @@
-package org.exp.primeapp.models.dto;
+package org.exp.primeapp.models.dto.responce.order;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.Value;
 @Value
 @Builder
 
-public class OrderItemDTO {
+public class OrderItemRes {
     Long productId;
     Long productSizeId;
     Integer quantity;

@@ -10,16 +10,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.exp.primeapp.utils.Const.*;
+
 @Slf4j
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping(API + V1 + ORDER)
 @RequiredArgsConstructor
 public class OrderController {
 
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody CreateOrderReq request) throws InterruptedException {
+    public ResponseEntity<?> createOrder(@RequestBody CreateOrderReq request) {
         log.info("Yangi buyurtma yaratilmoqda: userId={}, itemCount={}",
                 request.getUserId(), request.getOrderItems().size());
 

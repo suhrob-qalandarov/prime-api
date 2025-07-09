@@ -86,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
         return convertToProductRes(product);
     }
 
-    private ProductRes convertToProductRes(Product product) {
+    public ProductRes convertToProductRes(Product product) {
         List<String> attachmentKeys = product.getAttachments()
                 .stream()
                 .map(Attachment::getKey)

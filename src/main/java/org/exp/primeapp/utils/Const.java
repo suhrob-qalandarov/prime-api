@@ -37,6 +37,8 @@ public interface Const {
     String PRODUCTS = "/products";
     String INACTIVE = "/inactive";
     String BY_CATEGORY = "/by-category";
+    String ORDER = "/order";
+    String ORDERS = "/orders";
 
     String EMAIL_EXIST_MSG = "Email already exist!";
     String PASSWORD_NO_MATCH_MSG = "Passwords do not match!";
