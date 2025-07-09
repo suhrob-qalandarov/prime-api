@@ -1,0 +1,103 @@
+/resources/static/
+├── index.html
+├── assets/
+│   ├── component/
+│   │   ├── desktop/
+│   │   │   ├── top-header.html
+│   │   │   ├── header.html
+│   │   │   └── footer.html
+│   │   └── mobile/
+│   │       ├── bottom-bar.html
+│   │       ├── header.html
+│   │       └── footer.html
+│   ├── modals/
+│   │   ├── desktop/
+│   │   │   ├── cart-modal.html
+│   │   │   └── quick-view-modal.html
+│   │   └── mobile/
+│   │       ├── cart-modal.html
+│   │       └── quick-view-modal.html
+│   ├── pages/
+│   │   ├── desktop/
+│   │   │   ├── about.html
+│   │   │   ├── catalog.html
+│   │   │   ├── collection.html
+│   │   │   └── contact.html
+│   │   └── mobile/
+│   │       ├── about.html
+│   │       ├── catalog.html
+│   │       ├── collection.html
+│   │       └── contact.html
+│   └── auth/
+│       ├── desktop/
+│       │   ├── login.html
+│       │   └── register.html
+│       └── mobile/
+│           ├── login.html
+│           └── register.html
+├── styles/
+│   ├── common/
+│   │   └── main.css
+│   ├── desktop/
+│   │   ├── modals/
+│   │   │   └── quick-view.css
+│   │   ├── pages/
+│   │   │   ├── home.css
+│   │   │   ├── categories.css
+│   │   │   ├── orders.css
+│   │   │   └── about.css
+│   │   ├── auth/
+│   │   │   ├── login.css
+│   │   │   └── register.css
+│   │   └── ui/
+│   │       ├── header.css
+│   │       ├── footer.css
+│   │       └── top-header.css
+│   └── mobile/
+│       ├── modals/
+│       │   └── quick-view.css
+│       ├── pages/
+│       │   ├── home.css
+│       │   ├── categories.css
+│       │   ├── orders.css
+│       │   └── about.css
+│       ├── auth/
+│       │   ├── login.css
+│       │   └── register.css
+│       └── ui/
+│           ├── bottom-bar.css
+│           ├── header.css
+│           └── footer.css
+├── scripts/
+│   ├── common/
+│   │   ├── api.js
+│   │   ├── auth.js
+│   │   ├── router.js
+│   │   └── utils.js
+│   ├── desktop/
+│   │   ├── main.js
+│   │   ├── pages/
+│   │   │   ├── home.js
+│   │   │   ├── cart.js
+│   │   │   └── checkout.js
+│   │   ├── modals/
+│   │   │   └── quick-view.js
+│   │   └── ui/
+│   │       ├── header.js
+│   │       ├── footer.js
+│   │       └── top-header.js
+│   └── mobile/
+│       ├── main.js
+│       ├── modals/
+│       │   └── quick-view.js
+│       ├── pages/
+│       │   ├── home.js
+│       │   ├── cart.js
+│       │   └── checkout.js
+│       └── ui/
+│           ├── bottom-bar.js
+│           ├── header.js
+│           └── footer.js
+├── img/
+│   └── (umumiy yoki maxsus rasmlar)
+└── favicon.ico

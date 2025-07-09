@@ -24,7 +24,7 @@ public class CategoriesController {
     @GetMapping
     public ResponseEntity<List<CategoryRes>> getCategories() {
         List<CategoryRes> categories = categoryService.getResCategories();
-        return new ResponseEntity<>(categories, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     @GetMapping("/by-spotlight/{spotlightId}")

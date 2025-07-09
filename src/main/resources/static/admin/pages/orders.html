@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyurtmalar - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/admin/css/pages/categories.css" rel="stylesheet">
+    <link href="/admin/css/pages/orders.css" rel="stylesheet">
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <i class="fas fa-crown"></i>
+        </div>
+        <h4 class="logo-text">Just Admin</h4>
+        <p class="logo-subtitle">Control Panel</p>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <span>Dashboard</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="orders.html" class="nav-link active">
+            <div class="nav-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <span>Buyurtmalar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="categories.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-tags"></i>
+            </div>
+            <span>Kategoriyalar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="products.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-box-open"></i>
+            </div>
+            <span>Mahsulotlar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="users.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <span>Foydalanuvchilar</span>
+            <div class="nav-indicator"></div>
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-profile">
+            <div class="user-avatar">
+                <i class="fas fa-user-crown"></i>
+            </div>
+            <div class="user-info">
+                <div class="user-name">Admin</div>
+                <div class="user-role">Super Admin</div>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Chiqish</span>
+        </button>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-left">
+            <button class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="breadcrumb">
+                <h1>Buyurtmalar</h1>
+                <p>Buyurtmalarni boshqarish</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-actions">
+                <button class="header-btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="header-btn" onclick="toggleFullscreen()">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Orders Content -->
+    <div class="tab-content active">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stats-card primary">
+                <div class="stats-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="total-orders">0</div>
+                    <div class="stats-label">Jami buyurtmalar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card warning">
+                <div class="stats-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="pending-orders">0</div>
+                    <div class="stats-label">Kutilayotgan</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+5%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card info">
+                <div class="stats-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="inprogress-orders">0</div>
+                    <div class="stats-label">Yo'lda</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card success">
+                <div class="stats-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="delivered-orders">0</div>
+                    <div class="stats-label">Yetkazilgan</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+15%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Kanban Board -->
+        <div class="orders-board">
+            <!-- Top Row - 4 Columns -->
+            <div class="board-row">
+                <!-- Pending Orders -->
+                <div class="board-column pending">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-clock"></i>
+                            <span>KUTILAYOTGAN</span>
+                        </div>
+                        <div class="column-count" id="pending-count">0</div>
+                    </div>
+                    <div class="column-body"
+                         id="PENDING"
+                         ondragover="handleDragOver(event)"
+                         ondrop="handleDrop(event, 'PENDING')">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Yuklanmoqda...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accepted Orders -->
+                <div class="board-column accepted">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-check"></i>
+                            <span>QABUL QILINGAN</span>
+                        </div>
+                        <div class="column-count" id="accepted-count">0</div>
+                    </div>
+                    <div class="column-body"
+                         id="ACCEPTED"
+                         ondragover="handleDragOver(event)"
+                         ondrop="handleDrop(event, 'ACCEPTED')">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Yuklanmoqda...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- In Progress Orders -->
+                <div class="board-column inprogress">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-truck"></i>
+                            <span>YO'LDA</span>
+                        </div>
+                        <div class="column-count" id="inprogress-count">0</div>
+                    </div>
+                    <div class="column-body"
+                         id="INPROGRESS"
+                         ondragover="handleDragOver(event)"
+                         ondrop="handleDrop(event, 'INPROGRESS')">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Yuklanmoqda...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivered Orders -->
+                <div class="board-column delivered">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-check-circle"></i>
+                            <span>YETKAZILGAN</span>
+                        </div>
+                        <div class="column-count" id="delivered-count">0</div>
+                    </div>
+                    <div class="column-body"
+                         id="DELIVERED"
+                         ondragover="handleDragOver(event)"
+                         ondrop="handleDrop(event, 'DELIVERED')">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Yuklanmoqda...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row - Canceled Orders (Full Width) -->
+            <div class="board-row">
+                <div class="board-column canceled full-width">
+                    <div class="column-header">
+                        <div class="column-title">
+                            <i class="fas fa-times-circle"></i>
+                            <span>BEKOR QILINGAN</span>
+                        </div>
+                        <div class="column-count" id="canceled-count">0</div>
+                    </div>
+                    <div class="column-body horizontal-scroll"
+                         id="CANCELED"
+                         ondragover="handleDragOver(event)"
+                         ondrop="handleDrop(event, 'CANCELED')">
+                        <div class="loading-state">
+                            <div class="loading-spinner"></div>
+                            <p>Yuklanmoqda...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Order Modal -->
+<div class="modal fade" id="viewOrderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modern-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Buyurtma tafsilotlari</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Buyurtma ID</label>
+                            <p id="view-order-id" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mijoz</label>
+                            <p id="view-order-customer" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telefon</label>
+                            <p id="view-order-phone" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Manzil</label>
+                            <p id="view-order-address" class="form-text">-</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <div id="view-order-status">-</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Jami summa</label>
+                            <p id="view-order-total" class="form-text price-display">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Buyurtma vaqti</label>
+                            <p id="view-order-date" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Izoh</label>
+                            <p id="view-order-note" class="form-text">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Buyurtma mahsulotlari</label>
+                    <div id="view-order-items" class="order-items-list">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/admin/js/common/orders.js"></script>
+</body>
+</html>

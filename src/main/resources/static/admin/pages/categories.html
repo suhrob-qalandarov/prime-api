@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategoriyalar - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="/admin/css/pages/categories.css" rel="stylesheet">
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <i class="fas fa-crown"></i>
+        </div>
+        <h4 class="logo-text">Just Admin</h4>
+        <p class="logo-subtitle">Control Panel</p>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <span>Dashboard</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="orders.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <span>Buyurtmalar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="categories.html" class="nav-link active">
+            <div class="nav-icon">
+                <i class="fas fa-tags"></i>
+            </div>
+            <span>Kategoriyalar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="products.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-box-open"></i>
+            </div>
+            <span>Mahsulotlar</span>
+            <div class="nav-indicator"></div>
+        </a>
+        <a href="users.html" class="nav-link">
+            <div class="nav-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <span>Foydalanuvchilar</span>
+            <div class="nav-indicator"></div>
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-profile">
+            <div class="user-avatar">
+                <i class="fas fa-user-crown"></i>
+            </div>
+            <div class="user-info">
+                <div class="user-name">Admin</div>
+                <div class="user-role">Super Admin</div>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Chiqish</span>
+        </button>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-left">
+            <button class="sidebar-toggle" id="sidebar-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="breadcrumb">
+                <h1>Kategoriyalar</h1>
+                <p>Kategoriyalarni boshqarish</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-actions">
+                <button class="header-btn" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="header-btn" onclick="toggleFullscreen()">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Categories Content -->
+    <div class="tab-content active">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stats-card primary">
+                <div class="stats-icon">
+                    <i class="fas fa-list"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="total-categories">0</div>
+                    <div class="stats-label">Jami kategoriyalar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+5%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card success">
+                <div class="stats-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="active-categories">0</div>
+                    <div class="stats-label">Faol kategoriyalar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card warning">
+                <div class="stats-icon">
+                    <i class="fas fa-pause-circle"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="inactive-categories">0</div>
+                    <div class="stats-label">Nofaol kategoriyalar</div>
+                    <div class="stats-change negative">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>-2%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories Management -->
+        <div class="table-card full-width">
+            <div class="card-header">
+                <h3>Kategoriyalar ro'yxati</h3>
+                <div class="card-actions">
+                    <button class="btn btn-primary" onclick="showAddCategoryModal()">
+                        <i class="fas fa-plus"></i> Qo'shish
+                    </button>
+                    <button class="btn btn-secondary" onclick="showOrderCategoriesModal()">
+                        <i class="fas fa-sort"></i> Tartiblash
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <!-- Search and Filter -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <select class="form-select" id="status-filter" onchange="filterCategories()">
+                            <option value="all">Barcha kategoriyalar</option>
+                            <option value="active">Faol kategoriyalar</option>
+                            <option value="inactive">Nofaol kategoriyalar</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="search-input" placeholder="Kategoriya qidirish...">
+                            <button class="btn btn-outline-secondary" onclick="searchCategories()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="clearSearch()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Table with Scrollable Container -->
+                <div class="table-container scrollable-table">
+                    <table class="modern-table">
+                        <thead>
+                        <tr>
+                            <th>Tartib raqam</th>
+                            <th>ID</th>
+                            <th>Nomi</th>
+                            <th>Spotlight</th>
+                            <th>Holati</th>
+                            <th>Yaratilgan</th>
+                            <th>Amallar</th>
+                        </tr>
+                        </thead>
+                        <tbody id="categories-table">
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <div class="loading-state">
+                                    <div class="loading-spinner"></div>
+                                    <p>Yuklanmoqda...</p>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Category Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modern-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalTitle">Kategoriya qo'shish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="category-form" class="modern-form">
+                    <input type="hidden" id="category-id">
+
+                    <div class="form-group">
+                        <label class="form-label">Kategoriya nomi</label>
+                        <input type="text" class="form-control" id="category-name" placeholder="Kategoriya nomini kiriting" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Spotlight</label>
+                        <select class="form-select" id="category-spotlight" required>
+                            <option value="">Spotlight tanlang</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="category-active" checked>
+                            <label for="category-active">
+                                <div class="toggle-slider"></div>
+                            </label>
+                            <span class="toggle-label">Faol kategoriya</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                <button type="button" class="btn btn-primary" onclick="saveCategory()">
+                    <span id="save-btn-text">Saqlash</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Category Modal -->
+<div class="modal fade" id="viewCategoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modern-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Kategoriya ma'lumotlari</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">ID</label>
+                            <p id="view-category-id" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nomi</label>
+                            <p id="view-category-name" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Spotlight</label>
+                            <p id="view-category-spotlight" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tartib raqam</label>
+                            <p id="view-category-order" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Holati</label>
+                            <div id="view-category-status">-</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Yaratilgan</label>
+                            <p id="view-category-created-at" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Yaratuvchi</label>
+                            <p id="view-category-created-by" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Yangilangan</label>
+                            <p id="view-category-updated-at" class="form-text">-</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Yangilovchi</label>
+                            <p id="view-category-updated-by" class="form-text">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Categories Modal -->
+<div class="modal fade" id="orderCategoriesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modern-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Kategoriyalar tartibini o'zgartirish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-3">Kategoriyalarni suda-suda tortib tartiblang:</p>
+                <div id="order-categories-list" class="order-list">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                <button type="button" class="btn btn-primary" onclick="saveCategoryOrder()">
+                    Saqlash
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/admin/js/common/categories.js"></script>
+</body>
+</html>

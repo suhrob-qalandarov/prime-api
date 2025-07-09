@@ -7,7 +7,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/global/styles.css">
+    <link rel="stylesheet" href="styles/common/styles.css">
+    <link rel="stylesheet" href="styles/common/featured.css">
 </head>
 <body>
 
@@ -37,23 +38,23 @@
     <div class="container-custom">
         <div class="row align-items-center">
             <div class="col-lg-3">
-                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: var(--burgundy-dark);">PRIME<span style="color: #ff6b6b">77</span></h1>
+                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: rgba(195,164,9,0.84);">PRIME<span style="color: #ff6b6b">77</span></h1>
             </div>
             <div class="col-lg-6">
                 <nav class="navbar navbar-expand-lg">
                     <div class="collapse navbar-collapse justify-content-start">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="/pages/global/catalog.html">KATALOG</a>
+                                <a class="nav-link" href="/assets/pages/desktop/catalog.html">KATALOG</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/pages/global/collection.html">KOLLEKSIYA</a>
+                                <a class="nav-link" href="/assets/pages/desktop/collection.html">KOLLEKSIYA</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/pages/global/about.html">BIZ HAQIMIZDA</a>
+                                <a class="nav-link" href="/assets/pages/desktop/about.html">BIZ HAQIMIZDA</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/pages/global/contact.html">KONTAKTLAR</a>
+                                <a class="nav-link" href="/assets/pages/desktop/contact.html">KONTAKTLAR</a>
                             </li>
                         </ul>
                     </div>
@@ -68,7 +69,7 @@
                             </svg>
                         </a>
                         <span class="header-separator">|</span>
-                        <a href="/pages/admin/dashboard.html" class="header-icon">
+                        <a href="/admin/pages/dashboard.html" class="header-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
                                 <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
                             </svg>
@@ -123,9 +124,9 @@
             <button class="mobile-sidebar-close" id="mobileSidebarClose">&times;</button>
         </div>
         <nav class="mobile-sidebar-nav">
-            <a href="/pages/global/catalog.html" class="mobile-nav-link">KATALOG</a>
-            <a href="/pages/global/about.html" class="mobile-nav-link">BIZ HAQIMIZDA</a>
-            <a href="/pages/global/contact.html" class="mobile-nav-link">KONTAKTLAR</a>
+            <a href="/assets/pages/desktop/catalog.html" class="mobile-nav-link">KATALOG</a>
+            <a href="/assets/pages/desktop/about.html" class="mobile-nav-link">BIZ HAQIMIZDA</a>
+            <a href="/assets/pages/desktop/contact.html" class="mobile-nav-link">KONTAKTLAR</a>
         </nav>
         <div class="mobile-sidebar-footer">
             <div class="mobile-contact">
@@ -174,9 +175,8 @@
     <div class="hero-3d-showcase">
         <!-- Hero Content -->
         <div class="hero-content">
-            <h1 class="hero-title">YANGI KOLLEKSIYASI</h1>
+            <h1 class="hero-title">BREND KOLLEKSIYASI</h1>
             <p class="hero-text">Zamonaviy va sifatli erkaklar kiyimi kolleksiyasi. Har bir mahsulot diqqat bilan tanlab olingan va yuqori sifat standartlariga javob beradi.</p>
-            <a href="#" class="btn-custom">Kolleksiyani ko'rish</a>
         </div>
 
         <!-- 3D Product Showcase -->
@@ -354,7 +354,6 @@
             <h2>KOLLEKSIYALAR</h2>
             <p style="color: #666; margin-top: 10px;">Obrazimga qo'shib olaman 👀</p>
         </div>
-
         <div class="products-container">
             <!-- Main Product Image -->
             <div class="main-product">
@@ -380,10 +379,6 @@
                     <div class="product-info">
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Kepka</h3>
-                        <div class="product-thumbnails">
-                            <img src="/images/polo-cap.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="/images/polo-cap.png" alt="Thumbnail 2" class="product-thumbnail">
-                        </div>
                         <div class="product-pricing">
                             <span class="current-price">129 000 So'm</span>
                             <span class="original-price">160 000 So'm</span>
@@ -409,10 +404,6 @@
                     <div class="product-info">
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Shopper</h3>
-                        <div class="product-thumbnails">
-                            <img src="/images/shopper.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="/images/shopper.png" alt="Thumbnail 2" class="product-thumbnail">
-                        </div>
                         <div class="product-pricing">
                             <span class="current-price">109 000 So'm</span>
                             <span class="original-price">150 000 So'm</span>
@@ -438,10 +429,6 @@
                     <div class="product-info">
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Soat</h3>
-                        <div class="product-thumbnails">
-                            <img src="/images/watch-2.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="/images/polo-watch.png" alt="Thumbnail 2" class="product-thumbnail">
-                        </div>
                         <div class="product-pricing">
                             <span class="current-price">299 000 So'm</span>
                             <span class="original-price">399 000 So'm</span>
@@ -467,10 +454,6 @@
                     <div class="product-info">
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Hamyon</h3>
-                        <div class="product-thumbnails">
-                            <img src="/images/polo-wallet.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="/images/polo-wallet.png" alt="Thumbnail 2" class="product-thumbnail">
-                        </div>
                         <div class="product-pricing">
                             <span class="current-price">89 000 So'm</span>
                             <span class="original-price">120 000 So'm</span>
@@ -496,10 +479,6 @@
                     <div class="product-info">
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">Krossovka</h3>
-                        <div class="product-thumbnails">
-                            <img src="/images/polo-sneakers.png" alt="Thumbnail 1" class="product-thumbnail">
-                            <img src="/images/polo-sneakers.png" alt="Thumbnail 2" class="product-thumbnail">
-                        </div>
                         <div class="product-pricing">
                             <span class="current-price">399 000 So'm</span>
                             <span class="original-price">499 000 So'm</span>
@@ -525,10 +504,6 @@
                     <div class="product-info">
                         <div class="product-category">AKSESSUARLAR</div>
                         <h3 class="product-name">T-shirt</h3>
-                        <div class="product-thumbnails">
-                            <img src="/images/bmw-t-shirt.jpg" alt="Thumbnail 2" class="product-thumbnail">
-                            <img src="/images/hero-badge.jpg" alt="Thumbnail 1" class="product-thumbnail">
-                        </div>
                         <div class="product-pricing">
                             <span class="current-price">199 000 So'm</span>
                             <span class="original-price">249 000 So'm</span>
@@ -536,6 +511,35 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="section-padding" style="background-color: #fafafa;">
+    <div class="container-fluid">
+        <div class="featured-tabs">
+            <button class="featured-tab active" data-tab="new">Yangi</button>
+            <button class="featured-tab" data-tab="popular">Mashhur</button>
+            <button class="featured-tab" data-tab="sale">Chegirmada</button>
+        </div>
+
+        <div class="featured-content active" id="new-products">
+            <div class="row" id="new-products-grid">
+                <!-- New products will be loaded here -->
+            </div>
+        </div>
+
+        <div class="featured-content" id="popular-products">
+            <div class="row" id="popular-products-grid">
+                <!-- Popular products will be loaded here -->
+            </div>
+        </div>
+
+        <div class="featured-content" id="sale-products">
+            <div class="row" id="sale-products-grid">
+                <!-- Sale products will be loaded here -->
             </div>
         </div>
     </div>
@@ -581,7 +585,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-6 mb-4">
-                <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 25px; color: #F5F5DC;">PRIME<span style="color: #ff6b6b">77</span></h1>
+                <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 25px; color: rgba(195,164,9,0.84);">PRIME<span style="color: #ff6b6b">77</span></h1>
             </div>
             <div class="col-lg-2 col-md-6 col-6 mb-4">
                 <h3 class="footer-title">KOMPANIYA</h3>
@@ -630,7 +634,7 @@
     </div>
 </footer>
 
-<script src="js/api.js"></script>
-<script src="js/global/script.js"></script>
+<script src="scripts/common/api.js"></script>
+<script src="scripts/desktop/common/script.js"></script>
 </body>
 </html>
