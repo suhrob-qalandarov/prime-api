@@ -2,7 +2,7 @@ package org.exp.primeapp.service.impl.user.order;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.exp.primeapp.models.dto.OrderItemDTO;
+import org.exp.primeapp.models.dto.responce.order.OrderItemRes;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.enums.OrderStatus;
 import org.exp.primeapp.repository.*;
@@ -27,7 +27,7 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Transactional
-    public Order createOrder(Long userId, List<OrderItemDTO> orderItems) {
+    public Order createOrder(Long userId, List<OrderItemRes> orderItems) {
         log.info("Buyurtma yaratish jarayoni boshlandi. Foydalanuvchi ID: {}", userId);
 
         User user = userRepository.findById(userId)
@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItemsList = new ArrayList<>();
 
         try {
-            for (OrderItemDTO itemDTO : orderItems) {
+            for (OrderItemRes itemDTO : orderItems) {
                 log.debug("Mahsulotni qayta ishlash. ProductID: {}, ProductSizeID: {}, Quantity: {}",
                         itemDTO.getProductId(), itemDTO.getProductSizeId(), itemDTO.getQuantity());
 
