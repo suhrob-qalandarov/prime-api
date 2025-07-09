@@ -224,7 +224,7 @@ body {
 .mobile-header {
     background: #f0f0f0; /* Default background same as hero */
     color: var(--burgundy-light);
-    padding: 15px 0;
+    padding: 10px 0; /* 15px dan 10px ga o'zgartirildi */
     position: fixed;
     top: 40px; /* Position below top-header */
     left: 0;
@@ -1380,7 +1380,7 @@ body {
     /* Hide desktop elements */
     .top-header {
         display: block !important; /* Keep top-header on mobile */
-        padding: 8px 0;
+        padding: 6px 0; /* 8px dan 6px ga o'zgartirildi */
         font-size: 12px;
     }
 
@@ -1433,13 +1433,13 @@ body {
     /* Hero section adjustments for mobile */
     .hero-section {
         height: 500px;
-        margin-top: 95px; /* Account for top-header + mobile-header */
+        margin-top: 60px; /* 95px dan 60px ga o'zgartirildi */
     }
 
     /* Hero content positioning - top left */
     .hero-content {
         left: 20px;
-        top: 80px;
+        top: 40px; /* 80px dan 40px ga o'zgartirildi */
         max-width: 320px; /* Increase width for description */
         transform: none;
     }
