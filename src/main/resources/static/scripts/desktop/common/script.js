@@ -12,21 +12,23 @@ function initializeResponsiveHeaders() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop
 
         if (window.innerWidth <= 768) {
-            // Mobile header logic
+            // Mobile header logic - simplified
             if (scrollTop > 100) {
-                if (scrollTop > lastScrollTop) {
-                    // Scrolling down - hide header
-                    mobileHeader?.classList.remove("scrolled-up")
-                } else {
-                    // Scrolling up - show header with red background
-                    mobileHeader?.classList.add("scrolled-up")
-                }
+                // Show red background when scrolled
+                mobileHeader?.classList.add("scrolled-up")
             } else {
-                // At top - transparent header
+                // Show default background at top
                 mobileHeader?.classList.remove("scrolled-up")
             }
+
+            // Always keep header visible
+            if (mobileHeader) {
+                mobileHeader.style.transform = "translateY(0)"
+                mobileHeader.style.opacity = "1"
+                mobileHeader.style.display = "block"
+            }
         } else {
-            // Desktop header logic
+            // Desktop header logic remains the same
             if (scrollTop > 100) {
                 if (scrollTop > lastScrollTop) {
                     // Scrolling down
@@ -53,33 +55,25 @@ function initializeResponsiveHeaders() {
 function initializeMobileScrollEffects() {
     const mobileHeader = document.querySelector(".mobile-header")
     let lastScrollTop = 0
-    let isFirstLoad = true
 
     window.addEventListener("scroll", () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop
 
         if (window.innerWidth <= 768) {
-            if (isFirstLoad && scrollTop > 50) {
-                isFirstLoad = false
+            if (scrollTop > 100) {
+                // When scrolled down more than 100px, show red background
+                mobileHeader?.classList.add("scrolled-up")
+                mobileHeader?.classList.remove("scrolled-down")
+            } else {
+                // At top - show default background (#f0f0f0)
+                mobileHeader?.classList.remove("scrolled-up")
+                mobileHeader?.classList.remove("scrolled-down")
             }
 
-            if (scrollTop > 100) {
-                if (scrollTop > lastScrollTop) {
-                    // Scrolling down - hide header
-                    mobileHeader?.classList.add("scrolled-down")
-                    mobileHeader?.classList.remove("scrolled-up")
-                } else {
-                    // Scrolling up - show header with red background
-                    mobileHeader?.classList.remove("scrolled-down")
-                    mobileHeader?.classList.add("scrolled-up")
-                }
-            } else {
-                // At top - show transparent header only on first load
-                if (isFirstLoad) {
-                    mobileHeader?.classList.remove("scrolled-down", "scrolled-up")
-                } else {
-                    mobileHeader?.classList.add("scrolled-down")
-                }
+            // Header should always be visible - never hide it
+            if (mobileHeader) {
+                mobileHeader.style.transform = "translateY(0)"
+                mobileHeader.style.opacity = "1"
             }
         }
 
