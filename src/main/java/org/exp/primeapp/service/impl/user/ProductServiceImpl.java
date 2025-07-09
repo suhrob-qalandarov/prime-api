@@ -1,6 +1,8 @@
 package org.exp.primeapp.service.impl.user;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.exp.primeapp.models.dto.responce.user.FeaturedProductRes;
 import org.exp.primeapp.models.dto.responce.user.ProductRes;
 import org.exp.primeapp.models.dto.responce.user.ProductSizeRes;
 import org.exp.primeapp.models.entities.Attachment;
@@ -25,6 +27,24 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(this::convertToProductRes)
                 .collect(toList());
+    }
+
+    @Transactional
+    @Override
+    public FeaturedProductRes getFeaturedRandomProducts() {
+        return new FeaturedProductRes(
+                productRepository.findRandom4ActiveProductsStatusSale().stream()
+                        .map(this::convertToProductRes)
+                        .collect(toList()),
+
+                productRepository.findRandom4ActiveProductsStatusNew().stream()
+                        .map(this::convertToProductRes)
+                        .collect(toList()),
+
+                productRepository.findRandom4ActiveProductsStatusHot().stream()
+                        .map(this::convertToProductRes)
+                        .collect(toList())
+        );
     }
 
     @Override

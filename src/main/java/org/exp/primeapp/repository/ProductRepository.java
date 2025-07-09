@@ -33,4 +33,26 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("UPDATE Product p SET p.active = CASE WHEN p.active = true THEN false ELSE true END WHERE p.id = :productId")
     void toggleProductUpdateStatus(@Param("productId") Long productId);
+
+    @Query(
+            value = "SELECT * FROM product p WHERE p.active = true AND p.status = 'SALE' ORDER BY RANDOM() LIMIT 4",
+            nativeQuery = true
+    )
+    List<Product> findRandom4ActiveProductsStatusSale();
+
+
+    @Query(
+            value = "SELECT * FROM product p WHERE p.active = true AND p.status = 'NEW' ORDER BY RANDOM() LIMIT 4",
+            nativeQuery = true
+    )
+    List<Product> findRandom4ActiveProductsStatusNew();
+
+
+    @Query(
+            value = "SELECT * FROM product p WHERE p.active = true AND p.status = 'HOT' ORDER BY RANDOM() LIMIT 4",
+            nativeQuery = true
+    )
+    List<Product> findRandom4ActiveProductsStatusHot();
+
+
 }

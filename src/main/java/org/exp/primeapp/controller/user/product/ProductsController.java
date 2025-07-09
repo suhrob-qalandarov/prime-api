@@ -1,6 +1,7 @@
 package org.exp.primeapp.controller.user.product;
 
 import lombok.RequiredArgsConstructor;
+import org.exp.primeapp.models.dto.responce.user.FeaturedProductRes;
 import org.exp.primeapp.models.dto.responce.user.ProductRes;
 import org.exp.primeapp.service.interfaces.user.ProductService;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,12 @@ public class ProductsController {
     @GetMapping
     public ResponseEntity<List<ProductRes>> getProducts() {
         List<ProductRes> products = productService.getActiveProducts();
+        return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/featured")
+    public ResponseEntity<FeaturedProductRes> getFeaturedRandomProducts() {
+        FeaturedProductRes products = productService.getFeaturedRandomProducts();
         return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
     }
 
