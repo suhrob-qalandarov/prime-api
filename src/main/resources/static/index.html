@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<!-- Top Header (Desktop Only) -->
+<!-- Top Header (Now shows on mobile too) -->
 <div class="top-header">
     <div class="container-custom">
         <div class="row align-items-center">
@@ -172,58 +172,110 @@
             <p class="hero-text">Zamonaviy va sifatli erkaklar kiyimi kolleksiyasi. Har bir mahsulot diqqat bilan tanlab olingan va yuqori sifat standartlariga javob beradi.</p>
         </div>
 
-        <!-- 3D Product Showcase -->
-        <div class="brand-showcase">
+        <!-- Desktop Brand Showcase -->
+        <div class="brand-showcase desktop-only">
             <div class="brand-item loropiana-logo" data-product="polo">
-                <img src="https://tw.loropiana.com/on/demandware.static/Sites-loropiana-b2c-sa-Site/-/default/dw00aaaf6a/images/LoroPiana-logo.svg" alt="Polo Shirt">
+                <img src="https://tw.loropiana.com/on/demandware.static/Sites-loropiana-b2c-sa-Site/-/default/dw00aaaf6a/images/LoroPiana-logo.svg" alt="Loro Piana">
             </div>
-
             <div class="brand-item polo-logo" data-product="cap">
-                <img src="/images/polo-ralph-lauren.png" alt="Baseball Cap">
+                <img src="/images/polo-ralph-lauren.png" alt="Polo Ralph Lauren">
             </div>
-
             <div class="brand-item louboutin-logo" data-product="watch">
-                <img src="/images/louboutin-logo.svg" alt="Wallet">
+                <img src="/images/louboutin-logo.svg" alt="Louboutin">
             </div>
-
             <div class="brand-item hermes-logo" data-product="pants">
-                <img src="/images/hermes-orange.png" alt="Pants">
+                <img src="/images/hermes-orange.png" alt="Hermes">
             </div>
-
             <div class="brand-item versace-medusa-logo" data-product="pants">
-                <img src="/images/versace-medusa-logo.png" alt="Pants">
+                <img src="/images/versace-medusa-logo.png" alt="Versace">
             </div>
-
             <div class="brand-item brunello-logo" data-product="pants">
-                <img src="/images/brunello_cucinelli-logo.png" alt="Pants">
+                <img src="/images/brunello_cucinelli-logo.png" alt="Brunello Cucinelli">
             </div>
-
             <div class="brand-item burberry-logo" data-product="pants">
-                <img src="/images/burberry-logo.png" alt="Pants">
+                <img src="/images/burberry-logo.png" alt="Burberry">
             </div>
-
             <div class="brand-item balenciaga-logo" data-product="pants">
-                <img src="/images/balenciaga-logo.png" alt="Pants">
+                <img src="/images/balenciaga-logo.png" alt="Balenciaga">
             </div>
-
             <div class="brand-item levis-logo" data-product="pants">
-                <img src="/images/levis-logo.png" alt="Pants">
+                <img src="/images/levis-logo.png" alt="Levi's">
             </div>
-
             <div class="brand-item moncler-logo" data-product="pants">
-                <img src="/images/moncler-logo.jpg" alt="Pants">
+                <img src="/images/moncler-logo.jpg" alt="Moncler">
             </div>
-
             <div class="brand-item dolce-gabbana-logo" data-product="wallet">
-                <img src="/images/dolce-gabbana-logo.png" alt="Wallet">
+                <img src="/images/dolce-gabbana-logo.png" alt="Dolce & Gabbana">
             </div>
-
             <div class="brand-item louis_vuitton-logo" data-product="wallet">
-                <img src="/images/louis_vuitton-logo.svg" alt="Wallet">
+                <img src="/images/louis_vuitton-logo.svg" alt="Louis Vuitton">
             </div>
-
             <div class="brand-item zegna-logo" data-product="shoes">
-                <img src="/images/zegna-logo.svg" alt="Wallet">
+                <img src="/images/zegna-logo.svg" alt="Zegna">
+            </div>
+        </div>
+
+        <!-- Mobile Brand Carousel -->
+        <div class="mobile-brand-carousel mobile-only">
+            <div class="mobile-brand-track" id="mobileBrandTrack">
+                <div class="mobile-brand-item">
+                    <img src="https://tw.loropiana.com/on/demandware.static/Sites-loropiana-b2c-sa-Site/-/default/dw00aaaf6a/images/LoroPiana-logo.svg" alt="Loro Piana">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/polo-ralph-lauren.png" alt="Polo Ralph Lauren">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/louboutin-logo.svg" alt="Louboutin">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/hermes-orange.png" alt="Hermes">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/versace-medusa-logo.png" alt="Versace">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/brunello_cucinelli-logo.png" alt="Brunello Cucinelli">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/burberry-logo.png" alt="Burberry">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/balenciaga-logo.png" alt="Balenciaga">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/levis-logo.png" alt="Levi's">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/moncler-logo.jpg" alt="Moncler">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/dolce-gabbana-logo.png" alt="Dolce & Gabbana">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/louis_vuitton-logo.svg" alt="Louis Vuitton">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/zegna-logo.svg" alt="Zegna">
+                </div>
+                <!-- Duplicate items for seamless loop -->
+                <div class="mobile-brand-item">
+                    <img src="https://tw.loropiana.com/on/demandware.static/Sites-loropiana-b2c-sa-Site/-/default/dw00aaaf6a/images/LoroPiana-logo.svg" alt="Loro Piana">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/polo-ralph-lauren.png" alt="Polo Ralph Lauren">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/louboutin-logo.svg" alt="Louboutin">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/hermes-orange.png" alt="Hermes">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/versace-medusa-logo.png" alt="Versace">
+                </div>
+                <div class="mobile-brand-item">
+                    <img src="/images/brunello_cucinelli-logo.png" alt="Brunello Cucinelli">
+                </div>
             </div>
         </div>
     </div>
@@ -259,7 +311,7 @@
     </div>
 </section>
 
-<!-- Featured Products Section - FIXED STRUCTURE -->
+<!-- Featured Products Section -->
 <section class="featured-products-section">
     <div class="featured-container">
         <!-- Tabs -->
