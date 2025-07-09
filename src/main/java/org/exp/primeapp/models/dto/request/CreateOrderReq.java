@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Value;
-import org.exp.primeapp.models.dto.OrderItemDTO;
+import org.exp.primeapp.models.dto.responce.order.OrderItemRes;
 
 import java.util.List;
 
@@ -14,5 +14,5 @@ import java.util.List;
 @Builder
 public class CreateOrderReq {
     Long userId;
-    List<OrderItemDTO> orderItems;
+    List<OrderItemRes> orderItems;
 }
