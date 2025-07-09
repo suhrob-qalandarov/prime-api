@@ -170,29 +170,40 @@ function initializeMobileBottomNav() {
 }
 
 // ======================================================
-// MOBILE BRAND CAROUSEL FUNCTIONALITY - NEW
+// MOBILE BRAND CAROUSEL FUNCTIONALITY - FIXED
 // ======================================================
 function initializeMobileBrandCarousel() {
     const brandTrack = document.getElementById("mobileBrandTrack")
+    const brandCarousel = document.querySelector(".mobile-brand-carousel")
 
-    if (!brandTrack) return
+    if (!brandTrack || !brandCarousel) {
+        console.log("Brand carousel elements not found")
+        return
+    }
+
+    // Force restart animation
+    brandTrack.style.animation = "none"
+    brandTrack.offsetHeight // Trigger reflow
+    brandTrack.style.animation = "brandCarousel 20s linear infinite"
 
     // Pause animation on touch/hover
-    brandTrack.addEventListener("touchstart", () => {
+    brandCarousel.addEventListener("touchstart", () => {
         brandTrack.style.animationPlayState = "paused"
     })
 
-    brandTrack.addEventListener("touchend", () => {
+    brandCarousel.addEventListener("touchend", () => {
         brandTrack.style.animationPlayState = "running"
     })
 
-    brandTrack.addEventListener("mouseenter", () => {
+    brandCarousel.addEventListener("mouseenter", () => {
         brandTrack.style.animationPlayState = "paused"
     })
 
-    brandTrack.addEventListener("mouseleave", () => {
+    brandCarousel.addEventListener("mouseleave", () => {
         brandTrack.style.animationPlayState = "running"
     })
+
+    console.log("Mobile brand carousel initialized successfully")
 }
 
 // ======================================================
@@ -658,7 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeMobileScrollEffects()
     initializeMobileSidebar()
     initializeMobileBottomNav()
-    initializeMobileBrandCarousel() // New mobile brand carousel
+    initializeMobileBrandCarousel() // Qayta ishga tushirildi
     initializeCartModal()
     loadCartFromStorage()
 
@@ -669,7 +680,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", () => {
         // Reinitialize components on resize
         setTimeout(() => {
-            initializeMobileBrandCarousel()
+            initializeMobileBrandCarousel() // Resize da ham qayta ishga tushirish
         }, 100)
     })
 

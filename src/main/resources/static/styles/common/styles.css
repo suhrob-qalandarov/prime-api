@@ -222,11 +222,11 @@ body {
    MOBILE HEADER STYLES - UPDATED
 ====================================================== */
 .mobile-header {
-    background: #f0f0f0; /* Default background same as hero */
+    background: #f0f0f0;
     color: var(--burgundy-light);
-    padding: 10px 0; /* 15px dan 10px ga o'zgartirildi */
+    padding: 10px 0;
     position: fixed;
-    top: 40px; /* Position below top-header */
+    top: 37px;
     left: 0;
     right: 0;
     z-index: 1030;
@@ -234,10 +234,9 @@ body {
     transition: all 0.3s ease;
     transform: translateY(0);
     opacity: 1;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Show header with red background on scroll up (but not at very top) */
 .mobile-header.scrolled-up {
     background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
     backdrop-filter: blur(10px);
@@ -245,12 +244,10 @@ body {
     color: #f5f5dc;
     transform: translateY(0);
     opacity: 1;
-    top: 0; /* Move to top when scrolled */
+    top: 0;
 }
 
-/* Never hide the header - remove scrolled-down class effects */
 .mobile-header.scrolled-down {
-    /* Remove the hide behavior - header should always be visible */
     transform: translateY(0);
     opacity: 1;
 }
@@ -354,13 +351,13 @@ body {
 ====================================================== */
 .mobile-brand-carousel {
     position: absolute;
-    bottom: 40px; /* 20px dan 40px ga o'zgartirildi - yuqoriga ko'tarildi */
+    bottom: 40px;
     left: 0;
     right: 0;
-    height: 80px; /* 60px dan 80px ga o'zgartirildi - balandroq */
+    height: 80px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.05); /* Juda engil background */
-    backdrop-filter: blur(5px); /* Kamroq blur */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
     border-radius: 15px;
     margin: 0 20px;
 }
@@ -371,37 +368,51 @@ body {
     height: 100%;
     animation: brandCarousel 20s linear infinite;
     width: max-content;
+    will-change: transform;
 }
 
 .mobile-brand-item {
     flex-shrink: 0;
-    width: 100px; /* 80px dan 100px ga o'zgartirildi - kattaroq */
-    height: 70px; /* 50px dan 70px ga o'zgartirildi - balandroq */
-    margin: 0 20px; /* 15px dan 20px ga o'zgartirildi - ko'proq oraliq */
+    width: 100px;
+    height: 70px;
+    margin: 0 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: transparent; /* Oq background olib tashlandi */
-    border-radius: 0; /* Border radius olib tashlandi */
-    padding: 8px; /* 5px dan 8px ga o'zgartirildi */
+    background: transparent;
+    border-radius: 0;
+    padding: 8px;
 }
 
 .mobile-brand-item img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    filter: grayscale(0.2); /* 0.3 dan 0.2 ga o'zgartirildi - kamroq grayscale */
+    filter: grayscale(0.2);
     transition: var(--transition);
-    drop-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Engil shadow qo'shildi */
+    drop-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .mobile-brand-item:hover img {
     filter: grayscale(0);
-    transform: scale(1.1); /* 1.05 dan 1.1 ga o'zgartirildi - kattaroq hover effect */
+    transform: scale(1.1);
+}
+
+@keyframes brandCarousel {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.mobile-brand-carousel:hover .mobile-brand-track {
+    animation-play-state: paused;
 }
 
 /* ======================================================
-   MOBILE BOTTOM NAVIGATION - NEW
+   MOBILE BOTTOM NAVIGATION
 ====================================================== */
 .mobile-bottom-nav {
     position: fixed;
@@ -640,7 +651,7 @@ body {
 }
 
 /* ======================================================
-   CART MODAL STYLES - SHARED
+   CART MODAL STYLES
 ====================================================== */
 .cart-modal {
     position: fixed;
@@ -871,7 +882,7 @@ body {
 }
 
 /* ======================================================
-   HERO SECTION - SHARED
+   HERO SECTION
 ====================================================== */
 .hero-section {
     position: relative;
@@ -1248,7 +1259,7 @@ body {
 }
 
 /* ======================================================
-   FOOTER STYLES - SHARED
+   FOOTER STYLES
 ====================================================== */
 .footer {
     background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
@@ -1366,8 +1377,8 @@ body {
 
     /* Hide desktop elements */
     .top-header {
-        display: block !important; /* Keep top-header on mobile */
-        padding: 6px 0; /* 8px dan 6px ga o'zgartirildi */
+        display: block !important;
+        padding: 6px 0;
         font-size: 12px;
     }
 
@@ -1420,14 +1431,14 @@ body {
     /* Hero section adjustments for mobile */
     .hero-section {
         height: 500px;
-        margin-top: 60px; /* 95px dan 60px ga o'zgartirildi */
+        margin-top: 57px;
     }
 
     /* Hero content positioning - top left */
     .hero-content {
         left: 20px;
-        top: 40px; /* 80px dan 40px ga o'zgartirildi */
-        max-width: 320px; /* Increase width for description */
+        top: 40px;
+        max-width: 320px;
         transform: none;
     }
 
@@ -1441,7 +1452,7 @@ body {
     .hero-text {
         font-size: 14px;
         margin-bottom: 20px;
-        display: block; /* Show the description text on mobile */
+        display: block;
         line-height: 1.4;
         color: var(--burgundy-color);
     }
@@ -1486,7 +1497,7 @@ body {
     }
 
     .featured-nav {
-        display: none; /* Hide navigation arrows on mobile */
+        display: none;
     }
 
     .featured-products-track {
