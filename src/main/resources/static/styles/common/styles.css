@@ -350,18 +350,18 @@ body {
 }
 
 /* ======================================================
-   MOBILE BRAND CAROUSEL - NEW
+   MOBILE BRAND CAROUSEL - UPDATED
 ====================================================== */
 .mobile-brand-carousel {
     position: absolute;
-    bottom: 20px;
+    bottom: 40px; /* 20px dan 40px ga o'zgartirildi - yuqoriga ko'tarildi */
     left: 0;
     right: 0;
-    height: 60px;
+    height: 80px; /* 60px dan 80px ga o'zgartirildi - balandroq */
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05); /* Juda engil background */
+    backdrop-filter: blur(5px); /* Kamroq blur */
+    border-radius: 15px;
     margin: 0 20px;
 }
 
@@ -375,42 +375,29 @@ body {
 
 .mobile-brand-item {
     flex-shrink: 0;
-    width: 80px;
-    height: 50px;
-    margin: 0 15px;
+    width: 100px; /* 80px dan 100px ga o'zgartirildi - kattaroq */
+    height: 70px; /* 50px dan 70px ga o'zgartirildi - balandroq */
+    margin: 0 20px; /* 15px dan 20px ga o'zgartirildi - ko'proq oraliq */
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    padding: 5px;
+    background: transparent; /* Oq background olib tashlandi */
+    border-radius: 0; /* Border radius olib tashlandi */
+    padding: 8px; /* 5px dan 8px ga o'zgartirildi */
 }
 
 .mobile-brand-item img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    filter: grayscale(0.3);
+    filter: grayscale(0.2); /* 0.3 dan 0.2 ga o'zgartirildi - kamroq grayscale */
     transition: var(--transition);
+    drop-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Engil shadow qo'shildi */
 }
 
 .mobile-brand-item:hover img {
     filter: grayscale(0);
-    transform: scale(1.05);
-}
-
-@keyframes brandCarousel {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-/* Pause animation on hover */
-.mobile-brand-carousel:hover .mobile-brand-track {
-    animation-play-state: paused;
+    transform: scale(1.1); /* 1.05 dan 1.1 ga o'zgartirildi - kattaroq hover effect */
 }
 
 /* ======================================================
