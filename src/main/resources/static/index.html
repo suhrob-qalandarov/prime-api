@@ -89,13 +89,6 @@
     </div>
 </header>
 
-<div style="position: fixed; bottom: 18px; right: 18px; z-index: 2147483647; border-radius: 50%; background: rgb(229, 229, 229); box-sizing: content-box;">
-    <div style="background: var(--burgundy-light); height: 52px; width: 52px; cursor: pointer; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: rgba(101, 119, 134, 0.75) 1px 1px 4px;">
-        <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" style="padding-top: 4px;">
-            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"></path>
-            <path d="M0 0h24v24H0z" fill="none"></path></svg></div><div style="display: none; height: 450px;"></div>
-</div>
-
 <!-- Mobile Header (Mobile Only) -->
 <div class="mobile-header">
     <div class="container">
@@ -236,88 +229,7 @@
     </div>
 </section>
 
-<!-- Enhanced Quick View Modal -->
-<div class="quick-view-modal" id="quickViewModal">
-    <div class="quick-view-content">
-        <button class="quick-view-close" id="quickViewClose">&times;</button>
-
-        <div class="quick-view-body">
-            <!-- Left side - Product Images -->
-            <div class="quick-view-images">
-                <div class="main-product-image-container">
-                    <img id="quickViewMainImage" src="/placeholder.svg" alt="" class="main-product-image">
-                    <button class="image-navigation image-nav-prev" id="imagePrev">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="image-navigation image-nav-next" id="imageNext">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Right side - Product Info -->
-            <div class="quick-view-info">
-                <h2 class="product-title" id="quickViewTitle"></h2>
-                <div class="product-category-badge" id="quickViewCategory"></div>
-
-                <div class="product-price-section">
-                    <span class="product-current-price" id="quickViewCurrentPrice"></span>
-                    <span class="product-original-price" id="quickViewOriginalPrice"></span>
-                    <span class="product-discount-badge" id="quickViewDiscount"></span>
-                </div>
-
-                <p class="product-description" id="quickViewDescription"></p>
-
-                <div class="product-thumbnails-container" id="quickViewThumbnails">
-                    <!-- Thumbnails will be populated by JavaScript -->
-                </div>
-
-                <!-- Size Selection -->
-                <div class="size-selection" id="sizeSelectionContainer">
-                    <div class="selection-label">O'lcham:</div>
-                    <div class="size-options" id="quickViewSizes">
-                        <!-- Sizes will be populated by JavaScript -->
-                    </div>
-                </div>
-
-                <!-- Quantity and Add to Cart -->
-                <div class="quantity-cart-section">
-                    <div class="quantity-selector">
-                        <button class="quantity-btn" id="decreaseQty">-</button>
-                        <input type="number" class="quantity-input" id="quantityInput" value="1" min="1" max="10">
-                        <button class="quantity-btn" id="increaseQty">+</button>
-                    </div>
-                    <button class="add-to-cart-btn" id="addToCartBtn">
-                        <i class="fas fa-shopping-cart"></i>
-                        Savatga qo'shish
-                    </button>
-                </div>
-
-                <!-- Product Features -->
-                <div class="product-features">
-                    <div class="feature-item">
-                        <i class="fas fa-truck feature-icon"></i>
-                        <span>Bepul yetkazib berish 200,000 so'mdan yuqori</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-undo feature-icon"></i>
-                        <span>30 kun ichida qaytarish</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-shield-alt feature-icon"></i>
-                        <span>1 yil kafolat</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="fas fa-medal feature-icon"></i>
-                        <span>Premium sifat</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Categories Section - UPDATED FOR DYNAMIC SPOTLIGHT LOADING -->
+<!-- Categories Section -->
 <section class="category-section">
     <div class="container-fluid px-0">
         <!-- Loading State -->
@@ -340,37 +252,65 @@
             </div>
         </div>
 
-        <!-- Spotlight Categories Container - Will be populated dynamically -->
+        <!-- Spotlight Categories Container -->
         <div class="row g-0" id="categoriesContainer">
             <!-- Spotlight categories will be loaded here dynamically -->
         </div>
     </div>
 </section>
 
-<!-- Featured Products Section -->
-<section class="section-padding" style="background-color: #fafafa;">
-    <div class="container-fluid">
+<!-- Featured Products Section - FIXED STRUCTURE -->
+<section class="featured-products-section">
+    <div class="featured-container">
+        <!-- Tabs -->
         <div class="featured-tabs">
             <button class="featured-tab active" data-tab="new">Yangi</button>
-            <button class="featured-tab" data-tab="popular">Mashhur</button>
+            <button class="featured-tab" data-tab="hot">Mashhur</button>
             <button class="featured-tab" data-tab="sale">Chegirmada</button>
         </div>
 
+        <!-- New Products -->
         <div class="featured-content active" id="new-products">
-            <div class="row" id="new-products-grid">
-                <!-- New products will be loaded here -->
+            <div class="featured-carousel">
+                <button class="featured-nav featured-nav-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="featured-products-track" id="new-products-grid">
+                    <!-- New products will be loaded here -->
+                </div>
+                <button class="featured-nav featured-nav-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
 
-        <div class="featured-content" id="popular-products">
-            <div class="row" id="popular-products-grid">
-                <!-- Popular products will be loaded here -->
+        <!-- Hot Products -->
+        <div class="featured-content" id="hot-products">
+            <div class="featured-carousel">
+                <button class="featured-nav featured-nav-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="featured-products-track" id="hot-products-grid">
+                    <!-- Hot products will be loaded here -->
+                </div>
+                <button class="featured-nav featured-nav-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
 
+        <!-- Sale Products -->
         <div class="featured-content" id="sale-products">
-            <div class="row" id="sale-products-grid">
-                <!-- Sale products will be loaded here -->
+            <div class="featured-carousel">
+                <button class="featured-nav featured-nav-prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="featured-products-track" id="sale-products-grid">
+                    <!-- Sale products will be loaded here -->
+                </div>
+                <button class="featured-nav featured-nav-next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -403,9 +343,7 @@
     </div>
     <div class="bottom-nav-item" id="searchBtn">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-            <path
-                    d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z">
-            </path>
+            <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
         </svg>
         <span>Qidirish</span>
     </div>
@@ -465,6 +403,8 @@
     </div>
 </footer>
 
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="scripts/common/api.js"></script>
 <script src="scripts/common/featured.js"></script>
 <script src="scripts/desktop/common/script.js"></script>

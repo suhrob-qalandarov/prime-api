@@ -1,8 +1,8 @@
 // ======================================================
-// FEATURED PRODUCTS FUNCTIONALITY
+// FEATURED PRODUCTS FUNCTIONALITY - FIXED VERSION
 // ======================================================
 
-import axios from "axios" // Declare axios variable
+import axios from "axios"
 
 class FeaturedProducts {
     constructor() {
@@ -19,7 +19,7 @@ class FeaturedProducts {
         }
         this.cardWidth = 300 // 280px + 20px gap
         this.visibleCards = 4
-        API_BASE_URL = "https://prime77.uz"
+        this.API_BASE_URL = "https://prime77.uz"
 
         this.init()
     }
@@ -47,7 +47,7 @@ class FeaturedProducts {
             console.log("Loading featured products from API...")
 
             // Use axios to fetch featured products
-            const response = await axios.get(`${API_BASE_URL}/api/v1/products/featured`)
+            const response = await axios.get(`${this.API_BASE_URL}/api/v1/products/featured`)
 
             console.log("Featured products API response:", response.data)
 
@@ -57,9 +57,9 @@ class FeaturedProducts {
 
             // Map API response to our structure
             this.products = {
-                new: response.data.newStatusProducts || [],
-                hot: response.data.hotStatusProducts || [],
-                sale: response.data.saleStatusProducts || [],
+                new: response.data.saleStatusProducts || [],
+                hot: response.data.newStatusProducts || [],
+                sale: response.data.hotStatusProducts || [],
             }
 
             console.log("Featured products loaded successfully:", {
@@ -102,18 +102,24 @@ class FeaturedProducts {
                 sampleProduct(2, "Yangi Ko'ylak", "NEW", 200000),
                 sampleProduct(3, "Yangi Shim", "NEW", 180000),
                 sampleProduct(4, "Yangi Kurtka", "NEW", 350000),
+                sampleProduct(5, "Yangi Polo", "NEW", 120000),
+                sampleProduct(6, "Yangi Jins", "NEW", 250000),
             ],
             hot: [
-                sampleProduct(5, "Mashhur Polo", "HOT", 120000),
-                sampleProduct(6, "Mashhur Jins", "HOT", 250000),
-                sampleProduct(7, "Mashhur Kepka", "HOT", 80000),
-                sampleProduct(8, "Mashhur Krossovka", "HOT", 400000),
+                sampleProduct(7, "Mashhur Polo", "HOT", 120000),
+                sampleProduct(8, "Mashhur Jins", "HOT", 250000),
+                sampleProduct(9, "Mashhur Kepka", "HOT", 80000),
+                sampleProduct(10, "Mashhur Krossovka", "HOT", 400000),
+                sampleProduct(11, "Mashhur Ko'ylak", "HOT", 180000),
+                sampleProduct(12, "Mashhur Shim", "HOT", 220000),
             ],
             sale: [
-                sampleProduct(9, "Chegirmadagi Ko'ylak", "SALE", 200000, 25),
-                sampleProduct(10, "Chegirmadagi Shim", "SALE", 180000, 30),
-                sampleProduct(11, "Chegirmadagi Kurtka", "SALE", 350000, 20),
-                sampleProduct(12, "Chegirmadagi Ayoqqabı", "SALE", 300000, 35),
+                sampleProduct(13, "Chegirmadagi Ko'ylak", "SALE", 200000, 25),
+                sampleProduct(14, "Chegirmadagi Shim", "SALE", 180000, 30),
+                sampleProduct(15, "Chegirmadagi Kurtka", "SALE", 350000, 20),
+                sampleProduct(16, "Chegirmadagi Ayoqqabı", "SALE", 300000, 35),
+                sampleProduct(17, "Chegirmadagi T-shirt", "SALE", 150000, 40),
+                sampleProduct(18, "Chegirmadagi Jins", "SALE", 250000, 25),
             ],
         }
 
@@ -240,7 +246,7 @@ class FeaturedProducts {
             if (window.API && window.API.getImageUrl) {
                 mainImageUrl = window.API.getImageUrl(product.attachmentKeys[0])
             } else {
-                mainImageUrl = `${API_BASE_URL}/api/v1/attachment/${product.attachmentKeys[0]}`
+                mainImageUrl = `${this.API_BASE_URL}/api/v1/attachment/${product.attachmentKeys[0]}`
             }
         }
 
@@ -333,7 +339,7 @@ class FeaturedProducts {
     }
 
     updateNavigationStates() {
-        ;["new", "hot", "sale"].forEach((type) => {
+        ;["NEW", "HOT", "SALE"].forEach((type) => {
             const products = this.products[type] || []
             const maxPosition = Math.max(0, products.length - this.visibleCards)
             const currentPosition = this.carouselPositions[type]
@@ -430,7 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Error creating FeaturedProducts instance:", error)
         }
-    }, 500)
+    }, 1000)
 })
 
 // Handle window resize
