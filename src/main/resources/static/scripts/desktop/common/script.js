@@ -223,7 +223,7 @@ async function loadCategories() {
         console.log("Loading spotlight categories from API...")
 
         // API dan spotlight kategoriyalarni olish
-        const spotlights = (await window.API?.fetchSpotlightCategories()) || []
+        const spotlights = await window.API.fetchSpotlightCategories()
 
         // Loading holatini yashirish
         categoryLoading.style.display = "none"
@@ -254,8 +254,11 @@ async function loadCategories() {
         // Error holatini ko'rsatish
         categoryError.style.display = "block"
 
-        // API ishlamasa fallback kategoriyalarni yuklash
-        loadFallbackCategories()
+        // Update error message
+        const errorMessage = categoryError.querySelector("p")
+        if (errorMessage) {
+            errorMessage.textContent = "Backend serverga ulanib bo'lmadi. Server ishlab turganini tekshiring."
+        }
     }
 }
 
@@ -268,8 +271,8 @@ function createSpotlightCard(spotlight, index) {
     categoryCard.className = "category-card"
     categoryCard.setAttribute("data-spotlight-id", spotlight.id)
 
-    // imageKey dan rasm URL olish
-    const imageUrl = spotlight.imageKey ? window.API?.getImageUrl(spotlight.imageKey) : "/images/default/category.jpeg"
+    // imageKey dan rasm URL olish - API dan
+    const imageUrl = spotlight.imageKey ? window.API.getImageUrl(spotlight.imageKey) : "/images/default/category.jpeg"
 
     categoryCard.innerHTML = `
         <img src="${imageUrl}" alt="${spotlight.name}" class="category-img" loading="lazy">
@@ -301,59 +304,10 @@ function handleSpotlightClick(spotlight) {
     // Bu yerda navigation logic qo'shishingiz mumkin
     // Masalan: window.location.href = `/spotlight/${spotlight.id}`
 
-    // Hozircha notification ko'rsatamiz
-    if (window.API?.showSuccessNotification) {
+    // API notification ko'rsatish
+    if (window.API && window.API.showSuccessNotification) {
         window.API.showSuccessNotification(`${spotlight.name} spotlight tanlandi`)
     }
-}
-
-/**
- * Load fallback categories if API fails
- */
-function loadFallbackCategories() {
-    const categoriesContainer = document.getElementById("categoriesContainer")
-
-    const fallbackCategories = [
-        { id: 1, name: "Ko'ylaklar", imageKey: null },
-        { id: 2, name: "Shimlar", imageKey: null },
-        { id: 3, name: "Poyabzallar", imageKey: null },
-        { id: 4, name: "Aksessuarlar", imageKey: null },
-    ]
-
-    const fallbackImages = [
-        "/images/clothes.jpeg",
-        "/images/jens.jpeg",
-        "/images/mens-shoes.jpeg",
-        "/images/accessors.jpeg",
-    ]
-
-    categoriesContainer.innerHTML = ""
-
-    fallbackCategories.forEach((category, index) => {
-        const colDiv = document.createElement("div")
-        colDiv.className = "col-lg-3 col-md-6 col-6"
-
-        const categoryCard = document.createElement("div")
-        categoryCard.className = "category-card"
-        categoryCard.setAttribute("data-category-id", category.id)
-
-        categoryCard.innerHTML = `
-            <img src="${fallbackImages[index]}" alt="${category.name}" class="category-img">
-            <div class="category-overlay">
-                <h3 class="category-title">${category.name.toUpperCase()}</h3>
-            </div>
-        `
-
-        categoryCard.addEventListener("click", () => {
-            handleSpotlightClick(category)
-        })
-
-        colDiv.appendChild(categoryCard)
-        categoriesContainer.appendChild(colDiv)
-    })
-
-    categoriesContainer.style.display = "flex"
-    console.log("Fallback categories loaded")
 }
 
 // ======================================================
