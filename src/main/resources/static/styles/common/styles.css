@@ -351,10 +351,10 @@ body {
 ====================================================== */
 .mobile-brand-carousel {
     position: absolute;
-    bottom: 5px; /* 15px dan 5px ga o'zgartiring */
+    bottom: 25px; /* Move down more to create space with spotlights */
     left: 0;
     right: 0;
-    height: 95px;
+    height: 110px; /* Increase height for larger logos */
     overflow: hidden;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
@@ -373,20 +373,20 @@ body {
 
 .mobile-brand-item {
     flex-shrink: 0;
-    width: 120px;
-    height: 85px;
-    margin: 0 12px;
+    width: 140px; /* Increase from 120px */
+    height: 100px; /* Increase from 85px */
+    margin: 0 15px; /* Increase spacing between items */
     display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;
     border-radius: 0;
-    padding: 10px;
+    padding: 12px; /* Increase padding */
 }
 
 .mobile-brand-item img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100px; /* Set fixed width for consistency */
+    height: 80px; /* Set fixed height for consistency */
     object-fit: contain;
     filter: grayscale(0.2);
     transition: var(--transition);
@@ -1430,7 +1430,7 @@ body {
 
     /* Hero section adjustments for mobile */
     .hero-section {
-        height: 500px;
+        height: 320px; /* Increase from 400px to accommodate text */
         margin-top: 57px;
     }
 
@@ -1444,15 +1444,15 @@ body {
 
     .hero-title {
         font-size: 1.6rem;
-        margin-bottom: 5px; /* 15px dan 5px ga o'zgartiring */
+        margin-bottom: 0px; /* 5px dan 0px ga o'zgartiring */
         line-height: 1.1;
         color: var(--burgundy-color);
     }
 
     .hero-text {
         font-size: 14px;
-        margin-bottom: 10px;
-        display: none; /* Mobile da yashirish */
+        margin-bottom: -190px; /* Drastically reduce space to brands */
+        display: block; /* Show on mobile instead of none */
         line-height: 1.4;
         color: var(--burgundy-color);
     }
