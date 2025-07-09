@@ -351,7 +351,7 @@ body {
 ====================================================== */
 .mobile-brand-carousel {
     position: absolute;
-    bottom: 40px;
+    bottom: 15px; /* 40px dan 15px ga o'zgartiring */
     left: 0;
     right: 0;
     height: 95px;
@@ -1451,7 +1451,7 @@ body {
 
     .hero-text {
         font-size: 14px;
-        margin-bottom: 20px;
+        margin-bottom: 10px; /* 20px dan 10px ga o'zgartiring */
         display: block;
         line-height: 1.4;
         color: var(--burgundy-color);
