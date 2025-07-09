@@ -354,7 +354,7 @@ body {
     bottom: 40px;
     left: 0;
     right: 0;
-    height: 80px;
+    height: 95px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
@@ -373,15 +373,15 @@ body {
 
 .mobile-brand-item {
     flex-shrink: 0;
-    width: 100px;
-    height: 70px;
-    margin: 0 20px;
+    width: 120px;
+    height: 85px;
+    margin: 0 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;
     border-radius: 0;
-    padding: 8px;
+    padding: 10px;
 }
 
 .mobile-brand-item img {
