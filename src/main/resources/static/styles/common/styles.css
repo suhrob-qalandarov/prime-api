@@ -318,7 +318,7 @@ body {
 .mobile-header.scrolled-up {
     background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
     backdrop-filter: blur(10px);
-    box-shadow: var(--box_shadow);
+    box-shadow: var(--burgundy-dark);
     color: #f5f5dc;
     transform: translateY(0);
     opacity: 1;
@@ -398,7 +398,7 @@ body {
 }
 
 .mobile-header-icon {
-    color: var(--burgundy-light);
+    color: var(--burgundy-dark);
     text-decoration: none;
     cursor: pointer;
     padding: 8px;
@@ -411,7 +411,7 @@ body {
 }
 
 .mobile-header-icon:hover {
-    color: var(--burgundy-dark);
+    color: black;
 }
 
 .mobile-header.scrolled-up .mobile-header-icon:hover {
@@ -419,8 +419,8 @@ body {
 }
 
 .mobile-header-icon svg {
-    width: 20px;
-    height: 20px;
+    width: 23px;
+    height: 23px;
     fill: currentColor;
 }
 
@@ -429,7 +429,7 @@ body {
 ====================================================== */
 .mobile-brand-carousel {
     position: absolute;
-    bottom: 25px; /* Move down more to create space with spotlights */
+    bottom: 25px; /* Change from -35px to 25px */
     left: 0;
     right: 0;
     height: 110px; /* Increase height for larger logos */
@@ -498,11 +498,11 @@ body {
     left: 0;
     right: 0;
     background: white;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid var(--burgundy-dark);
     display: none;
     justify-content: space-around;
     align-items: center;
-    padding: -5px 0 -6px 0;
+    padding: 0 0 0 0;
     z-index: 1020;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -516,7 +516,7 @@ body {
     padding: 12px 16px;
     border-radius: 12px;
     transition: var(--transition);
-    color: var(--burgundy-dark); /* Change default color to burgundy-light */
+    color: var(--burgundy-dark); /* Change from var(--burgundy-light) to var(--burgundy-dark) */
     min-width: 70px;
 }
 
@@ -1478,7 +1478,7 @@ body {
 
     /* Add bottom padding to body for bottom nav */
     body {
-        padding-bottom: 60px; /* Reduce by 20px to match smaller bottom nav */
+        padding-bottom: 75px; /* Reduce from 60px to 57px (3px reduction) */
     }
 
     /* Container adjustments */
