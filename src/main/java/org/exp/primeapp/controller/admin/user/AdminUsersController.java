@@ -1,9 +1,11 @@
 package org.exp.primeapp.controller.admin.user;
 
 import lombok.RequiredArgsConstructor;
+import org.exp.primeapp.models.dto.responce.admin.AdminUserDashboardRes;
 import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.repository.UserRepository;
+import org.exp.primeapp.service.interfaces.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +20,11 @@ import static org.exp.primeapp.utils.Const.*;
 @RequestMapping(API + V1 + ADMIN + USERS)
 @RequiredArgsConstructor
 public class AdminUsersController {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<UserRes>> getAllUsers() {
-        List<User> users = userRepository.findAll();
+    @GetMapping(DASHBOARD)
+    public ResponseEntity<AdminUserDashboardRes> getAllUsers() {
+        AdminUserDashboardRes users = userService.getAdminAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 

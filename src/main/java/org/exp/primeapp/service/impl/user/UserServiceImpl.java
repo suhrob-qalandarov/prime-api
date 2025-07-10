@@ -3,6 +3,8 @@ package org.exp.primeapp.service.impl.user;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.UserReq;
 import org.exp.primeapp.models.dto.request.UserUpdateReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminUserDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminUserRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.Role;
@@ -132,6 +134,32 @@ public class UserServiceImpl implements UserService {
         } else {
             return new ApiResponse(false, "Product not found with id or already active");
         }
+    }
+
+    @Override
+    public AdminUserDashboardRes getAdminAllUsers() {
+        List<AdminUserRes> adminUserResList = userRepository.findAll().stream().map(this::convertToAdminUserRes).toList();
+        List<AdminUserRes> adminActiveUserResList = userRepository.findAllByActive(true).stream().map(this::convertToAdminUserRes).toList();
+        List<AdminUserRes> adminInactiveUserResList = userRepository.findAllByActive(false).stream().map(this::convertToAdminUserRes).toList();
+
+        long count = userRepository.count();
+        long activeCount = userRepository.countByActive(true);
+        long inactiveCount = count - activeCount;
+
+
+        return new AdminUserDashboardRes(count, activeCount, inactiveCount, adminUserResList, adminActiveUserResList, adminInactiveUserResList);
+    }
+
+    private AdminUserRes convertToAdminUserRes(User user) {
+        return new AdminUserRes(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getActive(),
+                user.getCreatedAt()
+        );
     }
 
     private void checkUserActiveAndRolesAndUse(Boolean userReq, User user, List<Long> userReq1) {
