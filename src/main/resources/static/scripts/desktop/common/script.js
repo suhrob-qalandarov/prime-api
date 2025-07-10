@@ -311,72 +311,14 @@ function handleSpotlightClick(spotlight) {
 }
 
 // ======================================================
-// CART FUNCTIONALITY
+// CART FUNCTIONALITY - TEST MAHSULOTLARSIZ
 // ======================================================
 let cartItems = []
 let cartCount = 0
 let cartTotal = 0
 
-// Sample product data
-const productData = {
-    cap: {
-        name: "Kepka",
-        currentPrice: 129000,
-        originalPrice: 160000,
-        images: ["/images/polo-cap.png"],
-        category: "AKSESSUARLAR",
-        description: "Yuqori sifatli kepka, zamonaviy dizayn bilan.",
-        sizes: ["S", "M", "L", "XL"],
-    },
-    shopper: {
-        name: "Shopper",
-        currentPrice: 109000,
-        originalPrice: 150000,
-        images: ["/images/shopper.png"],
-        category: "AKSESSUARLAR",
-        description: "Keng va qulay shopper sumka.",
-        sizes: [],
-    },
-    watch: {
-        name: "Soat",
-        currentPrice: 299000,
-        originalPrice: 399000,
-        images: ["/images/watch-2.png", "/images/polo-watch.png"],
-        category: "AKSESSUARLAR",
-        description: "Premium sifatli qo'l soati.",
-        sizes: [],
-    },
-    wallet: {
-        name: "Hamyon",
-        currentPrice: 89000,
-        originalPrice: 120000,
-        images: ["/images/polo-wallet.png"],
-        category: "AKSESSUARLAR",
-        description: "Zamonaviy va funksional hamyon.",
-        sizes: [],
-    },
-    shoes: {
-        name: "Krossovka",
-        currentPrice: 399000,
-        originalPrice: 499000,
-        images: ["/images/polo-sneakers.png"],
-        category: "AKSESSUARLAR",
-        description: "Sport va kundalik kiyish uchun krossovka.",
-        sizes: ["39", "40", "41", "42", "43", "44"],
-    },
-    tshirt: {
-        name: "T-shirt",
-        currentPrice: 199000,
-        originalPrice: 249000,
-        images: ["/images/bmw-t-shirt.jpg", "/images/hero-badge.jpg"],
-        category: "AKSESSUARLAR",
-        description: "Yumshoq va qulay t-shirt.",
-        sizes: ["S", "M", "L", "XL", "XXL"],
-    },
-}
-
 function formatPrice(price) {
-    return new Intl.NumberFormat("uz-UZ").format(price) + " So'm"
+    return new Intl.NumberFormat("uz-UZ").format(price) + " so'm"
 }
 
 function updateCartBadge() {
@@ -401,8 +343,8 @@ function updateCartBadge() {
 
 function updateCartTotal() {
     cartTotal = cartItems.reduce((total, item) => {
-        const product = productData[item.productId]
-        return total + (product ? product.currentPrice * item.quantity : 0)
+        // Bu yerda real mahsulot ma'lumotlari API dan keladi
+        return total + item.price * item.quantity
     }, 0)
 
     const cartTotalPrice = document.getElementById("cartTotalPrice")
@@ -421,29 +363,31 @@ function renderCartItems() {
     const cartItemsContainer = document.getElementById("cartItems")
     const cartFooter = document.getElementById("cartFooter")
 
+    console.log("Rendering cart items, count:", cartItems.length)
+
     if (cartItems.length === 0) {
         cartEmpty.style.display = "block"
         cartItemsContainer.style.display = "none"
         cartFooter.style.display = "none"
+        console.log("Cart is empty")
     } else {
         cartEmpty.style.display = "none"
         cartItemsContainer.style.display = "block"
         cartFooter.style.display = "block"
 
+        console.log("Cart has items, showing footer")
+
         cartItemsContainer.innerHTML = ""
 
         cartItems.forEach((item, index) => {
-            const product = productData[item.productId]
-            if (!product) return
-
             const cartItem = document.createElement("div")
             cartItem.className = "cart-item"
             cartItem.innerHTML = `
-        <img src="${product.images[0]}" alt="${product.name}" class="cart-item-image">
+        <img src="${item.image}" alt="${item.name}" class="cart-item-image">
         <div class="cart-item-details">
-          <h4 class="cart-item-name">${product.name}</h4>
+          <h4 class="cart-item-name">${item.name}</h4>
           ${item.size ? `<div class="cart-item-size">O'lcham: ${item.size}</div>` : ""}
-          <div class="cart-item-price">${formatPrice(product.currentPrice)}</div>
+          <div class="cart-item-price">${formatPrice(item.price)}</div>
           <div class="cart-item-controls">
             <button class="cart-quantity-btn" onclick="updateCartItemQuantity(${index}, -1)">-</button>
             <span class="cart-quantity">${item.quantity}</span>
@@ -461,14 +405,17 @@ function renderCartItems() {
     updateCartTotal()
 }
 
-function addToCart(productId, quantity = 1, size = null) {
-    const existingItemIndex = cartItems.findIndex((item) => item.productId === productId && item.size === size)
+function addToCart(productData, quantity = 1, size = null) {
+    const existingItemIndex = cartItems.findIndex((item) => item.id === productData.id && item.size === size)
 
     if (existingItemIndex !== -1) {
         cartItems[existingItemIndex].quantity += quantity
     } else {
         cartItems.push({
-            productId: productId,
+            id: productData.id,
+            name: productData.name,
+            price: productData.price,
+            image: productData.image,
             quantity: quantity,
             size: size,
             addedAt: new Date(),
@@ -529,7 +476,7 @@ function showNotification(message, type = "info") {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: ${type === "success" ? "#4CAF50" : "#2196F3"};
+    background: ${type === "success" ? "#4CAF50" : type === "warning" ? "#ff9800" : "#2196F3"};
     color: white;
     padding: 15px 20px;
     border-radius: 8px;
@@ -572,18 +519,21 @@ function initializeCartModal() {
         e.preventDefault()
         cartModal?.classList.add("show")
         document.body.style.overflow = "hidden"
+        console.log("Desktop cart opened")
     })
 
     mobileCartIcon?.addEventListener("click", (e) => {
         e.preventDefault()
         cartModal?.classList.add("show")
         document.body.style.overflow = "hidden"
+        console.log("Mobile cart opened")
     })
 
     // Close cart modal
     cartClose?.addEventListener("click", () => {
         cartModal?.classList.remove("show")
         document.body.style.overflow = "auto"
+        console.log("Cart closed")
     })
 
     // Close on outside click
@@ -597,9 +547,10 @@ function initializeCartModal() {
     // Cart View Button functionality
     cartViewBtn?.addEventListener("click", () => {
         console.log("Savat ko'rish tugmasi bosildi")
-        // You can add navigation to cart page here
-        // window.location.href = '/cart'
         showNotification("Savat sahifasiga o'tish", "info")
+        // Close cart modal
+        cartModal?.classList.remove("show")
+        document.body.style.overflow = "auto"
     })
 
     // Cart Checkout Button functionality
@@ -613,12 +564,16 @@ function initializeCartModal() {
         console.log("Cart items:", cartItems)
         console.log("Total:", formatPrice(cartTotal))
 
-        // You can add checkout logic here
-        showNotification("Buyurtma berishga o'tish...", "success")
+        showNotification(`Buyurtma: ${formatPrice(cartTotal)} - Tasdiqlash...`, "success")
 
-        // Example: redirect to checkout page
-        // window.location.href = '/checkout'
+        // Close cart modal after 2 seconds
+        setTimeout(() => {
+            cartModal?.classList.remove("show")
+            document.body.style.overflow = "auto"
+        }, 2000)
     })
+
+    console.log("Cart modal initialized with buttons")
 }
 
 // ======================================================
