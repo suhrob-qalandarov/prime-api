@@ -511,29 +511,29 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px; /* Increase gap */
+    gap: 6px;
     cursor: pointer;
-    padding: 12px 16px; /* Increase padding */
-    border-radius: 12px; /* Increase border radius */
+    padding: 12px 16px;
+    border-radius: 12px;
     transition: var(--transition);
-    color: #666;
-    min-width: 70px; /* Increase min-width */
+    color: var(--burgundy-dark); /* Change default color to burgundy-light */
+    min-width: 70px;
 }
 
 .bottom-nav-item:hover,
 .bottom-nav-item.active {
-    color: var(--burgundy-light); /* Change to burgundy-light */
-    background: transparent; /* Remove background hover */
+    color: black; /* Change hover color to black */
+    background: transparent;
 }
 
 .bottom-nav-item svg {
     flex-shrink: 0;
-    width: 24px; /* Increase icon size */
-    height: 24px; /* Increase icon size */
+    width: 20px; /* Reduce from 24px to 20px */
+    height: 20px; /* Reduce from 24px to 20px */
 }
 
 .bottom-nav-item span {
-    font-size: 12px; /* Increase font size */
+    font-size: 14px; /* Increase from 12px to 14px */
     font-weight: 500;
     text-align: center;
     line-height: 1;
