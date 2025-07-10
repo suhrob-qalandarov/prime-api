@@ -1,8 +1,4 @@
-// ======================================================
-// FEATURED PRODUCTS FUNCTIONALITY
-// ======================================================
-
-import axios from "axios" // Declare axios variable
+import axios from "axios"
 
 class FeaturedProducts {
     constructor() {
@@ -19,47 +15,69 @@ class FeaturedProducts {
         }
         this.cardWidth = 300 // 280px + 20px gap
         this.visibleCards = 4
-        API_BASE_URL = "https://prime77.uz"
+        this.API_BASE_URL = "https://prime77.uz"
+        this.isLoading = false
 
+        console.log("FeaturedProducts constructor called")
         this.init()
     }
 
     async init() {
         try {
             console.log("Initializing Featured Products...")
-            await this.loadFeaturedProducts()
+
+            // Initialize UI components first
             this.initializeTabs()
             this.initializeCarousels()
+
+            // Show loading state
+            this.showLoading()
+
+            // Load products from API
+            await this.loadFeaturedProducts()
+
+            // Show first tab
             this.showTab("new")
+
             console.log("Featured Products initialized successfully!")
         } catch (error) {
             console.error("Error initializing featured products:", error)
-            this.loadFallbackData()
-            this.initializeTabs()
-            this.initializeCarousels()
-            this.showTab("new")
+            this.showError()
         }
     }
 
     async loadFeaturedProducts() {
         try {
-            this.showLoading()
+            this.isLoading = true
             console.log("Loading featured products from API...")
 
-            // Use axios to fetch featured products
-            const response = await axios.get(`${API_BASE_URL}/api/v1/products/featured`)
+            // Check if axios is available
+            if (typeof axios === "undefined") {
+                throw new Error("Axios library not loaded")
+            }
+
+            const response = await axios.get(`${this.API_BASE_URL}/api/v1/products/featured`, {
+                timeout: 10000, // 10 second timeout
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
 
             console.log("Featured products API response:", response.data)
 
             if (!response.data) {
-                throw new Error("No featured products data received")
+                throw new Error("No data received from API")
             }
 
-            // Map API response to our structure
+            // Extract products from API response
+            const newProducts = response.data.newStatusProducts || []
+            const hotProducts = response.data.hotStatusProducts || []
+            const saleProducts = response.data.saleStatusProducts || []
+
             this.products = {
-                new: response.data.newStatusProducts || [],
-                hot: response.data.hotStatusProducts || [],
-                sale: response.data.saleStatusProducts || [],
+                new: newProducts,
+                hot: hotProducts,
+                sale: saleProducts,
             }
 
             console.log("Featured products loaded successfully:", {
@@ -68,63 +86,32 @@ class FeaturedProducts {
                 sale: this.products.sale.length,
             })
 
+            this.isLoading = false
             this.hideLoading()
         } catch (error) {
             console.error("Error loading featured products from API:", error)
+            this.isLoading = false
             this.hideLoading()
-            this.loadFallbackData()
+
+            // Set empty products
+            this.products = {
+                new: [],
+                hot: [],
+                sale: [],
+            }
+
+            throw error
         }
-    }
-
-    loadFallbackData() {
-        console.log("Loading fallback featured products data...")
-
-        // Create sample fallback data
-        const sampleProduct = (id, name, status, price, discount = 0) => ({
-            id: id,
-            name: name,
-            description: `${name} mahsuloti haqida ma'lumot`,
-            price: price,
-            discount: discount,
-            status: status,
-            categoryName: "KIYIM",
-            attachmentKeys: ["sample-image.jpg"],
-            productSizes: [
-                { size: "M", amount: 5 },
-                { size: "L", amount: 3 },
-                { size: "XL", amount: 2 },
-            ],
-        })
-
-        this.products = {
-            new: [
-                sampleProduct(1, "Yangi T-shirt", "NEW", 150000),
-                sampleProduct(2, "Yangi Ko'ylak", "NEW", 200000),
-                sampleProduct(3, "Yangi Shim", "NEW", 180000),
-                sampleProduct(4, "Yangi Kurtka", "NEW", 350000),
-            ],
-            hot: [
-                sampleProduct(5, "Mashhur Polo", "HOT", 120000),
-                sampleProduct(6, "Mashhur Jins", "HOT", 250000),
-                sampleProduct(7, "Mashhur Kepka", "HOT", 80000),
-                sampleProduct(8, "Mashhur Krossovka", "HOT", 400000),
-            ],
-            sale: [
-                sampleProduct(9, "Chegirmadagi Ko'ylak", "SALE", 200000, 25),
-                sampleProduct(10, "Chegirmadagi Shim", "SALE", 180000, 30),
-                sampleProduct(11, "Chegirmadagi Kurtka", "SALE", 350000, 20),
-                sampleProduct(12, "Chegirmadagi Ayoqqabı", "SALE", 300000, 35),
-            ],
-        }
-
-        console.log("Fallback products loaded:", this.products)
     }
 
     initializeTabs() {
         console.log("Initializing tabs...")
         const tabs = document.querySelectorAll(".featured-tab")
+        console.log("Found tabs:", tabs.length)
 
-        tabs.forEach((tab) => {
+        tabs.forEach((tab, index) => {
+            console.log(`Tab ${index}:`, tab.getAttribute("data-tab"))
+
             tab.addEventListener("click", (e) => {
                 e.preventDefault()
                 const tabType = tab.getAttribute("data-tab")
@@ -136,11 +123,11 @@ class FeaturedProducts {
 
     initializeCarousels() {
         console.log("Initializing carousels...")
-
-        // Initialize navigation for each carousel
         ;["new", "hot", "sale"].forEach((type) => {
             const prevBtn = document.querySelector(`#${type}-products .featured-nav-prev`)
             const nextBtn = document.querySelector(`#${type}-products .featured-nav-next`)
+
+            console.log(`Carousel ${type}:`, { prevBtn: !!prevBtn, nextBtn: !!nextBtn })
 
             if (prevBtn && nextBtn) {
                 prevBtn.addEventListener("click", (e) => {
@@ -157,7 +144,6 @@ class FeaturedProducts {
             }
         })
 
-        // Update navigation states
         this.updateNavigationStates()
     }
 
@@ -172,23 +158,33 @@ class FeaturedProducts {
         const activeTab = document.querySelector(`[data-tab="${tabType}"]`)
         if (activeTab) {
             activeTab.classList.add("active")
+            console.log("Active tab set:", tabType)
+        } else {
+            console.error("Active tab not found:", tabType)
         }
 
         // Update active content
         document.querySelectorAll(".featured-content").forEach((content) => {
             content.classList.remove("active")
+            content.style.display = "none"
         })
 
         const activeContent = document.getElementById(`${tabType}-products`)
         if (activeContent) {
             activeContent.classList.add("active")
+            activeContent.style.display = "block"
+            console.log("Active content set:", tabType)
+        } else {
+            console.error("Active content not found:", `${tabType}-products`)
         }
 
         this.currentTab = tabType
 
         // Render products for this tab
-        this.renderProducts(tabType)
-        this.updateNavigationStates()
+        if (!this.isLoading) {
+            this.renderProducts(tabType)
+            this.updateNavigationStates()
+        }
     }
 
     renderProducts(type) {
@@ -205,11 +201,12 @@ class FeaturedProducts {
 
         if (products.length === 0) {
             container.innerHTML = `
-        <div class="featured-error">
-          <i class="fas fa-box-open" style="font-size: 48px; color: #ddd; margin-bottom: 15px;"></i>
-          <p>Bu kategoriyada mahsulotlar topilmadi</p>
-        </div>
-      `
+                <div class="featured-no-products" style="text-align: center; padding: 40px; color: #666;">
+                    <i class="fas fa-box-open" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 24px; margin-bottom: 10px;">Mahsulotlar mavjud emas</h3>
+                    <p style="font-size: 16px; color: #888;">Hozirda ushbu kategoriyada mahsulotlar yo'q. Keyinroq qayta urinib ko'ring!</p>
+                </div>
+            `
             return
         }
 
@@ -217,8 +214,12 @@ class FeaturedProducts {
 
         products.forEach((product, index) => {
             console.log(`Creating card for product ${index + 1}:`, product.name)
-            const productCard = this.createProductCard(product)
-            container.appendChild(productCard)
+            try {
+                const productCard = this.createProductCard(product)
+                container.appendChild(productCard)
+            } catch (error) {
+                console.error(`Error creating product card for ${product.name}:`, error)
+            }
         })
 
         // Reset carousel position
@@ -233,14 +234,14 @@ class FeaturedProducts {
         card.className = "featured-product-card"
         card.setAttribute("data-product-id", product.id)
 
-        // Get main image URL - use placeholder if no image
-        let mainImageUrl = "/placeholder.svg?height=200&width=200&text=Product"
+        // Get main image URL
+        let mainImageUrl = "/placeholder.svg?height=200&width=200&text=No+Image"
 
         if (product.attachmentKeys && product.attachmentKeys.length > 0) {
             if (window.API && window.API.getImageUrl) {
                 mainImageUrl = window.API.getImageUrl(product.attachmentKeys[0])
             } else {
-                mainImageUrl = `${API_BASE_URL}/api/v1/attachment/${product.attachmentKeys[0]}`
+                mainImageUrl = `${this.API_BASE_URL}/api/v1/attachment/${product.attachmentKeys[0]}`
             }
         }
 
@@ -268,7 +269,7 @@ class FeaturedProducts {
                 ${discountBanner}
                 ${statusBadge}
                 <img src="${mainImageUrl}" alt="${product.name}" class="featured-product-image" onerror="this.src='/placeholder.svg?height=200&width=200&text=No+Image'">
-                <button class="featured-quick-view-btn" onclick="openProductQuickView(${product.id})">Quick View</button>
+                <button class="featured-quick-view-btn" onclick="window.openProductQuickView(${product.id})">Quick View</button>
             </div>
             <div class="featured-product-info">
                 <div class="featured-product-category">${product.categoryName?.toUpperCase() || "MAHSULOT"}</div>
@@ -287,7 +288,7 @@ class FeaturedProducts {
             </div>
         `
 
-        // Add click handler for the card (excluding quick view button)
+        // Add click handler for the card
         card.addEventListener("click", (e) => {
             if (!e.target.classList.contains("featured-quick-view-btn")) {
                 console.log("Product card clicked:", product.id)
@@ -358,9 +359,9 @@ class FeaturedProducts {
         const containers = document.querySelectorAll('[id$="-products-grid"]')
         containers.forEach((container) => {
             container.innerHTML = `
-                <div class="featured-loading">
-                    <div class="featured-loading-spinner"></div>
-                    <p>Mahsulotlar yuklanmoqda...</p>
+                <div class="featured-loading" style="text-align: center; padding: 40px; color: #666;">
+                    <div class="featured-loading-spinner" style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                    <p style="font-size: 18px;">Mahsulotlar yuklanmoqda...</p>
                 </div>
             `
         })
@@ -374,17 +375,16 @@ class FeaturedProducts {
         const containers = document.querySelectorAll('[id$="-products-grid"]')
         containers.forEach((container) => {
             container.innerHTML = `
-                <div class="featured-error">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <h4>Xatolik yuz berdi</h4>
-                    <p>Mahsulotlarni yuklashda muammo bo'ldi</p>
-                    <button class="btn-custom" onclick="location.reload()">Qayta urinish</button>
+                <div class="featured-error" style="text-align: center; padding: 40px; color: #666;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ff6b6b; margin-bottom: 20px;"></i>
+                    <h3 style="font-size: 24px; margin-bottom: 10px;">Xatolik yuz berdi</h3>
+                    <p style="font-size: 16px; color: #888;">Mahsulotlarni yuklashda muammo bo'ldi. Iltimos, keyinroq qayta urinib ko'ring.</p>
+                    <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 15px; padding: 10px 20px; background: var(--burgundy-color); color: white; border: none; border-radius: 5px; cursor: pointer;">Qayta urinish</button>
                 </div>
             `
         })
     }
 
-    // Format price function
     formatPrice(price) {
         if (window.API && window.API.formatPrice) {
             return window.API.formatPrice(price)
@@ -392,7 +392,6 @@ class FeaturedProducts {
         return new Intl.NumberFormat("uz-UZ").format(price) + " So'm"
     }
 
-    // Open product quick view
     openProductQuickView(productId) {
         console.log("Opening quick view for product:", productId)
         if (window.openProductQuickView) {
@@ -402,7 +401,6 @@ class FeaturedProducts {
         }
     }
 
-    // Update visible cards based on screen size
     updateVisibleCards() {
         const width = window.innerWidth
         if (width <= 480) {
@@ -417,20 +415,55 @@ class FeaturedProducts {
 
         this.updateNavigationStates()
     }
+
+    // Public method to refresh products
+    async refresh() {
+        console.log("Refreshing featured products...")
+        this.showLoading()
+        try {
+            await this.loadFeaturedProducts()
+            this.renderProducts(this.currentTab)
+            this.updateNavigationStates()
+        } catch (error) {
+            this.showError()
+        }
+    }
 }
 
 // Initialize Featured Products when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM loaded, initializing Featured Products...")
 
-    // Wait a bit for other scripts to load
-    setTimeout(() => {
-        try {
-            window.featuredProducts = new FeaturedProducts()
-        } catch (error) {
-            console.error("Error creating FeaturedProducts instance:", error)
-        }
-    }, 500)
+    // Check if required elements exist
+    const featuredSection = document.querySelector(".featured-products-section")
+    const featuredTabs = document.querySelectorAll(".featured-tab")
+
+    console.log("Featured section found:", !!featuredSection)
+    console.log("Featured tabs found:", featuredTabs.length)
+
+    if (!featuredSection) {
+        console.error("Featured products section not found in DOM!")
+        return
+    }
+
+    if (featuredTabs.length === 0) {
+        console.error("Featured tabs not found in DOM!")
+        return
+    }
+
+    // Check if axios is loaded
+    if (typeof axios === "undefined") {
+        console.error("Axios library not loaded! Please include axios in your HTML.")
+        return
+    }
+
+    try {
+        console.log("Creating FeaturedProducts instance...")
+        window.featuredProducts = new FeaturedProducts()
+        console.log("FeaturedProducts instance created successfully")
+    } catch (error) {
+        console.error("Error creating FeaturedProducts instance:", error)
+    }
 })
 
 // Handle window resize
@@ -445,7 +478,6 @@ window.openProductQuickView =
     window.openProductQuickView ||
     ((productId) => {
         console.log("Opening quick view for product ID:", productId)
-        // Implement quick view logic here or call existing function
         if (window.openQuickView) {
             window.openQuickView(productId)
         }

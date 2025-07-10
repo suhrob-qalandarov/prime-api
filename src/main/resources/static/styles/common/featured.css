@@ -4,7 +4,7 @@
 
 .featured-products-section {
     padding: 60px 0;
-    background: #fafafa;
+    background: var(--light-color);
 }
 
 .featured-container {
@@ -127,10 +127,9 @@
 /* Featured Product Card */
 .featured-product-card {
     flex: 0 0 280px;
-    background: white;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
@@ -138,7 +137,7 @@
 
 .featured-product-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 /* Product Image Container */
@@ -176,17 +175,17 @@
 }
 
 .featured-status-badge.new {
-    background: linear-gradient(135deg, #4CAF50, #45a049);
+    background: linear-gradient(135deg, #4caf50, #45a049);
     color: white;
 }
 
 .featured-status-badge.hot {
-    background: linear-gradient(135deg, #FF5722, #E64A19);
+    background: linear-gradient(135deg, #ff5722, #e64a19);
     color: white;
 }
 
 .featured-status-badge.sale {
-    background: linear-gradient(135deg, #FF9800, #F57C00);
+    background: linear-gradient(135deg, #ff9800, #f57c00);
     color: white;
 }
 
@@ -313,7 +312,7 @@
 }
 
 .featured-discount-badge {
-    background: #4CAF50;
+    background: #4caf50;
     color: white;
     padding: 3px 8px;
     border-radius: 12px;
@@ -341,8 +340,12 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Error State */

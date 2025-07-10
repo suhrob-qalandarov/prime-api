@@ -12,21 +12,23 @@ function initializeResponsiveHeaders() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop
 
         if (window.innerWidth <= 768) {
-            // Mobile header logic
+            // Mobile header logic - simplified
             if (scrollTop > 100) {
-                if (scrollTop > lastScrollTop) {
-                    // Scrolling down - hide header
-                    mobileHeader?.classList.remove("scrolled-up")
-                } else {
-                    // Scrolling up - show header with red background
-                    mobileHeader?.classList.add("scrolled-up")
-                }
+                // Show red background when scrolled
+                mobileHeader?.classList.add("scrolled-up")
             } else {
-                // At top - transparent header
+                // Show default background at top
                 mobileHeader?.classList.remove("scrolled-up")
             }
+
+            // Always keep header visible
+            if (mobileHeader) {
+                mobileHeader.style.transform = "translateY(0)"
+                mobileHeader.style.opacity = "1"
+                mobileHeader.style.display = "block"
+            }
         } else {
-            // Desktop header logic
+            // Desktop header logic remains the same
             if (scrollTop > 100) {
                 if (scrollTop > lastScrollTop) {
                     // Scrolling down
@@ -53,33 +55,25 @@ function initializeResponsiveHeaders() {
 function initializeMobileScrollEffects() {
     const mobileHeader = document.querySelector(".mobile-header")
     let lastScrollTop = 0
-    let isFirstLoad = true
 
     window.addEventListener("scroll", () => {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop
 
         if (window.innerWidth <= 768) {
-            if (isFirstLoad && scrollTop > 50) {
-                isFirstLoad = false
+            if (scrollTop > 100) {
+                // When scrolled down more than 100px, show red background
+                mobileHeader?.classList.add("scrolled-up")
+                mobileHeader?.classList.remove("scrolled-down")
+            } else {
+                // At top - show default background (#f0f0f0)
+                mobileHeader?.classList.remove("scrolled-up")
+                mobileHeader?.classList.remove("scrolled-down")
             }
 
-            if (scrollTop > 100) {
-                if (scrollTop > lastScrollTop) {
-                    // Scrolling down - hide header
-                    mobileHeader?.classList.add("scrolled-down")
-                    mobileHeader?.classList.remove("scrolled-up")
-                } else {
-                    // Scrolling up - show header with red background
-                    mobileHeader?.classList.remove("scrolled-down")
-                    mobileHeader?.classList.add("scrolled-up")
-                }
-            } else {
-                // At top - show transparent header only on first load
-                if (isFirstLoad) {
-                    mobileHeader?.classList.remove("scrolled-down", "scrolled-up")
-                } else {
-                    mobileHeader?.classList.add("scrolled-down")
-                }
+            // Header should always be visible - never hide it
+            if (mobileHeader) {
+                mobileHeader.style.transform = "translateY(0)"
+                mobileHeader.style.opacity = "1"
             }
         }
 
@@ -176,10 +170,45 @@ function initializeMobileBottomNav() {
 }
 
 // ======================================================
-// CATEGORY LOADING FUNCTIONALITY - NEW
+// MOBILE BRAND CAROUSEL FUNCTIONALITY - FIXED
 // ======================================================
+function initializeMobileBrandCarousel() {
+    const brandTrack = document.getElementById("mobileBrandTrack")
+    const brandCarousel = document.querySelector(".mobile-brand-carousel")
 
-// loadCategories funksiyasini spotlight API bilan ishlash uchun yangilang:
+    if (!brandTrack || !brandCarousel) {
+        console.log("Brand carousel elements not found")
+        return
+    }
+
+    // Force restart animation
+    brandTrack.style.animation = "none"
+    brandTrack.offsetHeight // Trigger reflow
+    brandTrack.style.animation = "brandCarousel 20s linear infinite"
+
+    // Pause animation on touch/hover
+    brandCarousel.addEventListener("touchstart", () => {
+        brandTrack.style.animationPlayState = "paused"
+    })
+
+    brandCarousel.addEventListener("touchend", () => {
+        brandTrack.style.animationPlayState = "running"
+    })
+
+    brandCarousel.addEventListener("mouseenter", () => {
+        brandTrack.style.animationPlayState = "paused"
+    })
+
+    brandCarousel.addEventListener("mouseleave", () => {
+        brandTrack.style.animationPlayState = "running"
+    })
+
+    console.log("Mobile brand carousel initialized successfully")
+}
+
+// ======================================================
+// CATEGORY LOADING FUNCTIONALITY
+// ======================================================
 async function loadCategories() {
     const categoriesContainer = document.getElementById("categoriesContainer")
     const categoryLoading = document.getElementById("categoryLoading")
@@ -225,8 +254,11 @@ async function loadCategories() {
         // Error holatini ko'rsatish
         categoryError.style.display = "block"
 
-        // API ishlamasa fallback kategoriyalarni yuklash
-        loadFallbackCategories()
+        // Update error message
+        const errorMessage = categoryError.querySelector("p")
+        if (errorMessage) {
+            errorMessage.textContent = "Backend serverga ulanib bo'lmadi. Server ishlab turganini tekshiring."
+        }
     }
 }
 
@@ -239,7 +271,7 @@ function createSpotlightCard(spotlight, index) {
     categoryCard.className = "category-card"
     categoryCard.setAttribute("data-spotlight-id", spotlight.id)
 
-    // imageKey dan rasm URL olish
+    // imageKey dan rasm URL olish - API dan
     const imageUrl = spotlight.imageKey ? window.API.getImageUrl(spotlight.imageKey) : "/images/default/category.jpeg"
 
     categoryCard.innerHTML = `
@@ -272,111 +304,10 @@ function handleSpotlightClick(spotlight) {
     // Bu yerda navigation logic qo'shishingiz mumkin
     // Masalan: window.location.href = `/spotlight/${spotlight.id}`
 
-    // Hozircha notification ko'rsatamiz
-    window.API.showSuccessNotification(`${spotlight.name} spotlight tanlandi`)
-}
-
-/**
- * Create a category card element
- * @param {Object} category - Category data from API
- * @param {number} index - Category index
- * @returns {HTMLElement} Category card element
- */
-// function createCategoryCard(category, index) {
-//   const colDiv = document.createElement("div")
-//   colDiv.className = "col-lg-3 col-md-6 col-6"
-
-//   const categoryCard = document.createElement("div")
-//   categoryCard.className = "category-card"
-//   categoryCard.setAttribute("data-category-id", category.id)
-
-//   // Get image URL from imageKey
-//   const imageUrl = category.imageKey ? window.API.getImageUrl(category.imageKey) : "/images/default/category.jpeg"
-
-//   categoryCard.innerHTML = `
-//         <img src="${imageUrl}" alt="${category.name}" class="category-img" loading="lazy">
-//         <div class="category-overlay">
-//             <h3 class="category-title">${category.name.toUpperCase()}</h3>
-//         </div>
-//     `
-
-//   // Add click event listener
-//   categoryCard.addEventListener("click", () => {
-//     handleCategoryClick(category)
-//   })
-
-//   // Add error handling for image
-//   const img = categoryCard.querySelector(".category-img")
-//   img.onerror = function () {
-//     console.log("Category image failed to load:", imageUrl)
-//     this.src = "/images/default/category.jpeg"
-//   }
-
-//   colDiv.appendChild(categoryCard)
-//   return colDiv
-// }
-
-/**
- * Handle category card click
- * @param {Object} category - Category data
- */
-// function handleCategoryClick(category) {
-//   console.log("Category clicked:", category)
-
-//   // You can add navigation logic here
-//   // For example: window.location.href = `/catalog?category=${category.id}`
-
-//   // Show notification for now
-//   window.API.showSuccessNotification(`${category.name} kategoriyasi tanlandi`)
-// }
-
-/**
- * Load fallback categories if API fails
- */
-function loadFallbackCategories() {
-    const categoriesContainer = document.getElementById("categoriesContainer")
-
-    const fallbackCategories = [
-        { id: 1, name: "Ko'ylaklar", imageKey: null },
-        { id: 2, name: "Shimlar", imageKey: null },
-        { id: 3, name: "Poyabzallar", imageKey: null },
-        { id: 4, name: "Aksessuarlar", imageKey: null },
-    ]
-
-    const fallbackImages = [
-        "/images/clothes.jpeg",
-        "/images/jens.jpeg",
-        "/images/mens-shoes.jpeg",
-        "/images/accessors.jpeg",
-    ]
-
-    categoriesContainer.innerHTML = ""
-
-    fallbackCategories.forEach((category, index) => {
-        const colDiv = document.createElement("div")
-        colDiv.className = "col-lg-3 col-md-6 col-6"
-
-        const categoryCard = document.createElement("div")
-        categoryCard.className = "category-card"
-        categoryCard.setAttribute("data-category-id", category.id)
-
-        categoryCard.innerHTML = `
-            <img src="${fallbackImages[index]}" alt="${category.name}" class="category-img">
-            <div class="category-overlay">
-                <h3 class="category-title">${category.name.toUpperCase()}</h3>
-            </div>
-        `
-
-        categoryCard.addEventListener("click", () => {
-            handleSpotlightClick(category)
-        })
-
-        colDiv.appendChild(categoryCard)
-        categoriesContainer.appendChild(colDiv)
-    })
-
-    categoriesContainer.style.display = "flex"
-    console.log("Fallback categories loaded")
+    // API notification ko'rsatish
+    if (window.API && window.API.showSuccessNotification) {
+        window.API.showSuccessNotification(`${spotlight.name} spotlight tanlandi`)
+    }
 }
 
 // ======================================================
@@ -663,212 +594,6 @@ function initializeCartModal() {
 }
 
 // ======================================================
-// QUICK VIEW MODAL FUNCTIONALITY
-// ======================================================
-function initializeQuickViewModal() {
-    const quickViewModal = document.getElementById("quickViewModal")
-    const quickViewClose = document.getElementById("quickViewClose")
-    const addToCartBtn = document.getElementById("addToCartBtn")
-    const quantityInput = document.getElementById("quantityInput")
-    const decreaseQty = document.getElementById("decreaseQty")
-    const increaseQty = document.getElementById("increaseQty")
-
-    let currentProductId = null
-    let currentImageIndex = 0
-    let selectedSize = null
-
-    // Close quick view modal
-    quickViewClose?.addEventListener("click", () => {
-        quickViewModal?.classList.remove("show")
-        document.body.style.overflow = "auto"
-    })
-
-    // Close on outside click
-    quickViewModal?.addEventListener("click", (e) => {
-        if (e.target === quickViewModal) {
-            quickViewModal.classList.remove("show")
-            document.body.style.overflow = "auto"
-        }
-    })
-
-    // Quantity controls
-    decreaseQty?.addEventListener("click", () => {
-        const currentValue = Number.parseInt(quantityInput.value)
-        if (currentValue > 1) {
-            quantityInput.value = currentValue - 1
-        }
-    })
-
-    increaseQty?.addEventListener("click", () => {
-        const currentValue = Number.parseInt(quantityInput.value)
-        if (currentValue < 10) {
-            quantityInput.value = currentValue + 1
-        }
-    })
-
-    // Add to cart from quick view
-    addToCartBtn?.addEventListener("click", () => {
-        if (currentProductId) {
-            const quantity = Number.parseInt(quantityInput.value)
-            addToCart(currentProductId, quantity, selectedSize)
-            quickViewModal.classList.remove("show")
-            document.body.style.overflow = "auto"
-        }
-    })
-
-    // Open quick view modal
-    window.openQuickView = (productId) => {
-        const product = productData[productId]
-        if (!product) return
-
-        currentProductId = productId
-        currentImageIndex = 0
-        selectedSize = null
-
-        // Populate modal content
-        document.getElementById("quickViewTitle").textContent = product.name
-        document.getElementById("quickViewCategory").textContent = product.category
-        document.getElementById("quickViewCurrentPrice").textContent = formatPrice(product.currentPrice)
-        document.getElementById("quickViewOriginalPrice").textContent = formatPrice(product.originalPrice)
-        document.getElementById("quickViewDescription").textContent = product.description
-
-        // Calculate discount
-        const discount = Math.round((1 - product.currentPrice / product.originalPrice) * 100)
-        document.getElementById("quickViewDiscount").textContent = `-${discount}%`
-
-        // Set main image
-        document.getElementById("quickViewMainImage").src = product.images[0]
-
-        // Populate thumbnails
-        const thumbnailsContainer = document.getElementById("quickViewThumbnails")
-        thumbnailsContainer.innerHTML = ""
-        product.images.forEach((image, index) => {
-            const thumbnail = document.createElement("img")
-            thumbnail.src = image
-            thumbnail.className = `product-thumbnail-large ${index === 0 ? "active" : ""}`
-            thumbnail.addEventListener("click", () => {
-                document.getElementById("quickViewMainImage").src = image
-                thumbnailsContainer.querySelectorAll(".product-thumbnail-large").forEach((t) => t.classList.remove("active"))
-                thumbnail.classList.add("active")
-                currentImageIndex = index
-            })
-            thumbnailsContainer.appendChild(thumbnail)
-        })
-
-        // Populate sizes
-        const sizesContainer = document.getElementById("quickViewSizes")
-        const sizeSelectionContainer = document.getElementById("sizeSelectionContainer")
-
-        if (product.sizes && product.sizes.length > 0) {
-            sizeSelectionContainer.style.display = "block"
-            sizesContainer.innerHTML = ""
-            product.sizes.forEach((size) => {
-                const sizeOption = document.createElement("div")
-                sizeOption.className = "size-option"
-                sizeOption.textContent = size
-                sizeOption.addEventListener("click", () => {
-                    sizesContainer.querySelectorAll(".size-option").forEach((s) => s.classList.remove("selected"))
-                    sizeOption.classList.add("selected")
-                    selectedSize = size
-                })
-                sizesContainer.appendChild(sizeOption)
-            })
-        } else {
-            sizeSelectionContainer.style.display = "none"
-        }
-
-        // Reset quantity
-        quantityInput.value = 1
-
-        // Show modal
-        quickViewModal.classList.add("show")
-        document.body.style.overflow = "hidden"
-    }
-
-    // Image navigation
-    document.getElementById("imagePrev")?.addEventListener("click", () => {
-        if (currentProductId && productData[currentProductId].images.length > 1) {
-            currentImageIndex =
-                currentImageIndex > 0 ? currentImageIndex - 1 : productData[currentProductId].images.length - 1
-            document.getElementById("quickViewMainImage").src = productData[currentProductId].images[currentImageIndex]
-
-            // Update active thumbnail
-            const thumbnails = document.querySelectorAll(".product-thumbnail-large")
-            thumbnails.forEach((t) => t.classList.remove("active"))
-            thumbnails[currentImageIndex]?.classList.add("active")
-        }
-    })
-
-    document.getElementById("imageNext")?.addEventListener("click", () => {
-        if (currentProductId && productData[currentProductId].images.length > 1) {
-            currentImageIndex =
-                currentImageIndex < productData[currentProductId].images.length - 1 ? currentImageIndex + 1 : 0
-            document.getElementById("quickViewMainImage").src = productData[currentProductId].images[currentImageIndex]
-
-            // Update active thumbnail
-            const thumbnails = document.querySelectorAll(".product-thumbnail-large")
-            thumbnails.forEach((t) => t.classList.remove("active"))
-            thumbnails[currentImageIndex]?.classList.add("active")
-        }
-    })
-}
-
-// ======================================================
-// PRODUCT INTERACTIONS
-// ======================================================
-function initializeProductInteractions() {
-    // Quick view triggers
-    document.querySelectorAll(".quick-view-overlay, .mobile-quick-view-icon").forEach((element) => {
-        element.addEventListener("click", (e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            const productCard = element.closest(".product-card")
-            const productId = productCard?.getAttribute("data-product-id")
-            if (productId) {
-                window.openQuickView(productId)
-            }
-        })
-    })
-
-    // Product thumbnail hover effects (desktop only)
-    /*if (window.innerWidth > 768) {
-        document.querySelectorAll(".product-thumbnail").forEach((thumbnail) => {
-            thumbnail.addEventListener("click", (e) => {
-                e.preventDefault()
-                const productCard = thumbnail.closest(".product-card")
-                const productImage = productCard?.querySelector(".product-image")
-                if (productImage) {
-                    productImage.src = thumbnail.src
-                }
-            })
-        })
-    }*/
-}
-
-// ======================================================
-// 3D HERO PRODUCT INTERACTIONS
-// ======================================================
-function initializeHeroProductInteractions() {
-    const productItems = document.querySelectorAll(".product-item")
-
-    productItems.forEach((item) => {
-        item.addEventListener("click", () => {
-            // Remove selected class from all items
-            productItems.forEach((p) => p.classList.remove("selected"))
-            // Add selected class to clicked item
-            item.classList.add("selected")
-
-            // Get product data
-            const productType = item.getAttribute("data-product")
-            if (productType && productData[productType]) {
-                // You can add modal or other interactions here
-                console.log("Selected product:", productType)
-            }
-        })
-    })
-}
-
-// ======================================================
 // LOAD CART FROM LOCALSTORAGE
 // ======================================================
 function loadCartFromStorage() {
@@ -890,6 +615,30 @@ function loadCartFromStorage() {
 }
 
 // ======================================================
+// MESSAGE BUTTON FUNCTIONALITY
+// ======================================================
+function initializeMessageButtons() {
+    const desktopMessageBtn = document.getElementById("desktopMessageBtn")
+    const mobileMessageBtn = document.getElementById("mobileMessageBtn")
+
+    // Desktop message button
+    desktopMessageBtn?.addEventListener("click", () => {
+        console.log("Desktop message button clicked")
+        // TODO: Add message functionality here
+    })
+
+    // Mobile message button
+    mobileMessageBtn?.addEventListener("click", () => {
+        console.log("Mobile message button clicked")
+        // TODO: Add message functionality here
+
+        // Update active state for mobile bottom nav
+        document.querySelectorAll(".bottom-nav-item").forEach((item) => item.classList.remove("active"))
+        mobileMessageBtn.classList.add("active")
+    })
+}
+
+// ======================================================
 // INITIALIZE ALL FUNCTIONALITY
 // ======================================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -898,10 +647,9 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeMobileScrollEffects()
     initializeMobileSidebar()
     initializeMobileBottomNav()
+    initializeMobileBrandCarousel()
     initializeCartModal()
-    initializeQuickViewModal()
-    initializeProductInteractions()
-    initializeHeroProductInteractions()
+    initializeMessageButtons() // Add this line
     loadCartFromStorage()
 
     // Load categories from API
@@ -909,9 +657,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle window resize
     window.addEventListener("resize", () => {
-        // Reinitialize product interactions on resize
+        // Reinitialize components on resize
         setTimeout(() => {
-            initializeProductInteractions()
+            initializeMobileBrandCarousel()
         }, 100)
     })
 
