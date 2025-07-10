@@ -343,7 +343,6 @@ function updateCartBadge() {
 
 function updateCartTotal() {
     cartTotal = cartItems.reduce((total, item) => {
-        // Bu yerda real mahsulot ma'lumotlari API dan keladi
         return total + item.price * item.quantity
     }, 0)
 
@@ -355,6 +354,12 @@ function updateCartTotal() {
     const cartCheckoutBtn = document.getElementById("cartCheckoutBtn")
     if (cartCheckoutBtn) {
         cartCheckoutBtn.disabled = cartItems.length === 0
+    }
+
+    // Footer ni har doim ko'rsatish
+    const cartFooter = document.getElementById("cartFooter")
+    if (cartFooter) {
+        cartFooter.style.display = "block"
     }
 }
 
@@ -368,14 +373,15 @@ function renderCartItems() {
     if (cartItems.length === 0) {
         cartEmpty.style.display = "block"
         cartItemsContainer.style.display = "none"
-        cartFooter.style.display = "none"
-        console.log("Cart is empty")
+        // Footer ni har doim ko'rsatish, lekin tugmalarni disable qilish
+        cartFooter.style.display = "block"
+        console.log("Cart is empty, showing footer with disabled buttons")
     } else {
         cartEmpty.style.display = "none"
         cartItemsContainer.style.display = "block"
         cartFooter.style.display = "block"
 
-        console.log("Cart has items, showing footer")
+        console.log("Cart has items, showing footer with enabled buttons")
 
         cartItemsContainer.innerHTML = ""
 
