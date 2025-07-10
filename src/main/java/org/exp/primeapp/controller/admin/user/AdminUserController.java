@@ -19,29 +19,15 @@ public class AdminUserController {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    @GetMapping("{user_id}")
-    public ResponseEntity<User> getUser(@PathVariable long user_id) {
-        User user = userRepository.getById(user_id);
+    @GetMapping("{userId}")
+    public ResponseEntity<User> getUser(@PathVariable Long userId) {
+        User user = userRepository.getById(userId);
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/{user_id}")
-    public ResponseEntity<ApiResponse> updateUser(@PathVariable Long user_id, @RequestBody UserUpdateReq userReq) {
-        ApiResponse apiResponse = userService.updateUser(user_id, userReq);
-        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
+    @PatchMapping("/toogle/{userId}")
+    public ResponseEntity<?> toggleUser(@PathVariable Long userId) {
+        userService.toogleUserUpdate(userId);
+        return ResponseEntity.ok().build();
     }
-
-    @PutMapping("/activate/{user_id}")
-    public ResponseEntity<ApiResponse> activateUser(@PathVariable Long user_id) {
-        ApiResponse apiResponse = userService.activateUser(user_id);
-        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
-    }
-
-    @PutMapping("/deactivate/{user_id}")
-    public ResponseEntity<ApiResponse> deactivateUser(@PathVariable Long user_id) {
-        ApiResponse apiResponse = userService.deactivateUser(user_id);
-        return new ResponseEntity<>(apiResponse, HttpStatus.ACCEPTED);
-    }
-
-
 }

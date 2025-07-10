@@ -27,6 +27,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.active = :active WHERE u.id = :productId")
     int updateActive(@Param("active")boolean active, @Param("userId") Long userId);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.active = CASE WHEN u.active = true THEN false ELSE true END WHERE u.id = :userId")
+    void toggleUserActiveStatus(@Param("userId") Long userId);
+
+
     List<User> findAllByActive(boolean b);
 
     long countByActive(Boolean active);
