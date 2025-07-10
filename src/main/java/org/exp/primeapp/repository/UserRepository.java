@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,4 +26,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("UPDATE User u SET u.active = :active WHERE u.id = :productId")
     int updateActive(@Param("active")boolean active, @Param("userId") Long userId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.active = CASE WHEN u.active = true THEN false ELSE true END WHERE u.id = :userId")
+    void toggleUserActiveStatus(@Param("userId") Long userId);
+
+
+    List<User> findAllByActive(boolean b);
+
+    long countByActive(Boolean active);
 }

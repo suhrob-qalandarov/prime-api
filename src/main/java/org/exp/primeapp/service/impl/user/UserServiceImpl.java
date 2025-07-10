@@ -3,6 +3,8 @@ package org.exp.primeapp.service.impl.user;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.UserReq;
 import org.exp.primeapp.models.dto.request.UserUpdateReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminUserDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminUserRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.Role;
@@ -70,18 +72,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserRes getByUserId(Long userId) {
-        User foundUser = userRepository.findById(userId).orElseThrow(RuntimeException::new);
-        return new UserRes(
-                foundUser.getId(),
-                foundUser.getFirstName(),
-                foundUser.getLastName(),
-                foundUser.getEmail(),
-                foundUser.getPhone());
+        User user = userRepository.findById(userId).orElseThrow();
+        return convertToUserRes(user);
     }
 
     @Transactional
     @Override
-    public ApiResponse updateUser(Long user_id, UserUpdateReq userReq) {
+    public UserRes updateUser(Long user_id, UserUpdateReq userReq) {
         User user = User.builder()
                 .firstName(userReq.getFirstName())
                 .lastName(userReq.getLastName())
@@ -91,15 +88,14 @@ public class UserServiceImpl implements UserService {
 
         checkUserActiveAndRolesAndUse(userReq.get_active(), user, userReq.getRole_ids());
 
-        userRepository.save(user);
-        return new ApiResponse(true, "User updated successfully");
-
+        User saved = userRepository.save(user);
+        return convertToUserRes(saved);
     }
 
     @Transactional
     @Override
     public void updateUser_Active(Long userId) {
-        userRepository.findById(userId).ifPresent(user -> user.setActive(false));
+        userRepository.toggleUserActiveStatus(userId);
     }
 
     @Override
@@ -115,23 +111,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse activateUser(Long userId) {
-        int updated = userRepository.updateActive(true, userId);
-        if (updated > 0) {
-            return new ApiResponse(true, "Product activated successfully");
-        } else {
-            return new ApiResponse(false, "Product not found with id or already active");
-        }
+    public AdminUserDashboardRes getAdminAllUsers() {
+        List<AdminUserRes> adminUserResList = userRepository.findAll().stream().map(this::convertToAdminUserRes).toList();
+        List<AdminUserRes> adminActiveUserResList = userRepository.findAllByActive(true).stream().map(this::convertToAdminUserRes).toList();
+        List<AdminUserRes> adminInactiveUserResList = userRepository.findAllByActive(false).stream().map(this::convertToAdminUserRes).toList();
+
+        long count = userRepository.count();
+        long activeCount = userRepository.countByActive(true);
+        long inactiveCount = count - activeCount;
+
+
+        return new AdminUserDashboardRes(count, activeCount, inactiveCount, adminUserResList, adminActiveUserResList, adminInactiveUserResList);
     }
 
     @Override
-    public ApiResponse deactivateUser(Long userId) {
-        int updated = userRepository.updateActive(false, userId);
-        if (updated > 0) {
-            return new ApiResponse(true, "Product activated successfully");
-        } else {
-            return new ApiResponse(false, "Product not found with id or already active");
-        }
+    public void toogleUserUpdate(Long userId) {
+        userRepository.findById(userId).ifPresent(user -> user.setActive(!user.getActive()));
+    }
+
+    private UserRes convertToUserRes(User user) {
+        return new UserRes(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhone()
+        );
+    }
+
+    private AdminUserRes convertToAdminUserRes(User user) {
+        return new AdminUserRes(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhone(),
+                user.getActive(),
+                user.getCreatedAt()
+        );
     }
 
     private void checkUserActiveAndRolesAndUse(Boolean userReq, User user, List<Long> userReq1) {
