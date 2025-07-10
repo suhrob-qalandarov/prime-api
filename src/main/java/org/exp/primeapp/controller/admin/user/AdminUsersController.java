@@ -1,6 +1,7 @@
 package org.exp.primeapp.controller.admin.user;
 
 import lombok.RequiredArgsConstructor;
+import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class AdminUsersController {
     private final UserRepository userRepository;
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserRes>> getAllUsers() {
         List<User> users = userRepository.findAll();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
