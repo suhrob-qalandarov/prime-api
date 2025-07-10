@@ -557,13 +557,15 @@ function showNotification(message, type = "info") {
 }
 
 // ======================================================
-// CART MODAL FUNCTIONALITY
+// CART MODAL FUNCTIONALITY - UPDATED
 // ======================================================
 function initializeCartModal() {
     const cartModal = document.getElementById("cartModal")
     const cartIcon = document.getElementById("cartIcon")
     const mobileCartIcon = document.getElementById("mobileCartIcon")
     const cartClose = document.getElementById("cartClose")
+    const cartViewBtn = document.getElementById("cartViewBtn")
+    const cartCheckoutBtn = document.getElementById("cartCheckoutBtn")
 
     // Open cart modal
     cartIcon?.addEventListener("click", (e) => {
@@ -590,6 +592,32 @@ function initializeCartModal() {
             cartModal.classList.remove("show")
             document.body.style.overflow = "auto"
         }
+    })
+
+    // Cart View Button functionality
+    cartViewBtn?.addEventListener("click", () => {
+        console.log("Savat ko'rish tugmasi bosildi")
+        // You can add navigation to cart page here
+        // window.location.href = '/cart'
+        showNotification("Savat sahifasiga o'tish", "info")
+    })
+
+    // Cart Checkout Button functionality
+    cartCheckoutBtn?.addEventListener("click", () => {
+        if (cartItems.length === 0) {
+            showNotification("Savat bo'sh!", "warning")
+            return
+        }
+
+        console.log("Buyurtma berish tugmasi bosildi")
+        console.log("Cart items:", cartItems)
+        console.log("Total:", formatPrice(cartTotal))
+
+        // You can add checkout logic here
+        showNotification("Buyurtma berishga o'tish...", "success")
+
+        // Example: redirect to checkout page
+        // window.location.href = '/checkout'
     })
 }
 
@@ -649,7 +677,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeMobileBottomNav()
     initializeMobileBrandCarousel()
     initializeCartModal()
-    initializeMessageButtons() // Add this line
+    initializeMessageButtons()
     loadCartFromStorage()
 
     // Load categories from API
@@ -668,3 +696,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Make loadCategories globally available for retry button
 window.loadCategories = loadCategories
+
+// Make cart functions globally available
+window.addToCart = addToCart
+window.updateCartItemQuantity = updateCartItemQuantity
+window.removeCartItem = removeCartItem
