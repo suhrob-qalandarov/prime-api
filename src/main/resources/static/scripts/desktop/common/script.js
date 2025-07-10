@@ -615,6 +615,30 @@ function loadCartFromStorage() {
 }
 
 // ======================================================
+// MESSAGE BUTTON FUNCTIONALITY
+// ======================================================
+function initializeMessageButtons() {
+    const desktopMessageBtn = document.getElementById("desktopMessageBtn")
+    const mobileMessageBtn = document.getElementById("mobileMessageBtn")
+
+    // Desktop message button
+    desktopMessageBtn?.addEventListener("click", () => {
+        console.log("Desktop message button clicked")
+        // TODO: Add message functionality here
+    })
+
+    // Mobile message button
+    mobileMessageBtn?.addEventListener("click", () => {
+        console.log("Mobile message button clicked")
+        // TODO: Add message functionality here
+
+        // Update active state for mobile bottom nav
+        document.querySelectorAll(".bottom-nav-item").forEach((item) => item.classList.remove("active"))
+        mobileMessageBtn.classList.add("active")
+    })
+}
+
+// ======================================================
 // INITIALIZE ALL FUNCTIONALITY
 // ======================================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -623,8 +647,9 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeMobileScrollEffects()
     initializeMobileSidebar()
     initializeMobileBottomNav()
-    initializeMobileBrandCarousel() // Qayta ishga tushirildi
+    initializeMobileBrandCarousel()
     initializeCartModal()
+    initializeMessageButtons() // Add this line
     loadCartFromStorage()
 
     // Load categories from API
@@ -634,7 +659,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("resize", () => {
         // Reinitialize components on resize
         setTimeout(() => {
-            initializeMobileBrandCarousel() // Resize da ham qayta ishga tushirish
+            initializeMobileBrandCarousel()
         }, 100)
     })
 

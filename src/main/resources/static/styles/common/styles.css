@@ -219,6 +219,45 @@ body {
 }
 
 /* ======================================================
+   DESKTOP MESSAGE BUTTON
+====================================================== */
+.desktop-message-btn {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    z-index: 2147483647;
+    border-radius: 50%;
+    background: rgb(229, 229, 229);
+    box-sizing: content-box;
+    display: block;
+}
+
+.desktop-message-btn-inner {
+    background: var(--burgundy-light);
+    height: 52px;
+    width: 52px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(101, 119, 134, 0.75) 1px 1px 4px;
+    transition: var(--transition);
+}
+
+.desktop-message-btn-inner:hover {
+    background: var(--burgundy-color);
+    transform: scale(1.05);
+}
+
+.desktop-message-btn svg {
+    fill: #FFFFFF;
+    height: 24px;
+    width: 24px;
+    padding-top: 4px;
+}
+
+/* ======================================================
    MOBILE HEADER STYLES - UPDATED
 ====================================================== */
 .mobile-header {
@@ -226,7 +265,7 @@ body {
     color: var(--burgundy-light);
     padding: 10px 0;
     position: fixed;
-    top: 37px;
+    top: 0px; /* Change from 37px to 0px since we're removing top header */
     left: 0;
     right: 0;
     z-index: 1030;
@@ -412,7 +451,7 @@ body {
 }
 
 /* ======================================================
-   MOBILE BOTTOM NAVIGATION
+   MOBILE BOTTOM NAVIGATION - UPDATED
 ====================================================== */
 .mobile-bottom-nav {
     position: fixed;
@@ -424,7 +463,7 @@ body {
     display: none;
     justify-content: space-around;
     align-items: center;
-    padding: 8px 0 12px 0;
+    padding: 12px 0 16px 0; /* Increase padding */
     z-index: 1020;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -433,27 +472,29 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 6px; /* Increase gap */
     cursor: pointer;
-    padding: 8px 12px;
-    border-radius: 8px;
+    padding: 12px 16px; /* Increase padding */
+    border-radius: 12px; /* Increase border radius */
     transition: var(--transition);
     color: #666;
-    min-width: 60px;
+    min-width: 70px; /* Increase min-width */
 }
 
 .bottom-nav-item:hover,
 .bottom-nav-item.active {
-    color: var(--burgundy-color);
-    background: rgba(139, 21, 56, 0.1);
+    color: var(--burgundy-light); /* Change to burgundy-light */
+    background: transparent; /* Remove background hover */
 }
 
 .bottom-nav-item svg {
     flex-shrink: 0;
+    width: 24px; /* Increase icon size */
+    height: 24px; /* Increase icon size */
 }
 
 .bottom-nav-item span {
-    font-size: 11px;
+    font-size: 12px; /* Increase font size */
     font-weight: 500;
     text-align: center;
     line-height: 1;
@@ -1377,9 +1418,7 @@ body {
 
     /* Hide desktop elements */
     .top-header {
-        display: block !important;
-        padding: 6px 0;
-        font-size: 12px;
+        display: none !important; /* Hide top header on mobile */
     }
 
     .main-header {
@@ -1390,24 +1429,19 @@ body {
         display: none !important;
     }
 
+    .desktop-message-btn {
+        display: none !important; /* Hide desktop message button on mobile */
+    }
+
     /* Add bottom padding to body for bottom nav */
     body {
-        padding-bottom: 70px;
+        padding-bottom: 80px; /* Increase for larger bottom nav */
     }
 
     /* Container adjustments */
     .container-custom {
         padding-left: 15px;
         padding-right: 15px;
-    }
-
-    /* Top header mobile adjustments */
-    .top-header .social-icons {
-        gap: 10px;
-    }
-
-    .top-header .social-icons a {
-        font-size: 14px;
     }
 
     /* Mobile cart modal - center positioning */
@@ -1430,8 +1464,8 @@ body {
 
     /* Hero section adjustments for mobile */
     .hero-section {
-        height: 320px; /* Increase from 400px to accommodate text */
-        margin-top: 57px;
+        height: 320px; /* User requested height */
+        margin-top: 47px; /* Adjust for removed top header */
     }
 
     /* Hero content positioning - top left */
@@ -1444,7 +1478,7 @@ body {
 
     .hero-title {
         font-size: 1.6rem;
-        margin-bottom: 0px; /* 5px dan 0px ga o'zgartiring */
+        margin-bottom: 0px;
         line-height: 1.1;
         color: var(--burgundy-color);
     }
