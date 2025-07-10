@@ -10,31 +10,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.exp.primeapp.utils.Const.*;
+
 @RestController
-@RequestMapping("/api/user")
 @RequiredArgsConstructor
+@RequestMapping(API + V1 + USER)
 public class UserController {
 
     private final UserService userService;
-
-    @PostMapping()
-    public ResponseEntity<UserRes> addUser(@RequestBody UserReq userReq) {
-        UserRes user=userService.createUser(userReq);
-        return ResponseEntity.ok(user);
-    }
-
-    @GetMapping("/admin")
-    public ResponseEntity<List<UserRes>> getUsers() {
-        List<UserRes> users=userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
 
     @GetMapping("/{user_id}")
     public ResponseEntity<UserRes> getUser(@PathVariable Long user_id) {
         UserRes user = userService.getByUserId(user_id);
         return ResponseEntity.ok(user);
     }
-
 
     @GetMapping("/{email}")
     public ResponseEntity<UserRes> getUser(@PathVariable String email) {
