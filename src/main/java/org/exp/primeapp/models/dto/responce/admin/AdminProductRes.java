@@ -1,20 +1,17 @@
 package org.exp.primeapp.models.dto.responce.admin;
 
-import lombok.*;
+import lombok.Builder;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-@Getter
-@Setter
-public class AdminProductRes {
-    Long id;
-    String name;
-    Integer discount;
-    Boolean active;
-    String status;
-    String categoryName;
-    Integer attachmentCount;
-    String collectionName;
-    Integer sizeCount;
+public record AdminProductRes(
+        Long id,
+        String name,
+        Integer discount,
+        Boolean active,
+        String status,
+        String categoryName,
+        Integer attachmentCount,
+        String collectionName,
+        Integer sizeCount
+) {
 }
