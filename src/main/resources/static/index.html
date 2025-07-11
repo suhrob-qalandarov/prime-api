@@ -14,6 +14,7 @@
     <link rel="manifest" href="/images/favicon/site.webmanifest" />
     <link rel="stylesheet" href="styles/common/styles.css">
     <link rel="stylesheet" href="styles/common/featured.css">
+    <link rel="stylesheet" href="styles/common/quick-view.css"> <!-- Quick View CSS -->
 </head>
 <body>
 
@@ -196,6 +197,7 @@
         <div class="hero-content">
             <h1 class="hero-title">BREND KOLLEKSIYASI</h1>
             <p class="hero-text">Zamonaviy va sifatli erkaklar kiyimi kolleksiyasi. Har bir mahsulot diqqat bilan tanlab olingan va yuqori sifat standartlariga javob beradi.</p>
+            <!-- Example Add to Cart Button - REMOVED -->
         </div>
 
         <!-- Desktop Brand Showcase -->
@@ -355,6 +357,27 @@
                 </button>
                 <div class="featured-products-track" id="new-products-grid">
                     <!-- New products will be loaded here -->
+                    <!-- EXAMPLE PRODUCT CARD WITH QUICK VIEW BUTTON -->
+                    <div class="product-card">
+                        <div class="product-image-container">
+                            <img src="/placeholder.svg?height=200&width=200&text=Mahsulot" alt="Namuna Mahsulot" class="product-image">
+                            <div class="product-actions">
+                                <button class="action-btn quick-view-trigger" onclick="window.openProductQuickView('123')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn add-to-cart-trigger" onclick="window.addToCart({ id: '123', name: 'Namuna Mahsulot', price: 150000, image: '/placeholder.svg?height=100&width=100&text=Mahsulot', sizes: [{name: 'M', stock: 10}, {name: 'L', stock: 5}]}, 1, 'M')">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">Namuna Mahsulot</h3>
+                            <div class="product-price">
+                                <span class="current-price">150 000 So'm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END EXAMPLE PRODUCT CARD -->
                 </div>
                 <button class="featured-nav featured-nav-next">
                     <i class="fas fa-chevron-right"></i>
@@ -435,65 +458,72 @@
     </div>
 </div>
 
-<!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-6 mb-4">
-                <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 25px; color: rgba(195,164,9,0.84);">PRIME<span style="color: #ff6b6b">77</span></h1>
-            </div>
-            <div class="col-lg-2 col-md-6 col-6 mb-4">
-                <h3 class="footer-title">KOMPANIYA</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Biz bilan bog'lanish</a></li>
-                    <li><a href="#">Biz haqimizda</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-md-6 col-6 mb-4">
-                <h3 class="footer-title">QO'LLAB-QUVVATLASH</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Yetkazib berish</a></li>
-                    <li><a href="#">FAQ</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-md-6 col-6 mb-4">
-                <h3 class="footer-title">IJTIMOIY TARMOQLAR</h3>
-                <div class="social-links">
-                    <a href="#" class="social-link">
-                        <i class="fab fa-telegram-plane"></i>
-                        <span>Telegram</span>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-instagram"></i>
-                        <span>Instagram</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
             <div class="row">
-                <div class="col-md-6">
-                    <p>&copy; 2024 Prime77. All Rights Reserved.</p>
+                <div class="col-lg-3 col-md-6 col-6 mb-4">
+                    <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 25px; color: rgba(195,164,9,0.84);">PRIME<span style="color: #ff6b6b">77</span></h1>
                 </div>
-                <div class="col-md-6 d-none d-md-block">
-                    <div class="payment-methods">
-                        <span>To'lov turlari:</span>
-                        <div class="payment-images">
-                            <img src="/images/click.webp" alt="Click" />
-                            <img src="/images/payme.webp" alt="Payme" />
+                <div class="col-lg-2 col-md-6 col-6 mb-4">
+                    <h3 class="footer-title">KOMPANIYA</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Biz bilan bog'lanish</a></li>
+                        <li><a href="#">Biz haqimizda</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 col-6 mb-4">
+                    <h3 class="footer-title">QO'LLAB-QUVVATLASH</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Yetkazib berish</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 col-6 mb-4">
+                    <h3 class="footer-title">IJTIMOIY TARMOQLAR</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-telegram-plane"></i>
+                            <span>Telegram</span>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2024 Prime77. All Rights Reserved.</p>
+                    </div>
+                    <div class="col-md-6 d-none d-md-block">
+                        <div class="payment-methods">
+                            <span>To'lov turlari:</span>
+                            <div class="payment-images">
+                                <img src="/images/click.webp" alt="Click" />
+                                <img src="/images/payme.webp" alt="Payme" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</footer>
+    </footer>
 
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="scripts/common/api.js"></script>
-<script src="scripts/common/featured.js"></script>
-<script src="scripts/common/cart-add-logic.js"></script>
-<script src="scripts/desktop/common/script.js"></script>
+    <!-- Quick View Modal HTML -->
+    <div class="product-quick-view-modal" id="productQuickViewModal">
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="scripts/common/api.js"></script>
+    <script src="scripts/common/cart-add-logic.js"></script> <!-- New cart logic -->
+    <script src="scripts/desktop/common/discount.js"></script> <!-- Ensure discount.js is loaded if used -->
+    <script src="scripts/common/featured.js"></script>
+    <script src="scripts/desktop/common/script.js"></script>
+    <script src="scripts/desktop/common/quick-view.js"></script> <!-- New quick view logic -->
 </body>
 </html>

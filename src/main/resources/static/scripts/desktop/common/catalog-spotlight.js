@@ -1133,6 +1133,32 @@ function clearSpotlightFilter() {
     }
 }
 
+;(() => {
+    function init() {
+        // Initialization logic here, if any.
+        console.log("Catalog spotlight initialized.")
+    }
+
+    function showQuickView(productId) {
+        // Original implementation (to be updated)
+        // This would likely involve fetching product details and displaying a quick view.
+        // For now, just log the product ID.
+        console.log("Showing quick view for product ID:", productId)
+
+        // Updated implementation:
+        window.openProductQuickView(productId)
+    }
+
+    // Expose the showQuickView function (or other relevant functions)
+    window.catalogSpotlight = {
+        init: init,
+        showQuickView: showQuickView,
+    }
+
+    // Initialize the catalog spotlight when the DOM is ready (example).
+    document.addEventListener("DOMContentLoaded", init)
+})()
+
 // Export functions for global access
 window.SpotlightCatalogAPI = {
     initializeSpotlightCatalog,
