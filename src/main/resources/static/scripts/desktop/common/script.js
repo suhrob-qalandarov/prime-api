@@ -525,7 +525,6 @@ function initializeCartModal() {
         e.preventDefault()
         cartModal?.classList.add("show")
         document.body.style.overflow = "hidden"
-        window.renderCartModalItems(); // Render items when modal opens
         console.log("Desktop cart opened")
     })
 
@@ -533,7 +532,6 @@ function initializeCartModal() {
         e.preventDefault()
         cartModal?.classList.add("show")
         document.body.style.overflow = "hidden"
-        window.renderCartModalItems(); // Render items when modal opens
         console.log("Mobile cart opened")
     })
 
@@ -555,41 +553,29 @@ function initializeCartModal() {
     // Cart View Button functionality
     cartViewBtn?.addEventListener("click", () => {
         console.log("Savat ko'rish tugmasi bosildi")
-        window.API.showNotification("Savat sahifasiga o'tish", "info")
+        showNotification("Savat sahifasiga o'tish", "info")
         // Close cart modal
         cartModal?.classList.remove("show")
         document.body.style.overflow = "auto"
-        window.location.href = "/assets/pages/desktop/cart.html"; // Navigate to cart page
     })
 
     // Cart Checkout Button functionality
     cartCheckoutBtn?.addEventListener("click", () => {
-        if (window.cartItems.length === 0) {
-            window.API.showNotification("Savat bo'sh!", "warning")
+        if (cartItems.length === 0) {
+            showNotification("Savat bo'sh!", "warning")
             return
         }
 
-        // Calculate total for modal checkout
-        const modalCartTotal = window.cartItems.reduce((total, item) => {
-            return total + item.price * item.quantity;
-        }, 0);
-
         console.log("Buyurtma berish tugmasi bosildi")
-        console.log("Cart items:", window.cartItems)
-        console.log("Total:", window.API.formatPrice(modalCartTotal))
+        console.log("Cart items:", cartItems)
+        console.log("Total:", formatPrice(cartTotal))
 
-        window.API.showNotification(`Buyurtma: ${window.API.formatPrice(modalCartTotal)} - Tasdiqlash...`, "success")
+        showNotification(`Buyurtma: ${formatPrice(cartTotal)} - Tasdiqlash...`, "success")
 
-        // Simulate checkout process and clear cart
+        // Close cart modal after 2 seconds
         setTimeout(() => {
-            window.cartItems = []; // Clear cart
-            window.cartCount = 0;
-            window.saveCartToStorage();
-            window.updateCartBadge();
-            window.renderCartModalItems(); // Re-render modal to show empty state
             cartModal?.classList.remove("show")
             document.body.style.overflow = "auto"
-            window.API.showNotification("Buyurtma muvaffaqiyatli yuborildi!", "success");
         }, 2000)
     })
 
@@ -599,24 +585,51 @@ function initializeCartModal() {
 // ======================================================
 // LOAD CART FROM LOCALSTORAGE
 // ======================================================
-function loadCartFromStorageAndRender() {
-    window.loadCartFromStorage(); // Use the global function
-    window.renderCartModalItems(); // Render modal items on load
+function loadCartFromStorage() {
+    const savedCartItems = localStorage.getItem("cartItems")
+    const savedCartCount = localStorage.getItem("cartCount")
+
+    if (savedCartItems) {
+        try {
+            cartItems = JSON.parse(savedCartItems)
+            cartCount = Number.parseInt(savedCartCount) || 0
+            updateCartBadge()
+            renderCartItems()
+        } catch (error) {
+            console.error("Error loading cart from storage:", error)
+            cartItems = []
+            cartCount = 0
+        }
+    }
+}
+
+// ======================================================
+// MESSAGE BUTTON FUNCTIONALITY
+// ======================================================
+function initializeMessageButtons() {
+    const desktopMessageBtn = document.getElementById("desktopMessageBtn")
+    const mobileMessageBtn = document.getElementById("mobileMessageBtn")
+
+    // Desktop message button
+    desktopMessageBtn?.addEventListener("click", () => {
+        console.log("Desktop message button clicked")
+        // TODO: Add message functionality here
+    })
+
+    // Mobile message button
+    mobileMessageBtn?.addEventListener("click", () => {
+        console.log("Mobile message button clicked")
+        // TODO: Add message functionality here
+
+        // Update active state for mobile bottom nav
+        document.querySelectorAll(".bottom-nav-item").forEach((item) => item.classList.remove("active"))
+        mobileMessageBtn.classList.add("active")
+    })
 }
 
 // ======================================================
 // INITIALIZE ALL FUNCTIONALITY
 // ======================================================
-
-// Declare all necessary functions before using them
-function initializeResponsiveHeaders() {}
-function initializeMobileScrollEffects() {}
-function initializeMobileSidebar() {}
-function initializeMobileBottomNav() {}
-function initializeMobileBrandCarousel() {}
-function initializeMessageButtons() {}
-function loadCategories() {}
-
 document.addEventListener("DOMContentLoaded", () => {
     // Initialize all components
     initializeResponsiveHeaders()
@@ -626,7 +639,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeMobileBrandCarousel()
     initializeCartModal()
     initializeMessageButtons()
-    loadCartFromStorageAndRender() // Call the new wrapper function
+    loadCartFromStorage()
 
     // Load categories from API
     loadCategories()
@@ -645,7 +658,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Make loadCategories globally available for retry button
 window.loadCategories = loadCategories
 
-// Remove these global exports as they are now in cart-add-logic.js
-// window.addToCart = addToCart
-// window.updateCartItemQuantity = updateCartItemQuantity
-// window.removeCartItem = removeCartItem
+// Make cart functions globally available
+window.addToCart = addToCart
+window.updateCartItemQuantity = updateCartItemQuantity
+window.removeCartItem = removeCartItem
