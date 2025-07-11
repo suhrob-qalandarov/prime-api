@@ -1,5 +1,5 @@
 // ======================================================
-// CART PAGE FUNCTIONALITY
+// CART PAGE FUNCTIONALITY - IMPROVED WITH FULL API INTEGRATION
 // ======================================================
 
 // Global variables
@@ -7,12 +7,14 @@ let cartPageItems = []
 let cartPageTotal = 0
 let cartPageSubtotal = 0
 let cartPageDiscount = 0
+let isLoading = false
 
 // Initialize cart page when DOM is loaded
 document.addEventListener("DOMContentLoaded", async () => {
     // Wait for API and other dependencies to be available
     if (typeof window.API === "undefined") {
         console.error("API not loaded")
+        showErrorState("API yuklanmadi. Sahifani qayta yuklang.")
         return
     }
 
@@ -50,10 +52,12 @@ document.addEventListener("DOMContentLoaded", async () => {
  */
 async function initializeCartPage() {
     try {
+        showLoading(true)
+
         // Load cart items from localStorage
         loadCartPageItems()
 
-        // Render cart page
+        // Render cart page with API data
         await renderCartPage()
 
         // Initialize event listeners
@@ -61,10 +65,24 @@ async function initializeCartPage() {
 
         // Update cart badge
         updateCartBadge()
+
+        showLoading(false)
     } catch (error) {
         console.error("Error initializing cart page:", error)
-        showErrorState()
+        showLoading(false)
+        showErrorState("Savatni yuklashda xatolik yuz berdi")
     }
+}
+
+/**
+ * Show/hide loading overlay
+ */
+function showLoading(show) {
+    const loadingOverlay = document.getElementById("loadingOverlay")
+    if (loadingOverlay) {
+        loadingOverlay.style.display = show ? "flex" : "none"
+    }
+    isLoading = show
 }
 
 /**
@@ -73,11 +91,10 @@ async function initializeCartPage() {
 function loadCartPageItems() {
     try {
         const savedCartItems = localStorage.getItem("cartItems")
-        const savedCartCount = localStorage.getItem("cartCount")
 
         if (savedCartItems) {
             cartPageItems = JSON.parse(savedCartItems)
-            console.log("Loaded cart items:", cartPageItems)
+            console.log("Loaded cart items from localStorage:", cartPageItems)
         } else {
             cartPageItems = []
         }
@@ -102,15 +119,15 @@ async function renderCartPage() {
 
     if (!cartPageItems || cartPageItems.length === 0) {
         // Show empty cart state
-        cartEmptyState.style.display = "block"
+        cartEmptyState.style.display = "flex"
         cartWithItems.style.display = "none"
     } else {
         // Show cart with items
         cartEmptyState.style.display = "none"
         cartWithItems.style.display = "block"
 
-        // Render cart items
-        await renderCartItems()
+        // Render cart items with full API data
+        await renderCartItemsWithAPI()
 
         // Calculate and update totals
         calculateCartTotals()
@@ -119,47 +136,84 @@ async function renderCartPage() {
 }
 
 /**
- * Render cart items list
+ * Render cart items with full API data
  */
-async function renderCartItems() {
+async function renderCartItemsWithAPI() {
     const cartProductsList = document.getElementById("cartProductsList")
     if (!cartProductsList) return
 
-    cartProductsList.innerHTML = ""
+    // Show loading state
+    cartProductsList.innerHTML =
+        '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Mahsulotlar yuklanmoqda...</p></div>'
 
-    for (const item of cartPageItems) {
-        try {
-            // Get full product details if needed
-            let productDetails = item
+    try {
+        // Fetch full product details for each cart item
+        const enrichedCartItems = []
 
-            // If we only have basic info, fetch full details
-            if (!item.productSizes && typeof window.API !== "undefined") {
-                try {
-                    const fullProduct = await window.API.fetchProductById(item.id)
-                    if (fullProduct) {
-                        productDetails = { ...item, ...fullProduct }
+        for (const item of cartPageItems) {
+            try {
+                console.log(`Fetching product details for ID: ${item.id}`)
+
+                // Fetch full product details from API
+                const fullProduct = await window.API.fetchProductById(item.id)
+
+                if (fullProduct) {
+                    // Merge cart item data with full product data
+                    const enrichedItem = {
+                        ...fullProduct,
+                        quantity: item.quantity,
+                        size: item.size,
+                        addedAt: item.addedAt,
+                        cartItemId: `${item.id}_${item.size || "no-size"}`,
                     }
-                } catch (error) {
-                    console.warn("Could not fetch full product details for:", item.id)
+                    enrichedCartItems.push(enrichedItem)
+                    console.log(`Successfully fetched product: ${fullProduct.name}`)
+                } else {
+                    console.warn(`Product not found for ID: ${item.id}`)
+                    // Keep original item if API call fails
+                    enrichedCartItems.push(item)
                 }
+            } catch (error) {
+                console.error(`Error fetching product ${item.id}:`, error)
+                // Keep original item if API call fails
+                enrichedCartItems.push(item)
             }
-
-            const cartItemElement = createCartItemElement(productDetails)
-            cartProductsList.appendChild(cartItemElement)
-        } catch (error) {
-            console.error("Error rendering cart item:", error)
         }
+
+        // Update cartPageItems with enriched data
+        cartPageItems = enrichedCartItems
+
+        // Clear loading state
+        cartProductsList.innerHTML = ""
+
+        // Render each cart item
+        enrichedCartItems.forEach((item, index) => {
+            const cartItemElement = createCartItemElement(item, index)
+            cartProductsList.appendChild(cartItemElement)
+        })
+
+        console.log("Cart items rendered successfully with API data")
+    } catch (error) {
+        console.error("Error rendering cart items with API:", error)
+        cartProductsList.innerHTML = `
+            <div class="text-center py-4 text-danger">
+                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                <p>Mahsulotlarni yuklashda xatolik yuz berdi</p>
+                <button class="btn btn-primary" onclick="renderCartItemsWithAPI()">Qayta urinish</button>
+            </div>
+        `
     }
 }
 
 /**
- * Create cart item HTML element
+ * Create cart item HTML element with full product data
  */
-function createCartItemElement(item) {
+function createCartItemElement(item, index) {
     const cartItem = document.createElement("div")
     cartItem.className = "cart-product-item"
     cartItem.setAttribute("data-item-id", item.id)
     cartItem.setAttribute("data-item-size", item.size || "")
+    cartItem.setAttribute("data-index", index)
 
     // Check if item is out of stock
     const isOutOfStock = checkItemStock(item)
@@ -167,21 +221,22 @@ function createCartItemElement(item) {
         cartItem.classList.add("out-of-stock")
     }
 
-    // Get image URL
+    // Get image URL using API
     const imageUrl = getItemImageUrl(item)
 
-    // Calculate pricing with discount
+    // Calculate pricing with discount using DiscountUtils
     const pricingInfo = calculateItemPricing(item)
 
-    // Get size info
+    // Get size info with stock count
     const sizeInfo = getItemSizeInfo(item)
 
     cartItem.innerHTML = `
-        <img src="${imageUrl}" alt="${item.name}" class="cart-product-image">
+        <img src="${imageUrl}" alt="${item.name}" class="cart-product-image" onerror="this.src='/placeholder.svg?height=100&width=100&text=No+Image'">
         <div class="cart-product-details">
             <div class="cart-product-info">
                 <h4 class="cart-product-name">${item.name}</h4>
                 ${sizeInfo.html}
+                ${item.categoryName ? `<div class="cart-product-category">Kategoriya: ${item.categoryName}</div>` : ""}
             </div>
             <div class="cart-product-pricing">
                 <span class="cart-current-price">${formatPrice(pricingInfo.displayPrice)}</span>
@@ -189,12 +244,12 @@ function createCartItemElement(item) {
             </div>
             <div class="cart-product-controls">
                 <div class="cart-quantity-controls">
-                    <button class="cart-quantity-btn" onclick="updateCartPageItemQuantity('${item.id}', '${item.size || ""}', -1)" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
+                    <button class="cart-quantity-btn" onclick="updateCartPageItemQuantity(${index}, -1)" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
                     <span class="cart-quantity-display">${item.quantity}</span>
-                    <button class="cart-quantity-btn" onclick="updateCartPageItemQuantity('${item.id}', '${item.size || ""}', 1)" ${isOutOfStock ? "disabled" : ""}>+</button>
+                    <button class="cart-quantity-btn" onclick="updateCartPageItemQuantity(${index}, 1)" ${isOutOfStock ? "disabled" : ""}>+</button>
                 </div>
                 <div class="cart-item-total">${formatPrice(pricingInfo.displayPrice * item.quantity)}</div>
-                <button class="cart-remove-btn" onclick="removeCartPageItem('${item.id}', '${item.size || ""}')">
+                <button class="cart-remove-btn" onclick="removeCartPageItem(${index})" title="Savatdan o'chirish">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -217,22 +272,25 @@ function checkItemStock(item) {
 }
 
 /**
- * Get item image URL
+ * Get item image URL using API
  */
 function getItemImageUrl(item) {
+    // Use API to get image URL
+    if (item.attachmentKeys && item.attachmentKeys.length > 0) {
+        return window.API.getImageUrl(item.attachmentKeys[0])
+    }
+
+    // Fallback to item.image if available
     if (item.image) {
         return item.image
     }
 
-    if (item.attachmentKeys && item.attachmentKeys.length > 0 && typeof window.API !== "undefined") {
-        return window.API.getImageUrl(item.attachmentKeys[0])
-    }
-
-    return "/placeholder.svg?height=80&width=80&text=No+Image"
+    // Default placeholder
+    return "/placeholder.svg?height=100&width=100&text=No+Image"
 }
 
 /**
- * Calculate item pricing with discounts
+ * Calculate item pricing with discounts using DiscountUtils
  */
 function calculateItemPricing(item) {
     if (typeof window.DiscountUtils !== "undefined") {
@@ -243,7 +301,7 @@ function calculateItemPricing(item) {
     const discountPercent = item.discount || 0
     const hasDiscount = item.status === "SALE" && discountPercent > 0
     const originalPrice = item.price
-    const discountedPrice = hasDiscount ? originalPrice * (1 - discountPercent / 100) : originalPrice
+    const discountedPrice = hasDiscount ? Math.round(originalPrice * (1 - discountPercent / 100)) : originalPrice
 
     return {
         hasDiscount,
@@ -255,7 +313,7 @@ function calculateItemPricing(item) {
 }
 
 /**
- * Get item size information
+ * Get item size information with stock count
  */
 function getItemSizeInfo(item) {
     if (!item.size) {
@@ -268,10 +326,10 @@ function getItemSizeInfo(item) {
         stockCount = sizeData ? sizeData.amount : 0
     }
 
-    const stockText = stockCount !== null ? ` (${stockCount} ta mavjud)` : ""
+    const stockText = stockCount !== null ? ` (<span class="stock-count">${stockCount} ta mavjud</span>)` : ""
 
     return {
-        html: `<div class="cart-product-size">O'lcham: ${item.size}<span class="stock-count">${stockText}</span></div>`,
+        html: `<div class="cart-product-size">O'lcham: <strong>${item.size}</strong>${stockText}</div>`,
         stockCount,
     }
 }
@@ -324,52 +382,56 @@ function updateOrderSummary() {
 /**
  * Update cart item quantity
  */
-function updateCartPageItemQuantity(itemId, itemSize, change) {
-    const itemIndex = cartPageItems.findIndex(
-        (item) => item.id.toString() === itemId.toString() && (item.size || "") === itemSize,
-    )
+async function updateCartPageItemQuantity(itemIndex, change) {
+    if (isLoading) return
 
-    if (itemIndex === -1) return
+    if (itemIndex < 0 || itemIndex >= cartPageItems.length) {
+        console.error("Invalid item index:", itemIndex)
+        return
+    }
 
     const item = cartPageItems[itemIndex]
     const newQuantity = item.quantity + change
 
     if (newQuantity <= 0) {
-        removeCartPageItem(itemId, itemSize)
-    } else {
-        // Check stock availability
-        if (change > 0) {
-            const stockInfo = getItemSizeInfo(item)
-            if (stockInfo.stockCount !== null && newQuantity > stockInfo.stockCount) {
-                showNotification("Omborda yetarli mahsulot yo'q!", "warning")
-                return
-            }
-        }
-
-        item.quantity = newQuantity
-
-        // Update localStorage
-        saveCartToStorage()
-
-        // Re-render cart
-        renderCartPage()
-
-        // Update cart badge
-        updateCartBadge()
-
-        showNotification("Miqdor yangilandi", "success")
+        removeCartPageItem(itemIndex)
+        return
     }
+
+    // Check stock availability
+    if (change > 0) {
+        const sizeInfo = getItemSizeInfo(item)
+        if (sizeInfo.stockCount !== null && newQuantity > sizeInfo.stockCount) {
+            showNotification("Omborda yetarli mahsulot yo'q!", "warning")
+            return
+        }
+    }
+
+    // Update quantity
+    item.quantity = newQuantity
+
+    // Update localStorage
+    saveCartToStorage()
+
+    // Re-render cart
+    await renderCartPage()
+
+    // Update cart badge
+    updateCartBadge()
+
+    showNotification("Miqdor yangilandi", "success")
 }
 
 /**
  * Remove item from cart
  */
-function removeCartPageItem(itemId, itemSize) {
-    const itemIndex = cartPageItems.findIndex(
-        (item) => item.id.toString() === itemId.toString() && (item.size || "") === itemSize,
-    )
+async function removeCartPageItem(itemIndex) {
+    if (isLoading) return
 
-    if (itemIndex === -1) return
+    if (itemIndex < 0 || itemIndex >= cartPageItems.length) {
+        console.error("Invalid item index:", itemIndex)
+        return
+    }
 
     const removedItem = cartPageItems[itemIndex]
     cartPageItems.splice(itemIndex, 1)
@@ -378,7 +440,7 @@ function removeCartPageItem(itemId, itemSize) {
     saveCartToStorage()
 
     // Re-render cart
-    renderCartPage()
+    await renderCartPage()
 
     // Update cart badge
     updateCartBadge()
@@ -391,16 +453,30 @@ function removeCartPageItem(itemId, itemSize) {
  */
 function saveCartToStorage() {
     try {
-        localStorage.setItem("cartItems", JSON.stringify(cartPageItems))
+        // Save only essential cart data (not full product details)
+        const cartDataToSave = cartPageItems.map((item) => ({
+            id: item.id,
+            quantity: item.quantity,
+            size: item.size,
+            addedAt: item.addedAt,
+            // Keep basic info for fallback
+            name: item.name,
+            price: item.price,
+            image: item.image || (item.attachmentKeys ? window.API.getImageUrl(item.attachmentKeys[0]) : null),
+        }))
+
+        localStorage.setItem("cartItems", JSON.stringify(cartDataToSave))
 
         const totalCount = cartPageItems.reduce((total, item) => total + item.quantity, 0)
         localStorage.setItem("cartCount", totalCount.toString())
 
         // Update global cart variables if they exist
         if (typeof window.cartItems !== "undefined") {
-            window.cartItems = cartPageItems
+            window.cartItems = cartDataToSave
             window.cartCount = totalCount
         }
+
+        console.log("Cart saved to localStorage successfully")
     } catch (error) {
         console.error("Error saving cart to storage:", error)
     }
@@ -448,12 +524,22 @@ function initializeCartPageEvents() {
     if (orderCheckoutBtn) {
         orderCheckoutBtn.addEventListener("click", handleCheckout)
     }
+
+    // Cart icon click - navigate to cart page
+    const cartIcon = document.getElementById("cartIcon")
+    if (cartIcon) {
+        cartIcon.addEventListener("click", (e) => {
+            e.preventDefault()
+            // Already on cart page, just scroll to top
+            window.scrollTo({ top: 0, behavior: "smooth" })
+        })
+    }
 }
 
 /**
  * Handle checkout process
  */
-function handleCheckout() {
+async function handleCheckout() {
     if (cartPageItems.length === 0) {
         showNotification("Savat bo'sh!", "warning")
         return
@@ -466,29 +552,41 @@ function handleCheckout() {
         return
     }
 
-    console.log("Processing checkout...")
-    console.log("Cart items:", cartPageItems)
-    console.log("Total amount:", formatPrice(cartPageTotal))
+    showLoading(true)
 
-    // Show success message
-    showNotification(`Buyurtma qabul qilindi! Jami: ${formatPrice(cartPageTotal)}`, "success")
+    try {
+        console.log("Processing checkout...")
+        console.log("Cart items:", cartPageItems)
+        console.log("Total amount:", formatPrice(cartPageTotal))
 
-    // Here you would typically:
-    // 1. Send order to backend
-    // 2. Process payment
-    // 3. Clear cart
-    // 4. Redirect to success page
+        // Simulate API call for checkout
+        await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    // For now, just simulate success
-    setTimeout(() => {
-        // Clear cart
-        cartPageItems = []
-        saveCartToStorage()
-        renderCartPage()
-        updateCartBadge()
+        // Show success message
+        showNotification(`Buyurtma qabul qilindi! Jami: ${formatPrice(cartPageTotal)}`, "success")
 
-        showNotification("Buyurtma muvaffaqiyatli yuborildi!", "success")
-    }, 2000)
+        // Here you would typically:
+        // 1. Send order to backend
+        // 2. Process payment
+        // 3. Clear cart
+        // 4. Redirect to success page
+
+        // For now, simulate success
+        setTimeout(async () => {
+            // Clear cart
+            cartPageItems = []
+            saveCartToStorage()
+            await renderCartPage()
+            updateCartBadge()
+
+            showNotification("Buyurtma muvaffaqiyatli yuborildi!", "success")
+        }, 1000)
+    } catch (error) {
+        console.error("Checkout error:", error)
+        showNotification("Buyurtma berishda xatolik yuz berdi", "error")
+    } finally {
+        showLoading(false)
+    }
 }
 
 /**
@@ -508,8 +606,8 @@ function formatPrice(price) {
  */
 function showNotification(message, type = "info") {
     // Use existing notification system if available
-    if (typeof window.showNotification === "function") {
-        window.showNotification(message, type)
+    if (typeof window.API !== "undefined" && window.API.showNotification) {
+        window.API.showNotification(message, type)
         return
     }
 
@@ -522,13 +620,14 @@ function showNotification(message, type = "info") {
         background: ${type === "success" ? "#4CAF50" : type === "warning" ? "#ff9800" : type === "error" ? "#f44336" : "#2196F3"};
         color: white;
         padding: 15px 20px;
-        border-radius: 8px;
+        border-radius: 12px;
         z-index: 9999;
         font-weight: 600;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         transform: translateX(100%);
         transition: transform 0.3s ease;
-        max-width: 300px;
+        max-width: 350px;
+        font-family: "Montserrat", sans-serif;
     `
     notification.textContent = message
     document.body.appendChild(notification)
@@ -538,7 +637,7 @@ function showNotification(message, type = "info") {
         notification.style.transform = "translateX(0)"
     }, 100)
 
-    // Remove after 3 seconds
+    // Remove after 4 seconds
     setTimeout(() => {
         notification.style.transform = "translateX(100%)"
         setTimeout(() => {
@@ -546,25 +645,28 @@ function showNotification(message, type = "info") {
                 document.body.removeChild(notification)
             }
         }, 300)
-    }, 3000)
+    }, 4000)
 }
 
 /**
  * Show error state
  */
-function showErrorState() {
+function showErrorState(message = "Savatni yuklashda muammo bo'ldi") {
     const cartEmptyState = document.getElementById("cartEmptyState")
     const cartWithItems = document.getElementById("cartWithItems")
 
     if (cartEmptyState) {
         cartEmptyState.innerHTML = `
             <div class="empty-cart-content">
+                <div class="empty-cart-icon" style="color: #dc3545;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
                 <h2 class="empty-cart-title" style="color: #dc3545;">Xatolik yuz berdi</h2>
-                <p style="color: #666; margin-bottom: 20px;">Savatni yuklashda muammo bo'ldi</p>
-                <button class="empty-cart-btn" onclick="location.reload()">Qayta yuklash</button>
+                <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">${message}</p>
+                <button class="empty-cart-btn" onclick="location.reload()" style="background: #dc3545;">Qayta yuklash</button>
             </div>
         `
-        cartEmptyState.style.display = "block"
+        cartEmptyState.style.display = "flex"
     }
 
     if (cartWithItems) {
@@ -578,7 +680,19 @@ window.removeCartPageItem = removeCartPageItem
 window.CartPageAPI = {
     initializeCartPage,
     renderCartPage,
+    renderCartItemsWithAPI,
     updateCartPageItemQuantity,
     removeCartPageItem,
     handleCheckout,
+    showLoading,
+    showErrorState,
+}
+
+// Export for debugging
+window.cartPageDebug = {
+    cartPageItems,
+    cartPageTotal,
+    cartPageSubtotal,
+    cartPageDiscount,
+    isLoading,
 }
