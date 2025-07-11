@@ -193,12 +193,15 @@
 }
 
 .empty-cart-title {
-    font-size: 2.5rem;
+    font-size: 2.5rem; /* Keep large font size for desktop */
     font-weight: 700;
     color: var(--burgundy-dark);
     margin-bottom: 40px;
     line-height: 1.3;
     font-family: "Montserrat", sans-serif;
+    white-space: nowrap; /* Ensure it stays on one line */
+    overflow: hidden; /* Hide overflow if it's too long */
+    text-overflow: ellipsis; /* Add ellipsis if text overflows */
 }
 
 .empty-cart-btn {
@@ -213,12 +216,18 @@
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
+    box-shadow: 0 4px 15px rgba(107, 15, 42, 0.3);
+    /* Adjust width for mobile */
+    max-width: 250px; /* Limit max width */
+    width: 100%; /* Make it take full width up to max-width */
 }
 
 .empty-cart-btn:hover {
     background: var(--light-color);
     color: var(--burgundy-dark);
     border: 2px solid var(--burgundy-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107, 15, 42, 0.4);
 }
 
 /* Cart with Items */
@@ -509,20 +518,22 @@
     }
 
     .empty-cart-title {
-        font-size: 2rem;
-        margin-bottom: 30px;
+        font-size: 2rem; /* Smaller font for mobile */
+        white-space: normal; /* Allow wrapping on smaller screens if needed, or keep nowrap if preferred */
+        /* If you strictly want one line on mobile, keep white-space: nowrap and adjust font-size further */
     }
 
     .empty-cart-btn {
-        padding: 12px 25px;
+        padding: 12px 30px;
         font-size: 14px;
-        width: auto;
-        max-width: 200px;
+        width: auto; /* Allow it to shrink to content size */
+        max-width: 200px; /* Smaller max width for mobile */
+        margin: 0 auto; /* Center the button */
+        display: block; /* Make it a block element to center with margin:auto */
     }
 
     .cart-products-section {
         padding: 15px 0;
-        margin-bottom: 20px;
     }
 
     .cart-product-item {
@@ -606,7 +617,7 @@
     }
 
     .empty-cart-title {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
 
     .cart-product-item.out-of-stock::after {
@@ -627,5 +638,9 @@
     .cart-quantity-display {
         min-width: 25px;
         font-size: 12px;
+    }
+
+    .empty-cart-btn {
+        max-width: 180px; /* Even smaller max width for very small screens */
     }
 }

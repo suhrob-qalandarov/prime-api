@@ -2,12 +2,8 @@
 // CART PAGE FUNCTIONALITY - IMPROVED WITH FULL API INTEGRATION
 // ======================================================
 
-// Global variables
-let cartPageItems = []
-let cartPageTotal = 0
-let cartPageSubtotal = 0
-let cartPageDiscount = 0
-let isLoading = false
+// Global variables (now managed by cart-add-logic.js, but referenced here)
+let isLoading = false // This remains local to cart-page.js
 
 // Initialize cart page when DOM is loaded
 document.addEventListener("DOMContentLoaded", async () => {
@@ -17,13 +13,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         showErrorState("API yuklanmadi. Sahifani qayta yuklang.")
         return
     }
+    // Ensure cart-add-logic functions are available
+    if (typeof window.loadCartPageItems === "undefined" || typeof window.saveCartToStorage === "undefined") {
+        console.error("Cart add logic not loaded. Please ensure cart-add-logic.js is loaded before cart-page.js.")
+        showErrorState("Savat funksiyalari yuklanmadi. Sahifani qayta yuklang.")
+        return
+    }
 
     // Load existing functionality from script.js
     const initializeMobileScrollEffects = window.initializeMobileScrollEffects
     const initializeDesktopScrollEffects = window.initializeDesktopScrollEffects
     const initializeMobileSidebar = window.initializeMobileSidebar
     const initializeMobileBottomNav = window.initializeMobileBottomNav
-    const loadCartFromStorage = window.loadCartFromStorage
 
     if (typeof initializeMobileScrollEffects === "function") {
         initializeMobileScrollEffects()
@@ -36,9 +37,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (typeof initializeMobileBottomNav === "function") {
         initializeMobileBottomNav()
-    }
-    if (typeof loadCartFromStorage === "function") {
-        loadCartFromStorage()
     }
 
     // Initialize cart page specific functionality
@@ -54,8 +52,8 @@ async function initializeCartPage() {
     try {
         showLoading(true)
 
-        // Load cart items from localStorage
-        loadCartPageItems()
+        // Load cart items from localStorage (now from cart-add-logic.js)
+        window.loadCartPageItems()
 
         // Render cart page with API data
         await renderCartPage()
@@ -63,8 +61,8 @@ async function initializeCartPage() {
         // Initialize event listeners
         initializeCartPageEvents()
 
-        // Update cart badge
-        updateCartBadge()
+        // Update cart badge (now from cart-add-logic.js)
+        window.updateCartBadge()
 
         showLoading(false)
     } catch (error) {
@@ -86,38 +84,13 @@ function showLoading(show) {
 }
 
 /**
- * Load cart items from localStorage
- */
-function loadCartPageItems() {
-    try {
-        const savedCartItems = localStorage.getItem("cartItems")
-
-        if (savedCartItems) {
-            cartPageItems = JSON.parse(savedCartItems)
-            console.log("Loaded cart items from localStorage:", cartPageItems)
-        } else {
-            cartPageItems = []
-        }
-
-        // Update global cart variables if they exist
-        if (typeof window.cartItems !== "undefined") {
-            window.cartItems = cartPageItems
-            window.cartCount = cartPageItems.reduce((total, item) => total + item.quantity, 0)
-        }
-    } catch (error) {
-        console.error("Error loading cart items:", error)
-        cartPageItems = []
-    }
-}
-
-/**
  * Render cart page based on cart state
  */
 async function renderCartPage() {
     const cartEmptyState = document.getElementById("cartEmptyState")
     const cartWithItems = document.getElementById("cartWithItems")
 
-    if (!cartPageItems || cartPageItems.length === 0) {
+    if (!window.cartPageItems || window.cartPageItems.length === 0) {
         // Show empty cart state
         cartEmptyState.style.display = "flex"
         cartWithItems.style.display = "none"
@@ -142,23 +115,15 @@ async function renderCartItemsWithAPI() {
     const cartProductsList = document.getElementById("cartProductsList")
     if (!cartProductsList) return
 
-    // Show loading state
     cartProductsList.innerHTML =
         '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Mahsulotlar yuklanmoqda...</p></div>'
 
     try {
-        // Fetch full product details for each cart item
         const enrichedCartItems = []
-
-        for (const item of cartPageItems) {
+        for (const item of window.cartPageItems) {
             try {
-                console.log(`Fetching product details for ID: ${item.id}`)
-
-                // Fetch full product details from API
                 const fullProduct = await window.API.fetchProductById(item.id)
-
                 if (fullProduct) {
-                    // Merge cart item data with full product data
                     const enrichedItem = {
                         ...fullProduct,
                         quantity: item.quantity,
@@ -167,32 +132,23 @@ async function renderCartItemsWithAPI() {
                         cartItemId: `${item.id}_${item.size || "no-size"}`,
                     }
                     enrichedCartItems.push(enrichedItem)
-                    console.log(`Successfully fetched product: ${fullProduct.name}`)
                 } else {
-                    console.warn(`Product not found for ID: ${item.id}`)
-                    // Keep original item if API call fails
-                    enrichedCartItems.push(item)
+                    enrichedCartItems.push(item) // Keep original if not found
                 }
             } catch (error) {
                 console.error(`Error fetching product ${item.id}:`, error)
-                // Keep original item if API call fails
-                enrichedCartItems.push(item)
+                enrichedCartItems.push(item) // Keep original if API call fails
             }
         }
 
-        // Update cartPageItems with enriched data
-        cartPageItems = enrichedCartItems
+        // Update global cartPageItems with enriched data
+        window.cartPageItems = enrichedCartItems
 
-        // Clear loading state
         cartProductsList.innerHTML = ""
-
-        // Render each cart item
         enrichedCartItems.forEach((item, index) => {
             const cartItemElement = createCartItemElement(item, index)
             cartProductsList.appendChild(cartItemElement)
         })
-
-        console.log("Cart items rendered successfully with API data")
     } catch (error) {
         console.error("Error rendering cart items with API:", error)
         cartProductsList.innerHTML = `
@@ -215,8 +171,8 @@ function createCartItemElement(item, index) {
     cartItem.setAttribute("data-item-size", item.size || "")
     cartItem.setAttribute("data-index", index)
 
-    // Check if item is out of stock
-    const isOutOfStock = checkItemStock(item)
+    // Check if item is out of stock (using global function)
+    const isOutOfStock = window.checkItemStock(item)
     if (isOutOfStock) {
         cartItem.classList.add("out-of-stock")
     }
@@ -227,8 +183,8 @@ function createCartItemElement(item, index) {
     // Calculate pricing with discount using DiscountUtils
     const pricingInfo = calculateItemPricing(item)
 
-    // Get size info with stock count
-    const sizeInfo = getItemSizeInfo(item)
+    // Get size info with stock count (using global function)
+    const sizeInfo = window.getItemSizeInfo(item)
 
     cartItem.innerHTML = `
         <img src="${imageUrl}" alt="${item.name}" class="cart-product-image" onerror="this.src='/placeholder.svg?height=100&width=100&text=No+Image'">
@@ -239,17 +195,17 @@ function createCartItemElement(item, index) {
                 ${item.categoryName ? `<div class="cart-product-category">Kategoriya: ${item.categoryName}</div>` : ""}
             </div>
             <div class="cart-product-pricing">
-                <span class="cart-current-price">${formatPrice(pricingInfo.displayPrice)}</span>
-                ${pricingInfo.hasDiscount ? `<span class="cart-original-price">${formatPrice(pricingInfo.originalPrice)}</span>` : ""}
+                <span class="cart-current-price">${window.formatPrice(pricingInfo.displayPrice)}</span>
+                ${pricingInfo.hasDiscount ? `<span class="cart-original-price">${window.formatPrice(pricingInfo.originalPrice)}</span>` : ""}
             </div>
             <div class="cart-product-controls">
                 <div class="cart-quantity-controls">
-                    <button class="cart-quantity-btn" onclick="updateCartPageItemQuantity(${index}, -1)" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
+                    <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, -1)" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
                     <span class="cart-quantity-display">${item.quantity}</span>
-                    <button class="cart-quantity-btn" onclick="updateCartPageItemQuantity(${index}, 1)" ${isOutOfStock ? "disabled" : ""}>+</button>
+                    <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, 1)" ${isOutOfStock ? "disabled" : ""}>+</button>
                 </div>
-                <div class="cart-item-total">${formatPrice(pricingInfo.displayPrice * item.quantity)}</div>
-                <button class="cart-remove-btn" onclick="removeCartPageItem(${index})" title="Savatdan o'chirish">
+                <div class="cart-item-total">${window.formatPrice(pricingInfo.displayPrice * item.quantity)}</div>
+                <button class="cart-remove-btn" onclick="window.removeCartPageItem(${index})" title="Savatdan o'chirish">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -260,32 +216,15 @@ function createCartItemElement(item, index) {
 }
 
 /**
- * Check if item is out of stock
- */
-function checkItemStock(item) {
-    if (!item.productSizes || !item.size) {
-        return false
-    }
-
-    const sizeData = item.productSizes.find((size) => size.size === item.size)
-    return !sizeData || sizeData.amount <= 0
-}
-
-/**
  * Get item image URL using API
  */
 function getItemImageUrl(item) {
-    // Use API to get image URL
     if (item.attachmentKeys && item.attachmentKeys.length > 0) {
         return window.API.getImageUrl(item.attachmentKeys[0])
     }
-
-    // Fallback to item.image if available
     if (item.image) {
         return item.image
     }
-
-    // Default placeholder
     return "/placeholder.svg?height=100&width=100&text=No+Image"
 }
 
@@ -296,13 +235,10 @@ function calculateItemPricing(item) {
     if (typeof window.DiscountUtils !== "undefined") {
         return window.DiscountUtils.calculateDiscount(item)
     }
-
-    // Fallback calculation
     const discountPercent = item.discount || 0
     const hasDiscount = item.status === "SALE" && discountPercent > 0
     const originalPrice = item.price
     const discountedPrice = hasDiscount ? Math.round(originalPrice * (1 - discountPercent / 100)) : originalPrice
-
     return {
         hasDiscount,
         discountedPrice,
@@ -313,44 +249,22 @@ function calculateItemPricing(item) {
 }
 
 /**
- * Get item size information with stock count
- */
-function getItemSizeInfo(item) {
-    if (!item.size) {
-        return { html: "", stockCount: null }
-    }
-
-    let stockCount = null
-    if (item.productSizes) {
-        const sizeData = item.productSizes.find((size) => size.size === item.size)
-        stockCount = sizeData ? sizeData.amount : 0
-    }
-
-    const stockText = stockCount !== null ? ` (<span class="stock-count">${stockCount} ta mavjud</span>)` : ""
-
-    return {
-        html: `<div class="cart-product-size">O'lcham: <strong>${item.size}</strong>${stockText}</div>`,
-        stockCount,
-    }
-}
-
-/**
  * Calculate cart totals
  */
 function calculateCartTotals() {
-    cartPageSubtotal = 0
-    cartPageDiscount = 0
+    window.cartPageSubtotal = 0
+    window.cartPageDiscount = 0
 
-    cartPageItems.forEach((item) => {
+    window.cartPageItems.forEach((item) => {
         const pricingInfo = calculateItemPricing(item)
         const itemSubtotal = pricingInfo.originalPrice * item.quantity
         const itemTotal = pricingInfo.displayPrice * item.quantity
 
-        cartPageSubtotal += itemSubtotal
-        cartPageDiscount += itemSubtotal - itemTotal
+        window.cartPageSubtotal += itemSubtotal
+        window.cartPageDiscount += itemSubtotal - itemTotal
     })
 
-    cartPageTotal = cartPageSubtotal - cartPageDiscount
+    window.cartPageTotal = window.cartPageSubtotal - window.cartPageDiscount
 }
 
 /**
@@ -363,174 +277,50 @@ function updateOrderSummary() {
     const orderCheckoutBtn = document.getElementById("orderCheckoutBtn")
 
     if (orderSubtotal) {
-        orderSubtotal.textContent = formatPrice(cartPageSubtotal)
+        orderSubtotal.textContent = window.formatPrice(window.cartPageSubtotal)
     }
-
     if (orderDiscount) {
-        orderDiscount.textContent = cartPageDiscount > 0 ? `-${formatPrice(cartPageDiscount)}` : "-0 So'm"
+        orderDiscount.textContent =
+            window.cartPageDiscount > 0 ? `-${window.formatPrice(window.cartPageDiscount)}` : "-0 So'm"
     }
-
     if (orderTotal) {
-        orderTotal.textContent = formatPrice(cartPageTotal)
+        orderTotal.textContent = window.formatPrice(window.cartPageTotal)
     }
-
     if (orderCheckoutBtn) {
-        orderCheckoutBtn.disabled = cartPageItems.length === 0
+        orderCheckoutBtn.disabled = window.cartPageItems.length === 0
     }
 }
 
 /**
- * Update cart item quantity
+ * Update cart item quantity (now globally exposed from cart-add-logic.js)
  */
-async function updateCartPageItemQuantity(itemIndex, change) {
-    if (isLoading) return
-
-    if (itemIndex < 0 || itemIndex >= cartPageItems.length) {
-        console.error("Invalid item index:", itemIndex)
-        return
-    }
-
-    const item = cartPageItems[itemIndex]
-    const newQuantity = item.quantity + change
-
-    if (newQuantity <= 0) {
-        removeCartPageItem(itemIndex)
-        return
-    }
-
-    // Check stock availability
-    if (change > 0) {
-        const sizeInfo = getItemSizeInfo(item)
-        if (sizeInfo.stockCount !== null && newQuantity > sizeInfo.stockCount) {
-            showNotification("Omborda yetarli mahsulot yo'q!", "warning")
-            return
-        }
-    }
-
-    // Update quantity
-    item.quantity = newQuantity
-
-    // Update localStorage
-    saveCartToStorage()
-
-    // Re-render cart
-    await renderCartPage()
-
-    // Update cart badge
-    updateCartBadge()
-
-    showNotification("Miqdor yangilandi", "success")
-}
+// window.updateCartPageItemQuantity is now defined in cart-add-logic.js
 
 /**
- * Remove item from cart
+ * Remove item from cart (now globally exposed from cart-add-logic.js)
  */
-async function removeCartPageItem(itemIndex) {
-    if (isLoading) return
-
-    if (itemIndex < 0 || itemIndex >= cartPageItems.length) {
-        console.error("Invalid item index:", itemIndex)
-        return
-    }
-
-    const removedItem = cartPageItems[itemIndex]
-    cartPageItems.splice(itemIndex, 1)
-
-    // Update localStorage
-    saveCartToStorage()
-
-    // Re-render cart
-    await renderCartPage()
-
-    // Update cart badge
-    updateCartBadge()
-
-    showNotification(`${removedItem.name} savatdan o'chirildi`, "info")
-}
-
-/**
- * Save cart to localStorage
- */
-function saveCartToStorage() {
-    try {
-        // Save only essential cart data (not full product details)
-        const cartDataToSave = cartPageItems.map((item) => ({
-            id: item.id,
-            quantity: item.quantity,
-            size: item.size,
-            addedAt: item.addedAt,
-            // Keep basic info for fallback
-            name: item.name,
-            price: item.price,
-            image: item.image || (item.attachmentKeys ? window.API.getImageUrl(item.attachmentKeys[0]) : null),
-        }))
-
-        localStorage.setItem("cartItems", JSON.stringify(cartDataToSave))
-
-        const totalCount = cartPageItems.reduce((total, item) => total + item.quantity, 0)
-        localStorage.setItem("cartCount", totalCount.toString())
-
-        // Update global cart variables if they exist
-        if (typeof window.cartItems !== "undefined") {
-            window.cartItems = cartDataToSave
-            window.cartCount = totalCount
-        }
-
-        console.log("Cart saved to localStorage successfully")
-    } catch (error) {
-        console.error("Error saving cart to storage:", error)
-    }
-}
-
-/**
- * Update cart badge in header
- */
-function updateCartBadge() {
-    const cartBadge = document.getElementById("cartBadge")
-    const bottomNavCartBadge = document.getElementById("bottomNavCartBadge")
-
-    const totalCount = cartPageItems.reduce((total, item) => total + item.quantity, 0)
-
-    if (cartBadge) {
-        cartBadge.textContent = totalCount
-        cartBadge.style.display = totalCount > 0 ? "flex" : "none"
-    }
-
-    if (bottomNavCartBadge) {
-        bottomNavCartBadge.textContent = totalCount
-        if (totalCount > 0) {
-            bottomNavCartBadge.classList.add("show")
-        } else {
-            bottomNavCartBadge.classList.remove("show")
-        }
-    }
-}
+// window.removeCartPageItem is now defined in cart-add-logic.js
 
 /**
  * Initialize cart page event listeners
  */
 function initializeCartPageEvents() {
-    // Empty cart button
     const emptyCartBtn = document.getElementById("emptyCartBtn")
     if (emptyCartBtn) {
         emptyCartBtn.addEventListener("click", () => {
-            // Navigate to catalog
             window.location.href = "/index.html"
         })
     }
 
-    // Order checkout button
     const orderCheckoutBtn = document.getElementById("orderCheckoutBtn")
     if (orderCheckoutBtn) {
         orderCheckoutBtn.addEventListener("click", handleCheckout)
     }
 
-    // Cart icon click - navigate to cart page
     const cartIcon = document.getElementById("cartIcon")
     if (cartIcon) {
         cartIcon.addEventListener("click", (e) => {
             e.preventDefault()
-            // Already on cart page, just scroll to top
             window.scrollTo({ top: 0, behavior: "smooth" })
         })
     }
@@ -540,112 +330,35 @@ function initializeCartPageEvents() {
  * Handle checkout process
  */
 async function handleCheckout() {
-    if (cartPageItems.length === 0) {
-        showNotification("Savat bo'sh!", "warning")
+    if (window.cartPageItems.length === 0) {
+        window.showNotification("Savat bo'sh!", "warning")
         return
     }
 
-    // Check for out of stock items
-    const outOfStockItems = cartPageItems.filter((item) => checkItemStock(item))
+    const outOfStockItems = window.cartPageItems.filter((item) => window.checkItemStock(item))
     if (outOfStockItems.length > 0) {
-        showNotification("Ba'zi mahsulotlar omborda mavjud emas!", "warning")
+        window.showNotification("Ba'zi mahsulotlar omborda mavjud emas!", "warning")
         return
     }
 
     showLoading(true)
-
     try {
-        console.log("Processing checkout...")
-        console.log("Cart items:", cartPageItems)
-        console.log("Total amount:", formatPrice(cartPageTotal))
-
-        // Simulate API call for checkout
         await new Promise((resolve) => setTimeout(resolve, 2000))
+        window.showNotification(`Buyurtma qabul qilindi! Jami: ${window.formatPrice(window.cartPageTotal)}`, "success")
 
-        // Show success message
-        showNotification(`Buyurtma qabul qilindi! Jami: ${formatPrice(cartPageTotal)}`, "success")
-
-        // Here you would typically:
-        // 1. Send order to backend
-        // 2. Process payment
-        // 3. Clear cart
-        // 4. Redirect to success page
-
-        // For now, simulate success
         setTimeout(async () => {
-            // Clear cart
-            cartPageItems = []
-            saveCartToStorage()
+            window.cartPageItems = [] // Clear cart
+            window.saveCartToStorage()
             await renderCartPage()
-            updateCartBadge()
-
-            showNotification("Buyurtma muvaffaqiyatli yuborildi!", "success")
+            window.updateCartBadge()
+            window.showNotification("Buyurtma muvaffaqiyatli yuborildi!", "success")
         }, 1000)
     } catch (error) {
         console.error("Checkout error:", error)
-        showNotification("Buyurtma berishda xatolik yuz berdi", "error")
+        window.showNotification("Buyurtma berishda xatolik yuz berdi", "error")
     } finally {
         showLoading(false)
     }
-}
-
-/**
- * Format price for display
- */
-function formatPrice(price) {
-    if (typeof window.API !== "undefined" && window.API.formatPrice) {
-        return window.API.formatPrice(price)
-    }
-
-    // Fallback formatting
-    return new Intl.NumberFormat("uz-UZ").format(Math.round(price)) + " So'm"
-}
-
-/**
- * Show notification message
- */
-function showNotification(message, type = "info") {
-    // Use existing notification system if available
-    if (typeof window.API !== "undefined" && window.API.showNotification) {
-        window.API.showNotification(message, type)
-        return
-    }
-
-    // Fallback notification
-    const notification = document.createElement("div")
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === "success" ? "#4CAF50" : type === "warning" ? "#ff9800" : type === "error" ? "#f44336" : "#2196F3"};
-        color: white;
-        padding: 15px 20px;
-        border-radius: 12px;
-        z-index: 9999;
-        font-weight: 600;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        max-width: 350px;
-        font-family: "Montserrat", sans-serif;
-    `
-    notification.textContent = message
-    document.body.appendChild(notification)
-
-    // Animate in
-    setTimeout(() => {
-        notification.style.transform = "translateX(0)"
-    }, 100)
-
-    // Remove after 4 seconds
-    setTimeout(() => {
-        notification.style.transform = "translateX(100%)"
-        setTimeout(() => {
-            if (document.body.contains(notification)) {
-                document.body.removeChild(notification)
-            }
-        }, 300)
-    }, 4000)
 }
 
 /**
@@ -668,21 +381,16 @@ function showErrorState(message = "Savatni yuklashda muammo bo'ldi") {
         `
         cartEmptyState.style.display = "flex"
     }
-
     if (cartWithItems) {
         cartWithItems.style.display = "none"
     }
 }
 
-// Make functions globally available
-window.updateCartPageItemQuantity = updateCartPageItemQuantity
-window.removeCartPageItem = removeCartPageItem
+// Make functions globally available for external access (e.g., debugging)
 window.CartPageAPI = {
     initializeCartPage,
     renderCartPage,
     renderCartItemsWithAPI,
-    updateCartPageItemQuantity,
-    removeCartPageItem,
     handleCheckout,
     showLoading,
     showErrorState,
@@ -690,9 +398,9 @@ window.CartPageAPI = {
 
 // Export for debugging
 window.cartPageDebug = {
-    cartPageItems,
-    cartPageTotal,
-    cartPageSubtotal,
-    cartPageDiscount,
+    // cartPageItems, // Now global from cart-add-logic.js
+    // cartPageTotal, // These will be updated by cart-page.js logic
+    // cartPageSubtotal,
+    // cartPageDiscount,
     isLoading,
 }

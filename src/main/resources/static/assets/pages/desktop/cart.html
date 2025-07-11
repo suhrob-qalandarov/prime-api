@@ -139,6 +139,16 @@
     </div>
 </div>
 
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loading-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Yuklanmoqda...</span>
+        </div>
+        <p class="loading-text">Savat ma'lumotlari yuklanmoqda...</p>
+    </div>
+</div>
+
 <!-- Cart Page Content -->
 <main class="cart-page">
     <!-- Page Header -->
@@ -161,6 +171,9 @@
             <!-- Empty Cart State -->
             <div class="cart-empty-state" id="cartEmptyState">
                 <div class="empty-cart-content">
+                    <div class="empty-cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
                     <h2 class="empty-cart-title">Ha ul-bul narsa qo'shmaymizmi bu yerga?</h2>
                     <button class="empty-cart-btn" id="emptyCartBtn">Qo'shishga olg'a</button>
                 </div>
@@ -172,6 +185,7 @@
                     <!-- Product Items (Left Side) -->
                     <div class="col-lg-8 col-md-12">
                         <div class="cart-products-section">
+                            <h3 class="cart-products-title">Savatdagi mahsulotlar</h3>
                             <div class="cart-products-list" id="cartProductsList">
                                 <!-- Cart items will be populated here -->
                             </div>
