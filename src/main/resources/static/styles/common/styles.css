@@ -1556,30 +1556,28 @@ body {
     }
 
     /* Mobile cart footer with summary and buttons */
-    @media (max-width: 768px) {
-        .cart-footer {
-            border-radius: 0;
-            padding: 15px 20px;
-            background: white;
-            border-top: 2px solid #e9ecef;
-            flex-shrink: 0; /* Mobile da ham qimirlamasligi uchun */
-        }
+    .cart-footer {
+        border-radius: 0;
+        padding: 15px 20px;
+        background: white;
+        border-top: 2px solid #e9ecef;
+        flex-shrink: 0; /* Mobile da ham qimirlamasligi uchun */
+    }
 
-        .cart-total {
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
+    .cart-total {
+        margin-bottom: 15px;
+        font-size: 16px;
+    }
 
-        .cart-buttons {
-            flex-direction: column;
-            gap: 10px;
-        }
+    .cart-buttons {
+        flex-direction: row; /* CHANGED FROM column TO row */
+        gap: 10px;
+    }
 
-        .cart-checkout-btn,
-        .cart-view-btn {
-            font-size: 16px;
-            padding: 12px;
-        }
+    .cart-checkout-btn,
+    .cart-view-btn {
+        font-size: 16px;
+        padding: 12px;
     }
 
     /* Hero section adjustments for mobile */
