@@ -3,7 +3,7 @@
 // ======================================================
 
 // Global variables (now managed by cart-add-logic.js, but referenced here)
-let isLoading = false // This remains local to cart-page.js
+// let isLoading = false // This remains local to cart-page.js - REMOVED, use showLoading from API
 
 // Initialize cart page when DOM is loaded
 document.addEventListener("DOMContentLoaded", async () => {
@@ -14,18 +14,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         return
     }
     // Ensure cart-add-logic functions are available
-    if (typeof window.loadCartPageItems === "undefined" || typeof window.saveCartToStorage === "undefined") {
+    if (typeof window.loadCartFromStorage === "undefined" || typeof window.saveCartToStorage === "undefined") {
         console.error("Cart add logic not loaded. Please ensure cart-add-logic.js is loaded before cart-page.js.")
         showErrorState("Savat funksiyalari yuklanmadi. Sahifani qayta yuklang.")
         return
     }
 
     // Load existing functionality from script.js
+    const initializeResponsiveHeaders = window.initializeResponsiveHeaders // Added this line
     const initializeMobileScrollEffects = window.initializeMobileScrollEffects
     const initializeDesktopScrollEffects = window.initializeDesktopScrollEffects
     const initializeMobileSidebar = window.initializeMobileSidebar
     const initializeMobileBottomNav = window.initializeMobileBottomNav
 
+    if (typeof initializeResponsiveHeaders === "function") {
+        // Added this line
+        initializeResponsiveHeaders() // Added this line
+    } // Added this line
     if (typeof initializeMobileScrollEffects === "function") {
         initializeMobileScrollEffects()
     }
@@ -50,10 +55,10 @@ document.addEventListener("DOMContentLoaded", async () => {
  */
 async function initializeCartPage() {
     try {
-        showLoading(true)
+        window.API.showLoading(true) // Use API's showLoading
 
         // Load cart items from localStorage (now from cart-add-logic.js)
-        window.loadCartPageItems()
+        window.loadCartFromStorage() // Use the global function
 
         // Render cart page with API data
         await renderCartPage()
@@ -64,10 +69,10 @@ async function initializeCartPage() {
         // Update cart badge (now from cart-add-logic.js)
         window.updateCartBadge()
 
-        showLoading(false)
+        window.API.showLoading(false) // Use API's showLoading
     } catch (error) {
         console.error("Error initializing cart page:", error)
-        showLoading(false)
+        window.API.showLoading(false) // Use API's showLoading
         showErrorState("Savatni yuklashda xatolik yuz berdi")
     }
 }
@@ -76,11 +81,12 @@ async function initializeCartPage() {
  * Show/hide loading overlay
  */
 function showLoading(show) {
+    // This function is now redundant, use window.API.showLoading
     const loadingOverlay = document.getElementById("loadingOverlay")
     if (loadingOverlay) {
         loadingOverlay.style.display = show ? "flex" : "none"
     }
-    isLoading = show
+    // isLoading = show // Redundant
 }
 
 /**
@@ -90,7 +96,8 @@ async function renderCartPage() {
     const cartEmptyState = document.getElementById("cartEmptyState")
     const cartWithItems = document.getElementById("cartWithItems")
 
-    if (!window.cartPageItems || window.cartPageItems.length === 0) {
+    if (!window.cartItems || window.cartItems.length === 0) {
+        // Use window.cartItems
         // Show empty cart state
         cartEmptyState.style.display = "flex"
         cartWithItems.style.display = "none"
@@ -120,7 +127,8 @@ async function renderCartItemsWithAPI() {
 
     try {
         const enrichedCartItems = []
-        for (const item of window.cartPageItems) {
+        for (const item of window.cartItems) {
+            // Use window.cartItems
             try {
                 const fullProduct = await window.API.fetchProductById(item.id)
                 if (fullProduct) {
@@ -133,7 +141,9 @@ async function renderCartItemsWithAPI() {
                     }
                     enrichedCartItems.push(enrichedItem)
                 } else {
-                    enrichedCartItems.push(item) // Keep original if not found
+                    // If product not found in API, use existing data but log warning
+                    console.warn(`Product with ID ${item.id} not found in API. Using cached data.`)
+                    enrichedCartItems.push(item)
                 }
             } catch (error) {
                 console.error(`Error fetching product ${item.id}:`, error)
@@ -142,7 +152,7 @@ async function renderCartItemsWithAPI() {
         }
 
         // Update global cartPageItems with enriched data
-        window.cartPageItems = enrichedCartItems
+        // window.cartPageItems = enrichedCartItems // This is now local to cart-page.js, not global
 
         cartProductsList.innerHTML = ""
         enrichedCartItems.forEach((item, index) => {
@@ -152,12 +162,12 @@ async function renderCartItemsWithAPI() {
     } catch (error) {
         console.error("Error rendering cart items with API:", error)
         cartProductsList.innerHTML = `
-            <div class="text-center py-4 text-danger">
-                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
-                <p>Mahsulotlarni yuklashda xatolik yuz berdi</p>
-                <button class="btn btn-primary" onclick="renderCartItemsWithAPI()">Qayta urinish</button>
-            </div>
-        `
+          <div class="text-center py-4 text-danger">
+              <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+              <p>Mahsulotlarni yuklashda xatolik yuz berdi</p>
+              <button class="btn btn-primary" onclick="window.CartPageAPI.renderCartItemsWithAPI()">Qayta urinish</button>
+          </div>
+      `
     }
 }
 
@@ -187,30 +197,30 @@ function createCartItemElement(item, index) {
     const sizeInfo = window.getItemSizeInfo(item)
 
     cartItem.innerHTML = `
-        <img src="${imageUrl}" alt="${item.name}" class="cart-product-image" onerror="this.src='/placeholder.svg?height=100&width=100&text=No+Image'">
-        <div class="cart-product-details">
-            <div class="cart-product-info">
-                <h4 class="cart-product-name">${item.name}</h4>
-                ${sizeInfo.html}
-                ${item.categoryName ? `<div class="cart-product-category">Kategoriya: ${item.categoryName}</div>` : ""}
-            </div>
-            <div class="cart-product-pricing">
-                <span class="cart-current-price">${window.formatPrice(pricingInfo.displayPrice)}</span>
-                ${pricingInfo.hasDiscount ? `<span class="cart-original-price">${window.formatPrice(pricingInfo.originalPrice)}</span>` : ""}
-            </div>
-            <div class="cart-product-controls">
-                <div class="cart-quantity-controls">
-                    <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, -1)" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
-                    <span class="cart-quantity-display">${item.quantity}</span>
-                    <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, 1)" ${isOutOfStock ? "disabled" : ""}>+</button>
-                </div>
-                <div class="cart-item-total">${window.formatPrice(pricingInfo.displayPrice * item.quantity)}</div>
-                <button class="cart-remove-btn" onclick="window.removeCartPageItem(${index})" title="Savatdan o'chirish">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-    `
+      <img src="${imageUrl}" alt="${item.name}" class="cart-product-image" onerror="this.src='/placeholder.svg?height=100&width=100&text=No+Image'">
+      <div class="cart-product-details">
+          <div class="cart-product-info">
+              <h4 class="cart-product-name">${item.name}</h4>
+              ${sizeInfo.html}
+              ${item.categoryName ? `<div class="cart-product-category">Kategoriya: ${item.categoryName}</div>` : ""}
+          </div>
+          <div class="cart-product-pricing">
+              <span class="cart-current-price">${window.API.formatPrice(pricingInfo.displayPrice)}</span>
+              ${pricingInfo.hasDiscount ? `<span class="cart-original-price">${window.API.formatPrice(pricingInfo.originalPrice)}</span>` : ""}
+          </div>
+          <div class="cart-product-controls">
+              <div class="cart-quantity-controls">
+                  <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, -1)" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
+                  <span class="cart-quantity-display">${item.quantity}</span>
+                  <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, 1)" ${isOutOfStock ? "disabled" : ""}>+</button>
+              </div>
+              <div class="cart-item-total">${window.API.formatPrice(pricingInfo.displayPrice * item.quantity)}</div>
+              <button class="cart-remove-btn" onclick="window.removeCartPageItem(${index})" title="Savatdan o'chirish">
+                  <i class="fas fa-times"></i>
+              </button>
+          </div>
+      </div>
+  `
 
     return cartItem
 }
@@ -255,7 +265,8 @@ function calculateCartTotals() {
     window.cartPageSubtotal = 0
     window.cartPageDiscount = 0
 
-    window.cartPageItems.forEach((item) => {
+    window.cartItems.forEach((item) => {
+        // Use window.cartItems
         const pricingInfo = calculateItemPricing(item)
         const itemSubtotal = pricingInfo.originalPrice * item.quantity
         const itemTotal = pricingInfo.displayPrice * item.quantity
@@ -277,17 +288,17 @@ function updateOrderSummary() {
     const orderCheckoutBtn = document.getElementById("orderCheckoutBtn")
 
     if (orderSubtotal) {
-        orderSubtotal.textContent = window.formatPrice(window.cartPageSubtotal)
+        orderSubtotal.textContent = window.API.formatPrice(window.cartPageSubtotal)
     }
     if (orderDiscount) {
         orderDiscount.textContent =
-            window.cartPageDiscount > 0 ? `-${window.formatPrice(window.cartPageDiscount)}` : "-0 So'm"
+            window.cartPageDiscount > 0 ? `-${window.API.formatPrice(window.cartPageDiscount)}` : "-0 So'm"
     }
     if (orderTotal) {
-        orderTotal.textContent = window.formatPrice(window.cartPageTotal)
+        orderTotal.textContent = window.API.formatPrice(window.cartPageTotal)
     }
     if (orderCheckoutBtn) {
-        orderCheckoutBtn.disabled = window.cartPageItems.length === 0
+        orderCheckoutBtn.disabled = window.cartItems.length === 0 // Use window.cartItems
     }
 }
 
@@ -308,7 +319,7 @@ function initializeCartPageEvents() {
     const emptyCartBtn = document.getElementById("emptyCartBtn")
     if (emptyCartBtn) {
         emptyCartBtn.addEventListener("click", () => {
-            window.location.href = "/index.html"
+            window.location.href = "/assets/pages/desktop/catalog.html"
         })
     }
 
@@ -330,34 +341,39 @@ function initializeCartPageEvents() {
  * Handle checkout process
  */
 async function handleCheckout() {
-    if (window.cartPageItems.length === 0) {
-        window.showNotification("Savat bo'sh!", "warning")
+    if (window.cartItems.length === 0) {
+        // Use window.cartItems
+        window.API.showNotification("Savat bo'sh!", "warning")
         return
     }
 
-    const outOfStockItems = window.cartPageItems.filter((item) => window.checkItemStock(item))
+    const outOfStockItems = window.cartItems.filter((item) => window.checkItemStock(item)) // Use window.cartItems
     if (outOfStockItems.length > 0) {
-        window.showNotification("Ba'zi mahsulotlar omborda mavjud emas!", "warning")
+        window.API.showNotification("Ba'zi mahsulotlar omborda mavjud emas!", "warning")
         return
     }
 
-    showLoading(true)
+    window.API.showLoading(true) // Use API's showLoading
     try {
         await new Promise((resolve) => setTimeout(resolve, 2000))
-        window.showNotification(`Buyurtma qabul qilindi! Jami: ${window.formatPrice(window.cartPageTotal)}`, "success")
+        window.API.showNotification(
+            `Buyurtma qabul qilindi! Jami: ${window.API.formatPrice(window.cartPageTotal)}`,
+            "success",
+        )
 
         setTimeout(async () => {
-            window.cartPageItems = [] // Clear cart
+            window.cartItems = [] // Clear cart
+            window.cartCount = 0 // Clear cart count
             window.saveCartToStorage()
             await renderCartPage()
             window.updateCartBadge()
-            window.showNotification("Buyurtma muvaffaqiyatli yuborildi!", "success")
+            window.API.showNotification("Buyurtma muvaffaqiyatli yuborildi!", "success")
         }, 1000)
     } catch (error) {
         console.error("Checkout error:", error)
-        window.showNotification("Buyurtma berishda xatolik yuz berdi", "error")
+        window.API.showNotification("Buyurtma berishda xatolik yuz berdi", "error")
     } finally {
-        showLoading(false)
+        window.API.showLoading(false) // Use API's showLoading
     }
 }
 
@@ -370,15 +386,15 @@ function showErrorState(message = "Savatni yuklashda muammo bo'ldi") {
 
     if (cartEmptyState) {
         cartEmptyState.innerHTML = `
-            <div class="empty-cart-content">
-                <div class="empty-cart-icon" style="color: #dc3545;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <h2 class="empty-cart-title" style="color: #dc3545;">Xatolik yuz berdi</h2>
-                <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">${message}</p>
-                <button class="empty-cart-btn" onclick="location.reload()" style="background: #dc3545;">Qayta yuklash</button>
-            </div>
-        `
+          <div class="empty-cart-content">
+              <div class="empty-cart-icon" style="color: #dc3545;">
+                  <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <h2 class="empty-cart-title" style="color: #dc3545;">Xatolik yuz berdi</h2>
+              <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">${message}</p>
+              <button class="empty-cart-btn" onclick="location.reload()" style="background: #dc3545;">Qayta yuklash</button>
+          </div>
+      `
         cartEmptyState.style.display = "flex"
     }
     if (cartWithItems) {
@@ -392,7 +408,7 @@ window.CartPageAPI = {
     renderCartPage,
     renderCartItemsWithAPI,
     handleCheckout,
-    showLoading,
+    // showLoading, // Redundant, use window.API.showLoading
     showErrorState,
 }
 
@@ -402,5 +418,5 @@ window.cartPageDebug = {
     // cartPageTotal, // These will be updated by cart-page.js logic
     // cartPageSubtotal,
     // cartPageDiscount,
-    isLoading,
+    // isLoading, // Redundant
 }

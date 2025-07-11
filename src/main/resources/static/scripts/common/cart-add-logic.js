@@ -1,208 +1,258 @@
 // ======================================================
-// CORE CART ADDITION AND MANAGEMENT LOGIC
-// This file provides global functions for cart operations.
+// CART ADD LOGIC - CENTRALIZED CART MANAGEMENT
 // ======================================================
 
-// Global cart items array
-window.cartPageItems = []
+// Global cart state
+window.cartItems = [];
+window.cartCount = 0;
 
-// Function to load cart items from localStorage
-window.loadCartPageItems = () => {
-    try {
-        const savedCartItems = localStorage.getItem("cartItems")
-        if (savedCartItems) {
-            window.cartPageItems = JSON.parse(savedCartItems)
-        } else {
-            window.cartPageItems = []
+// Global variables for cart page totals (updated by cart-page.js)
+window.cartPageSubtotal = 0;
+window.cartPageDiscount = 0;
+window.cartPageTotal = 0;
+
+/**
+ * Loads cart items and count from localStorage.
+ */
+function loadCartFromStorage() {
+    const savedCartItems = localStorage.getItem("cartItems");
+    const savedCartCount = localStorage.getItem("cartCount");
+
+    if (savedCartItems) {
+        try {
+            window.cartItems = JSON.parse(savedCartItems);
+            window.cartCount = Number.parseInt(savedCartCount) || 0;
+            console.log("Cart loaded from storage:", window.cartItems, "Count:", window.cartCount);
+        } catch (error) {
+            console.error("Error parsing cart from storage:", error);
+            window.cartItems = [];
+            window.cartCount = 0;
         }
-        // Also update global window.cartItems and window.cartCount if they exist
-        if (typeof window.cartItems !== "undefined") {
-            window.cartItems = window.cartPageItems
-            window.cartCount = window.cartPageItems.reduce((total, item) => total + item.quantity, 0)
-        }
-    } catch (error) {
-        console.error("Error loading cart items:", error)
-        window.cartPageItems = []
+    } else {
+        window.cartItems = [];
+        window.cartCount = 0;
     }
+    updateCartBadge();
 }
 
-// Function to save cart to localStorage
-window.saveCartToStorage = () => {
-    try {
-        const cartDataToSave = window.cartPageItems.map((item) => ({
-            id: item.id,
-            quantity: item.quantity,
-            size: item.size,
-            addedAt: item.addedAt,
-            name: item.name,
-            price: item.price,
-            image: item.image || (item.attachmentKeys ? window.API.getImageUrl(item.attachmentKeys[0]) : null),
-        }))
-        localStorage.setItem("cartItems", JSON.stringify(cartDataToSave))
-        const totalCount = window.cartPageItems.reduce((total, item) => total + item.quantity, 0)
-        localStorage.setItem("cartCount", totalCount.toString())
-
-        if (typeof window.cartItems !== "undefined") {
-            window.cartItems = cartDataToSave
-            window.cartCount = totalCount
-        }
-    } catch (error) {
-        console.error("Error saving cart to storage:", error)
-    }
+/**
+ * Saves current cart items and count to localStorage.
+ */
+function saveCartToStorage() {
+    localStorage.setItem("cartItems", JSON.stringify(window.cartItems));
+    localStorage.setItem("cartCount", window.cartCount.toString());
+    console.log("Cart saved to storage:", window.cartItems, "Count:", window.cartCount);
 }
 
-// Function to update cart badge in header and bottom nav
-window.updateCartBadge = () => {
-    const cartBadge = document.getElementById("cartBadge")
-    const bottomNavCartBadge = document.getElementById("bottomNavCartBadge")
-    const totalCount = window.cartPageItems.reduce((total, item) => total + item.quantity, 0)
+/**
+ * Updates the cart badges in the header and mobile bottom navigation.
+ */
+function updateCartBadge() {
+    const cartBadge = document.getElementById("cartBadge");
+    const mobileCartBadge = document.getElementById("mobileCartBadge");
+    const bottomNavCartBadge = document.getElementById("bottomNavCartBadge");
 
     if (cartBadge) {
-        cartBadge.textContent = totalCount
-        cartBadge.style.display = totalCount > 0 ? "flex" : "none"
+        cartBadge.textContent = window.cartCount;
+        cartBadge.style.display = window.cartCount > 0 ? "flex" : "none";
     }
+
+    if (mobileCartBadge) {
+        mobileCartBadge.textContent = window.cartCount;
+        mobileCartBadge.style.display = window.cartCount > 0 ? "flex" : "none";
+    }
+
     if (bottomNavCartBadge) {
-        bottomNavCartBadge.textContent = totalCount
-        if (totalCount > 0) {
-            bottomNavCartBadge.classList.add("show")
+        bottomNavCartBadge.textContent = window.cartCount;
+        if (window.cartCount > 0) {
+            bottomNavCartBadge.classList.add("show");
         } else {
-            bottomNavCartBadge.classList.remove("show")
+            bottomNavCartBadge.classList.remove("show");
         }
     }
 }
 
-// Function to format price for display (dependency for notifications)
-window.formatPrice = (price) => {
-    if (typeof window.API !== "undefined" && window.API.formatPrice) {
-        return window.API.formatPrice(price)
-    }
-    return new Intl.NumberFormat("uz-UZ").format(Math.round(price)) + " So'm"
-}
+/**
+ * Renders cart items in the cart modal.
+ */
+function renderCartModalItems() {
+    const cartEmpty = document.getElementById("cartEmpty");
+    const cartItemsContainer = document.getElementById("cartItems");
+    const cartFooter = document.getElementById("cartFooter");
+    const cartTotalPrice = document.getElementById("cartTotalPrice");
+    const cartCheckoutBtn = document.getElementById("cartCheckoutBtn");
 
-// Function to show notification message (dependency for addProductToCart)
-window.showNotification = (message, type = "info") => {
-    if (typeof window.API !== "undefined" && window.API.showNotification) {
-        window.API.showNotification(message, type)
-        return
-    }
-    const notification = document.createElement("div")
-    notification.style.cssText = `
-        position: fixed; top: 20px; right: 20px; background: ${type === "success" ? "#4CAF50" : type === "warning" ? "#ff9800" : type === "error" ? "#f44336" : "#2196F3"};
-        color: white; padding: 15px 20px; border-radius: 12px; z-index: 9999; font-weight: 600; box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        transform: translateX(100%); transition: transform 0.3s ease; max-width: 350px; font-family: "Montserrat", sans-serif;
-    `
-    notification.textContent = message
-    document.body.appendChild(notification)
-    setTimeout(() => {
-        notification.style.transform = "translateX(0)"
-    }, 100)
-    setTimeout(() => {
-        notification.style.transform = "translateX(100%)"
-        setTimeout(() => {
-            if (document.body.contains(notification)) {
-                document.body.removeChild(notification)
-            }
-        }, 300)
-    }, 4000)
-}
+    let currentCartTotal = 0;
 
-// Helper function to check item stock (dependency for addProductToCart)
-window.checkItemStock = (item) => {
-    if (!item.productSizes || !item.size) {
-        // If no sizes or size selected, check the general product amount if available
-        return item.amount !== undefined && item.amount <= 0
-    }
-    const sizeData = item.productSizes.find((size) => size.size === item.size)
-    return !sizeData || sizeData.amount <= 0
-}
-
-// Helper function to get item size info (dependency for addProductToCart)
-window.getItemSizeInfo = (item) => {
-    if (!item.size) {
-        return { html: "", stockCount: item.amount !== undefined ? item.amount : null }
-    }
-    let stockCount = null
-    if (item.productSizes) {
-        const sizeData = item.productSizes.find((size) => size.size === item.size)
-        stockCount = sizeData ? sizeData.amount : 0
-    }
-    const stockText = stockCount !== null ? ` (<span class="stock-count">${stockCount} ta mavjud</span>)` : ""
-    return { html: `<div class="cart-product-size">O'lcham: <strong>${item.size}</strong>${stockText}</div>`, stockCount }
-}
-
-// Main function to add product to cart
-window.addProductToCart = (product, quantity, size) => {
-    // Ensure cartPageItems is loaded before attempting to modify it
-    if (window.cartPageItems.length === 0 && localStorage.getItem("cartItems")) {
-        window.loadCartPageItems()
-    }
-
-    const existingItemIndex = window.cartPageItems.findIndex(
-        (item) => item.id === product.id && (item.size || "") === (size || ""),
-    )
-
-    if (existingItemIndex > -1) {
-        const existingItem = window.cartPageItems[existingItemIndex]
-        const newQuantity = existingItem.quantity + quantity
-
-        const sizeData = product.productSizes ? product.productSizes.find((s) => s.size === size) : null
-        const stockCount = sizeData
-            ? sizeData.amount
-            : product.amount !== undefined
-                ? product.amount
-                : Number.POSITIVE_INFINITY // Use product.amount if no sizes
-
-        if (newQuantity > stockCount) {
-            window.showNotification("Omborda yetarli mahsulot yo'q!", "warning")
-            return
-        }
-
-        existingItem.quantity = newQuantity
-        window.showNotification(`${product.name} miqdori yangilandi`, "success")
+    if (window.cartItems.length === 0) {
+        if (cartEmpty) cartEmpty.style.display = "block";
+        if (cartItemsContainer) cartItemsContainer.style.display = "none";
+        if (cartFooter) cartFooter.style.display = "block"; // Always show footer, but disable buttons
+        if (cartCheckoutBtn) cartCheckoutBtn.disabled = true;
     } else {
-        const itemToAdd = {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image:
-                product.image ||
-                (product.attachmentKeys && product.attachmentKeys.length > 0
-                    ? window.API.getImageUrl(product.attachmentKeys[0])
-                    : null),
-            discount: product.discount,
-            status: product.status,
+        if (cartEmpty) cartEmpty.style.display = "none";
+        if (cartItemsContainer) cartItemsContainer.style.display = "block";
+        if (cartFooter) cartFooter.style.display = "block";
+        if (cartCheckoutBtn) cartCheckoutBtn.disabled = false;
+
+        if (cartItemsContainer) cartItemsContainer.innerHTML = "";
+
+        window.cartItems.forEach((item, index) => {
+            const cartItem = document.createElement("div");
+            cartItem.className = "cart-item";
+            // Corrected template literal for innerHTML
+            cartItem.innerHTML = `
+                <img src="${item.image || '/placeholder.svg?height=50&width=50&text=No+Image'}" alt="${item.name}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h4 class="cart-item-name">${item.name}</h4>
+                    ${item.size ? `<div class="cart-item-size">O'lcham: ${item.size}</div>` : ''}
+                    <div class="cart-item-price">${window.API.formatPrice(item.price)}</div>
+                    <div class="cart-item-controls">
+                        <button class="cart-quantity-btn" onclick="window.updateCartItemQuantity(${index}, -1)" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
+                        <span class="cart-quantity">${item.quantity}</span>
+                        <button class="cart-quantity-btn" onclick="window.updateCartItemQuantity(${index}, 1)">+</button>
+                        <button class="cart-remove-btn" onclick="window.removeCartItem(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            if (cartItemsContainer) cartItemsContainer.appendChild(cartItem);
+            currentCartTotal += item.price * item.quantity;
+        });
+    }
+
+    if (cartTotalPrice) {
+        cartTotalPrice.textContent = window.API.formatPrice(currentCartTotal);
+    }
+}
+
+/**
+ * Adds a product to the cart or updates its quantity if it already exists.
+ * @param {Object} productData - The product object to add.
+ * @param {number} quantity - The quantity to add.
+ * @param {string|null} size - The selected size of the product.
+ */
+function addToCart(productData, quantity = 1, size = null) {
+    const existingItemIndex = window.cartItems.findIndex((item) => item.id === productData.id && item.size === size);
+
+    if (existingItemIndex !== -1) {
+        window.cartItems[existingItemIndex].quantity += quantity;
+    } else {
+        window.cartItems.push({
+            id: productData.id,
+            name: productData.name,
+            price: productData.price,
+            image: productData.image, // Assuming productData has an image URL
             quantity: quantity,
             size: size,
             addedAt: new Date().toISOString(),
-            productSizes: product.productSizes, // Include productSizes for stock checking
-            amount: product.amount, // Include product.amount for stock checking if no sizes
-        }
-
-        // Final stock check for new item
-        const sizeData = product.productSizes ? product.productSizes.find((s) => s.size === size) : null
-        const stockCount = sizeData
-            ? sizeData.amount
-            : product.amount !== undefined
-                ? product.amount
-                : Number.POSITIVE_INFINITY
-        if (quantity > stockCount) {
-            window.showNotification("Omborda yetarli mahsulot yo'q!", "warning")
-            return
-        }
-
-        window.cartPageItems.push(itemToAdd)
-        window.showNotification(`${itemToAdd.name} savatga qo'shildi`, "success")
+        });
     }
 
-    window.saveCartToStorage()
-    window.updateCartBadge()
-    // If on cart page, re-render it
-    if (document.getElementById("cartWithItems") && document.getElementById("cartWithItems").style.display === "block") {
-        if (typeof window.CartPageAPI !== "undefined" && typeof window.CartPageAPI.renderCartPage === "function") {
-            window.CartPageAPI.renderCartPage()
-        }
+    window.cartCount += quantity;
+    updateCartBadge();
+    renderCartModalItems();
+    saveCartToStorage();
+
+    window.API.showNotification("Mahsulot savatga qo'shildi!", "success");
+}
+
+/**
+ * Updates the quantity of a specific item in the cart.
+ * @param {number} index - The index of the item in the cartItems array.
+ * @param {number} change - The amount to change the quantity by (+1 or -1).
+ */
+function updateCartItemQuantity(index, change) {
+    if (index < 0 || index >= window.cartItems.length) return;
+
+    const item = window.cartItems[index];
+    const newQuantity = item.quantity + change;
+
+    if (newQuantity <= 0) {
+        removeCartItem(index);
+    } else {
+        window.cartCount += change;
+        item.quantity = newQuantity;
+        updateCartBadge();
+        renderCartModalItems();
+        saveCartToStorage();
+    }
+
+    // If on cart page, re-render cart page items as well
+    if (typeof window.CartPageAPI !== "undefined" && typeof window.CartPageAPI.renderCartPage === "function") {
+        window.CartPageAPI.renderCartPage();
     }
 }
 
-// Load cart items on script load
-window.loadCartPageItems()
+/**
+ * Removes an item from the cart.
+ * @param {number} index - The index of the item to remove from the cartItems array.
+ */
+function removeCartItem(index) {
+    if (index < 0 || index >= window.cartItems.length) return;
+
+    const item = window.cartItems[index];
+    window.cartCount -= item.quantity;
+    window.cartItems.splice(index, 1);
+
+    updateCartBadge();
+    renderCartModalItems();
+    saveCartToStorage();
+
+    window.API.showNotification("Mahsulot savatdan o'chirildi!", "info");
+
+    // If on cart page, re-render cart page items as well
+    if (typeof window.CartPageAPI !== "undefined" && typeof window.CartPageAPI.renderCartPage === "function") {
+        window.CartPageAPI.renderCartPage();
+    }
+}
+
+/**
+ * Placeholder function to check if an item is out of stock.
+ * In a real application, this would involve checking product stock levels.
+ * @param {Object} item - The cart item.
+ * @returns {boolean} True if out of stock, false otherwise.
+ */
+function checkItemStock(item) {
+    // For demonstration, assume items are always in stock unless explicitly marked.
+    // In a real app, you'd fetch actual stock from your backend.
+    return item.stock === 0; // Example: if product data includes a 'stock' property
+}
+
+/**
+ * Placeholder function to get size information with stock count.
+ * @param {Object} item - The cart item.
+ * @returns {Object} An object containing HTML for size info and stock count.
+ */
+function getItemSizeInfo(item) {
+    let html = '';
+    if (item.size) {
+        html += `<div class="cart-product-size">O'lcham: ${item.size}`;
+        // Example: if item has sizes array with stock
+        if (item.sizes && Array.isArray(item.sizes)) {
+            const selectedSize = item.sizes.find(s => s.name === item.size);
+            if (selectedSize && selectedSize.stock !== undefined) {
+                html += ` (Omborda: <span class="stock-count">${selectedSize.stock}</span>)`;
+            }
+        }
+        html += `</div>`;
+    }
+    return { html };
+}
+
+
+// Expose functions globally
+window.loadCartFromStorage = loadCartFromStorage;
+window.saveCartToStorage = saveCartToStorage;
+window.addToCart = addToCart;
+window.updateCartItemQuantity = updateCartItemQuantity;
+window.removeCartItem = removeCartItem;
+window.updateCartBadge = updateCartBadge;
+window.renderCartModalItems = renderCartModalItems;
+window.checkItemStock = checkItemStock;
+window.getItemSizeInfo = getItemSizeInfo;
+
+// For cart-page.js to use these functions
+window.updateCartPageItemQuantity = updateCartItemQuantity;
+window.removeCartPageItem = removeCartItem;
