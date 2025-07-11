@@ -928,7 +928,8 @@ body {
     border-top: 2px solid #e9ecef;
     background: #f8f9fa;
     border-radius: 0 0 15px 15px;
-    flex-shrink: 0; /* Footer qimirlamasligi uchun */
+    flex-shrink: 0;
+    display: block !important; /* Force display */
 }
 
 /* Sum row - chap tarafda "Sum", o'ng tarafda summa */
@@ -1556,28 +1557,32 @@ body {
     }
 
     /* Mobile cart footer with summary and buttons */
-    .cart-footer {
-        border-radius: 0;
-        padding: 15px 20px;
-        background: white;
-        border-top: 2px solid #e9ecef;
-        flex-shrink: 0; /* Mobile da ham qimirlamasligi uchun */
-    }
+    @media (max-width: 768px) {
+        .cart-footer {
+            border-radius: 0;
+            padding: 15px 20px;
+            background: white;
+            border-top: 2px solid #e9ecef;
+            flex-shrink: 0;
+            display: block !important; /* Force display on mobile */
+        }
 
-    .cart-total {
-        margin-bottom: 15px;
-        font-size: 16px;
-    }
+        .cart-total {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
 
-    .cart-buttons {
-        flex-direction: row; /* CHANGED FROM column TO row */
-        gap: 10px;
-    }
+        .cart-buttons {
+            flex-direction: row !important; /* Force row layout */
+            gap: 10px;
+        }
 
-    .cart-checkout-btn,
-    .cart-view-btn {
-        font-size: 16px;
-        padding: 12px;
+        .cart-checkout-btn,
+        .cart-view-btn {
+            font-size: 14px;
+            padding: 12px 8px;
+            flex: 1;
+        }
     }
 
     /* Hero section adjustments for mobile */
