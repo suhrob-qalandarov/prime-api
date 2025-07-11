@@ -1,0 +1,169 @@
+/* ======================================================
+   CONTACT PAGE SPECIFIC STYLES
+====================================================== */
+
+/* Page Header */
+.page-header {
+    background: #f0f0f0;
+    padding: 140px 0 30px;
+    margin-top: 0;
+}
+
+.page-header-content {
+    text-align: center;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--burgundy-dark);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.breadcrumb-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 16px;
+    margin-top: 15px;
+    padding-bottom: 20px;
+    position: relative;
+}
+
+.breadcrumb-nav::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 2px;
+    background: var(--burgundy-light);
+}
+
+.breadcrumb-link {
+    color: var(--burgundy-dark);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.breadcrumb-link:hover {
+    color: var(--burgundy-light);
+}
+
+.breadcrumb-separator {
+    color: var(--burgundy-dark);
+    font-weight: 600;
+}
+
+.breadcrumb-current {
+    color: var(--burgundy-light);
+    font-weight: 600;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--burgundy-dark);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Active Navigation Link */
+.navbar-nav .nav-link.active {
+    color: black !important;
+    font-weight: 700;
+}
+
+.navbar-nav .nav-link.active::after {
+    width: 70%;
+    background: var(--burgundy-light);
+}
+
+.main-header.scrolled-up .navbar-nav .nav-link.active {
+    color: var(--light-color) !important;
+}
+
+.main-header.scrolled-up .navbar-nav .nav-link.active::after {
+    background: var(--light-color);
+}
+
+/* Page Layout - Allow Normal Scrolling */
+.contact-page {
+    min-height: auto;
+}
+
+/* Footer Visibility */
+.footer {
+    margin-top: 50px;
+    padding: 60px 0 20px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 100px 0 25px;
+    }
+
+    .page-title {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+
+    .breadcrumb-nav {
+        font-size: 14px;
+        padding-bottom: 15px;
+    }
+
+    .breadcrumb-nav::after {
+        width: 150px;
+    }
+
+    .footer {
+        padding: 40px 0 20px;
+        margin-top: 30px;
+    }
+
+    /* Mobile bottom nav padding */
+    body {
+        padding-bottom: 70px;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 576px) {
+    .container-custom {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+
+    .breadcrumb-nav::after {
+        width: 120px;
+    }
+}
+
+/* Desktop - Normal Scrolling */
+@media (min-width: 769px) {
+    body {
+        overflow-y: auto;
+        height: auto;
+    }
+
+    .contact-page {
+        min-height: auto;
+        overflow: visible;
+    }
+}
