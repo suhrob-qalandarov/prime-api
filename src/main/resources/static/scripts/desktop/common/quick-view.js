@@ -2,10 +2,17 @@
 // QUICK VIEW MODAL FUNCTIONALITY
 // ======================================================
 
+console.log("quick-view.js yuklanmoqda...")
+
+let currentProduct = null
+let selectedSize = null // Global o'zgaruvchi
+let availableStock = 0 // Global o'zgaruvchi
+
 /**
  * Open product quick view modal with full product information
  */
 async function openProductQuickView(productId) {
+    console.log("openProductQuickView chaqirildi, Product ID:", productId)
     try {
         // Show loading
         window.API.showLoading(true)
@@ -18,6 +25,10 @@ async function openProductQuickView(productId) {
             window.API.showLoading(false)
             return
         }
+
+        currentProduct = product
+        selectedSize = null // Yangi mahsulot ochilganda o'lchamni qayta o'rnatish
+        availableStock = 0 // Yangi mahsulot ochilganda zaxirani qayta o'rnatish
 
         // Create modal if it doesn't exist
         let modal = document.getElementById("productQuickViewModal")
@@ -51,7 +62,7 @@ async function createQuickViewModal() {
 
     try {
         // Load modal HTML from external file
-        const response = await fetch(`${window.API_BASE_URL || ""}/assets/modals/desktop/quick-view-modal.html`)
+        const response = await fetch(`/assets/modals/desktop/quick-view-modal.html`) // To'g'ri yo'l
         const modalHTML = await response.text()
         modal.innerHTML = modalHTML
     } catch (error) {
@@ -75,6 +86,41 @@ async function createQuickViewModal() {
 
     // Initialize mobile carousel
     initializeMobileCarousel(modal)
+
+    // Add to Cart button event listener
+    const addToCartBtn = modal.querySelector("#addToCartBtn")
+    addToCartBtn?.addEventListener("click", () => {
+        console.log("Savatga qo'shish tugmasi bosildi (Quick View)")
+        if (!currentProduct) {
+            window.API?.showNotification("Mahsulot tanlanmagan.", "error")
+            return
+        }
+
+        const hasSizes = currentProduct.productSizes && currentProduct.productSizes.length > 0
+        if (hasSizes && !selectedSize) {
+            window.API?.showNotification("Iltimos, o'lcham tanlang.", "warning")
+            return
+        }
+
+        const qty = modal._getCurrentQuantity() // Miqdorni olish
+        if (qty <= 0) {
+            window.API?.showNotification("Miqdor 0 dan katta bo'lishi kerak.", "warning")
+            return
+        }
+
+        if (qty > availableStock) {
+            window.API?.showNotification("Omborda yetarli miqdor mavjud emas.", "warning")
+            return
+        }
+
+        if (typeof window.addToCart === "function") {
+            window.addToCart(currentProduct, qty, selectedSize)
+            closeQuickViewModal() // Savatga qo'shgandan keyin modalni yopish
+        } else {
+            console.error("window.addToCart funksiyasi aniqlanmagan.")
+            window.API?.showNotification("Savat funksiyasi yuklanmadi.", "error")
+        }
+    })
 
     return modal
 }
@@ -132,14 +178,12 @@ function getFallbackModalHTML() {
                         <div class="option-group">
                             <div class="available-quantity" id="availableQuantity" style="display: none;"></div>
                             <label class="option-label">Miqdori:</label>
-                            <div class="quantity-cart-section">
-                                <div class="quantity-selector">
-                                    <button class="quantity-btn" id="decreaseQty">−</button>
-                                    <div class="quantity-display" id="quantityDisplay">1</div>
-                                    <button class="quantity-btn" id="increaseQty">+</button>
-                                </div>
-                                <button class="add-to-cart-btn" id="addToCartBtn">SAVATGA</button>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" id="decreaseQty">−</button>
+                                <div class="quantity-display" id="quantityDisplay">1</div>
+                                <button class="quantity-btn" id="increaseQty">+</button>
                             </div>
+                            <button class="add-to-cart-btn" id="addToCartBtn">SAVATGA</button>
                         </div>
                     </div>
                     
@@ -185,7 +229,7 @@ function initializeMobileCarousel(modal) {
     console.log("Initializing mobile carousel") // Debug log
 
     let currentIndex = 0
-    const totalImages = 0
+    const totalImages = 0 // Bu populateQuickViewModal tomonidan o'rnatiladi
     let startX = 0
     let currentX = 0
     let isDragging = false
@@ -195,9 +239,9 @@ function initializeMobileCarousel(modal) {
         currentIndex: 0,
         totalImages: 0,
         updateCarousel: (index) => {
-            console.log("Updating carousel to index:", index, "of", totalImages) // Debug log
+            console.log("Updating carousel to index:", index, "of", modal._carouselState.totalImages) // Debug log
 
-            if (index < 0 || index >= totalImages) return
+            if (index < 0 || index >= modal._carouselState.totalImages) return
 
             currentIndex = index
             modal._carouselState.currentIndex = currentIndex
@@ -247,7 +291,7 @@ function initializeMobileCarousel(modal) {
             if (diffX > 0 && currentIndex > 0) {
                 // Swipe right - go to previous
                 modal._carouselState.updateCarousel(currentIndex - 1)
-            } else if (diffX < 0 && currentIndex < totalImages - 1) {
+            } else if (diffX < 0 && currentIndex < modal._carouselState.totalImages - 1) {
                 // Swipe left - go to next
                 modal._carouselState.updateCarousel(currentIndex + 1)
             } else {
@@ -291,7 +335,7 @@ function initializeMobileCarousel(modal) {
         if (Math.abs(diffX) > threshold) {
             if (diffX > 0 && currentIndex > 0) {
                 modal._carouselState.updateCarousel(currentIndex - 1)
-            } else if (diffX < 0 && currentIndex < totalImages - 1) {
+            } else if (diffX < 0 && currentIndex < modal._carouselState.totalImages - 1) {
                 modal._carouselState.updateCarousel(currentIndex + 1)
             } else {
                 modal._carouselState.updateCarousel(currentIndex)
@@ -312,14 +356,14 @@ function initializeMobileCarousel(modal) {
  */
 function initializeQuantityControls(modal) {
     let currentQuantity = 1
-    let maxQuantity = 10
+    let maxQuantity = 10 // Bu populateQuickViewModal tomonidan yangilanadi
     const decreaseBtn = modal.querySelector("#decreaseQty")
     const increaseBtn = modal.querySelector("#increaseQty")
     const quantityDisplay = modal.querySelector("#quantityDisplay")
 
     const updateQuantityDisplay = () => {
         if (quantityDisplay) {
-            quantityDisplay.textContent = currentQuantity
+            quantityDisplay.textContent = currentQuantity.toString()
         }
         if (decreaseBtn) {
             decreaseBtn.disabled = currentQuantity <= 1
@@ -340,6 +384,8 @@ function initializeQuantityControls(modal) {
         if (currentQuantity < maxQuantity) {
             currentQuantity++
             updateQuantityDisplay()
+        } else {
+            window.API?.showNotification("Omborda yetarli miqdor mavjud emas.", "warning")
         }
     })
 
@@ -366,24 +412,22 @@ function initializeQuantityControls(modal) {
  */
 function initializeCopyLink(modal) {
     const copyLinkSection = modal.querySelector("#copyLinkSection")
-    copyLinkSection?.addEventListener("click", () => {
+    copyLinkSection?.addEventListener("click", async () => {
         const productId = modal.getAttribute("data-product-id")
-        const productLink = `${window.API_BASE_URL || "https://prime77.uz"}/api/v1/product/${productId}`
+        if (!productId) {
+            window.API?.showNotification("Mahsulot havolasi mavjud emas.", "error")
+            return
+        }
+        const productLink = `${window.location.origin}/product.html?id=${productId}` // Mahsulot sahifasi mavjud deb hisoblanadi
 
-        navigator.clipboard
-            .writeText(productLink)
-            .then(() => {
-                showCopySuccess(copyLinkSection)
-            })
-            .catch(() => {
-                const textArea = document.createElement("textarea")
-                textArea.value = productLink
-                document.body.appendChild(textArea)
-                textArea.select()
-                document.execCommand("copy")
-                document.body.removeChild(textArea)
-                showCopySuccess(copyLinkSection)
-            })
+        try {
+            await navigator.clipboard.writeText(productLink)
+            showCopySuccess(copyLinkSection)
+            window.API?.showNotification("Havola muvaffaqiyatli nusxalandi!", "success")
+        } catch (err) {
+            console.error("Havolani nusxalashda xatolik:", err)
+            window.API?.showNotification("Havolani nusxalashda xatolik yuz berdi.", "error")
+        }
     })
 }
 
@@ -407,18 +451,37 @@ function showCopySuccess(copyLinkSection) {
 /**
  * Update available quantity display and set max quantity for controls
  */
-function updateAvailableQuantity(modal, selectedSize) {
+function updateAvailableQuantity(modal, sizeData) {
     const availableQuantityElement = modal.querySelector("#availableQuantity")
-    if (availableQuantityElement && selectedSize) {
-        availableQuantityElement.textContent = `Mavjud: ${selectedSize.amount} ta`
+    if (availableQuantityElement && sizeData) {
+        availableQuantityElement.textContent = `Omborda: ${sizeData.amount} dona`
         availableQuantityElement.style.display = "block"
 
         if (modal._updateMaxQuantity) {
-            modal._updateMaxQuantity(selectedSize.amount)
+            modal._updateMaxQuantity(sizeData.amount)
         }
+        availableStock = sizeData.amount // Global availableStock ni yangilash
     } else if (availableQuantityElement) {
         availableQuantityElement.style.display = "none"
+        availableStock = 0 // Agar o'lcham tanlanmagan bo'lsa, zaxirani 0 ga o'rnatish
     }
+    // Savatga qo'shish tugmasi holatini yangilash
+    updateAddToCartButtonState(modal)
+}
+
+/**
+ * Update the state of the "Add to Cart" button.
+ */
+function updateAddToCartButtonState(modal) {
+    const addToCartBtn = modal.querySelector("#addToCartBtn")
+    if (!addToCartBtn) return
+
+    const hasSizes = currentProduct.productSizes && currentProduct.productSizes.length > 0
+    const isSizeSelected = hasSizes ? selectedSize !== null : true // Agar o'lchamlar bo'lmasa, har doim true
+
+    const currentQty = modal._getCurrentQuantity ? modal._getCurrentQuantity() : 1 // Miqdorni olish
+
+    addToCartBtn.disabled = !isSizeSelected || currentQty <= 0 || currentQty > availableStock || availableStock === 0
 }
 
 /**
@@ -552,9 +615,10 @@ function populateQuickViewModal(modal, product) {
         sizesContainer.innerHTML = ""
 
         allSizes.forEach((sizeData, index) => {
-            const sizeOption = document.createElement("div")
+            const sizeOption = document.createElement("button") // Changed to button for better accessibility
             const isAvailable = sizeData.amount > 0
-            sizeOption.className = `size-option ${index === 0 && isAvailable ? "selected" : ""} ${!isAvailable ? "disabled" : ""}`
+            sizeOption.className = `size-option ${!isAvailable ? "disabled" : ""}`
+            sizeOption.disabled = !isAvailable // Disable button if not available
 
             sizeOption.textContent = sizeData.size
 
@@ -562,7 +626,8 @@ function populateQuickViewModal(modal, product) {
                 sizeOption.addEventListener("click", () => {
                     sizesContainer.querySelectorAll(".size-option").forEach((s) => s.classList.remove("selected"))
                     sizeOption.classList.add("selected")
-                    updateAvailableQuantity(modal, sizeData)
+                    selectedSize = sizeData.size // Global selectedSize ni yangilash
+                    updateAvailableQuantity(modal, sizeData) // Bu availableStock ni yangilaydi
                 })
             }
 
@@ -571,20 +636,35 @@ function populateQuickViewModal(modal, product) {
 
         const firstAvailableSize = allSizes.find((size) => size.amount > 0)
         if (firstAvailableSize) {
-            updateAvailableQuantity(modal, firstAvailableSize)
+            // Birinchi mavjud o'lchamni avtomatik tanlash
+            const firstSizeOptionElement = sizesContainer.querySelector(`[data-size="${firstAvailableSize.size}"]`)
+            if (firstSizeOptionElement) {
+                firstSizeOptionElement.classList.add("selected")
+            }
+            selectedSize = firstAvailableSize.size // Global selectedSize ni o'rnatish
+            updateAvailableQuantity(modal, firstAvailableSize) // Bu availableStock ni yangilaydi
+        } else {
+            selectedSize = null
+            availableStock = 0
+            updateAvailableQuantity(modal, null) // Zaxira yo'qligini ko'rsatish
         }
     } else if (sizesGroup) {
         sizesGroup.style.display = "none"
+        // O'lchamlari bo'lmagan mahsulotlar uchun umumiy zaxirani o'rnatish
+        availableStock = product.stock !== undefined ? product.stock : 9999 // Agar stock bo'lmasa, yuqori deb hisoblash
+        selectedSize = null // O'lcham tanlanmagan
         if (modal._updateMaxQuantity) {
-            modal._updateMaxQuantity(10)
+            modal._updateMaxQuantity(availableStock)
         }
+        updateAvailableQuantity(modal, null) // Zaxira miqdorini ko'rsatish
     }
 
-    // Handle quantity controls
+    // Handle quantity controls and Add to Cart button state
     const quantityControls = modal.querySelectorAll("#decreaseQty, #increaseQty, #quantityDisplay")
     const addToCartBtn = modal.querySelector("#addToCartBtn")
 
     if (!hasAvailableSizes && allSizes.length > 0) {
+        // Agar o'lchamlar bor, lekin hammasi mavjud emas
         quantityControls.forEach((control) => {
             control.disabled = true
             if (control.id === "quantityDisplay") {
@@ -598,6 +678,7 @@ function populateQuickViewModal(modal, product) {
     } else {
         quantityControls.forEach((control) => {
             if (control.id !== "decreaseQty") {
+                // Decrease tugmasi har doim ishlaydi (min 1)
                 control.disabled = false
             }
             if (control.id === "quantityDisplay") {
@@ -613,6 +694,7 @@ function populateQuickViewModal(modal, product) {
     if (modal._resetQuantity) {
         modal._resetQuantity()
     }
+    updateAddToCartButtonState(modal) // Oxirgi holatni yangilash
 }
 
 /**
@@ -630,7 +712,7 @@ function closeQuickViewModal() {
 window.openProductQuickView = openProductQuickView
 window.closeQuickViewModal = closeQuickViewModal
 
-// Export for module use
+// Export for module use (agar kerak bo'lsa)
 if (typeof module !== "undefined" && module.exports) {
     module.exports = {
         openProductQuickView,

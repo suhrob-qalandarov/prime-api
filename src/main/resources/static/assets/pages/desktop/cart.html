@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biz bilan bog'lanish - Prime77</title>
+    <title>Savat - Prime77</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png" />
     <link rel="manifest" href="/images/favicon/site.webmanifest" />
     <link rel="stylesheet" href="/styles/common/styles.css">
-    <link rel="stylesheet" href="/styles/common/contact-styles.css">
+    <link rel="stylesheet" href="/styles/common/cart-page.css">
 </head>
 <body>
 
@@ -50,7 +50,7 @@
                     <div class="collapse navbar-collapse justify-content-start">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="catalog.html">KATALOG</a>
+                                <a class="nav-link" href="/index.html">KATALOG</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="collection.html">KOLLEKSIYA</a>
@@ -59,7 +59,7 @@
                                 <a class="nav-link" href="about.html">BIZ HAQIMIZDA</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" href="contact.html">KONTAKTLAR</a>
+                                <a class="nav-link" href="contact.html">KONTAKTLAR</a>
                             </li>
                         </ul>
                     </div>
@@ -139,87 +139,82 @@
     </div>
 </div>
 
-<!-- Cart Modal -->
-<div class="cart-modal" id="cartModal">
-    <div class="cart-modal-content">
-        <div class="cart-header">
-            <h3 class="cart-title">Savat</h3>
-            <button class="cart-close" id="cartClose">&times;</button>
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loading-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Yuklanmoqda...</span>
         </div>
-        <div class="cart-body" id="cartBody">
-            <div class="cart-empty" id="cartEmpty">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Savat bo'sh</p>
-                <small>Mahsulotlarni qo'shish uchun "Savatga qo'shish" tugmasini bosing</small>
-            </div>
-            <div class="cart-items" id="cartItems">
-                <!-- Cart items will be populated by JavaScript -->
-            </div>
-        </div>
-        <div class="cart-footer" id="cartFooter" style="display: none;">
-            <div class="cart-total">
-                <span>Jami:</span>
-                <span class="cart-total-price" id="cartTotalPrice">0 So'm</span>
-            </div>
-            <button class="cart-checkout-btn" id="cartCheckoutBtn" disabled>
-                Buyurtma berish
-            </button>
-        </div>
+        <p class="loading-text">Savat ma'lumotlari yuklanmoqda...</p>
     </div>
 </div>
 
-<!-- Contact Page Content -->
-<main class="contact-page">
+<!-- Cart Page Content -->
+<main class="cart-page">
     <!-- Page Header -->
     <section class="page-header">
         <div class="container-custom">
             <div class="page-header-content">
-                <h1 class="page-title">Biz bilan bog'lanish</h1>
+                <h1 class="page-title">Savat</h1>
                 <nav class="breadcrumb-nav">
                     <a href="/index.html" class="breadcrumb-link">Asosiy</a>
                     <span class="breadcrumb-separator">/</span>
-                    <span class="breadcrumb-current">Biz bilan bog'lanish</span>
+                    <span class="breadcrumb-current">Savat</span>
                 </nav>
             </div>
         </div>
     </section>
 
-    <!-- Contact Information Section -->
-    <section class="contact-info-section">
+    <!-- Cart Section -->
+    <section class="cart-section">
         <div class="container-custom">
-            <div class="row g-4">
-                <!-- Kontaktlar -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="contact-section">
-                        <h3 class="section-title">Kontaktlar</h3>
-                        <div class="contact-content">
-                            <i class="fab fa-telegram-plane"></i>
-                            <span>Telegram:
-                                <a href="https://t.me/prime77_fam" target="_blank">@prime77_fam</a>
-                            </span>
-                        </div>
+            <!-- Empty Cart State -->
+            <div class="cart-empty-state" id="cartEmptyState">
+                <div class="empty-cart-content">
+                    <div class="empty-cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
                     </div>
+                    <h2 class="empty-cart-title">Ha ul-bul narsa qo'shmaymizmi bu yerga?</h2>
+                    <button class="empty-cart-btn" id="emptyCartBtn">Qo'shishga olg'a</button>
                 </div>
+            </div>
 
-                <!-- Bizning do'konlar -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="contact-section">
-                        <h3 class="section-title">Bizning do'konlar</h3>
-                        <div class="contact-content">
-                            <div class="store-coming-soon">
-                                <span>Tez orada...</span>
+            <!-- Cart with Items -->
+            <div class="cart-with-items" id="cartWithItems" style="display: none;">
+                <div class="row">
+                    <!-- Product Items (Left Side) -->
+                    <div class="col-lg-8 col-md-12">
+                        <div class="cart-products-section">
+                            <h3 class="cart-products-title">Savatdagi mahsulotlar</h3>
+                            <div class="cart-products-list" id="cartProductsList">
+                                <!-- Cart items will be populated here -->
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Ishlash vaqtlari -->
-                <div class="col-lg-4 col-md-6">
-                    <div class="contact-section">
-                        <h3 class="section-title">Ishlash vaqtlari</h3>
-                        <div class="contact-content">
-                            <div class="working-hours">
-                                <span>Har kuni: 10:00 - 20:00 GMT+5</span>
+                    <!-- Order Summary (Right Side) -->
+                    <div class="col-lg-4 col-md-12">
+                        <div class="order-summary-card">
+                            <h3 class="order-summary-title">Buyurtma</h3>
+                            <div class="order-summary-details">
+                                <div class="summary-row">
+                                    <span class="summary-label">Summa</span>
+                                    <span class="summary-value" id="orderSubtotal">0 So'm</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label">Chegirma</span>
+                                    <span class="summary-value discount" id="orderDiscount">-0 So'm</span>
+                                </div>
+                                <div class="summary-row total-row">
+                                    <span class="summary-label">Jami</span>
+                                    <span class="summary-value" id="orderTotal">0 So'm</span>
+                                </div>
+                            </div>
+                            <button class="order-checkout-btn" id="orderCheckoutBtn">
+                                Buyurtma qilish
+                            </button>
+                            <div class="anti-stop-text">
+                                Yoki xaridlarni anti-to'xtatish
                             </div>
                         </div>
                     </div>
@@ -242,7 +237,7 @@
         </svg>
         <span>Kategoriyalar</span>
     </div>
-    <div class="bottom-nav-item" id="mobileBottomCartBtn">
+    <div class="bottom-nav-item active" id="mobileBottomCartBtn">
         <div class="bottom-nav-icon-container">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -256,20 +251,28 @@
     </div>
     <div class="bottom-nav-item" id="searchBtn">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-            <path
-                    d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z">
-            </path>
+            <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
         </svg>
         <span>Qidirish</span>
     </div>
-    <div class="bottom-nav-item"></div>
+    <div class="bottom-nav-item" id="mobileMessageBtn">
+        <div class="desktop-message-btn-inner">
+            <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"></path>
+                <path d="M0 0h24v24H0z" fill="none"></path>
+            </svg>
+        </div>
+    </div>
 </div>
 
-<div style="position: fixed; bottom: 18px; right: 18px; z-index: 2147483647; border-radius: 50%; background: rgb(229, 229, 229); box-sizing: content-box;">
-    <div style="background: var(--burgundy-light); height: 52px; width: 52px; cursor: pointer; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: rgba(101, 119, 134, 0.75) 1px 1px 4px;">
-        <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" style="padding-top: 4px;">
+<!-- Desktop Message Button -->
+<div class="desktop-message-btn" id="desktopMessageBtn">
+    <div class="desktop-message-btn-inner">
+        <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"></path>
-            <path d="M0 0h24v24H0z" fill="none"></path></svg></div><div style="display: none; height: 450px;"></div>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div>
 </div>
 
 <!-- Footer -->
@@ -326,6 +329,14 @@
     </div>
 </footer>
 
+<!-- Scripts -->
+<script src="/scripts/common/api.js"></script>
+<script src="/scripts/common/cart-add-logic.js"></script> <!-- New cart logic -->
+<script src="/scripts/desktop/common/discount.js"></script>
+<script src="/scripts/desktop/common/quick-view.js"></script>
 <script src="/scripts/desktop/common/script.js"></script>
+<script src="/scripts/desktop/common/catalog.js"></script>
+<script src="/scripts/desktop/common/catalog-spotlight.js"></script>
+<script src="/scripts/desktop/common/cart-page.js"></script>
 </body>
 </html>
