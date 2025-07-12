@@ -41,6 +41,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                             .phone(order.getUser().getPhone())
                             .build())
                     .totalPrice(order.getTotalPrice())
+                    .status(order.getStatus())
                     .ordersItems(ordersItemRes)
                     .build();
             orderAllRes.add(ordersRes);
