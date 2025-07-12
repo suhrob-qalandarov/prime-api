@@ -1,8 +1,11 @@
 /* General styles */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f6f9;
+    font-family: "Inter", sans-serif; /* Modern font for consistency */
+    background-color: #f0f2f5; /* Light background matching the image */
     color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
 }
 
 .container-fluid {
@@ -11,15 +14,16 @@ body {
 
 /* Sidebar */
 .sidebar {
-    background-color: #2c3e50;
-    color: #fff;
+    background-color: #2a2e43; /* Dark background from the image */
+    color: #ecf0f1;
     height: 100vh;
     position: fixed;
     top: 0;
     left: -250px;
     width: 250px;
-    transition: left 0.3s ease;
+    transition: left 0.3s ease, box-shadow 0.3s ease;
     z-index: 1000;
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.2); /* Deeper shadow for sidebar */
 }
 
 .sidebar.show {
@@ -27,43 +31,75 @@ body {
 }
 
 .sidebar-title {
-    padding: 20px;
-    font-size: 1.5rem;
-    border-bottom: 1px solid #34495e;
+    padding: 25px 20px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Subtle separator */
+    color: #ffffff;
+    text-align: center;
+    /* The crown icon and "Just Admin" text are in HTML, so we style the container */
 }
 
 .nav-link {
-    color: #fff;
-    padding: 10px 20px;
+    color: #ecf0f1;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
-    font-size: 1rem;
+    font-size: 1.05rem;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+    border-radius: 8px;
+    margin: 8px 15px;
 }
 
 .nav-link:hover {
-    background-color: #34495e;
+    background-color: #3a3f5a; /* Slightly lighter dark on hover */
+    color: #ffffff;
+    transform: translateX(3px);
 }
 
 .nav-link i {
-    margin-right: 10px;
+    margin-right: 15px;
+    font-size: 1.2rem;
 }
 
 .nav-link.active {
-    background-color: #34495e;
-    font-weight: bold;
+    /* Gradient background for active link, matching dashboard image */
+    background: linear-gradient(to right, #6a5acd, #8a2be2); /* Purple to violet gradient */
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.4); /* Shadow matching gradient */
+    transform: translateX(0);
 }
 
 .sidebar-footer {
     position: absolute;
     bottom: 20px;
     width: 100%;
+    padding: 0 15px;
+}
+
+.sidebar-footer .nav-link {
+    /* Style for the "Chiqish" button, matching the red/pink gradient */
+    background: linear-gradient(to right, #e74c3c, #c0392b); /* Red gradient */
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+    text-align: center;
+    justify-content: center; /* Center content for logout button */
+}
+
+.sidebar-footer .nav-link:hover {
+    background: linear-gradient(to right, #c0392b, #e74c3c); /* Reverse gradient on hover */
+    transform: translateY(-2px);
 }
 
 /* Main content */
 .main-content {
     margin-left: 0;
-    padding: 20px;
+    padding: 30px;
     transition: margin-left 0.3s ease;
+    background-color: #f0f2f5; /* Light background matching the image */
+    min-height: 100vh;
 }
 
 @media (min-width: 992px) {
@@ -79,46 +115,105 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 35px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .page-header h2 {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     margin: 0;
+    color: #2a2e43; /* Dark heading color */
+    font-weight: 700;
 }
 
 .page-header p {
     color: #6c757d;
-    margin: 0;
+    margin: 8px 0 0;
+    font-size: 1.05rem;
 }
 
 .header-actions .btn {
-    margin-left: 10px;
+    margin-left: 12px;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 0.98rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-color: #d0d0d0; /* Lighter border for outline buttons */
+    color: #6c757d; /* Default text color for outline buttons */
+}
+
+.header-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #e9ecef; /* Light background on hover */
 }
 
 /* Stats cards */
 .stats-row {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 .stats-card {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 15px; /* Rounded corners matching image */
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); /* Soft shadow matching image */
     text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e0e0e0; /* Subtle border */
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column;
+    align-items: flex-start; /* Align content to start */
+    position: relative;
+    overflow: hidden; /* Hide overflow for potential background elements */
+}
+
+.stats-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
 .stats-card h6 {
     color: #6c757d;
-    margin-bottom: 10px;
+    margin-bottom: 10px; /* Adjusted margin */
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    text-align: left; /* Align text to left */
 }
 
 .stats-card h3 {
-    font-size: 2rem;
+    font-size: 3.2rem;
     margin: 0;
-    color: #2c3e50;
+    color: #2a2e43;
+    font-weight: 800;
+    text-align: left; /* Align text to left */
+    width: 100%; /* Ensure it takes full width */
 }
+
+/* Since we cannot add the icon and bar chart via CSS only without changing HTML,
+   we will make the card itself look good and imply the style. */
+.stats-card::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 15px; /* Rounded square for icon background */
+    /* Placeholder for icon background color, adjust as needed for specific cards */
+    background: linear-gradient(45deg, #6a5acd, #8a2be2); /* Example gradient */
+    opacity: 0.8;
+    z-index: 1;
+}
+
+/* You would need to add specific classes to each stats-card in HTML
+   to apply different icon background colors/gradients as seen in the image.
+   Example: .stats-card.orders::before { background: linear-gradient(45deg, #4a90e2, #50b3ff); }
+   Since we cannot modify HTML, this is a general placeholder. */
 
 /* Orders board */
 .orders-board {
@@ -129,156 +224,227 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    padding: 10px 0;
 }
 
 .column-header h5 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     text-transform: uppercase;
-    color: #2c3e50;
+    color: #2a2e43;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .column-header span {
     background-color: #e9ecef;
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 0.9rem;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #495057;
 }
 
 .order-column {
-    background-color: #fff;
-    border-radius: 8px;
-    min-height: 300px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 15px;
+    min-height: 450px;
+    padding: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
     overflow-y: auto;
+    border: 1px solid #e0e0e0;
 }
 
 .order-column.dragging-over {
-    background-color: #f1f3f5;
+    background-color: #e6f7ff;
     border: 2px dashed #007bff;
 }
 
 /* Order card */
 .order-card {
-    background-color: #fff;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 10px;
-    cursor: move;
-    transition: transform 0.2s;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: grab;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    position: relative;
+}
+
+.order-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    border-color: #cce5ff;
 }
 
 .order-card.dragging {
-    opacity: 0.7;
+    opacity: 0.6;
     transform: scale(0.98);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    cursor: grabbing;
 }
 
 .order-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .order-id {
-    font-weight: bold;
-    color: #2c3e50;
+    font-weight: 700;
+    color: #2a2e43;
+    font-size: 1.2rem;
 }
 
 .order-status-badge {
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 0.8rem;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
     color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .order-status-badge.pending {
-    background-color: #ffc107;
+    background-color: #ffc107; /* Yellow */
 }
 
 .order-status-badge.confirmed {
-    background-color: #17a2b8;
+    background-color: #17a2b8; /* Info blue */
 }
 
 .order-status-badge.shipped {
-    background-color: #007bff;
+    background-color: #007bff; /* Primary blue */
 }
 
 .order-status-badge.delivered {
-    background-color: #28a745;
+    background-color: #28a745; /* Success green */
 }
 
 .order-status-badge.cancelled {
-    background-color: #dc3545;
+    background-color: #dc3545; /* Danger red */
 }
 
-.order-customer, .order-total, .order-date, .order-items-count {
+.order-customer,
+.order-total,
+.order-date,
+.order-items-count {
     display: flex;
     align-items: center;
-    margin: 5px 0;
-    font-size: 0.9rem;
+    margin: 10px 0;
+    font-size: 1rem;
+    color: #495057;
 }
 
-.order-customer i, .order-date i, .order-items-count i {
-    margin-right: 8px;
+.order-customer i,
+.order-date i,
+.order-items-count i {
+    margin-right: 12px;
     color: #6c757d;
+    font-size: 1.1rem;
 }
 
 .order-total {
-    font-weight: bold;
-    color: #2c3e50;
+    font-weight: 700;
+    color: #2a2e43;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    border-top: 1px dashed #e0e0e0;
+    padding-top: 15px;
 }
 
 /* Empty state */
 .empty-state {
     text-align: center;
-    padding: 20px;
+    padding: 50px 20px;
     color: #6c757d;
+    font-size: 1.1rem;
 }
 
 .empty-state i {
-    font-size: 2rem;
-    margin-bottom: 10px;
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    color: #adb5bd;
 }
 
 /* Modal */
 .modal-content {
-    border-radius: 8px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+.modal-header {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 25px 30px;
+}
+
+.modal-title {
+    font-weight: 700;
+    color: #2a2e43;
+    font-size: 1.8rem;
+}
+
+.modal-body {
+    padding: 30px;
+}
+
+.modal-body p {
+    margin-bottom: 12px;
+    font-size: 1.05rem;
+}
+
+.modal-body strong {
+    color: #2a2e43;
 }
 
 .order-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 15px 0;
     border-bottom: 1px solid #e9ecef;
 }
 
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-item-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
 .order-item-image {
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
     object-fit: cover;
-    border-radius: 4px;
-    margin-right: 10px;
+    border-radius: 10px;
+    margin-right: 20px;
+    border: 1px solid #dee2e6;
 }
 
 .order-item-details h6 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2a2e43;
 }
 
 .order-item-details p {
     margin: 0;
     color: #6c757d;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
 .order-item-price {
-    font-weight: bold;
-    color: #2c3e50;
+    font-weight: 700;
+    color: #2a2e43;
+    font-size: 1.1rem;
 }
 
 /* Loading overlay */
@@ -288,38 +454,168 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.98);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #495057;
+    font-size: 1.3rem;
+    font-weight: 600;
 }
 
 .loading-spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #007bff;
+    border: 6px solid #e0e0e0;
+    border-top: 6px solid #6a5acd; /* Matching the primary blue/purple from image */
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     animation: spin 1s linear infinite;
+    margin-bottom: 20px;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Notifications */
 .notification {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 25px;
+    right: 25px;
     z-index: 10000;
-    min-width: 300px;
+    min-width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    padding: 18px 25px;
+    font-size: 1.05rem;
+    font-weight: 500;
 }
 
 .alert i {
-    margin-right: 8px;
+    margin-right: 12px;
+    font-size: 1.2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .main-content {
+        padding: 25px;
+    }
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 25px;
+    }
+    .header-actions {
+        margin-top: 15px;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .stats-row .col-md-3 {
+        margin-bottom: 25px;
+    }
+    .orders-board .col-md-3 {
+        margin-bottom: 25px;
+    }
+}
+
+@media (max-width: 767px) {
+    .sidebar {
+        width: 220px;
+    }
+    .sidebar-title {
+        font-size: 1.5rem;
+    }
+    .nav-link {
+        font-size: 0.95rem;
+        padding: 12px 15px;
+    }
+    .page-header h2 {
+        font-size: 1.8rem;
+    }
+    .page-header p {
+        font-size: 0.95rem;
+    }
+    .stats-card h3 {
+        font-size: 2.5rem;
+    }
+    .column-header h5 {
+        font-size: 1.1rem;
+    }
+    .order-card {
+        padding: 18px;
+    }
+    .order-id {
+        font-size: 1.1rem;
+    }
+    .order-status-badge {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    .order-customer,
+    .order-total,
+    .order-date,
+    .order-items-count {
+        font-size: 0.9rem;
+    }
+    .order-item-image {
+        width: 50px;
+        height: 50px;
+    }
+    .order-item-details h6 {
+        font-size: 1rem;
+    }
+    .order-item-price {
+        font-size: 1rem;
+    }
+    .modal-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .main-content {
+        padding: 15px;
+    }
+    .page-header {
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .header-actions .btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    .stats-card {
+        padding: 20px;
+    }
+    .stats-card h3 {
+        font-size: 2rem;
+    }
+    .order-column {
+        min-height: 350px;
+        padding: 15px;
+    }
+    .order-card {
+        padding: 15px;
+    }
+    .order-total {
+        font-size: 1.1rem;
+    }
+    .notification {
+        min-width: unset;
+        width: calc(100% - 40px);
+        left: 20px;
+        right: 20px;
+        font-size: 0.95rem;
+    }
 }

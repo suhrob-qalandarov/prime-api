@@ -137,9 +137,8 @@ async function loadOrdersData() {
         // Ma'lumotlarni o'zgartirish (backend formatidan frontend formatiga)
         allOrders = orders.map((order) => ({
             id: order.id,
-            customerName: order.user?.name || "Noma'lum mijoz",
+            customerName: order.user?.firstName +" " + order.user.lastName || "Noma'lum mijoz",
             customerPhone: order.user?.phone || "Telefon ko'rsatilmagan",
-            customerAddress: order.user?.address || "Manzil ko'rsatilmagan",
             status: order.status || "PENDING",
             totalAmount: order.totalPrice || 0,
             orderDate: order.createdAt || new Date().toISOString(),
