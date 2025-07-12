@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prime Admin</title>
+    <title>Prime Admin - Buyurtmalar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="/admin/css/pages/orders.css" rel="stylesheet">
@@ -57,38 +57,50 @@
                 </div>
                 <div class="header-actions">
                     <button class="btn btn-outline-primary" onclick="refreshData()">
-                        <i class="fas fa-sync-alt"></i>
+                        <i class="fas fa-sync-alt"></i> Yangilash
                     </button>
                     <button class="btn btn-outline-primary" onclick="toggleFullscreen()">
-                        <i class="fas fa-expand"></i>
+                        <i class="fas fa-expand"></i> To'liq ekran
                     </button>
                 </div>
             </div>
 
             <!-- Stats cards -->
             <div class="row stats-row">
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6 mb-4">
                     <div class="stats-card">
                         <h6>Jami buyurtmalar</h6>
                         <h3 id="total-orders">0</h3>
+                        <div class="stats-icon-bg bg-primary-gradient">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6 mb-4">
                     <div class="stats-card">
                         <h6>Kutilayotgan</h6>
                         <h3 id="pending-orders">0</h3>
+                        <div class="stats-icon-bg bg-warning-gradient">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6 mb-4">
                     <div class="stats-card">
                         <h6>Yo'lda</h6>
                         <h3 id="shipped-orders">0</h3>
+                        <div class="stats-icon-bg bg-info-gradient">
+                            <i class="fas fa-truck"></i>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-sm-6 mb-4">
                     <div class="stats-card">
                         <h6>Yetkazildi</h6>
                         <h3 id="delivered-orders">0</h3>
+                        <div class="stats-icon-bg bg-success-gradient">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,48 +108,46 @@
             <!-- Orders board -->
             <div class="orders-board">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6 mb-4">
                         <div class="column-header">
                             <h5>KUTILAYOTGAN</h5>
-                            <span id="pending-count">0</span>
+                            <span id="pending-count" class="badge bg-warning text-dark">0</span>
                         </div>
                         <div class="order-column" id="PENDING" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'PENDING')">
                             <div class="loading-state">Yuklanmoqda...</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6 mb-4">
                         <div class="column-header">
                             <h5>TASDIQLANGAN</h5>
-                            <span id="confirmed-count">0</span>
+                            <span id="confirmed-count" class="badge bg-info">0</span>
                         </div>
                         <div class="order-column" id="CONFIRMED" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'CONFIRMED')">
                             <div class="loading-state">Yuklanmoqda...</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6 mb-4">
                         <div class="column-header">
                             <h5>YO'LDA</h5>
-                            <span id="shipped-count">0</span>
+                            <span id="shipped-count" class="badge bg-primary">0</span>
                         </div>
                         <div class="order-column" id="SHIPPED" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'SHIPPED')">
                             <div class="loading-state">Yuklanmoqda...</div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6 mb-4">
                         <div class="column-header">
                             <h5>YETKAZILDI</h5>
-                            <span id="delivered-count">0</span>
+                            <span id="delivered-count" class="badge bg-success">0</span>
                         </div>
                         <div class="order-column" id="DELIVERED" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'DELIVERED')">
                             <div class="loading-state">Yuklanmoqda...</div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-md-6 mb-4">
                         <div class="column-header">
                             <h5>BEKOR QILINDI</h5>
-                            <span id="cancelled-count">0</span>
+                            <span id="cancelled-count" class="badge bg-danger">0</span>
                         </div>
                         <div class="order-column" id="CANCELLED" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'CANCELLED')">
                             <div class="loading-state">Yuklanmoqda...</div>
@@ -147,28 +157,28 @@
             </div>
 
             <!-- Order details modal -->
-            <div class="modal fade" id="viewOrderModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
+            <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Buyurtma tafsilotlari</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <h5 class="modal-title" id="viewOrderModalLabel">Buyurtma tafsilotlari</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <p><strong>Buyurtma ID:</strong> <span id="view-order-id">-</span></p>
-                                    <p><strong>Mijoz:</strong> <span id="view-order-customer">-</span></p>
-                                    <p><strong>Telefon:</strong> <span id="view-order-phone">-</span></p>
+                                    <p class="mb-1"><strong>Buyurtma ID:</strong> <span id="view-order-id">-</span></p>
+                                    <p class="mb-1"><strong>Mijoz:</strong> <span id="view-order-customer">-</span></p>
+                                    <p class="mb-1"><strong>Telefon:</strong> <span id="view-order-phone">-</span></p>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><strong>Status:</strong> <span id="view-order-status">-</span></p>
-                                    <p><strong>Jami summa:</strong> <span id="view-order-total">-</span></p>
-                                    <p><strong>Buyurtma vaqti:</strong> <span id="view-order-date">-</span></p>
+                                    <p class="mb-1"><strong>Status:</strong> <span id="view-order-status">-</span></p>
+                                    <p class="mb-1"><strong>Jami summa:</strong> <span id="view-order-total">-</span></p>
+                                    <p class="mb-1"><strong>Buyurtma vaqti:</strong> <span id="view-order-date">-</span></p>
                                 </div>
                             </div>
                             <hr>
-                            <h6>Buyurtma mahsulotlari</h6>
+                            <h6 class="mb-3">Buyurtma mahsulotlari</h6>
                             <div id="view-order-items"></div>
                         </div>
                         <div class="modal-footer">
