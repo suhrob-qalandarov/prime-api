@@ -32,6 +32,7 @@ public class AdminOrderController {
         orderRepository.findById(id).ifPresent(order -> {
             order.setStatus(changeStatusDTO.getStatus());
             orderRepository.save(order);
+            messagingTemplate.convertAndSend("/topic/order/updated", id);
         });
     }
 
