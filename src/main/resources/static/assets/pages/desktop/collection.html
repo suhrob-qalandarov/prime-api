@@ -14,6 +14,7 @@
     <link rel="manifest" href="/images/favicon/site.webmanifest" />
     <link rel="stylesheet" href="/styles/common/styles.css">
     <link rel="stylesheet" href="/styles/desktop/pages/collection.css">
+    <link rel="stylesheet" href="/styles/common/cart-modal.css"> <!-- Cart Modal CSS -->
 </head>
 
 <body>
@@ -43,7 +44,7 @@
     <div class="container-custom">
         <div class="row align-items-center">
             <div class="col-lg-3">
-                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: var(--burgundy-dark);">PRIME<span style="color: #ff6b6b">77</span></h1>
+                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: rgba(195,164,9,0.84);">PRIME<span style="color: #ff6b6b">77</span></h1>
             </div>
             <div class="col-lg-6">
                 <nav class="navbar navbar-expand-lg">
@@ -122,9 +123,9 @@
             <button class="mobile-sidebar-close" id="mobileSidebarClose">&times;</button>
         </div>
         <nav class="mobile-sidebar-nav">
-            <a href="/desktop/pages/global/catalog.htmlog.html" class="mobile-nav-link">KATALOG</a>
-            <a href="/desktop/pagesop/pages/global/about.html" class="mobile-nav-link">BIZ HAQIMIZDA</a>
-            <a href="/desktop/pages/global/contact.htmlct.html" class="mobile-nav-link">KONTAKTLAR</a>
+            <a href="/assets/pages/desktop/catalog.html" class="mobile-nav-link">KATALOG</a>
+            <a href="/assets/pages/desktop/about.html" class="mobile-nav-link">BIZ HAQIMIZDA</a>
+            <a href="/assets/pages/desktop/contact.html" class="mobile-nav-link">KONTAKTLAR</a>
         </nav>
         <div class="mobile-sidebar-footer">
             <div class="mobile-contact">
@@ -141,31 +142,7 @@
 
 <!-- Cart Modal -->
 <div class="cart-modal" id="cartModal">
-    <div class="cart-modal-content">
-        <div class="cart-header">
-            <h3 class="cart-title">Savat</h3>
-            <button class="cart-close" id="cartClose">&times;</button>
-        </div>
-        <div class="cart-body" id="cartBody">
-            <div class="cart-empty" id="cartEmpty">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Savat bo'sh</p>
-                <small>Mahsulotlarni qo'shish uchun "Savatga qo'shish" tugmasini bosing</small>
-            </div>
-            <div class="cart-items" id="cartItems">
-                <!-- Cart items will be populated by JavaScript -->
-            </div>
-        </div>
-        <div class="cart-footer" id="cartFooter" style="display: none;">
-            <div class="cart-total">
-                <span>Jami:</span>
-                <span class="cart-total-price" id="cartTotalPrice">0 So'm</span>
-            </div>
-            <button class="cart-checkout-btn" id="cartCheckoutBtn" disabled>
-                Buyurtma berish
-            </button>
-        </div>
-    </div>
+    <!-- Cart modal content will be loaded dynamically by cart-modal.js -->
 </div>
 
 <!-- Collection Page Content -->
@@ -193,18 +170,19 @@
     <section class="products-section">
         <div class="container-custom">
             <div class="section-title">
-                <h2>KOLLEKSIYALAR</h2>
-                <p style="color: #666; margin-top: 10px;">Obrazimga qo'shib olaman 👀</p>
+                <!--<h2>KOLLEKSIYALAR</h2>-->
+                <!--<p style="color: #666; margin-top: 10px;">Obrazimga qo'shib olaman 👀</p>-->
+                <p style="color: black; margin-top: 10px;"> Tez orada...</p>
             </div>
-            <div class="products-container">
-                <!-- Main Product Image -->
+            <!--<div class="products-container">
+                &lt;!&ndash; Main Product Image &ndash;&gt;
                 <div class="main-product">
                     <img src="/images/full-collection.jpeg" alt="Main Product" class="main-product-image">
                 </div>
 
-                <!-- Products Grid - 6 Products -->
+                &lt;!&ndash; Products Grid - 6 Products &ndash;&gt;
                 <div class="products-grid grid-6">
-                    <!-- Product 1 -->
+                    &lt;!&ndash; Product 1 &ndash;&gt;
                     <div class="product-card" data-current-price="129000" data-original-price="160000" data-product-id="cap">
                         <div class="product-image-container">
                             <div class="discount-banner">
@@ -215,7 +193,7 @@
                                 <span class="quick-view-text">QUICK VIEW</span>
                             </div>
                             <button class="mobile-quick-view-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,1,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
                             </button>
                         </div>
                         <div class="product-info">
@@ -229,7 +207,7 @@
                         </div>
                     </div>
 
-                    <!-- Product 2 -->
+                    &lt;!&ndash; Product 2 &ndash;&gt;
                     <div class="product-card" data-current-price="109000" data-original-price="150000" data-product-id="shopper">
                         <div class="product-image-container">
                             <div class="discount-banner">
@@ -240,7 +218,7 @@
                                 <span class="quick-view-text">QUICK VIEW</span>
                             </div>
                             <button class="mobile-quick-view-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,1,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
                             </button>
                         </div>
                         <div class="product-info">
@@ -254,7 +232,7 @@
                         </div>
                     </div>
 
-                    <!-- Product 3 -->
+                    &lt;!&ndash; Product 3 &ndash;&gt;
                     <div class="product-card" data-current-price="299000" data-original-price="399000" data-product-id="watch">
                         <div class="product-image-container">
                             <div class="discount-banner">
@@ -265,7 +243,7 @@
                                 <span class="quick-view-text">QUICK VIEW</span>
                             </div>
                             <button class="mobile-quick-view-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,1,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
                             </button>
                         </div>
                         <div class="product-info">
@@ -279,7 +257,7 @@
                         </div>
                     </div>
 
-                    <!-- Product 4 -->
+                    &lt;!&ndash; Product 4 &ndash;&gt;
                     <div class="product-card" data-current-price="89000" data-original-price="120000" data-product-id="wallet">
                         <div class="product-image-container">
                             <div class="discount-banner">
@@ -290,7 +268,7 @@
                                 <span class="quick-view-text">QUICK VIEW</span>
                             </div>
                             <button class="mobile-quick-view-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,1,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
                             </button>
                         </div>
                         <div class="product-info">
@@ -304,7 +282,7 @@
                         </div>
                     </div>
 
-                    <!-- Product 5 -->
+                    &lt;!&ndash; Product 5 &ndash;&gt;
                     <div class="product-card" data-current-price="399000" data-original-price="499000" data-product-id="shoes">
                         <div class="product-image-container">
                             <div class="discount-banner">
@@ -315,7 +293,7 @@
                                 <span class="quick-view-text">QUICK VIEW</span>
                             </div>
                             <button class="mobile-quick-view-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,1,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
                             </button>
                         </div>
                         <div class="product-info">
@@ -329,7 +307,7 @@
                         </div>
                     </div>
 
-                    <!-- Product 6 -->
+                    &lt;!&ndash; Product 6 &ndash;&gt;
                     <div class="product-card" data-current-price="199000" data-original-price="249000" data-product-id="tshirt">
                         <div class="product-image-container">
                             <div class="discount-banner">
@@ -340,7 +318,7 @@
                                 <span class="quick-view-text">QUICK VIEW</span>
                             </div>
                             <button class="mobile-quick-view-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.5c.35.79,8.82,19.57,27.65,38.4C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.34c18.83-18.83,27.3-37.61,27.65-38.4A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-57.67-11.19-79.93-33.25A133.47,133.47,0,0,1,25,128,133.33,133.33,0,0,1,48.07,97.25C70.33,75.19,97.22,64,128,64s57.67,11.19,79.93,33.25A133.46,133.46,0,0,1,231.05,128C223.84,141.46,192.43,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,1,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"></path></svg>
                             </button>
                         </div>
                         <div class="product-info">
@@ -354,7 +332,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
     </section>
 </main>
@@ -457,5 +435,8 @@
 </footer>
 
 <script src="/scripts/desktop/common/script.js"></script>
+<script src="/scripts/common/api.js"></script>
+<script src="/scripts/common/cart-add-logic.js"></script>
+<script src="/scripts/desktop/common/cart-modal.js"></script> <!-- New cart modal logic -->
 </body>
 </html>

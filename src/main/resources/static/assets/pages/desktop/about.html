@@ -14,6 +14,7 @@
     <link rel="manifest" href="/images/favicon/site.webmanifest" />
     <link rel="stylesheet" href="/styles/common/styles.css">
     <link rel="stylesheet" href="/styles/common/about-styles.css">
+    <link rel="stylesheet" href="/styles/common/cart-modal.css"> <!-- Cart Modal CSS -->
 </head>
 <body>
 
@@ -43,7 +44,7 @@
     <div class="container-custom">
         <div class="row align-items-center">
             <div class="col-lg-3">
-                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: var(--burgundy-dark);">PRIME<span style="color: #ff6b6b">77</span></h1>
+                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: rgba(195,164,9,0.84);">PRIME<span style="color: #ff6b6b">77</span></h1>
             </div>
             <div class="col-lg-6">
                 <nav class="navbar navbar-expand-lg">
@@ -141,31 +142,7 @@
 
 <!-- Cart Modal -->
 <div class="cart-modal" id="cartModal">
-    <div class="cart-modal-content">
-        <div class="cart-header">
-            <h3 class="cart-title">Savat</h3>
-            <button class="cart-close" id="cartClose">&times;</button>
-        </div>
-        <div class="cart-body" id="cartBody">
-            <div class="cart-empty" id="cartEmpty">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Savat bo'sh</p>
-                <small>Mahsulotlarni qo'shish uchun "Savatga qo'shish" tugmasini bosing</small>
-            </div>
-            <div class="cart-items" id="cartItems">
-                <!-- Cart items will be populated by JavaScript -->
-            </div>
-        </div>
-        <div class="cart-footer" id="cartFooter" style="display: none;">
-            <div class="cart-total">
-                <span>Jami:</span>
-                <span class="cart-total-price" id="cartTotalPrice">0 So'm</span>
-            </div>
-            <button class="cart-checkout-btn" id="cartCheckoutBtn" disabled>
-                Buyurtma berish
-            </button>
-        </div>
-    </div>
+    <!-- Cart modal content will be loaded dynamically by cart-modal.js -->
 </div>
 
 <!-- About Page Content -->
@@ -234,7 +211,7 @@
                         <p class="card-text">
                             Har bir erkak o'zining noyob uslubini topishiga yordam berish va
                             yuqori sifatli, zamonaviy kiyimlar bilan ta'minlash. Biz mijozlarimizning
-                            ehtiyojlarini birinchi o'ringa qo'yamiz.
+                            ehtiyojlarini birinchi o'rinda qo'yamiz.
                         </p>
                     </div>
                 </div>
@@ -521,5 +498,8 @@
 </footer>
 
 <script src="/scripts/desktop/common/script.js"></script>
+<script src="/scripts/common/api.js"></script>
+<script src="/scripts/common/cart-add-logic.js"></script>
+<script src="/scripts/desktop/common/cart-modal.js"></script> <!-- New cart modal logic -->
 </body>
 </html>

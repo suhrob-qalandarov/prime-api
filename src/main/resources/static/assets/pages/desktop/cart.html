@@ -14,6 +14,7 @@
     <link rel="manifest" href="/images/favicon/site.webmanifest" />
     <link rel="stylesheet" href="/styles/common/styles.css">
     <link rel="stylesheet" href="/styles/common/cart-page.css">
+    <link rel="stylesheet" href="/styles/common/cart-modal.css"> <!-- Cart Modal CSS -->
 </head>
 <body>
 
@@ -43,7 +44,7 @@
     <div class="container-custom">
         <div class="row align-items-center">
             <div class="col-lg-3">
-                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: var(--burgundy-dark);">PRIME<span style="color: #ff6b6b">77</span></h1>
+                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: rgba(195,164,9,0.84);">PRIME<span style="color: #ff6b6b">77</span></h1>
             </div>
             <div class="col-lg-6">
                 <nav class="navbar navbar-expand-lg">
@@ -224,6 +225,11 @@
     </section>
 </main>
 
+<!-- Cart Modal -->
+<div class="cart-modal" id="cartModal">
+    <!-- Cart modal content will be loaded dynamically by cart-modal.js -->
+</div>
+
 <!-- Mobile Bottom Navigation (Mobile Only) -->
 <div class="mobile-bottom-nav">
     <div class="bottom-nav-item" id="categoriesBtn">
@@ -335,8 +341,7 @@
 <script src="/scripts/desktop/common/discount.js"></script>
 <script src="/scripts/desktop/common/quick-view.js"></script>
 <script src="/scripts/desktop/common/script.js"></script>
-<script src="/scripts/desktop/common/catalog.js"></script>
-<script src="/scripts/desktop/common/catalog-spotlight.js"></script>
 <script src="/scripts/desktop/common/cart-page.js"></script>
+<script src="/scripts/desktop/common/cart-modal.js"></script> <!-- New cart modal logic -->
 </body>
 </html>
