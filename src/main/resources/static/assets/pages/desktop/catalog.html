@@ -149,13 +149,15 @@
     <div class="cart-modal-content">
         <div class="cart-header">
             <h3 class="cart-title">Savat</h3>
-            <button class="cart-close" id="cartClose">&times;</button>
+            <button class="cart-close" id="cartClose">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+                </svg>
+            </button>
         </div>
         <div class="cart-body" id="cartBody">
             <div class="cart-empty" id="cartEmpty">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Savat bo'sh</p>
-                <small>Mahsulotlarni qo'shish uchun "Savatga qo'shish" tugmasini bosing</small>
+                <small>Ha ul-bul narsa qo'shmaymizmi bu yerga?</small>
             </div>
             <div class="cart-items" id="cartItems">
                 <!-- Cart items will be populated by JavaScript -->
@@ -163,12 +165,20 @@
         </div>
         <div class="cart-footer" id="cartFooter" style="display: none;">
             <div class="cart-total">
-                <span>Jami:</span>
-                <span class="cart-total-price" id="cartTotalPrice">0 So'm</span>
+                <span class="cart-total-label">Summa</span>
+                <span class="cart-total-price" id="cartTotalPrice">0 so'm</span>
             </div>
-            <button class="cart-checkout-btn" id="cartCheckoutBtn" disabled>
-                Buyurtma berish
-            </button>
+            <div class="cart-buttons">
+                <button class="cart-checkout-btn" id="cartCheckoutBtn" disabled>
+                    Buyurtma berish
+                </button>
+                <button class="cart-view-btn" id="cartViewBtn">
+                    Savat
+                </button>
+            </div>
+            <div class="anti-stop">
+                <span>Yoki xaridlarni anti-to'xtatish</span>
+            </div>
         </div>
     </div>
 </div>
@@ -326,11 +336,14 @@
     <div class="bottom-nav-item"></div>
 </div>
 
-<div style="position: fixed; bottom: 18px; right: 18px; z-index: 2147483647; border-radius: 50%; background: rgb(229, 229, 229); box-sizing: content-box;">
-    <div style="background: var(--burgundy-light); height: 52px; width: 52px; cursor: pointer; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: rgba(101, 119, 134, 0.75) 1px 1px 4px;">
-        <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" style="padding-top: 4px;">
+<!-- Desktop Message Button -->
+<div class="desktop-message-btn" id="desktopMessageBtn">
+    <div class="desktop-message-btn-inner">
+        <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"></path>
-            <path d="M0 0h24v24H0z" fill="none"></path></svg></div><div style="display: none; height: 450px;"></div>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div>
 </div>
 
 <!-- Footer -->
@@ -389,8 +402,9 @@
 
 <script src="/scripts/common/api.js"></script>
 <script src="/scripts/desktop/common/script.js"></script>
+<script src="/scripts/desktop/common/discount.js"></script>
 <script src="/scripts/desktop/common/catalog-spotlight.js"></script>
 <script src="/scripts/desktop/common/quick-view.js"></script>
-<script src="/scripts/desktop/common/discount.js"></script>
+<script src="/scripts/common/cart-add-logic.js"></script>
 </body>
 </html>

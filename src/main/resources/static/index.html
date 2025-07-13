@@ -14,6 +14,7 @@
     <link rel="manifest" href="/images/favicon/site.webmanifest" />
     <link rel="stylesheet" href="styles/common/styles.css">
     <link rel="stylesheet" href="styles/common/featured.css">
+    <link rel="stylesheet" href="styles/common/quick-view.css"> <!-- Quick View CSS -->
 </head>
 <body>
 
@@ -489,10 +490,18 @@
     </div>
 </footer>
 
+<!-- Quick View Modal HTML - This div will be populated by quick-view.js -->
+<div class="product-quick-view-modal" id="productQuickViewModal">
+</div>
+
+
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="scripts/common/api.js"></script>
+<script src="scripts/common/cart-add-logic.js"></script> <!-- New cart logic -->
+<script src="scripts/desktop/common/discount.js"></script> <!-- Ensure discount.js is loaded if used -->
 <script src="scripts/common/featured.js"></script>
 <script src="scripts/desktop/common/script.js"></script>
+<script src="scripts/desktop/common/quick-view.js"></script> <!-- New quick view logic -->
 </body>
 </html>

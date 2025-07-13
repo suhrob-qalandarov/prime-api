@@ -1,10 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Kirish</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            box-sizing: border-box;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 2px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 15px;
+        }
+
+        .general-error {
+            color: red;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
+
+<h2>Tizimga kirish</h2>
+
+<form id="loginForm">
+    <label>
+        Email:
+        <input name="email" type="email" required>
+        <div class="error" id="emailError"></div>
+    </label>
+
+    <label>
+        Parol:
+        <input name="password" type="password" required>
+        <div class="error" id="passwordError"></div>
+    </label>
+
+    <button type="submit">Kirish</button>
+
+    <div class="general-error" id="generalError"></div>
+</form>
+
+<script>
+    const loginForm = document.getElementById("loginForm");
+
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Xatoliklarni tozalash
+        document.getElementById("emailError").textContent = "";
+        document.getElementById("passwordError").textContent = "";
+        document.getElementById("generalError").textContent = "";
+
+        const formData = {
+            email: e.target.email.value.trim(),
+            password: e.target.password.value
+        };
+
+        try {
+            const res = await fetch("http://localhost/api/v1/auth/login", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                alert("Muvaffaqiyatli kirildi!");
+                window.location.href = "/index.html";
+            } else {
+                // Agar backend validatsiya xatolari bo‘lsa
+                if (data.errors) {
+                    if (data.errors.email) {
+                        document.getElementById("emailError").textContent = data.errors.email;
+                    }
+                    if (data.errors.password) {
+                        document.getElementById("passwordError").textContent = data.errors.password;
+                    }
+                } else if (data.message) {
+                    // Umumiy xatolik (masalan: Login yoki parol noto‘g‘ri)
+                    document.getElementById("generalError").textContent = data.message;
+                } else {
+                    document.getElementById("generalError").textContent = "Noma’lum xatolik yuz berdi.";
+                }
+            }
+        } catch (err) {
+            console.error("Tarmoq xatoligi:", err);
+            document.getElementById("generalError").textContent = "Serverga ulanishda muammo yuz berdi.";
+        }
+    });
+</script>
 
 </body>
 </html>
