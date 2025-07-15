@@ -9,9 +9,6 @@ let selectedSizes = []
 let uploadedAttachments = []
 const bootstrap = window.bootstrap
 
-// API Base URL
-const API_BASE_URL = "http://localhost"
-
 // Initialize products panel
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM Content Loaded - Products")
