@@ -9,6 +9,9 @@ let selectedSizes = []
 let uploadedAttachments = []
 const bootstrap = window.bootstrap
 
+// API Base URL
+const API_BASE_URL = "https://prime77.uz"
+
 // Initialize products panel
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM Content Loaded - Products")
