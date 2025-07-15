@@ -289,12 +289,13 @@
 }
 
 .cart-product-image {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
-    border-radius: 8px;
-    background: #f8f9fa;
-    padding: 8px;
+    width: 100px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: transparent;
+    /*background: #f8f9fa;*/
+    /*padding: 8px;*/
     margin-right: 15px;
     flex-shrink: 0;
 }
@@ -314,14 +315,14 @@
     font-size: 16px;
     font-weight: 600;
     color: var(--text-color);
-    margin-bottom: 5px;
+    margin-bottom: 28px;
     font-family: "Montserrat", sans-serif;
 }
 
 .cart-product-size {
     font-size: 12px;
     color: #666;
-    margin-bottom: 5px;
+    margin-top: -20px;
 }
 
 .cart-product-size .stock-count {
@@ -332,8 +333,8 @@
 .cart-product-pricing {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin: 0 15px;
+    align-items: flex-start;
+    margin: 0 0;
     min-width: 100px;
 }
 
@@ -353,26 +354,49 @@
 .cart-product-controls {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin: 0 15px;
+    gap: 25px;
+    margin: 0 25px;
 }
 
 .cart-quantity-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 15px;
+    background: rgba(240, 240, 240, 0.83);
     border: 1px solid #ddd;
     border-radius: 6px;
-    padding: 4px;
+    height: 50px;
+    padding: 8px;
+    margin: 6px;
 }
 
+.cart-quantity-btn {
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.cart-quantity {
+    font-size: 14px;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+}
+
+/*
 .cart-quantity-btn {
     width: 25px;
     height: 25px;
     border: none;
     background: transparent;
     border-radius: 4px;
-    cursor: pointer;
+    cursor: pointer
     display: flex;
     align-items: center;
     justify-content: center;
@@ -381,11 +405,12 @@
     color: var(--burgundy-dark);
     transition: all 0.3s ease;
 }
+*/
 
-.cart-quantity-btn:hover:not(:disabled) {
+/*.cart-quantity-btn:hover:not(:disabled) {
     background: var(--burgundy-color);
     color: white;
-}
+}*/
 
 .cart-quantity-btn:disabled {
     opacity: 0.5;
@@ -425,9 +450,10 @@
 
 /* Order Summary Card */
 .order-summary-card {
-    background: transparent;
-    border-radius: 0;
-    padding: 20px 0;
+    background: rgba(240, 240, 240, 0.83);
+    border: none;
+    border-radius: 10px;
+    padding: 20px 20px;
     box-shadow: none;
     position: sticky;
     top: 100px;

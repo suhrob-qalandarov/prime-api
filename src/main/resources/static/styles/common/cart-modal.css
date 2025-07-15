@@ -146,6 +146,7 @@
     margin-top: 5px;
 }
 
+/*
 .cart-quantity-btn {
     width: 24px;
     height: 24px;
@@ -165,6 +166,7 @@
     color: white;
     border-color: var(--burgundy-color);
 }
+*/
 
 .cart-quantity {
     font-size: 14px;
