@@ -417,7 +417,7 @@ function getStatusText(status) {
 async function loadCategories() {
     try {
         if (categories.length === 0) {
-            categories = (await apiRequest("/api/v1/categories/active")) || []
+            categories = (await apiRequest("/api/v1/categories")) || []
         }
         return categories
     } catch (error) {

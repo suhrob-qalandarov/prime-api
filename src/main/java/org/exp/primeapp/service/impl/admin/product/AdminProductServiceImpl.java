@@ -64,7 +64,6 @@ public class AdminProductServiceImpl implements AdminProductService {
                 product.getStatus().name(),
                 product.getCategory().getName(),
                 product.getAttachments().size(),
-                product.getCollection().getName(),
                 product.getSizes().size()
         );
     }
@@ -89,6 +88,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         Set<Attachment> attachments = new HashSet<>(attachmentRepository.findAllById(attachmentIds));
 
         Product product = createProductFromReq(productReq, category, attachments);
+        product.setDiscount(0);
         Product savedProduct = productRepository.save(product);
 
         // ProductIncome uchun umumiy amount hisoblaymiz
@@ -110,6 +110,7 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .active(req.getActive())
                 .status(req.getStatus())
                 .category(category)
+                .collection(null)
                 .attachments(attachments)
                 .sizes(new HashSet<>())
                 .build();
