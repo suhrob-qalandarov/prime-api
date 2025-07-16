@@ -33,9 +33,11 @@ public class CollectionsController {
         return ResponseEntity.ok(randomCollections);
     }
 
+    /*
     @GetMapping("/hero")
     public ResponseEntity<HeroCollectionRes> getRandomHeroCollection() {
         HeroCollectionRes collectionRes = collectionService.getRandomHeroCollection();
         return ResponseEntity.ok(collectionRes);
     }
+    */
 }
