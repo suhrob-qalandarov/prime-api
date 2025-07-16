@@ -34,10 +34,7 @@ public class Product extends BaseEntity {
     @ManyToOne
     private Category category;
 
-    @OneToOne
-    private Attachment mainImage;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "product_attachment",
             joinColumns = @JoinColumn(name = "product_id"),
