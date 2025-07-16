@@ -11,7 +11,7 @@ public record AdminProductRes(
         String status,
         String categoryName,
         Integer attachmentCount,
-        String collectionName,
+        //String collectionName,
         Integer sizeCount
 ) {
 }

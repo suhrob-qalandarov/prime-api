@@ -241,16 +241,18 @@ function getMockData(url) {
             name: "iPhone 14 Pro",
             description: "Apple iPhone 14 Pro with advanced camera system",
             price: 15000000,
-            active: true,
+            active: true, // Assuming 'active' is part of the Product entity for simplicity
             status: "HOT",
-            categoryName: "Elektronika",
-            collectionName: "Apple Collection",
+            category: { id: 1, name: "Elektronika" }, // Matches Category entity
+            collection: { id: 1, name: "Apple Collection" }, // Matches Collection entity
+            mainImage: { id: 1, key: "img1", filename: "iphone1.jpg" }, // OneToOne Attachment
             attachments: [
                 { id: 1, key: "img1", filename: "iphone1.jpg" },
                 { id: 2, key: "img2", filename: "iphone2.jpg" },
                 { id: 3, key: "img3", filename: "iphone3.jpg" },
             ],
-            productSizes: [
+            sizes: [
+                // Matches Set<ProductSize>
                 { size: "SIZE_128GB", amount: 10 },
                 { size: "SIZE_256GB", amount: 5 },
             ],
@@ -303,7 +305,7 @@ async function loadProductsDashboard() {
         console.log("Loading products dashboard...")
 
         // Single API call to get all product data
-        dashboardData = await apiRequest("/api/v1/admin/products")
+        dashboardData = await apiRequest("/api/v1/admin/products/dashboard")
 
         if (dashboardData) {
             console.log("Dashboard data loaded:", dashboardData)
@@ -360,39 +362,39 @@ function renderProductsTable(products) {
     tbody.innerHTML = products
         .map(
             (product) => `
-        <tr class="fade-in">
-            <td>${product.id}</td>
-            <td class="fw-bold">${product.name}</td>
-            <td>${product.categoryName || "-"}</td>
-            <td>
-                <span class="product-status-badge ${product.status?.toLowerCase() || "new"}">
-                    ${getStatusText(product.status)}
-                </span>
-            </td>
-            <td>
-                <span class="status-badge ${product.active ? "active" : "inactive"}">
-                    ${product.active ? "FAOL" : "NOFAOL"}
-                </span>
-            </td>
-            <td>
-                <span class="badge bg-info">${product.attachmentCount || 0}</span>
-            </td>
-            <td>
-                <span class="badge bg-secondary">${product.sizeCount || 0}</span>
-            </td>
-            <td>
-                <button class="action-btn edit" onclick="showViewProductModal(${product.id})" title="Ko'rish">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="action-btn edit" onclick="showEditProductModal(${product.id})" title="Tahrirlash">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="action-btn ${product.active ? "delete" : "edit"}" onclick="toggleProduct(${product.id})" title="${product.active ? "Nofaollashtirish" : "Faollashtirish"}">
-                    <i class="fas fa-${product.active ? "pause" : "play"}"></i>
-                </button>
-            </td>
-        </tr>
-    `,
+      <tr class="fade-in">
+          <td>${product.id}</td>
+          <td class="fw-bold">${product.name}</td>
+          <td>${product.categoryName || "-"}</td>
+          <td>
+              <span class="product-status-badge ${product.status?.toLowerCase() || "new"}">
+                  ${getStatusText(product.status)}
+              </span>
+          </td>
+          <td>
+              <span class="status-badge ${product.active ? "active" : "inactive"}">
+                  ${product.active ? "FAOL" : "NOFAOL"}
+              </span>
+          </td>
+          <td>
+              <span class="badge bg-info">${product.attachmentCount || 0}</span>
+          </td>
+          <td>
+              <span class="badge bg-secondary">${product.sizeCount || 0}</span>
+          </td>
+          <td>
+              <button class="action-btn edit" onclick="showViewProductModal(${product.id})" title="Ko'rish">
+                  <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn edit" onclick="showEditProductModal(${product.id})" title="Tahrirlash">
+                  <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn ${product.active ? "delete" : "edit"}" onclick="toggleProduct(${product.id})" title="${product.active ? "Nofaollashtirish" : "Faollashtirish"}">
+                  <i class="fas fa-${product.active ? "pause" : "play"}"></i>
+              </button>
+          </td>
+      </tr>
+  `,
         )
         .join("")
 }
@@ -415,7 +417,7 @@ function getStatusText(status) {
 async function loadCategories() {
     try {
         if (categories.length === 0) {
-            categories = (await apiRequest("/api/v1/categories/active")) || []
+            categories = (await apiRequest("/api/v1/categories")) || []
         }
         return categories
     } catch (error) {
@@ -493,11 +495,13 @@ async function showEditProductModal(productId) {
         }
 
         // Populate category select with current selection
-        await populateCategorySelect("product-category", product.categoryId)
+        await populateCategorySelect("product-category", product.category?.id)
 
         // Load existing sizes if available
-        if (product.productSizes) {
-            selectedSizes = product.productSizes.map((ps) => ({
+        if (product.sizes) {
+            // Changed from product.productSizes
+            selectedSizes = product.sizes.map((ps) => ({
+                // Changed from product.productSizes
                 size: ps.size,
                 amount: ps.amount,
             }))
@@ -536,31 +540,31 @@ async function showViewProductModal(productId) {
         document.getElementById("view-product-price").innerHTML = product.price
             ? `<span class="price-display">${formatPrice(product.price)}</span>`
             : "-"
-        document.getElementById("view-product-category").textContent = product.categoryName || "-"
-        document.getElementById("view-product-collection").textContent = product.collectionName || "-"
+        document.getElementById("view-product-category").textContent = product.category?.name || "-" // Changed from product.categoryName
+        document.getElementById("view-product-collection").textContent = product.collection?.name || "-" // Changed from product.collectionName
 
         // Status
         document.getElementById("view-product-status").innerHTML = `
-            <span class="product-status-badge ${product.status?.toLowerCase() || "new"}">
-                ${getStatusText(product.status)}
-            </span>
-        `
+          <span class="product-status-badge ${product.status?.toLowerCase() || "new"}">
+              ${getStatusText(product.status)}
+          </span>
+      `
 
         // Active status
         document.getElementById("view-product-active").innerHTML = `
-            <span class="status-badge ${product.active ? "active" : "inactive"}">
-                ${product.active ? "FAOL" : "NOFAOL"}
-            </span>
-        `
+          <span class="status-badge ${product.active ? "active" : "inactive"}">
+              ${product.active ? "FAOL" : "NOFAOL"}
+          </span>
+      `
 
         document.getElementById("view-product-created-at").textContent = formatDate(product.createdAt)
         document.getElementById("view-product-updated-at").textContent = formatDate(product.updatedAt)
 
         // Display images
-        displayProductImages(product.attachments)
+        displayProductImages(product.attachments) // Already correct, just confirming
 
         // Display sizes
-        displayProductSizes(product.productSizes)
+        displayProductSizes(product.sizes) // Changed from product.productSizes
 
         const modal = new bootstrap.Modal(document.getElementById("viewProductModal"))
         modal.show()
@@ -576,31 +580,31 @@ function displayProductImages(attachments) {
 
     if (!attachments || attachments.length === 0) {
         container.innerHTML = `
-            <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 300px;">
-                <div class="text-center">
-                    <i class="fas fa-image fa-3x text-muted mb-3"></i>
-                    <div class="text-muted">Rasmlar mavjud emas</div>
-                </div>
-            </div>
-        `
+          <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 300px;">
+              <div class="text-center">
+                  <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                  <div class="text-muted">Rasmlar mavjud emas</div>
+              </div>
+          </div>
+      `
         return
     }
 
     container.innerHTML = `
-        <div class="product-images-grid">
-            ${attachments
+      <div class="product-images-grid">
+          ${attachments
         .map(
             (attachment) => `
-                <div class="product-image-item">
-                    <img src="${API_BASE_URL}/api/v1/attachment/${attachment.key}" 
-                         alt="${attachment.filename}"
-                         onerror="this.src='/placeholder.svg?height=150&width=150'">
-                </div>
-            `,
+              <div class="product-image-item">
+                  <img src="${API_BASE_URL}/api/v1/attachment/${attachment.key}" 
+                       alt="${attachment.filename}"
+                       onerror="this.src='/placeholder.svg?height=150&width=150'">
+              </div>
+          `,
         )
         .join("")}
-        </div>
-    `
+      </div>
+  `
 }
 
 // Display product sizes in view modal
@@ -613,19 +617,19 @@ function displayProductSizes(productSizes) {
     }
 
     container.innerHTML = `
-        <div class="sizes-display">
-            ${productSizes
+      <div class="sizes-display">
+          ${productSizes
         .map(
             (ps) => `
-                <div class="size-badge">
-                    <span>${getSizeDisplayText(ps.size)}</span>
-                    <span class="size-count">${ps.amount}</span>
-                </div>
-            `,
+              <div class="size-badge">
+                  <span>${getSizeDisplayText(ps.size)}</span>
+                  <span class="size-count">${ps.amount}</span>
+              </div>
+          `,
         )
         .join("")}
-        </div>
-    `
+      </div>
+  `
 }
 
 // Setup file upload
@@ -674,11 +678,11 @@ function handleFileSelection(files) {
                 const previewItem = document.createElement("div")
                 previewItem.className = "preview-item"
                 previewItem.innerHTML = `
-                    <img src="${e.target.result}" alt="Preview">
-                    <button type="button" class="preview-remove" onclick="removePreview(this, ${uploadedAttachments.length + index})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `
+                  <img src="${e.target.result}" alt="Preview">
+                  <button type="button" class="preview-remove" onclick="removePreview(this, ${uploadedAttachments.length + index})">
+                      <i class="fas fa-times"></i>
+                  </button>
+              `
                 preview.appendChild(previewItem)
             }
             reader.readAsDataURL(file)
@@ -707,23 +711,23 @@ function renderImagePreviews() {
             const reader = new FileReader()
             reader.onload = (e) => {
                 previewItem.innerHTML = `
-                    <img src="${e.target.result}" alt="Preview">
-                    <button type="button" class="preview-remove" onclick="removePreview(this, ${index})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `
+                  <img src="${e.target.result}" alt="Preview">
+                  <button type="button" class="preview-remove" onclick="removePreview(this, ${index})">
+                      <i class="fas fa-times"></i>
+                  </button>
+              `
             }
             reader.readAsDataURL(attachment.file)
         } else {
             // Existing attachment
             previewItem.innerHTML = `
-                <img src="${API_BASE_URL}/api/v1/attachment/${attachment.key}" 
-                     alt="${attachment.filename}"
-                     onerror="this.src='/placeholder.svg?height=100&width=100'">
-                <button type="button" class="preview-remove" onclick="removePreview(this, ${index})">
-                    <i class="fas fa-times"></i>
-                </button>
-            `
+              <img src="${API_BASE_URL}/api/v1/attachment/${attachment.key}" 
+                   alt="${attachment.filename}"
+                   onerror="this.src='/placeholder.svg?height=100&width=100'">
+              <button type="button" class="preview-remove" onclick="removePreview(this, ${index})">
+                  <i class="fas fa-times"></i>
+              </button>
+          `
         }
 
         preview.appendChild(previewItem)
@@ -788,16 +792,16 @@ function renderSelectedSizes() {
     container.innerHTML = selectedSizes
         .map(
             (sizeItem, index) => `
-        <div class="size-item">
-            <div class="size-info">
-                <span class="size-label">${getSizeDisplayText(sizeItem.size)}</span>
-                <span class="size-amount">${sizeItem.amount} dona</span>
-            </div>
-            <button type="button" class="size-remove" onclick="removeSize(${index})">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    `,
+      <div class="size-item">
+          <div class="size-info">
+              <span class="size-label">${getSizeDisplayText(sizeItem.size)}</span>
+              <span class="size-amount">${sizeItem.amount} dona</span>
+          </div>
+          <button type="button" class="size-remove" onclick="removeSize(${index})">
+              <i class="fas fa-times"></i>
+          </button>
+      </div>
+  `,
         )
         .join("")
 }
@@ -894,19 +898,8 @@ async function saveProduct() {
         if (newProduct) {
             showNotification("success", "Mahsulot muvaffaqiyatli saqlandi")
 
-            // Update local data
-            if (productId) {
-                updateProductInLocalData(newProduct)
-            } else {
-                addProductToLocalData(newProduct)
-            }
-
-            // Update filtered products based on current filter
-            applyCurrentFilter()
-
-            // Re-render table and update stats
-            renderProductsTable(filteredProducts)
-            updateProductStats()
+            // Refresh all data from the server to ensure consistency
+            await loadProductsDashboard() // Added this line
 
             const modal = bootstrap.Modal.getInstance(document.getElementById("productModal"))
             modal.hide()
@@ -925,49 +918,10 @@ async function toggleProduct(productId) {
         })
 
         if (response === "OK" || response === 200) {
-            // Find product in all products
-            const productIndex = allProducts.findIndex((prod) => prod.id === productId)
-            if (productIndex !== -1) {
-                const product = allProducts[productIndex]
-                const wasActive = product.active
-                product.active = !product.active
+            showNotification("success", `Mahsulot holati o'zgartirildi`) // Simplified message
 
-                // Move product between active and inactive arrays
-                if (wasActive) {
-                    // Move from active to inactive
-                    const activeIndex = activeProducts.findIndex((prod) => prod.id === productId)
-                    if (activeIndex !== -1) {
-                        const [movedProduct] = activeProducts.splice(activeIndex, 1)
-                        movedProduct.active = false
-                        inactiveProducts.push(movedProduct)
-                    }
-                } else {
-                    // Move from inactive to active
-                    const inactiveIndex = inactiveProducts.findIndex((prod) => prod.id === productId)
-                    if (inactiveIndex !== -1) {
-                        const [movedProduct] = inactiveProducts.splice(inactiveIndex, 1)
-                        movedProduct.active = true
-                        activeProducts.push(movedProduct)
-                    }
-                }
-
-                // Update dashboard data counts
-                if (dashboardData) {
-                    dashboardData.activeCount = activeProducts.length
-                    dashboardData.inactiveCount = inactiveProducts.length
-                    dashboardData.activeProductResList = [...activeProducts]
-                    dashboardData.inactiveProductResList = [...inactiveProducts]
-                }
-
-                // Update filtered products based on current filter
-                applyCurrentFilter()
-
-                // Re-render and update stats without page refresh
-                renderProductsTable(filteredProducts)
-                updateProductStats()
-
-                showNotification("success", `Mahsulot ${product.active ? "faollashtirildi" : "nofaollashtirildi"}`)
-            }
+            // Refresh all data from the server to ensure consistency
+            await loadProductsDashboard() // Added this line
         }
     } catch (error) {
         console.error("Error toggling product:", error)
@@ -1125,14 +1079,14 @@ function showLoading() {
     const overlay = document.createElement("div")
     overlay.id = "loading-overlay"
     overlay.innerHTML = `
-        <div class="loading-spinner"></div>
-        <p>Yuklanmoqda...</p>
-    `
+      <div class="loading-spinner"></div>
+      <p>Yuklanmoqda...</p>
+  `
     overlay.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255, 255, 255, 0.9); display: flex; flex-direction: column;
-        align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(5px);
-    `
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.9); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(5px);
+  `
     document.body.appendChild(overlay)
 }
 
@@ -1149,10 +1103,10 @@ function showNotification(type, message) {
     notification.style.cssText = "top: 20px; right: 20px; z-index: 10000; max-width: 350px; animation: slideIn 0.3s ease;"
 
     notification.innerHTML = `
-        <i class="fas fa-${type === "success" ? "check-circle" : type === "error" ? "exclamation-circle" : type === "warning" ? "exclamation-triangle" : "info-circle"} me-2"></i>
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `
+      <i class="fas fa-${type === "success" ? "check-circle" : type === "error" ? "exclamation-circle" : type === "warning" ? "exclamation-triangle" : "info-circle"} me-2"></i>
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `
 
     document.body.appendChild(notification)
 
