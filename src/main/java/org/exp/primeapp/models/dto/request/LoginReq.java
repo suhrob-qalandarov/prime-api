@@ -1,13 +1,16 @@
 package org.exp.primeapp.models.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Value;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 
-@Data
-@AllArgsConstructor
-@Value
-public class LoginReq {
-    String email;
-    String password;
+@Builder
+public record LoginReq(
+        @Email(message = "Email formati noto‘g‘ri")
+        @NotBlank(message = "Email bo‘sh bo‘lmasligi kerak")
+        String email,
+
+        @NotBlank(message = "Parol bo‘sh bo‘lmasligi kerak")
+        String password
+) {
 }

@@ -1,5 +1,7 @@
 package org.exp.primeapp.controller.global.auth;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.configs.security.JwtService;
 import org.exp.primeapp.models.dto.request.LoginReq;
@@ -7,6 +9,7 @@ import org.exp.primeapp.models.dto.request.RegisterReq;
 import org.exp.primeapp.models.dto.request.VerifyEmailReq;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.dto.responce.global.LoginRes;
+import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.service.interfaces.global.auth.AuthService;
 import org.springframework.http.HttpStatus;
@@ -24,9 +27,9 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping(LOGIN)
-    public ResponseEntity<LoginRes> login(@RequestBody LoginReq loginReq) {
-        LoginRes loginRes = authService.login(loginReq);
-        return new ResponseEntity<>(loginRes, HttpStatus.ACCEPTED);
+    public ResponseEntity<UserRes> login(@RequestBody @Valid LoginReq loginReq, HttpServletResponse response) {
+        UserRes user = authService.login(loginReq, response);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping(REGISTER)

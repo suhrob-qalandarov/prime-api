@@ -5,7 +5,6 @@ import org.exp.primeapp.models.dto.request.UserReq;
 import org.exp.primeapp.models.dto.request.UserUpdateReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminUserDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminUserRes;
-import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
@@ -53,7 +52,9 @@ public class UserServiceImpl implements UserService {
                 savedUser.getFirstName(),
                 savedUser.getLastName(),
                 savedUser.getEmail(),
-                savedUser.getPhone());
+                savedUser.getPhone(),
+                savedUser.getRoles().stream().map(Role::getName).toList()
+        );
     }
 
     @Override
@@ -65,7 +66,8 @@ public class UserServiceImpl implements UserService {
                         user.getFirstName(),
                         user.getLastName(),
                         user.getEmail(),
-                        user.getPhone()
+                        user.getPhone(),
+                        user.getRoles().stream().map(Role::getName).toList()
                 ))
                 .collect(Collectors.toList());
     }
@@ -135,7 +137,8 @@ public class UserServiceImpl implements UserService {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getPhone()
+                user.getPhone(),
+                user.getRoles().stream().map(Role::getName).toList()
         );
     }
 

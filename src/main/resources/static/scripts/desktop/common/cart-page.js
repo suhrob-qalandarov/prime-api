@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const initializeDesktopScrollEffects = window.initializeDesktopScrollEffects
     const initializeMobileSidebar = window.initializeMobileSidebar
     const initializeMobileBottomNav = window.initializeMobileBottomNav
+    const initializeCartModal = window.initializeCartModal // Ensure cart modal is initialized
 
     if (typeof initializeResponsiveHeaders === "function") {
         // Added this line
@@ -42,6 +43,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (typeof initializeMobileBottomNav === "function") {
         initializeMobileBottomNav()
+    }
+    if (typeof initializeCartModal === "function") {
+        // Initialize cart modal
+        await initializeCartModal()
     }
 
     // Initialize cart page specific functionality
@@ -151,9 +156,6 @@ async function renderCartItemsWithAPI() {
             }
         }
 
-        // Update global cartPageItems with enriched data
-        // window.cartPageItems = enrichedCartItems // This is now local to cart-page.js, not global
-
         cartProductsList.innerHTML = ""
         enrichedCartItems.forEach((item, index) => {
             const cartItemElement = createCartItemElement(item, index)
@@ -199,27 +201,24 @@ function createCartItemElement(item, index) {
     cartItem.innerHTML = `
       <img src="${imageUrl}" alt="${item.name}" class="cart-product-image" onerror="this.src='/placeholder.svg?height=100&width=100&text=No+Image'">
       <div class="cart-product-details">
-          <div class="cart-product-info">
-              <h4 class="cart-product-name">${item.name}</h4>
-              ${sizeInfo.html}
-              ${item.categoryName ? `<div class="cart-product-category">Kategoriya: ${item.categoryName}</div>` : ""}
-          </div>
+          <h4 class="cart-product-name">${item.name}</h4>
+          ${sizeInfo.html}
           <div class="cart-product-pricing">
               <span class="cart-current-price">${window.API.formatPrice(pricingInfo.displayPrice)}</span>
               ${pricingInfo.hasDiscount ? `<span class="cart-original-price">${window.API.formatPrice(pricingInfo.originalPrice)}</span>` : ""}
           </div>
-          <div class="cart-product-controls">
-              <div class="cart-quantity-controls">
-                  <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, -1)" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
-                  <span class="cart-quantity-display">${item.quantity}</span>
-                  <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, 1)" ${isOutOfStock ? "disabled" : ""}>+</button>
-              </div>
-              <div class="cart-item-total">${window.API.formatPrice(pricingInfo.displayPrice * item.quantity)}</div>
-              <button class="cart-remove-btn" onclick="window.removeCartPageItem(${index})" title="Savatdan o'chirish">
-                  <i class="fas fa-times"></i>
-              </button>
+      </div>
+      <div class="cart-product-controls">
+          <div class="cart-quantity-controls">
+              <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, -1)" ${item.quantity <= 1 ? "disabled" : ""}>−</button>
+              <span class="cart-quantity-display">${item.quantity}</span>
+              <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, 1)" ${isOutOfStock ? "disabled" : ""}>+</button>
           </div>
       </div>
+      <div class="cart-item-total">${window.API.formatPrice(pricingInfo.displayPrice * item.quantity)}</div>
+      <button class="cart-remove-btn" onclick="window.removeCartPageItem(${index})" title="Savatdan o'chirish">
+          <i class="fas fa-times"></i>
+      </button>
   `
 
     return cartItem
@@ -295,7 +294,7 @@ function updateOrderSummary() {
             window.cartPageDiscount > 0 ? `-${window.API.formatPrice(window.cartPageDiscount)}` : "-0 So'm"
     }
     if (orderTotal) {
-        orderTotal.textContent = window.API.formatPrice(window.cartPageTotal)
+        orderTotal.textContent = window.API.formatPrice(window.cartPageTotal) // Ensure total is displayed
     }
     if (orderCheckoutBtn) {
         orderCheckoutBtn.disabled = window.cartItems.length === 0 // Use window.cartItems
@@ -319,7 +318,7 @@ function initializeCartPageEvents() {
     const emptyCartBtn = document.getElementById("emptyCartBtn")
     if (emptyCartBtn) {
         emptyCartBtn.addEventListener("click", () => {
-            window.location.href = "/assets/pages/desktop/catalog.html"
+            window.location.href = "/index.html"
         })
     }
 

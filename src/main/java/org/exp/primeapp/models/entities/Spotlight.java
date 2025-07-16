@@ -21,7 +21,7 @@ public class Spotlight extends BaseEntity {
 
     private String name;
 
-    @ManyToOne
+    @OneToOne
     private Attachment image;
 
     @OneToMany(mappedBy = "spotlight", cascade = CascadeType.ALL, orphanRemoval = true)

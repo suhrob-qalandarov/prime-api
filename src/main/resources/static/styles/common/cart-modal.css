@@ -98,6 +98,7 @@
     gap: 15px;
     padding: 15px 0;
     border-bottom: 1px solid #f0f0f0;
+    align-items: flex-start; /* Align items to the top */
 }
 
 .cart-item:last-child {
@@ -133,46 +134,37 @@
     color: #666;
 }
 
-.cart-item-price {
+.cart-item-pricing {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cart-current-price {
     font-size: 14px;
     font-weight: 700;
     color: var(--burgundy-color);
 }
 
-.cart-item-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 5px;
-}
-
-/*
-.cart-quantity-btn {
-    width: 24px;
-    height: 24px;
-    border: 1px solid #ddd;
-    background: white;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.cart-original-price {
     font-size: 12px;
-    transition: all 0.3s ease;
+    color: #999;
+    text-decoration: line-through;
 }
 
-.cart-quantity-btn:hover {
-    background: var(--burgundy-color);
-    color: white;
-    border-color: var(--burgundy-color);
+.cart-item-quantity-and-remove {
+    display: flex;
+    flex-direction: column; /* Stack quantity and remove button */
+    align-items: flex-end; /* Align to the right */
+    justify-content: space-between; /* Space out items */
+    height: 100%; /* Take full height of the item */
+    min-width: 40px; /* Ensure enough space for the button */
 }
-*/
 
-.cart-quantity {
-    font-size: 14px;
-    font-weight: 600;
-    min-width: 20px;
-    text-align: center;
+/* Remove quantity button styles from modal */
+.cart-item-controls .cart-quantity-btn,
+.cart-item-controls .cart-quantity {
+    display: none;
 }
 
 .cart-remove-btn {
@@ -182,12 +174,13 @@
     cursor: pointer;
     padding: 2px;
     border-radius: 4px;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease; /* Only color transition */
+    font-size: 16px;
 }
 
 .cart-remove-btn:hover {
-    background: #dc3545;
-    color: white;
+    color: var(--burgundy-dark); /* Change to burgundy-dark on hover */
+    background: none; /* Ensure no background */
 }
 
 /* ======================================================
