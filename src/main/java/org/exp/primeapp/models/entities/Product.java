@@ -34,6 +34,9 @@ public class Product extends BaseEntity {
     @ManyToOne
     private Category category;
 
+    @OneToOne
+    private Attachment mainImage;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "product_attachment",

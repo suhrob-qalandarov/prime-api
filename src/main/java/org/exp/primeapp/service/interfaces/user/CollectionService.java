@@ -11,7 +11,7 @@ public interface CollectionService {
 
     CollectionProductRes getCollection(Long id);
 
-    //HeroCollectionRes getRandomHeroCollection();
+    HeroCollectionRes getRandomHeroCollection();
 
     List<CollectionProductRes> getActiveCollections();
 

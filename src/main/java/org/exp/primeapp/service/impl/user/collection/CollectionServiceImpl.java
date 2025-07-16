@@ -20,7 +20,6 @@ public class CollectionServiceImpl implements CollectionService {
     private final CollectionRepository collectionRepository;
     private final CollectionMapper collectionMapper;
 
-    /*
     @Override
     @Transactional(readOnly = true)
     public HeroCollectionRes getRandomHeroCollection() {
@@ -36,7 +35,6 @@ public class CollectionServiceImpl implements CollectionService {
                         .toList())
                 .build();
     }
-    */
 
     @Override
     @Transactional(readOnly = true)
