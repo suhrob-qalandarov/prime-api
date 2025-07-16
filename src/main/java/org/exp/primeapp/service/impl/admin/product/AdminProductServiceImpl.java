@@ -64,6 +64,7 @@ public class AdminProductServiceImpl implements AdminProductService {
                 product.getStatus().name(),
                 product.getCategory().getName(),
                 product.getAttachments().size(),
+                //product.getCollection().getName(),
                 product.getSizes().size()
         );
     }
