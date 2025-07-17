@@ -20,6 +20,7 @@ import java.util.Set;
 public class Spotlight extends BaseEntity {
 
     private String name;
+    private Long orderNumber;
 
     @OneToOne
     private Attachment image;
