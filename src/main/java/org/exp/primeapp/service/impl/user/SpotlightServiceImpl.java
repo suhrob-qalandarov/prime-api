@@ -57,9 +57,10 @@ public class SpotlightServiceImpl implements SpotlightService {
 
     @Override
     public List<SimpleSpotlightRes> getSpotlightsForCategory() {
-        return spotlightRepository.findAll().stream().map(this::mapToCategorySpotlightResponse).toList();
+        return spotlightRepository.findAllByOrderByOrderNumberAsc().stream()
+                .map(this::mapToCategorySpotlightResponse)
+                .toList();
     }
-
 
     private SpotlightRes mapToResponse(Spotlight spotlight) {
         return SpotlightRes.builder()
