@@ -9,7 +9,7 @@ let currentSpotlightFilter = "all"
 const bootstrap = window.bootstrap
 
 // API Base URL
-const API_BASE_URL = "http://localhost"
+const API_BASE_URL = "https://prime77.uz"
 
 // Initialize categories panel
 document.addEventListener("DOMContentLoaded", () => {
