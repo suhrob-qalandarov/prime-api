@@ -1,5 +1,5 @@
 // WebSocket ulanish
-const socket = new SockJS("http://localhost/ws")
+const socket = new SockJS("https://prime77.uz/ws")
 const stompClient = Stomp.over(socket)
 let movingOrderId = null
 
@@ -14,7 +14,7 @@ const ORDER_STATUSES = {
 
 // Global o'zgaruvchilar
 let allOrders = []
-const API_BASE_URL = "http://localhost/api/v1"
+const API_BASE_URL = "https://prime.77/api/v1"
 
 // DOM yuklanganda ishga tushadi
 document.addEventListener("DOMContentLoaded", () => {

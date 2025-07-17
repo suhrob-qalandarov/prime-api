@@ -2,6 +2,7 @@ package org.exp.primeapp.controller.admin.product;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductViewRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
@@ -25,8 +26,8 @@ public class AdminProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long productId) {
-        Product product = adminProductService.getProductById(productId);
+    public ResponseEntity<AdminProductViewRes> getProduct(@PathVariable Long productId) {
+        AdminProductViewRes product = adminProductService.getProductById(productId);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 

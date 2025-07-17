@@ -6,7 +6,7 @@ let inactiveProducts = []
 let categories = []
 let filteredProducts = []
 let selectedSizes = []
-let uploadedAttachments = []
+let uploadedAttachments = [] // This will now store { file: File, isNew: true, id: number, key: string } OR { key: string, isNew: false }
 const bootstrap = window.bootstrap
 
 // API Base URL
@@ -124,144 +124,8 @@ async function apiRequest(url, options = {}) {
         }
     } catch (error) {
         console.error("API request error:", error)
-        // For demo purposes, return mock data
-        return getMockData(url)
+        throw error // Re-throw the error so calling functions can handle it.
     }
-}
-
-// Mock data for demo
-function getMockData(url) {
-    if (url.includes("/api/v1/admin/products")) {
-        return {
-            count: 15,
-            activeCount: 12,
-            inactiveCount: 3,
-            productResList: [
-                {
-                    id: 1,
-                    name: "iPhone 14 Pro",
-                    status: "HOT",
-                    active: true,
-                    categoryName: "Elektronika",
-                    attachmentCount: 3,
-                    collectionName: "Apple Collection",
-                    sizeCount: 2,
-                },
-                {
-                    id: 2,
-                    name: "Nike Air Max",
-                    status: "NEW",
-                    active: true,
-                    categoryName: "Poyabzal",
-                    attachmentCount: 5,
-                    collectionName: "Nike Collection",
-                    sizeCount: 6,
-                },
-                {
-                    id: 3,
-                    name: "Samsung Galaxy S23",
-                    status: "SALE",
-                    active: true,
-                    categoryName: "Elektronika",
-                    attachmentCount: 4,
-                    collectionName: "Samsung Collection",
-                    sizeCount: 1,
-                },
-                {
-                    id: 4,
-                    name: "Adidas Ultraboost",
-                    status: "HOT",
-                    active: false,
-                    categoryName: "Poyabzal",
-                    attachmentCount: 3,
-                    collectionName: "Adidas Collection",
-                    sizeCount: 5,
-                },
-            ],
-            activeProductResList: [
-                {
-                    id: 1,
-                    name: "iPhone 14 Pro",
-                    status: "HOT",
-                    active: true,
-                    categoryName: "Elektronika",
-                    attachmentCount: 3,
-                    collectionName: "Apple Collection",
-                    sizeCount: 2,
-                },
-                {
-                    id: 2,
-                    name: "Nike Air Max",
-                    status: "NEW",
-                    active: true,
-                    categoryName: "Poyabzal",
-                    attachmentCount: 5,
-                    collectionName: "Nike Collection",
-                    sizeCount: 6,
-                },
-                {
-                    id: 3,
-                    name: "Samsung Galaxy S23",
-                    status: "SALE",
-                    active: true,
-                    categoryName: "Elektronika",
-                    attachmentCount: 4,
-                    collectionName: "Samsung Collection",
-                    sizeCount: 1,
-                },
-            ],
-            inactiveProductResList: [
-                {
-                    id: 4,
-                    name: "Adidas Ultraboost",
-                    status: "HOT",
-                    active: false,
-                    categoryName: "Poyabzal",
-                    attachmentCount: 3,
-                    collectionName: "Adidas Collection",
-                    sizeCount: 5,
-                },
-            ],
-        }
-    }
-
-    if (url.includes("/api/v1/categories/active")) {
-        return [
-            { id: 1, name: "Elektronika" },
-            { id: 2, name: "Poyabzal" },
-            { id: 3, name: "Kiyim" },
-            { id: 4, name: "Aksessuarlar" },
-        ]
-    }
-
-    if (url.includes("/api/v1/admin/product/")) {
-        const productId = url.split("/").pop()
-        return {
-            id: Number.parseInt(productId),
-            name: "iPhone 14 Pro",
-            description: "Apple iPhone 14 Pro with advanced camera system",
-            price: 15000000,
-            active: true, // Assuming 'active' is part of the Product entity for simplicity
-            status: "HOT",
-            category: { id: 1, name: "Elektronika" }, // Matches Category entity
-            collection: { id: 1, name: "Apple Collection" }, // Matches Collection entity
-            mainImage: { id: 1, key: "img1", filename: "iphone1.jpg" }, // OneToOne Attachment
-            attachments: [
-                { id: 1, key: "img1", filename: "iphone1.jpg" },
-                { id: 2, key: "img2", filename: "iphone2.jpg" },
-                { id: 3, key: "img3", filename: "iphone3.jpg" },
-            ],
-            sizes: [
-                // Matches Set<ProductSize>
-                { size: "SIZE_128GB", amount: 10 },
-                { size: "SIZE_256GB", amount: 5 },
-            ],
-            createdAt: "2024-01-15T10:30:00",
-            updatedAt: "2024-01-15T10:30:00",
-        }
-    }
-
-    return null
 }
 
 // Upload multiple attachments
@@ -284,16 +148,10 @@ async function uploadAttachments(files) {
             throw new Error("Attachments upload failed")
         }
 
-        return await response.json()
+        return await response.json() // This should return a list of objects with id and key
     } catch (error) {
         console.error("Error uploading attachments:", error)
-        // Mock response for demo
-        return Array.from(files).map((file, index) => ({
-            id: Date.now() + index,
-            key: `mock-key-${Date.now()}-${index}`,
-            filename: file.name,
-            contentType: file.type,
-        }))
+        throw error // Re-throw the error
     }
 }
 
@@ -362,39 +220,39 @@ function renderProductsTable(products) {
     tbody.innerHTML = products
         .map(
             (product) => `
-      <tr class="fade-in">
-          <td>${product.id}</td>
-          <td class="fw-bold">${product.name}</td>
-          <td>${product.categoryName || "-"}</td>
-          <td>
-              <span class="product-status-badge ${product.status?.toLowerCase() || "new"}">
-                  ${getStatusText(product.status)}
-              </span>
-          </td>
-          <td>
-              <span class="status-badge ${product.active ? "active" : "inactive"}">
-                  ${product.active ? "FAOL" : "NOFAOL"}
-              </span>
-          </td>
-          <td>
-              <span class="badge bg-info">${product.attachmentCount || 0}</span>
-          </td>
-          <td>
-              <span class="badge bg-secondary">${product.sizeCount || 0}</span>
-          </td>
-          <td>
-              <button class="action-btn edit" onclick="showViewProductModal(${product.id})" title="Ko'rish">
-                  <i class="fas fa-eye"></i>
-              </button>
-              <button class="action-btn edit" onclick="showEditProductModal(${product.id})" title="Tahrirlash">
-                  <i class="fas fa-edit"></i>
-              </button>
-              <button class="action-btn ${product.active ? "delete" : "edit"}" onclick="toggleProduct(${product.id})" title="${product.active ? "Nofaollashtirish" : "Faollashtirish"}">
-                  <i class="fas fa-${product.active ? "pause" : "play"}"></i>
-              </button>
-          </td>
-      </tr>
-  `,
+    <tr class="fade-in">
+        <td>${product.id}</td>
+        <td class="fw-bold">${product.name}</td>
+        <td>${product.categoryName || "-"}</td>
+        <td>
+            <span class="product-status-badge ${product.status?.toLowerCase() || "new"}">
+                ${getStatusText(product.status)}
+            </span>
+        </td>
+        <td>
+            <span class="status-badge ${product.active ? "active" : "inactive"}">
+                ${product.active ? "FAOL" : "NOFAOL"}
+            </span>
+        </td>
+        <td>
+            <span class="badge bg-info">${product.attachmentCount || 0}</span>
+        </td>
+        <td>
+            <span class="badge bg-secondary">${product.sizeCount || 0}</span>
+        </td>
+        <td>
+            <button class="action-btn edit" onclick="showViewProductModal(${product.id})" title="Ko'rish">
+                <i class="fas fa-eye"></i>
+            </button>
+            <button class="action-btn edit" onclick="showEditProductModal(${product.id})" title="Tahrirlash">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="action-btn ${product.active ? "delete" : "edit"}" onclick="toggleProduct(${product.id})" title="${product.active ? "Nofaollashtirish" : "Faollashtirish"}">
+                <i class="fas fa-${product.active ? "pause" : "play"}"></i>
+            </button>
+        </td>
+    </tr>
+`,
         )
         .join("")
 }
@@ -450,11 +308,16 @@ async function showAddProductModal() {
     document.getElementById("save-btn-text").textContent = "Saqlash"
     document.getElementById("product-form").reset()
     document.getElementById("product-id").value = ""
-    document.getElementById("product-active").checked = true
+    document.getElementById("product-active").checked = true // Default to active
+
+    // Set default status to NEW and disable it for new products
+    document.getElementById("product-status").value = "NEW"
+    document.getElementById("product-status").disabled = true
+
     document.getElementById("product-file-preview").innerHTML = ""
     document.getElementById("selected-sizes").innerHTML = ""
 
-    // Reset global variables
+    // Reset global variables for new product
     selectedSizes = []
     uploadedAttachments = []
 
@@ -468,13 +331,7 @@ async function showAddProductModal() {
 // Show edit product modal
 async function showEditProductModal(productId) {
     try {
-        // Find product in local data first
-        let product = allProducts.find((prod) => prod.id === productId)
-
-        if (!product) {
-            // Fallback to API call for full product details
-            product = await apiRequest(`/api/v1/admin/product/${productId}`)
-        }
+        const product = await apiRequest(`/api/v1/admin/product/${productId}`)
 
         if (!product) {
             showNotification("error", "Mahsulot ma'lumotlari topilmadi")
@@ -489,30 +346,22 @@ async function showEditProductModal(productId) {
         document.getElementById("product-price").value = product.price || ""
         document.getElementById("product-active").checked = product.active
 
-        // Set status
-        if (product.status) {
-            document.getElementById("product-status").value = product.status
-        }
+        document.getElementById("product-status").value = product.status || "NEW"
+        document.getElementById("product-status").disabled = false
 
-        // Populate category select with current selection
         await populateCategorySelect("product-category", product.category?.id)
 
-        // Load existing sizes if available
-        if (product.sizes) {
-            // Changed from product.productSizes
-            selectedSizes = product.sizes.map((ps) => ({
-                // Changed from product.productSizes
-                size: ps.size,
-                amount: ps.amount,
-            }))
-            renderSelectedSizes()
-        }
+        // Use productSizeRes from the new DTO
+        selectedSizes = product.productSizeRes
+            ? product.productSizeRes.map((ps) => ({ size: ps.size, amount: ps.amount }))
+            : []
+        renderSelectedSizes()
 
-        // Load existing images if available
-        if (product.attachments) {
-            uploadedAttachments = product.attachments
-            renderImagePreviews()
-        }
+        // Use attachmentKeys from the new DTO
+        uploadedAttachments = product.attachmentKeys
+            ? product.attachmentKeys.map((key) => ({ key: key, isNew: false }))
+            : []
+        renderImagePreviews()
 
         const modal = new bootstrap.Modal(document.getElementById("productModal"))
         modal.show()
@@ -525,7 +374,6 @@ async function showEditProductModal(productId) {
 // Show view product modal
 async function showViewProductModal(productId) {
     try {
-        // Get full product details
         const product = await apiRequest(`/api/v1/admin/product/${productId}`)
 
         if (!product) {
@@ -533,38 +381,35 @@ async function showViewProductModal(productId) {
             return
         }
 
-        // Populate view modal
         document.getElementById("view-product-id").textContent = product.id
         document.getElementById("view-product-name").textContent = product.name
         document.getElementById("view-product-description").textContent = product.description || "-"
         document.getElementById("view-product-price").innerHTML = product.price
             ? `<span class="price-display">${formatPrice(product.price)}</span>`
             : "-"
-        document.getElementById("view-product-category").textContent = product.category?.name || "-" // Changed from product.categoryName
-        document.getElementById("view-product-collection").textContent = product.collection?.name || "-" // Changed from product.collectionName
+        document.getElementById("view-product-category").textContent = product.categoryName || "-" // Use categoryName directly
+        document.getElementById("view-product-collection").textContent = product.collectionName || "-" // Use collectionName directly
 
-        // Status
         document.getElementById("view-product-status").innerHTML = `
-          <span class="product-status-badge ${product.status?.toLowerCase() || "new"}">
-              ${getStatusText(product.status)}
-          </span>
-      `
+        <span class="product-status-badge ${product.status?.toLowerCase() || "new"}">
+            ${getStatusText(product.status)}
+        </span>
+    `
 
-        // Active status
         document.getElementById("view-product-active").innerHTML = `
-          <span class="status-badge ${product.active ? "active" : "inactive"}">
-              ${product.active ? "FAOL" : "NOFAOL"}
-          </span>
-      `
+        <span class="status-badge ${product.active ? "active" : "inactive"}">
+            ${product.active ? "FAOL" : "NOFAOL"}
+        </span>
+    `
 
         document.getElementById("view-product-created-at").textContent = formatDate(product.createdAt)
         document.getElementById("view-product-updated-at").textContent = formatDate(product.updatedAt)
 
-        // Display images
-        displayProductImages(product.attachments) // Already correct, just confirming
+        // Use attachmentKeys for displaying images
+        displayProductImages(product.attachmentKeys)
 
-        // Display sizes
-        displayProductSizes(product.sizes) // Changed from product.productSizes
+        // Use productSizeRes for displaying sizes
+        displayProductSizes(product.productSizeRes)
 
         const modal = new bootstrap.Modal(document.getElementById("viewProductModal"))
         modal.show()
@@ -575,61 +420,61 @@ async function showViewProductModal(productId) {
 }
 
 // Display product images in view modal
-function displayProductImages(attachments) {
+function displayProductImages(attachmentKeys) {
     const container = document.getElementById("view-product-images")
 
-    if (!attachments || attachments.length === 0) {
+    if (!attachmentKeys || attachmentKeys.length === 0) {
         container.innerHTML = `
-          <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 300px;">
-              <div class="text-center">
-                  <i class="fas fa-image fa-3x text-muted mb-3"></i>
-                  <div class="text-muted">Rasmlar mavjud emas</div>
-              </div>
-          </div>
-      `
+        <div class="d-flex align-items-center justify-content-center bg-light rounded" style="height: 300px;">
+            <div class="text-center">
+                <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                <div class="text-muted">Rasmlar mavjud emas</div>
+            </div>
+        </div>
+    `
         return
     }
 
     container.innerHTML = `
-      <div class="product-images-grid">
-          ${attachments
+    <div class="product-images-grid">
+        ${attachmentKeys
         .map(
-            (attachment) => `
-              <div class="product-image-item">
-                  <img src="${API_BASE_URL}/api/v1/attachment/${attachment.key}" 
-                       alt="${attachment.filename}"
-                       onerror="this.src='/placeholder.svg?height=150&width=150'">
-              </div>
-          `,
+            (key) => `
+            <div class="product-image-item">
+                <img src="${API_BASE_URL}/api/v1/attachment/${key}"
+                     alt="Product Image"
+                     onerror="this.src='/placeholder.svg?height=150&width=150'">
+            </div>
+        `,
         )
         .join("")}
-      </div>
-  `
+    </div>
+`
 }
 
 // Display product sizes in view modal
-function displayProductSizes(productSizes) {
+function displayProductSizes(productSizeRes) {
     const container = document.getElementById("view-product-sizes")
 
-    if (!productSizes || productSizes.length === 0) {
+    if (!productSizeRes || productSizeRes.length === 0) {
         container.innerHTML = "<p class=\"text-muted\">O'lchamlar ma'lumoti mavjud emas</p>"
         return
     }
 
     container.innerHTML = `
-      <div class="sizes-display">
-          ${productSizes
+    <div class="sizes-display">
+        ${productSizeRes
         .map(
             (ps) => `
-              <div class="size-badge">
-                  <span>${getSizeDisplayText(ps.size)}</span>
-                  <span class="size-count">${ps.amount}</span>
-              </div>
-          `,
+            <div class="size-badge">
+                <span>${getSizeDisplayText(ps.size)}</span>
+                <span class="size-count">${ps.amount}</span>
+            </div>
+        `,
         )
         .join("")}
-      </div>
-  `
+    </div>
+`
 }
 
 // Setup file upload
@@ -669,38 +514,22 @@ function setupFileUpload() {
 
 // Handle file selection
 function handleFileSelection(files) {
-    const preview = document.getElementById("product-file-preview")
-
-    Array.from(files).forEach((file, index) => {
+    Array.from(files).forEach((file) => {
         if (file.type.startsWith("image/")) {
-            const reader = new FileReader()
-            reader.onload = (e) => {
-                const previewItem = document.createElement("div")
-                previewItem.className = "preview-item"
-                previewItem.innerHTML = `
-                  <img src="${e.target.result}" alt="Preview">
-                  <button type="button" class="preview-remove" onclick="removePreview(this, ${uploadedAttachments.length + index})">
-                      <i class="fas fa-times"></i>
-                  </button>
-              `
-                preview.appendChild(previewItem)
-            }
-            reader.readAsDataURL(file)
-
-            // Add to uploaded attachments for tracking
             uploadedAttachments.push({
                 file: file,
                 isNew: true,
-                index: uploadedAttachments.length + index,
+                // id and key will be added after upload in saveProduct
             })
         }
     })
+    renderImagePreviews() // Re-render all previews including new ones
 }
 
 // Render existing image previews
 function renderImagePreviews() {
     const preview = document.getElementById("product-file-preview")
-    preview.innerHTML = ""
+    preview.innerHTML = "" // Clear existing previews
 
     uploadedAttachments.forEach((attachment, index) => {
         const previewItem = document.createElement("div")
@@ -711,23 +540,23 @@ function renderImagePreviews() {
             const reader = new FileReader()
             reader.onload = (e) => {
                 previewItem.innerHTML = `
-                  <img src="${e.target.result}" alt="Preview">
-                  <button type="button" class="preview-remove" onclick="removePreview(this, ${index})">
-                      <i class="fas fa-times"></i>
-                  </button>
-              `
+                <img src="${e.target.result}" alt="Preview">
+                <button type="button" class="preview-remove" onclick="removePreview(this, ${index})">
+                    <i class="fas fa-times"></i>
+                </button>
+            `
             }
             reader.readAsDataURL(attachment.file)
         } else {
-            // Existing attachment
+            // Existing attachment - use the key directly
             previewItem.innerHTML = `
-              <img src="${API_BASE_URL}/api/v1/attachment/${attachment.key}" 
-                   alt="${attachment.filename}"
-                   onerror="this.src='/placeholder.svg?height=100&width=100'">
-              <button type="button" class="preview-remove" onclick="removePreview(this, ${index})">
-                  <i class="fas fa-times"></i>
-              </button>
-          `
+            <img src="${API_BASE_URL}/api/v1/attachment/${attachment.key}"
+                 alt="Existing Image"
+                 onerror="this.src='/placeholder.svg?height=100&width=100'">
+            <button type="button" class="preview-remove" onclick="removePreview(this, ${index})">
+                <i class="fas fa-times"></i>
+            </button>
+        `
         }
 
         preview.appendChild(previewItem)
@@ -736,9 +565,10 @@ function renderImagePreviews() {
 
 // Remove preview
 function removePreview(button, index) {
-    button.parentElement.remove()
+    // Remove the item from the array
     uploadedAttachments.splice(index, 1)
-    renderImagePreviews() // Re-render to fix indices
+    // Re-render all previews to update indices and display
+    renderImagePreviews()
 }
 
 // Add size
@@ -792,16 +622,16 @@ function renderSelectedSizes() {
     container.innerHTML = selectedSizes
         .map(
             (sizeItem, index) => `
-      <div class="size-item">
-          <div class="size-info">
-              <span class="size-label">${getSizeDisplayText(sizeItem.size)}</span>
-              <span class="size-amount">${sizeItem.amount} dona</span>
-          </div>
-          <button type="button" class="size-remove" onclick="removeSize(${index})">
-              <i class="fas fa-times"></i>
-          </button>
-      </div>
-  `,
+    <div class="size-item">
+        <div class="size-info">
+            <span class="size-label">${getSizeDisplayText(sizeItem.size)}</span>
+            <span class="size-amount">${sizeItem.amount} dona</span>
+        </div>
+        <button type="button" class="size-remove" onclick="removeSize(${index})">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+`,
         )
         .join("")
 }
@@ -814,7 +644,7 @@ function getSizeDisplayText(size) {
     return size
 }
 
-// Save product
+// Save product (Add or Update)
 async function saveProduct() {
     try {
         const productId = document.getElementById("product-id").value
@@ -845,20 +675,23 @@ async function saveProduct() {
             return
         }
 
-        // Upload new images first
-        let attachmentIds = []
-        const newFiles = uploadedAttachments.filter((att) => att.isNew).map((att) => att.file)
+        let attachmentIdsToSend = []
+        const newFilesToUpload = uploadedAttachments.filter((att) => att.isNew).map((att) => att.file)
 
-        if (newFiles.length > 0) {
+        if (newFilesToUpload.length > 0) {
             showNotification("info", "Rasmlar yuklanmoqda...")
-            const uploadedFiles = await uploadAttachments(newFiles)
-            attachmentIds = uploadedFiles.map((file) => file.id)
+            const uploadedFiles = await uploadAttachments(newFilesToUpload)
+            // For newly uploaded files, we get their IDs from the upload response
+            attachmentIdsToSend = uploadedFiles.map((file) => file.id)
         }
 
-        // Add existing attachment IDs
-        const existingAttachmentIds = uploadedAttachments.filter((att) => !att.isNew).map((att) => att.id)
+        // For existing attachments, we use their keys (assuming backend can map keys to IDs)
+        const existingAttachmentKeys = uploadedAttachments.filter((att) => !att.isNew).map((att) => att.key)
 
-        attachmentIds = [...attachmentIds, ...existingAttachmentIds]
+        // Combine IDs from new uploads and keys from existing attachments
+        // This creates a mixed array of numbers (for new) and strings (for existing keys)
+        // Backend must be able to handle this mixed type for `attachmentIds`
+        attachmentIdsToSend = [...attachmentIdsToSend, ...existingAttachmentKeys]
 
         const productData = {
             name: name,
@@ -867,9 +700,9 @@ async function saveProduct() {
             active: isActive,
             status: status,
             categoryId: Number.parseInt(categoryId),
-            attachmentIds: attachmentIds,
+            attachmentIds: attachmentIdsToSend, // Send combined IDs/keys
             productSizes: selectedSizes.map((s) => ({
-                sizes: s.size,
+                size: s.size,
                 amount: s.amount,
             })),
         }
@@ -878,7 +711,6 @@ async function saveProduct() {
         let newProduct
 
         if (productId) {
-            // Update existing product
             response = await apiRequest(`/api/v1/admin/product/${productId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -886,7 +718,6 @@ async function saveProduct() {
             })
             newProduct = response
         } else {
-            // Create new product
             response = await apiRequest("/api/v1/admin/product", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -897,10 +728,7 @@ async function saveProduct() {
 
         if (newProduct) {
             showNotification("success", "Mahsulot muvaffaqiyatli saqlandi")
-
-            // Refresh all data from the server to ensure consistency
-            await loadProductsDashboard() // Added this line
-
+            await loadProductsDashboard()
             const modal = bootstrap.Modal.getInstance(document.getElementById("productModal"))
             modal.hide()
         }
@@ -918,10 +746,8 @@ async function toggleProduct(productId) {
         })
 
         if (response === "OK" || response === 200) {
-            showNotification("success", `Mahsulot holati o'zgartirildi`) // Simplified message
-
-            // Refresh all data from the server to ensure consistency
-            await loadProductsDashboard() // Added this line
+            showNotification("success", `Mahsulot holati o'zgartirildi`)
+            await loadProductsDashboard()
         }
     } catch (error) {
         console.error("Error toggling product:", error)
@@ -929,7 +755,8 @@ async function toggleProduct(productId) {
     }
 }
 
-// Helper functions for local data management
+// Helper functions for local data management (These are mostly for mock data consistency,
+// but `loadProductsDashboard()` after save/toggle ensures real data consistency)
 function addProductToLocalData(newProduct) {
     allProducts.push(newProduct)
 
@@ -1028,10 +855,15 @@ function formatDate(dateString) {
 
     try {
         const date = new Date(dateString)
+        // Agar sana obyekti noto'g'ri bo'lsa (masalan, "Invalid Date"), "-" qaytarish
+        if (isNaN(date.getTime())) {
+            return "-"
+        }
         return (
             date.toLocaleDateString("uz-UZ") + " " + date.toLocaleTimeString("uz-UZ", { hour: "2-digit", minute: "2-digit" })
         )
     } catch (error) {
+        console.error("Error formatting date:", dateString, error)
         return "-"
     }
 }
@@ -1079,14 +911,14 @@ function showLoading() {
     const overlay = document.createElement("div")
     overlay.id = "loading-overlay"
     overlay.innerHTML = `
-      <div class="loading-spinner"></div>
-      <p>Yuklanmoqda...</p>
-  `
+    <div class="loading-spinner"></div>
+    <p>Yuklanmoqda...</p>
+`
     overlay.style.cssText = `
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255, 255, 255, 0.9); display: flex; flex-direction: column;
-      align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(5px);
-  `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.9); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; z-index: 9999; backdrop-filter: blur(5px);
+`
     document.body.appendChild(overlay)
 }
 
@@ -1103,10 +935,10 @@ function showNotification(type, message) {
     notification.style.cssText = "top: 20px; right: 20px; z-index: 10000; max-width: 350px; animation: slideIn 0.3s ease;"
 
     notification.innerHTML = `
-      <i class="fas fa-${type === "success" ? "check-circle" : type === "error" ? "exclamation-circle" : type === "warning" ? "exclamation-triangle" : "info-circle"} me-2"></i>
-      ${message}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  `
+    <i class="fas fa-${type === "success" ? "check-circle" : type === "error" ? "exclamation-circle" : type === "warning" ? "exclamation-triangle" : "info-circle"} me-2"></i>
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+`
 
     document.body.appendChild(notification)
 
