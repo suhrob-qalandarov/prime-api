@@ -87,6 +87,29 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
+    public AdminCategoryDashboardRes getAdminSpotlightCategories(Long spotlightId) {
+        List<AdminCategoryRes> allCategories = categoryRepository.findAllBySpotlightId(spotlightId).stream()
+                .map(this::convertToAdminCategoryRes)
+                .toList();
+        List<AdminCategoryRes> activeCategories = categoryRepository.findBySpotlightIdAndActiveSorted(spotlightId, true).stream()
+                .map(this::convertToAdminCategoryRes)
+                .toList();
+        List<AdminCategoryRes> inactiveCategories = categoryRepository.findBySpotlightIdAndActiveSorted(spotlightId, false).stream()
+                .map(this::convertToAdminCategoryRes)
+                .toList();
+
+        return AdminCategoryDashboardRes.builder()
+                .count(allCategories.size())
+                .activeCount(activeCategories.size())
+                .inactiveCount(inactiveCategories.size())
+                .categoryResList(allCategories)
+                .activeCategoryResList(activeCategories)
+                .inactiveCategoryResList(inactiveCategories)
+                .build();
+    }
+
+    @Transactional
+    @Override
     public Category getCategoryById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         category.setSpotlightName(category.getSpotlight().getName());

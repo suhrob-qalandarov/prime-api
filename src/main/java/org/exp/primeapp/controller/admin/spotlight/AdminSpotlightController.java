@@ -3,7 +3,9 @@ package org.exp.primeapp.controller.admin.spotlight;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.request.SpotlightReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
 import org.exp.primeapp.models.dto.responce.user.SpotlightRes;
+import org.exp.primeapp.service.interfaces.user.CategoryService;
 import org.exp.primeapp.service.interfaces.user.SpotlightService;
 import org.exp.primeapp.service.interfaces.admin.spotlight.AdminSpotlightService;
 import org.springframework.http.HttpStatus;
@@ -22,11 +24,18 @@ public class AdminSpotlightController {
 
     private final SpotlightService spotlightService;
     private final AdminSpotlightService adminSpotlightService;
+    private final CategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<List<SpotlightRes>> getSpotlights() {
         List<SpotlightRes> spotlights = spotlightService.getHeroSpotlights();
         return new ResponseEntity<>(spotlights, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/{spotlightId}/categories")
+    public ResponseEntity<AdminCategoryDashboardRes> getSpotlightCategories(@PathVariable Long spotlightId) {
+        AdminCategoryDashboardRes spotlightCategories = categoryService.getAdminSpotlightCategories(spotlightId);
+        return new ResponseEntity<>(spotlightCategories, HttpStatus.OK);
     }
 
     @PostMapping
