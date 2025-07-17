@@ -3,9 +3,12 @@ package org.exp.primeapp.service.impl.admin.product;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
+import org.exp.primeapp.models.dto.request.ProductSizeReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductViewRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
+import org.exp.primeapp.models.dto.responce.user.ProductSizeRes;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.repository.AttachmentRepository;
 import org.exp.primeapp.repository.CategoryRepository;
@@ -14,6 +17,7 @@ import org.exp.primeapp.repository.ProductRepository;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -70,9 +74,24 @@ public class AdminProductServiceImpl implements AdminProductService {
     }
 
     @Override
-    public Product getProductById(Long productId) {
-        return productRepository.findById(productId)
+    public AdminProductViewRes getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+        List<ProductSizeRes> productSizeReslist = product.getSizes().stream().map(size -> new ProductSizeRes(size.getSize(), size.getAmount())).toList();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
+        return AdminProductViewRes.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .active(product.getActive())
+                .status(product.getStatus().name())
+                .discount(product.getDiscount())
+                .categoryName(product.getCategory().getName())
+                .attachmentKeys(product.getAttachments().stream().map(Attachment::getKey).toList())
+                .productSizeRes(productSizeReslist)
+                .createdAt(product.getCreatedAt().format(formatter))
+                .build();
     }
 
     @Transactional
