@@ -3,11 +3,10 @@ package org.exp.primeapp.models.dto.responce.admin.spotlight;
 import lombok.Builder;
 
 @Builder
-public record SpotlightRes(
+public record AdminSpotlightRes(
         Long id,
         String name,
         Long orderNumber,
-        Boolean active,
-        Integer categoriesCount
+        Long categoriesCount
 ) {
 }

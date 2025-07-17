@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.request.SpotlightReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.spotlight.AdminSpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.SpotlightRes;
 import org.exp.primeapp.service.interfaces.user.CategoryService;
 import org.exp.primeapp.service.interfaces.user.SpotlightService;
@@ -35,12 +36,24 @@ public class AdminSpotlightController {
     @GetMapping("/{spotlightId}/categories")
     public ResponseEntity<AdminCategoryDashboardRes> getSpotlightCategories(@PathVariable Long spotlightId) {
         AdminCategoryDashboardRes spotlightCategories = categoryService.getAdminSpotlightCategories(spotlightId);
-        return new ResponseEntity<>(spotlightCategories, HttpStatus.OK);
+        return new ResponseEntity<>(spotlightCategories, HttpStatus.ACCEPTED);
     }
 
     @PostMapping
-    public ResponseEntity<Void> saveSpotlight(@RequestBody SpotlightReq spotlightReq) {
-        adminSpotlightService.addSpotlight(spotlightReq);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AdminSpotlightRes> saveSpotlight(@RequestBody SpotlightReq spotlightReq) {
+        AdminSpotlightRes spotlightRes = adminSpotlightService.addSpotlight(spotlightReq);
+        return new ResponseEntity<>(spotlightRes, HttpStatus.OK);
+    }
+
+    @PutMapping("/{spotlightId}")
+    public ResponseEntity<AdminSpotlightRes> updateSpotlight(@PathVariable Long spotlightId, @RequestBody SpotlightReq spotlightReq) {
+        AdminSpotlightRes spotlightRes = adminSpotlightService.updateSpotlightById(spotlightId, spotlightReq);
+        return new ResponseEntity<>(spotlightRes, HttpStatus.OK);
+    }
+
+    @PatchMapping("/toggle/{spotlightId}")
+    public ResponseEntity<Void> toggleSpotlight(@PathVariable Long spotlightId) {
+        adminSpotlightService.toggleSpotlightById(spotlightId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
