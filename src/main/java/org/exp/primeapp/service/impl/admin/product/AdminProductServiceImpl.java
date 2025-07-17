@@ -84,6 +84,8 @@ public class AdminProductServiceImpl implements AdminProductService {
         return AdminProductViewRes.builder()
                 .id(product.getId())
                 .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
                 .active(product.getActive())
                 .status(product.getStatus().name())
                 .discount(product.getDiscount())
