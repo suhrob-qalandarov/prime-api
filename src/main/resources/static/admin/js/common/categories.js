@@ -78,6 +78,7 @@ function setupEventListeners() {
     window.refreshData = refreshData
     window.toggleFullscreen = toggleFullscreen
     window.logout = logout
+    window.retryLoadData = retryLoadData
 }
 
 // API request with token
@@ -85,10 +86,9 @@ async function apiRequest(url, options = {}) {
     const token = localStorage.getItem("accessToken")
 
     if (!token) {
-        console.log("No token found")
-        // For demo purposes, we'll continue without token
-        // window.location.href = "login.html"
-        // return null
+        console.log("No token found, redirecting to login")
+        //window.location.href = "login.html"
+        //return null
     }
 
     const headers = {
@@ -108,13 +108,15 @@ async function apiRequest(url, options = {}) {
         console.log(`API Request: ${url}, Status: ${response.status}`)
 
         if (response.status === 401) {
-            console.log("Unauthorized")
-            // window.location.href = "login.html"
-            // return null
+            console.log("Unauthorized, redirecting to login")
+            localStorage.removeItem("accessToken")
+            localStorage.removeItem("refreshToken")
+            window.location.href = "login.html"
+            return null
         }
 
         if (!response.ok) {
-            throw new Error(`API request failed: ${response.status}`)
+            throw new Error(`API request failed: ${response.status} - ${response.statusText}`)
         }
 
         const contentType = response.headers.get("content-type")
@@ -125,94 +127,26 @@ async function apiRequest(url, options = {}) {
         }
     } catch (error) {
         console.error("API request error:", error)
-        // For demo purposes, return mock data
-        return getMockData(url)
+        throw error
     }
-}
-
-// Mock data for demo
-function getMockData(url) {
-    if (url.includes("/api/v1/admin/categories/dashboard")) {
-        return {
-            count: 8,
-            activeCount: 6,
-            inactiveCount: 2,
-            categoryResList: [
-                { id: 1, name: "Elektronika", spotlightRes: { id: 1, name: "Electronics" }, order: 1, active: true },
-                { id: 2, name: "Kiyim", spotlightRes: { id: 2, name: "Clothing" }, order: 2, active: true },
-                { id: 3, name: "Kitoblar", spotlightRes: { id: 3, name: "Books" }, order: 3, active: true },
-                { id: 4, name: "Sport", spotlightRes: { id: 4, name: "Sports" }, order: 4, active: true },
-                { id: 5, name: "Uy-ro'zg'or", spotlightRes: { id: 5, name: "Home" }, order: 5, active: true },
-                { id: 6, name: "Avtomobil", spotlightRes: { id: 6, name: "Auto" }, order: 6, active: true },
-                { id: 7, name: "Salomatlik", spotlightRes: { id: 7, name: "Health" }, order: 7, active: false },
-                { id: 8, name: "Go'zallik", spotlightRes: { id: 8, name: "Beauty" }, order: 8, active: false },
-            ],
-            activeCategoryResList: [
-                { id: 1, name: "Elektronika", spotlightRes: { id: 1, name: "Electronics" }, order: 1, active: true },
-                { id: 2, name: "Kiyim", spotlightRes: { id: 2, name: "Clothing" }, order: 2, active: true },
-                { id: 3, name: "Kitoblar", spotlightRes: { id: 3, name: "Books" }, order: 3, active: true },
-                { id: 4, name: "Sport", spotlightRes: { id: 4, name: "Sports" }, order: 4, active: true },
-                { id: 5, name: "Uy-ro'zg'or", spotlightRes: { id: 5, name: "Home" }, order: 5, active: true },
-                { id: 6, name: "Avtomobil", spotlightRes: { id: 6, name: "Auto" }, order: 6, active: true },
-            ],
-            inactiveCategoryResList: [
-                { id: 7, name: "Salomatlik", spotlightRes: { id: 7, name: "Health" }, order: 7, active: false },
-                { id: 8, name: "Go'zallik", spotlightRes: { id: 8, name: "Beauty" }, order: 8, active: false },
-            ],
-        }
-    }
-
-    if (url.includes("/api/v1/spotlights/category")) {
-        return [
-            { id: 1, name: "Electronics" },
-            { id: 2, name: "Clothing" },
-            { id: 3, name: "Books" },
-            { id: 4, name: "Sports" },
-            { id: 5, name: "Home" },
-            { id: 6, name: "Auto" },
-            { id: 7, name: "Health" },
-            { id: 8, name: "Beauty" },
-        ]
-    }
-
-    if (url.includes("/api/v1/admin/spotlight/") && url.includes("/categories")) {
-        const spotlightId = url.match(/\/spotlight\/(\d+)\/categories/)?.[1]
-        const mockCategories = [
-            { id: 1, name: "Elektronika", spotlightRes: { id: 1, name: "Electronics" }, order: 1, active: true },
-            { id: 2, name: "Kiyim", spotlightRes: { id: 2, name: "Clothing" }, order: 2, active: true },
-            { id: 3, name: "Kitoblar", spotlightRes: { id: 3, name: "Books" }, order: 3, active: true },
-            { id: 4, name: "Sport", spotlightRes: { id: 4, name: "Sports" }, order: 4, active: true },
-            { id: 5, name: "Uy-ro'zg'or", spotlightRes: { id: 5, name: "Home" }, order: 5, active: true },
-            { id: 6, name: "Avtomobil", spotlightRes: { id: 6, name: "Auto" }, order: 6, active: true },
-            { id: 7, name: "Salomatlik", spotlightRes: { id: 7, name: "Health" }, order: 7, active: false },
-            { id: 8, name: "Go'zallik", spotlightRes: { id: 8, name: "Beauty" }, order: 8, active: false },
-        ]
-
-        // Filter categories by spotlight ID (mock logic)
-        const filteredBySpotlight = mockCategories.filter((cat) => cat.spotlightRes.id == spotlightId || spotlightId == 1)
-
-        return {
-            count: filteredBySpotlight.length,
-            activeCount: filteredBySpotlight.filter((cat) => cat.active).length,
-            inactiveCount: filteredBySpotlight.filter((cat) => !cat.active).length,
-            categoryResList: filteredBySpotlight,
-            activeCategoryResList: filteredBySpotlight.filter((cat) => cat.active),
-            inactiveCategoryResList: filteredBySpotlight.filter((cat) => !cat.active),
-        }
-    }
-
-    return null
 }
 
 // Load spotlights and render spotlight buttons
 async function loadSpotlights() {
     try {
         console.log("Loading spotlights...")
-        spotlights = (await apiRequest("/api/v1/spotlights/category")) || []
-        console.log("Spotlights loaded:", spotlights)
-        renderSpotlightButtons()
+        const response = await apiRequest("/api/v1/spotlights/category")
+
+        if (response) {
+            spotlights = response
+            console.log("Spotlights loaded:", spotlights)
+            renderSpotlightButtons()
+        } else {
+            throw new Error("No spotlights data received")
+        }
     } catch (error) {
         console.error("Error loading spotlights:", error)
+        showErrorState("Spotlights ma'lumotlarini yuklashda xatolik yuz berdi")
         showNotification("error", "Spotlights yuklashda xatolik")
     }
 }
@@ -253,16 +187,18 @@ async function filterBySpotlight(spotlightId) {
 
         currentSpotlightFilter = spotlightId
 
+        let response
         if (spotlightId === "all") {
             // Load all categories
-            dashboardData = await apiRequest("/api/v1/admin/categories/dashboard")
+            response = await apiRequest("/api/v1/admin/categories/dashboard")
         } else {
             // Load categories for specific spotlight
-            dashboardData = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}/categories`)
+            response = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}/categories`)
         }
 
-        if (dashboardData) {
-            console.log("Spotlight filtered data loaded:", dashboardData)
+        if (response) {
+            console.log("Spotlight filtered data loaded:", response)
+            dashboardData = response
 
             // Update local data
             allCategories = dashboardData.categoryResList || []
@@ -275,13 +211,17 @@ async function filterBySpotlight(spotlightId) {
             // Update statistics and render table
             updateCategoryStats()
             renderCategoriesTable(filteredCategories)
+            hideErrorState()
+        } else {
+            throw new Error("No data received from server")
         }
 
         hideLoading()
     } catch (error) {
         console.error("Error filtering by spotlight:", error)
-        showNotification("error", "Spotlight bo'yicha filtrlashda xatolik")
         hideLoading()
+        showErrorState("Ma'lumotlarni yuklashda xatolik yuz berdi")
+        showNotification("error", "Spotlight bo'yicha filtrlashda xatolik")
     }
 }
 
@@ -293,10 +233,11 @@ async function loadCategoriesDashboard() {
         console.log("Loading categories dashboard...")
 
         // Single API call to get all category data
-        dashboardData = await apiRequest("/api/v1/admin/categories/dashboard")
+        const response = await apiRequest("/api/v1/admin/categories/dashboard")
 
-        if (dashboardData) {
-            console.log("Dashboard data loaded:", dashboardData)
+        if (response) {
+            console.log("Dashboard data loaded:", response)
+            dashboardData = response
 
             // Update local data
             allCategories = dashboardData.categoryResList || []
@@ -309,16 +250,17 @@ async function loadCategoriesDashboard() {
 
             // Render table
             renderCategoriesTable(filteredCategories)
+            hideErrorState()
         } else {
-            console.error("No dashboard data received")
-            showNotification("error", "Ma'lumotlar yuklanmadi")
+            throw new Error("No dashboard data received from server")
         }
 
         hideLoading()
     } catch (error) {
         console.error("Error loading categories dashboard:", error)
-        showNotification("error", "Kategoriyalar ma'lumotlarini yuklashda xatolik")
         hideLoading()
+        showErrorState("Kategoriyalar ma'lumotlarini yuklashda xatolik yuz berdi")
+        showNotification("error", "Kategoriyalar ma'lumotlarini yuklashda xatolik")
     }
 }
 
@@ -424,8 +366,7 @@ async function showEditCategoryModal(categoryId) {
         }
 
         if (!category) {
-            showNotification("error", "Kategoriya ma'lumotlari topilmadi")
-            return
+            throw new Error("Category not found")
         }
 
         document.getElementById("categoryModalTitle").textContent = "Kategoriyani tahrirlash"
@@ -457,8 +398,7 @@ async function showViewCategoryModal(categoryId) {
         }
 
         if (!category) {
-            showNotification("error", "Kategoriya ma'lumotlari topilmadi")
-            return
+            throw new Error("Category not found")
         }
 
         // Populate view modal
@@ -793,6 +733,50 @@ function animateCounter(elementId, targetValue) {
     }
 
     requestAnimationFrame(updateCounter)
+}
+
+// Show error state
+function showErrorState(message) {
+    const tbody = document.getElementById("categories-table")
+    const statsCards = document.querySelectorAll(".stats-number")
+
+    if (tbody) {
+        tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="text-center">
+          <div class="error-state">
+            <div class="error-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h4>Xatolik yuz berdi</h4>
+            <p>${message}</p>
+            <button class="btn btn-primary" onclick="retryLoadData()">
+              <i class="fas fa-refresh"></i> Qayta urinish
+            </button>
+          </div>
+        </td>
+      </tr>
+    `
+    }
+
+    // Reset stats to 0
+    statsCards.forEach(card => {
+        card.textContent = "0"
+    })
+}
+
+// Hide error state
+function hideErrorState() {
+    // Error state will be hidden when table is re-rendered with actual data
+}
+
+// Retry loading data
+function retryLoadData() {
+    if (currentSpotlightFilter === "all") {
+        loadCategoriesDashboard()
+    } else {
+        filterBySpotlight(currentSpotlightFilter)
+    }
 }
 
 function showLoading() {
