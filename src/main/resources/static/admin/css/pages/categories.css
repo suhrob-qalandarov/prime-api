@@ -495,6 +495,15 @@ body {
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
+/* Add this new CSS rule for spotlight name styling */
+.spotlight-name {
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    letter-spacing: 0.5px;
+}
+
 /* Table Card */
 .table-card {
     background: white;
@@ -575,6 +584,12 @@ body {
 
 .modern-table tr:hover {
     background: rgba(102, 126, 234, 0.05);
+}
+
+/* Ensure table cell bold text works properly */
+.modern-table td.fw-bold {
+    font-weight: 600;
+    color: var(--dark-color);
 }
 
 .status-badge {
@@ -902,6 +917,48 @@ body {
     padding: 1rem 2rem;
 }
 
+/* Category Info Grid for View Modal */
+.category-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 0.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--gray-50);
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--primary-color);
+    transition: var(--transition);
+}
+
+.info-item:hover {
+    background: var(--gray-100);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.info-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--dark-color);
+    margin: 0;
+    word-break: break-word;
+}
+
 /* Loading State */
 .loading-state {
     display: flex;
@@ -1010,6 +1067,16 @@ body {
 
     .spotlight-btn {
         justify-content: center;
+    }
+
+    /* Responsive adjustments for info grid */
+    .category-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .info-item {
+        padding: 0.75rem;
     }
 }
 

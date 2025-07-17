@@ -3,6 +3,7 @@ package org.exp.primeapp.service.impl.user;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.spotlight.SimpleSpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
 import org.exp.primeapp.models.entities.Category;
@@ -230,11 +231,15 @@ public class CategoryServiceImpl implements CategoryService {
         );
     }
 
+    @Transactional
     public AdminCategoryRes convertToAdminCategoryRes(Category category) {
         return new AdminCategoryRes(
                 category.getId(),
                 category.getName(),
-                category.getSpotlightName(),
+                SimpleSpotlightRes.builder()
+                        .id(category.getSpotlight().getId())
+                        .name(category.getSpotlightName())
+                        .build(),
                 category.getOrderNumber(),
                 category.getActive()
         );

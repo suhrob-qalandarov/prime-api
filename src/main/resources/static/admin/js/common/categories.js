@@ -138,26 +138,26 @@ function getMockData(url) {
             activeCount: 6,
             inactiveCount: 2,
             categoryResList: [
-                { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
-                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
-                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
-                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
-                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
-                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
-                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
-                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
+                { id: 1, name: "Elektronika", spotlightRes: { id: 1, name: "Electronics" }, order: 1, active: true },
+                { id: 2, name: "Kiyim", spotlightRes: { id: 2, name: "Clothing" }, order: 2, active: true },
+                { id: 3, name: "Kitoblar", spotlightRes: { id: 3, name: "Books" }, order: 3, active: true },
+                { id: 4, name: "Sport", spotlightRes: { id: 4, name: "Sports" }, order: 4, active: true },
+                { id: 5, name: "Uy-ro'zg'or", spotlightRes: { id: 5, name: "Home" }, order: 5, active: true },
+                { id: 6, name: "Avtomobil", spotlightRes: { id: 6, name: "Auto" }, order: 6, active: true },
+                { id: 7, name: "Salomatlik", spotlightRes: { id: 7, name: "Health" }, order: 7, active: false },
+                { id: 8, name: "Go'zallik", spotlightRes: { id: 8, name: "Beauty" }, order: 8, active: false },
             ],
             activeCategoryResList: [
-                { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
-                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
-                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
-                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
-                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
-                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
+                { id: 1, name: "Elektronika", spotlightRes: { id: 1, name: "Electronics" }, order: 1, active: true },
+                { id: 2, name: "Kiyim", spotlightRes: { id: 2, name: "Clothing" }, order: 2, active: true },
+                { id: 3, name: "Kitoblar", spotlightRes: { id: 3, name: "Books" }, order: 3, active: true },
+                { id: 4, name: "Sport", spotlightRes: { id: 4, name: "Sports" }, order: 4, active: true },
+                { id: 5, name: "Uy-ro'zg'or", spotlightRes: { id: 5, name: "Home" }, order: 5, active: true },
+                { id: 6, name: "Avtomobil", spotlightRes: { id: 6, name: "Auto" }, order: 6, active: true },
             ],
             inactiveCategoryResList: [
-                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
-                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
+                { id: 7, name: "Salomatlik", spotlightRes: { id: 7, name: "Health" }, order: 7, active: false },
+                { id: 8, name: "Go'zallik", spotlightRes: { id: 8, name: "Beauty" }, order: 8, active: false },
             ],
         }
     }
@@ -178,18 +178,18 @@ function getMockData(url) {
     if (url.includes("/api/v1/admin/spotlight/") && url.includes("/categories")) {
         const spotlightId = url.match(/\/spotlight\/(\d+)\/categories/)?.[1]
         const mockCategories = [
-            { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
-            { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
-            { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
-            { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
-            { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
-            { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
-            { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
-            { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
+            { id: 1, name: "Elektronika", spotlightRes: { id: 1, name: "Electronics" }, order: 1, active: true },
+            { id: 2, name: "Kiyim", spotlightRes: { id: 2, name: "Clothing" }, order: 2, active: true },
+            { id: 3, name: "Kitoblar", spotlightRes: { id: 3, name: "Books" }, order: 3, active: true },
+            { id: 4, name: "Sport", spotlightRes: { id: 4, name: "Sports" }, order: 4, active: true },
+            { id: 5, name: "Uy-ro'zg'or", spotlightRes: { id: 5, name: "Home" }, order: 5, active: true },
+            { id: 6, name: "Avtomobil", spotlightRes: { id: 6, name: "Auto" }, order: 6, active: true },
+            { id: 7, name: "Salomatlik", spotlightRes: { id: 7, name: "Health" }, order: 7, active: false },
+            { id: 8, name: "Go'zallik", spotlightRes: { id: 8, name: "Beauty" }, order: 8, active: false },
         ]
 
         // Filter categories by spotlight ID (mock logic)
-        const filteredBySpotlight = mockCategories.filter((cat) => cat.id == spotlightId || spotlightId == 1)
+        const filteredBySpotlight = mockCategories.filter((cat) => cat.spotlightRes.id == spotlightId || spotlightId == 1)
 
         return {
             count: filteredBySpotlight.length,
@@ -350,30 +350,30 @@ function renderCategoriesTable(categories) {
     tbody.innerHTML = categories
         .map(
             (category) => `
-        <tr class="fade-in">
-            <td><strong>T-${category.order}</strong></td>
-            <td>${category.id}</td>
-            <td class="fw-bold">${category.name}</td>
-            <td class="text-uppercase fw-light fs-8 text-secondary">${category.spotlightName || "-"}</td>
-            <td>
-                <span class="status-badge ${category.active ? "active" : "inactive"}">
-                    ${category.active ? "FAOL" : "NOFAOL"}
-                </span>
-            </td>
-            <td>${formatDate(new Date())}</td>
-            <td>
-                <button class="action-btn edit" onclick="showViewCategoryModal(${category.id})" title="Ko'rish">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="action-btn edit" onclick="showEditCategoryModal(${category.id})" title="Tahrirlash">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="action-btn ${category.active ? "delete" : "edit"}" onclick="toggleCategory(${category.id})" title="${category.active ? "Nofaollashtirish" : "Faollashtirish"}">
-                    <i class="fas fa-${category.active ? "pause" : "play"}"></i>
-                </button>
-            </td>
-        </tr>
-    `,
+      <tr class="fade-in">
+          <td><strong>T-${category.order}</strong></td>
+          <td>${category.id}</td>
+          <td class="fw-bold">${category.name}</td>
+          <td class="spotlight-name">${category.spotlightRes ? category.spotlightRes.name : "-"}</td>
+          <td>
+              <span class="status-badge ${category.active ? "active" : "inactive"}">
+                  ${category.active ? "FAOL" : "NOFAOL"}
+              </span>
+          </td>
+          <td>${formatDate(new Date())}</td>
+          <td>
+              <button class="action-btn edit" onclick="showViewCategoryModal(${category.id})" title="Ko'rish">
+                  <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn edit" onclick="showEditCategoryModal(${category.id})" title="Tahrirlash">
+                  <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn ${category.active ? "delete" : "edit"}" onclick="toggleCategory(${category.id})" title="${category.active ? "Nofaollashtirish" : "Faollashtirish"}">
+                  <i class="fas fa-${category.active ? "pause" : "play"}"></i>
+              </button>
+          </td>
+      </tr>
+  `,
         )
         .join("")
 }
@@ -435,7 +435,7 @@ async function showEditCategoryModal(categoryId) {
         document.getElementById("category-active").checked = category.active
 
         // Populate spotlight select with current selection
-        await populateSpotlightSelect("category-spotlight", category.spotlightId)
+        await populateSpotlightSelect("category-spotlight", category.spotlightRes ? category.spotlightRes.id : null)
 
         const modal = new bootstrap.Modal(document.getElementById("categoryModal"))
         modal.show()
@@ -464,8 +464,10 @@ async function showViewCategoryModal(categoryId) {
         // Populate view modal
         document.getElementById("view-category-id").textContent = category.id
         document.getElementById("view-category-name").textContent = category.name
-        document.getElementById("view-category-spotlight").textContent = category.spotlightName || "-"
         document.getElementById("view-category-order").textContent = `T-${category.order}`
+        document.getElementById("view-category-spotlight").textContent = category.spotlightRes
+            ? category.spotlightRes.name
+            : "-"
         document.getElementById("view-category-status").innerHTML = `
             <span class="status-badge ${category.active ? "active" : "inactive"}">
                 ${category.active ? "FAOL" : "NOFAOL"}
@@ -726,7 +728,7 @@ function searchCategories() {
     filteredCategories = allCategories.filter(
         (category) =>
             category.name.toLowerCase().includes(searchTerm) ||
-            (category.spotlightName && category.spotlightName.toLowerCase().includes(searchTerm)),
+            (category.spotlightRes && category.spotlightRes.name.toLowerCase().includes(searchTerm)),
     )
 
     renderCategoriesTable(filteredCategories)
