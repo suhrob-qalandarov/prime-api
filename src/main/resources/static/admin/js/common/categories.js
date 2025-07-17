@@ -5,16 +5,18 @@ let activeCategories = []
 let inactiveCategories = []
 let spotlights = []
 let filteredCategories = []
+let currentSpotlightFilter = "all"
 const bootstrap = window.bootstrap
 
 // API Base URL
-const API_BASE_URL = "https://prime77.uz"
+const API_BASE_URL = "http://localhost"
 
 // Initialize categories panel
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM Content Loaded - Categories")
     checkAuth()
     initializeCategoriesPanel()
+    loadSpotlights()
     loadCategoriesDashboard()
 })
 
@@ -70,6 +72,7 @@ function setupEventListeners() {
     window.saveCategoryOrder = saveCategoryOrder
     window.toggleCategory = toggleCategory
     window.filterCategories = filterCategories
+    window.filterBySpotlight = filterBySpotlight
     window.searchCategories = searchCategories
     window.clearSearch = clearSearch
     window.refreshData = refreshData
@@ -172,7 +175,114 @@ function getMockData(url) {
         ]
     }
 
+    if (url.includes("/api/v1/admin/spotlight/") && url.includes("/categories")) {
+        const spotlightId = url.match(/\/spotlight\/(\d+)\/categories/)?.[1]
+        const mockCategories = [
+            { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
+            { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
+            { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
+            { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
+            { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
+            { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
+            { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
+            { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
+        ]
+
+        // Filter categories by spotlight ID (mock logic)
+        const filteredBySpotlight = mockCategories.filter((cat) => cat.id == spotlightId || spotlightId == 1)
+
+        return {
+            count: filteredBySpotlight.length,
+            activeCount: filteredBySpotlight.filter((cat) => cat.active).length,
+            inactiveCount: filteredBySpotlight.filter((cat) => !cat.active).length,
+            categoryResList: filteredBySpotlight,
+            activeCategoryResList: filteredBySpotlight.filter((cat) => cat.active),
+            inactiveCategoryResList: filteredBySpotlight.filter((cat) => !cat.active),
+        }
+    }
+
     return null
+}
+
+// Load spotlights and render spotlight buttons
+async function loadSpotlights() {
+    try {
+        console.log("Loading spotlights...")
+        spotlights = (await apiRequest("/api/v1/spotlights/category")) || []
+        console.log("Spotlights loaded:", spotlights)
+        renderSpotlightButtons()
+    } catch (error) {
+        console.error("Error loading spotlights:", error)
+        showNotification("error", "Spotlights yuklashda xatolik")
+    }
+}
+
+// Render spotlight filter buttons
+function renderSpotlightButtons() {
+    const container = document.getElementById("spotlight-buttons")
+    if (!container) return
+
+    // Clear existing buttons except "Barcha toifalar"
+    const allButton = container.querySelector('[data-spotlight-id="all"]')
+    container.innerHTML = ""
+    if (allButton) {
+        container.appendChild(allButton)
+    }
+
+    // Add spotlight buttons
+    spotlights.forEach((spotlight) => {
+        const button = document.createElement("button")
+        button.className = "spotlight-btn"
+        button.setAttribute("data-spotlight-id", spotlight.id)
+        button.onclick = () => filterBySpotlight(spotlight.id)
+        button.innerHTML = `<i class="fas fa-tag"></i> ${spotlight.name}`
+        container.appendChild(button)
+    })
+}
+
+// Filter categories by spotlight
+async function filterBySpotlight(spotlightId) {
+    try {
+        showLoading()
+
+        // Update active button
+        document.querySelectorAll(".spotlight-btn").forEach((btn) => {
+            btn.classList.remove("active")
+        })
+        document.querySelector(`[data-spotlight-id="${spotlightId}"]`).classList.add("active")
+
+        currentSpotlightFilter = spotlightId
+
+        if (spotlightId === "all") {
+            // Load all categories
+            dashboardData = await apiRequest("/api/v1/admin/categories/dashboard")
+        } else {
+            // Load categories for specific spotlight
+            dashboardData = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}/categories`)
+        }
+
+        if (dashboardData) {
+            console.log("Spotlight filtered data loaded:", dashboardData)
+
+            // Update local data
+            allCategories = dashboardData.categoryResList || []
+            activeCategories = dashboardData.activeCategoryResList || []
+            inactiveCategories = dashboardData.inactiveCategoryResList || []
+
+            // Apply current status filter
+            applyCurrentFilter()
+
+            // Update statistics and render table
+            updateCategoryStats()
+            renderCategoriesTable(filteredCategories)
+        }
+
+        hideLoading()
+    } catch (error) {
+        console.error("Error filtering by spotlight:", error)
+        showNotification("error", "Spotlight bo'yicha filtrlashda xatolik")
+        hideLoading()
+    }
 }
 
 // Load categories dashboard data (single API call)
@@ -268,30 +378,18 @@ function renderCategoriesTable(categories) {
         .join("")
 }
 
-// Load spotlights for select options
-async function loadSpotlights() {
-    try {
-        if (spotlights.length === 0) {
-            spotlights = (await apiRequest("/api/v1/spotlights/category")) || []
-        }
-        return spotlights
-    } catch (error) {
-        console.error("Error loading spotlights:", error)
-        showNotification("error", "Spotlights yuklashda xatolik")
-        return []
-    }
-}
-
 // Populate spotlight select
 async function populateSpotlightSelect(selectId, selectedId = null) {
     const select = document.getElementById(selectId)
     if (!select) return
 
-    const spotlightsList = await loadSpotlights()
+    if (spotlights.length === 0) {
+        await loadSpotlights()
+    }
 
     select.innerHTML =
         '<option value="">Spotlight tanlang</option>' +
-        spotlightsList
+        spotlights
             .map(
                 (spotlight) =>
                     `<option value="${spotlight.id}" ${selectedId === spotlight.id ? "selected" : ""}>${spotlight.name}</option>`,
@@ -516,21 +614,12 @@ async function saveCategory() {
         if (newCategory) {
             showNotification("success", "Kategoriya muvaffaqiyatli saqlandi")
 
-            // Update local data properly
-            if (categoryId) {
-                // Update existing category in local arrays
-                updateCategoryInLocalData(newCategory)
+            // Refresh data based on current spotlight filter
+            if (currentSpotlightFilter === "all") {
+                await loadCategoriesDashboard()
             } else {
-                // Add new category to local arrays
-                addCategoryToLocalData(newCategory)
+                await filterBySpotlight(currentSpotlightFilter)
             }
-
-            // Update filtered categories based on current filter
-            applyCurrentFilter()
-
-            // Re-render table and update stats
-            renderCategoriesTable(filteredCategories)
-            updateCategoryStats()
 
             const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"))
             modal.hide()
@@ -559,24 +648,14 @@ async function saveCategoryOrder() {
         })
 
         if (response) {
-            // Update local active categories with new order
-            activeCategories = response
-
-            // Update all categories array
-            response.forEach((updatedCategory) => {
-                const index = allCategories.findIndex((cat) => cat.id === updatedCategory.id)
-                if (index !== -1) {
-                    allCategories[index] = updatedCategory
-                }
-            })
-
-            // Update filtered categories
-            applyCurrentFilter()
-
             showNotification("success", "Kategoriyalar tartibi yangilandi")
 
-            // Re-render table
-            renderCategoriesTable(filteredCategories)
+            // Refresh data based on current spotlight filter
+            if (currentSpotlightFilter === "all") {
+                await loadCategoriesDashboard()
+            } else {
+                await filterBySpotlight(currentSpotlightFilter)
+            }
 
             const modal = bootstrap.Modal.getInstance(document.getElementById("orderCategoriesModal"))
             modal.hide()
@@ -595,93 +674,18 @@ async function toggleCategory(categoryId) {
         })
 
         if (response === "OK" || response === 200) {
-            // Find category in all categories
-            const categoryIndex = allCategories.findIndex((cat) => cat.id === categoryId)
-            if (categoryIndex !== -1) {
-                const category = allCategories[categoryIndex]
-                const wasActive = category.active
-                category.active = !category.active
+            showNotification("success", "Kategoriya holati o'zgartirildi")
 
-                // Move category between active and inactive arrays
-                if (wasActive) {
-                    // Move from active to inactive
-                    const activeIndex = activeCategories.findIndex((cat) => cat.id === categoryId)
-                    if (activeIndex !== -1) {
-                        const [movedCategory] = activeCategories.splice(activeIndex, 1)
-                        movedCategory.active = false
-                        inactiveCategories.push(movedCategory)
-                    }
-                } else {
-                    // Move from inactive to active
-                    const inactiveIndex = inactiveCategories.findIndex((cat) => cat.id === categoryId)
-                    if (inactiveIndex !== -1) {
-                        const [movedCategory] = inactiveCategories.splice(inactiveIndex, 1)
-                        movedCategory.active = true
-                        activeCategories.push(movedCategory)
-                    }
-                }
-
-                // Update dashboard data counts
-                if (dashboardData) {
-                    dashboardData.activeCount = activeCategories.length
-                    dashboardData.inactiveCount = inactiveCategories.length
-                    dashboardData.activeCategoryResList = [...activeCategories]
-                    dashboardData.inactiveCategoryResList = [...inactiveCategories]
-                }
-
-                // Update filtered categories based on current filter
-                applyCurrentFilter()
-
-                // Re-render and update stats without page refresh
-                renderCategoriesTable(filteredCategories)
-                updateCategoryStats()
-
-                showNotification("success", `Kategoriya ${category.active ? "faollashtirildi" : "nofaollashtirildi"}`)
+            // Refresh data based on current spotlight filter
+            if (currentSpotlightFilter === "all") {
+                await loadCategoriesDashboard()
+            } else {
+                await filterBySpotlight(currentSpotlightFilter)
             }
         }
     } catch (error) {
         console.error("Error toggling category:", error)
         showNotification("error", "Kategoriya holatini o'zgartirishda xatolik")
-    }
-}
-
-// Helper functions for local data management
-function addCategoryToLocalData(newCategory) {
-    allCategories.push(newCategory)
-
-    if (newCategory.active) {
-        activeCategories.push(newCategory)
-        if (dashboardData) dashboardData.activeCount++
-    } else {
-        inactiveCategories.push(newCategory)
-        if (dashboardData) dashboardData.inactiveCount++
-    }
-
-    if (dashboardData) {
-        dashboardData.count++
-        dashboardData.categoryResList = [...allCategories]
-        dashboardData.activeCategoryResList = [...activeCategories]
-        dashboardData.inactiveCategoryResList = [...inactiveCategories]
-    }
-}
-
-function updateCategoryInLocalData(updatedCategory) {
-    const updateInArray = (array) => {
-        const index = array.findIndex((cat) => cat.id === updatedCategory.id)
-        if (index !== -1) {
-            array[index] = { ...array[index], ...updatedCategory }
-        }
-    }
-
-    updateInArray(allCategories)
-    updateInArray(activeCategories)
-    updateInArray(inactiveCategories)
-
-    // Update dashboard data
-    if (dashboardData) {
-        dashboardData.categoryResList = [...allCategories]
-        dashboardData.activeCategoryResList = [...activeCategories]
-        dashboardData.inactiveCategoryResList = [...inactiveCategories]
     }
 }
 
@@ -752,7 +756,11 @@ function formatDate(dateString) {
 }
 
 function refreshData() {
-    loadCategoriesDashboard()
+    if (currentSpotlightFilter === "all") {
+        loadCategoriesDashboard()
+    } else {
+        filterBySpotlight(currentSpotlightFilter)
+    }
     showNotification("success", "Ma'lumotlar yangilandi")
 }
 

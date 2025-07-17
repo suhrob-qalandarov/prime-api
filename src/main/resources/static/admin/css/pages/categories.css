@@ -437,6 +437,64 @@ body {
     color: var(--danger-color);
 }
 
+/* Spotlight Filter Styles */
+.spotlight-filter-container {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1rem;
+}
+
+.spotlight-filter-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.spotlight-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.spotlight-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--border-radius-sm);
+    background: white;
+    color: var(--gray-700);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spotlight-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.spotlight-btn.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.spotlight-btn.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
 /* Table Card */
 .table-card {
     background: white;
@@ -944,6 +1002,14 @@ body {
 
     .stats-grid {
         grid-template-columns: 1fr;
+    }
+
+    .spotlight-buttons {
+        flex-direction: column;
+    }
+
+    .spotlight-btn {
+        justify-content: center;
     }
 }
 
