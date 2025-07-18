@@ -795,7 +795,7 @@ async function handleSpotlightImageUpload(file) {
         const formData = new FormData()
         formData.append("file", file)
 
-        const response = await apiRequest("/api/v1/admin/attachment/upload", {
+        const response = await apiRequest("/api/v1/admin/attachment", {
             method: "POST",
             body: formData,
         })
