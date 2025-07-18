@@ -7,6 +7,7 @@ public record AdminSpotlightRes(
         Long id,
         String name,
         Long orderNumber,
+        Boolean active,
         Long categoriesCount
 ) {
 }
