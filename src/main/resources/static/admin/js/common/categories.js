@@ -995,7 +995,7 @@ async function showViewSpotlightModal(spotlightId) {
 
         // Show image
         if (response.imageKey) {
-            document.getElementById("view-spotlight-image").src = `${API_BASE_URL}/api/v1/files/${response.imageKey}`
+            document.getElementById("view-spotlight-image").src = `${API_BASE_URL}/api/v1/attachment/${response.imageKey}`
         } else {
             document.getElementById("view-spotlight-image").src = "/placeholder.svg?height=300&width=300"
         }
