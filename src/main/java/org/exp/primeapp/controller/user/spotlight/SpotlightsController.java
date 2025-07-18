@@ -2,7 +2,7 @@ package org.exp.primeapp.controller.user.spotlight;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.exp.primeapp.models.dto.responce.admin.CategorySpotlightRes;
+import org.exp.primeapp.models.dto.responce.admin.spotlight.SimpleSpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.SpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.CatalogSpotlightRes;
 import org.exp.primeapp.service.interfaces.user.SpotlightService;
@@ -31,8 +31,8 @@ public class SpotlightsController {
     }
 
     @GetMapping("/category")
-    public ResponseEntity<List<CategorySpotlightRes>> getSpotlightsForCategory() {
-        List<CategorySpotlightRes> spotlights = spotlightService.getSpotlightsForCategory();
+    public ResponseEntity<List<SimpleSpotlightRes>> getSpotlightsForCategory() {
+        List<SimpleSpotlightRes> spotlights = spotlightService.getSpotlightsForCategory();
         return new ResponseEntity<>(spotlights, HttpStatus.OK);
     }
 

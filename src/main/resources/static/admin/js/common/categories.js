@@ -5,7 +5,16 @@ let activeCategories = []
 let inactiveCategories = []
 let spotlights = []
 let filteredCategories = []
+let currentSpotlightFilter = "all"
 const bootstrap = window.bootstrap
+
+// Global variables for spotlights
+let spotlightDashboardData = null
+let allSpotlights = []
+let activeSpotlights = []
+let inactiveSpotlights = []
+let filteredSpotlights = []
+let currentTab = "categories"
 
 // API Base URL
 const API_BASE_URL = "https://prime77.uz"
@@ -15,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM Content Loaded - Categories")
     checkAuth()
     initializeCategoriesPanel()
+    loadSpotlights()
     loadCategoriesDashboard()
 })
 
@@ -70,11 +80,30 @@ function setupEventListeners() {
     window.saveCategoryOrder = saveCategoryOrder
     window.toggleCategory = toggleCategory
     window.filterCategories = filterCategories
+    window.filterBySpotlight = filterBySpotlight
     window.searchCategories = searchCategories
     window.clearSearch = clearSearch
     window.refreshData = refreshData
     window.toggleFullscreen = toggleFullscreen
     window.logout = logout
+    window.retryLoadData = retryLoadData
+
+    // New spotlight functions
+    window.switchTab = switchTab
+    window.showAddSpotlightModal = showAddSpotlightModal
+    window.showEditSpotlightModal = showEditSpotlightModal
+    window.showViewSpotlightModal = showViewSpotlightModal
+    window.showOrderSpotlightsModal = showOrderSpotlightsModal
+    window.saveSpotlight = saveSpotlight
+    window.saveSpotlightOrder = saveSpotlightOrder
+    window.toggleSpotlight = toggleSpotlight
+    window.filterSpotlights = filterSpotlights
+    window.searchSpotlights = searchSpotlights
+    window.clearSpotlightSearch = clearSpotlightSearch
+
+    // Setup spotlight image upload
+    setupSpotlightImageUpload()
+    setupSpotlightSearchInput()
 }
 
 // API request with token
@@ -82,10 +111,9 @@ async function apiRequest(url, options = {}) {
     const token = localStorage.getItem("accessToken")
 
     if (!token) {
-        console.log("No token found")
-        // For demo purposes, we'll continue without token
-        // window.location.href = "login.html"
-        // return null
+        console.log("No token found, redirecting to login")
+        //window.location.href = "login.html"
+        //return null
     }
 
     const headers = {
@@ -105,13 +133,15 @@ async function apiRequest(url, options = {}) {
         console.log(`API Request: ${url}, Status: ${response.status}`)
 
         if (response.status === 401) {
-            console.log("Unauthorized")
-            // window.location.href = "login.html"
-            // return null
+            console.log("Unauthorized, redirecting to login")
+            localStorage.removeItem("accessToken")
+            localStorage.removeItem("refreshToken")
+            window.location.href = "login.html"
+            return null
         }
 
         if (!response.ok) {
-            throw new Error(`API request failed: ${response.status}`)
+            throw new Error(`API request failed: ${response.status} - ${response.statusText}`)
         }
 
         const contentType = response.headers.get("content-type")
@@ -122,57 +152,102 @@ async function apiRequest(url, options = {}) {
         }
     } catch (error) {
         console.error("API request error:", error)
-        // For demo purposes, return mock data
-        return getMockData(url)
+        throw error
     }
 }
 
-// Mock data for demo
-function getMockData(url) {
-    if (url.includes("/api/v1/admin/categories/dashboard")) {
-        return {
-            count: 8,
-            activeCount: 6,
-            inactiveCount: 2,
-            categoryResList: [
-                { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
-                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
-                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
-                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
-                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
-                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
-                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
-                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
-            ],
-            activeCategoryResList: [
-                { id: 1, name: "Elektronika", spotlightName: "ELECTRONICS", order: 1, active: true },
-                { id: 2, name: "Kiyim", spotlightName: "CLOTHING", order: 2, active: true },
-                { id: 3, name: "Kitoblar", spotlightName: "BOOKS", order: 3, active: true },
-                { id: 4, name: "Sport", spotlightName: "SPORTS", order: 4, active: true },
-                { id: 5, name: "Uy-ro'zg'or", spotlightName: "HOME", order: 5, active: true },
-                { id: 6, name: "Avtomobil", spotlightName: "AUTO", order: 6, active: true },
-            ],
-            inactiveCategoryResList: [
-                { id: 7, name: "Salomatlik", spotlightName: "HEALTH", order: 7, active: false },
-                { id: 8, name: "Go'zallik", spotlightName: "BEAUTY", order: 8, active: false },
-            ],
+// Load spotlights and render spotlight buttons
+async function loadSpotlights() {
+    try {
+        console.log("Loading spotlights...")
+        const response = await apiRequest("/api/v1/spotlights/category")
+
+        if (response) {
+            spotlights = response
+            console.log("Spotlights loaded:", spotlights)
+            renderSpotlightButtons()
+        } else {
+            throw new Error("No spotlights data received")
         }
+    } catch (error) {
+        console.error("Error loading spotlights:", error)
+        showErrorState("Spotlights ma'lumotlarini yuklashda xatolik yuz berdi")
+        showNotification("error", "Spotlights yuklashda xatolik")
+    }
+}
+
+// Render spotlight filter buttons
+function renderSpotlightButtons() {
+    const container = document.getElementById("spotlight-buttons")
+    if (!container) return
+
+    // Clear existing buttons except "Barcha toifalar"
+    const allButton = container.querySelector('[data-spotlight-id="all"]')
+    container.innerHTML = ""
+    if (allButton) {
+        container.appendChild(allButton)
     }
 
-    if (url.includes("/api/v1/spotlights/category")) {
-        return [
-            { id: 1, name: "Electronics" },
-            { id: 2, name: "Clothing" },
-            { id: 3, name: "Books" },
-            { id: 4, name: "Sports" },
-            { id: 5, name: "Home" },
-            { id: 6, name: "Auto" },
-            { id: 7, name: "Health" },
-            { id: 8, name: "Beauty" },
-        ]
-    }
+    // Add spotlight buttons
+    spotlights.forEach((spotlight) => {
+        const button = document.createElement("button")
+        button.className = "spotlight-btn"
+        button.setAttribute("data-spotlight-id", spotlight.id)
+        button.onclick = () => filterBySpotlight(spotlight.id)
+        button.innerHTML = `<i class="fas fa-tag"></i> ${spotlight.name}`
+        container.appendChild(button)
+    })
+}
 
-    return null
+// Filter categories by spotlight
+async function filterBySpotlight(spotlightId) {
+    try {
+        showLoading()
+
+        // Update active button
+        document.querySelectorAll(".spotlight-btn").forEach((btn) => {
+            btn.classList.remove("active")
+        })
+        document.querySelector(`[data-spotlight-id="${spotlightId}"]`).classList.add("active")
+
+        currentSpotlightFilter = spotlightId
+
+        let response
+        if (spotlightId === "all") {
+            // Load all categories
+            response = await apiRequest("/api/v1/admin/categories/dashboard")
+        } else {
+            // Load categories for specific spotlight
+            response = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}/categories`)
+        }
+
+        if (response) {
+            console.log("Spotlight filtered data loaded:", response)
+            dashboardData = response
+
+            // Update local data
+            allCategories = dashboardData.categoryResList || []
+            activeCategories = dashboardData.activeCategoryResList || []
+            inactiveCategories = dashboardData.inactiveCategoryResList || []
+
+            // Apply current status filter
+            applyCurrentFilter()
+
+            // Update statistics and render table
+            updateCategoryStats()
+            renderCategoriesTable(filteredCategories)
+            hideErrorState()
+        } else {
+            throw new Error("No data received from server")
+        }
+
+        hideLoading()
+    } catch (error) {
+        console.error("Error filtering by spotlight:", error)
+        hideLoading()
+        showErrorState("Ma'lumotlarni yuklashda xatolik yuz berdi")
+        showNotification("error", "Spotlight bo'yicha filtrlashda xatolik")
+    }
 }
 
 // Load categories dashboard data (single API call)
@@ -183,10 +258,11 @@ async function loadCategoriesDashboard() {
         console.log("Loading categories dashboard...")
 
         // Single API call to get all category data
-        dashboardData = await apiRequest("/api/v1/admin/categories/dashboard")
+        const response = await apiRequest("/api/v1/admin/categories/dashboard")
 
-        if (dashboardData) {
-            console.log("Dashboard data loaded:", dashboardData)
+        if (response) {
+            console.log("Dashboard data loaded:", response)
+            dashboardData = response
 
             // Update local data
             allCategories = dashboardData.categoryResList || []
@@ -199,16 +275,17 @@ async function loadCategoriesDashboard() {
 
             // Render table
             renderCategoriesTable(filteredCategories)
+            hideErrorState()
         } else {
-            console.error("No dashboard data received")
-            showNotification("error", "Ma'lumotlar yuklanmadi")
+            throw new Error("No dashboard data received from server")
         }
 
         hideLoading()
     } catch (error) {
         console.error("Error loading categories dashboard:", error)
-        showNotification("error", "Kategoriyalar ma'lumotlarini yuklashda xatolik")
         hideLoading()
+        showErrorState("Kategoriyalar ma'lumotlarini yuklashda xatolik yuz berdi")
+        showNotification("error", "Kategoriyalar ma'lumotlarini yuklashda xatolik")
     }
 }
 
@@ -240,46 +317,32 @@ function renderCategoriesTable(categories) {
     tbody.innerHTML = categories
         .map(
             (category) => `
-        <tr class="fade-in">
-            <td><strong>T-${category.order}</strong></td>
-            <td>${category.id}</td>
-            <td class="fw-bold">${category.name}</td>
-            <td class="text-uppercase fw-light fs-8 text-secondary">${category.spotlightName || "-"}</td>
-            <td>
-                <span class="status-badge ${category.active ? "active" : "inactive"}">
-                    ${category.active ? "FAOL" : "NOFAOL"}
-                </span>
-            </td>
-            <td>${formatDate(new Date())}</td>
-            <td>
-                <button class="action-btn edit" onclick="showViewCategoryModal(${category.id})" title="Ko'rish">
-                    <i class="fas fa-eye"></i>
-                </button>
-                <button class="action-btn edit" onclick="showEditCategoryModal(${category.id})" title="Tahrirlash">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="action-btn ${category.active ? "delete" : "edit"}" onclick="toggleCategory(${category.id})" title="${category.active ? "Nofaollashtirish" : "Faollashtirish"}">
-                    <i class="fas fa-${category.active ? "pause" : "play"}"></i>
-                </button>
-            </td>
-        </tr>
-    `,
+      <tr class="fade-in">
+          <td><strong>T-${category.order}</strong></td>
+          <td>${category.id}</td>
+          <td class="fw-bold">${category.name}</td>
+          <td class="spotlight-name">${category.spotlightRes ? category.spotlightRes.name : "-"}</td>
+          <td>
+              <span class="status-badge ${category.active ? "active" : "inactive"}">
+                  ${category.active ? "FAOL" : "NOFAOL"}
+              </span>
+          </td>
+          <td>${formatDate(new Date())}</td>
+          <td>
+              <button class="action-btn edit" onclick="showViewCategoryModal(${category.id})" title="Ko'rish">
+                  <i class="fas fa-eye"></i>
+              </button>
+              <button class="action-btn edit" onclick="showEditCategoryModal(${category.id})" title="Tahrirlash">
+                  <i class="fas fa-edit"></i>
+              </button>
+              <button class="action-btn ${category.active ? "delete" : "edit"}" onclick="toggleCategory(${category.id})" title="${category.active ? "Nofaollashtirish" : "Faollashtirish"}">
+                  <i class="fas fa-${category.active ? "pause" : "play"}"></i>
+              </button>
+          </td>
+      </tr>
+  `,
         )
         .join("")
-}
-
-// Load spotlights for select options
-async function loadSpotlights() {
-    try {
-        if (spotlights.length === 0) {
-            spotlights = (await apiRequest("/api/v1/spotlights/category")) || []
-        }
-        return spotlights
-    } catch (error) {
-        console.error("Error loading spotlights:", error)
-        showNotification("error", "Spotlights yuklashda xatolik")
-        return []
-    }
 }
 
 // Populate spotlight select
@@ -287,11 +350,13 @@ async function populateSpotlightSelect(selectId, selectedId = null) {
     const select = document.getElementById(selectId)
     if (!select) return
 
-    const spotlightsList = await loadSpotlights()
+    if (spotlights.length === 0) {
+        await loadSpotlights()
+    }
 
     select.innerHTML =
         '<option value="">Spotlight tanlang</option>' +
-        spotlightsList
+        spotlights
             .map(
                 (spotlight) =>
                     `<option value="${spotlight.id}" ${selectedId === spotlight.id ? "selected" : ""}>${spotlight.name}</option>`,
@@ -326,8 +391,7 @@ async function showEditCategoryModal(categoryId) {
         }
 
         if (!category) {
-            showNotification("error", "Kategoriya ma'lumotlari topilmadi")
-            return
+            throw new Error("Category not found")
         }
 
         document.getElementById("categoryModalTitle").textContent = "Kategoriyani tahrirlash"
@@ -337,7 +401,7 @@ async function showEditCategoryModal(categoryId) {
         document.getElementById("category-active").checked = category.active
 
         // Populate spotlight select with current selection
-        await populateSpotlightSelect("category-spotlight", category.spotlightId)
+        await populateSpotlightSelect("category-spotlight", category.spotlightRes ? category.spotlightRes.id : null)
 
         const modal = new bootstrap.Modal(document.getElementById("categoryModal"))
         modal.show()
@@ -359,15 +423,16 @@ async function showViewCategoryModal(categoryId) {
         }
 
         if (!category) {
-            showNotification("error", "Kategoriya ma'lumotlari topilmadi")
-            return
+            throw new Error("Category not found")
         }
 
         // Populate view modal
         document.getElementById("view-category-id").textContent = category.id
         document.getElementById("view-category-name").textContent = category.name
-        document.getElementById("view-category-spotlight").textContent = category.spotlightName || "-"
         document.getElementById("view-category-order").textContent = `T-${category.order}`
+        document.getElementById("view-category-spotlight").textContent = category.spotlightRes
+            ? category.spotlightRes.name
+            : "-"
         document.getElementById("view-category-status").innerHTML = `
             <span class="status-badge ${category.active ? "active" : "inactive"}">
                 ${category.active ? "FAOL" : "NOFAOL"}
@@ -516,21 +581,12 @@ async function saveCategory() {
         if (newCategory) {
             showNotification("success", "Kategoriya muvaffaqiyatli saqlandi")
 
-            // Update local data properly
-            if (categoryId) {
-                // Update existing category in local arrays
-                updateCategoryInLocalData(newCategory)
+            // Refresh data based on current spotlight filter
+            if (currentSpotlightFilter === "all") {
+                await loadCategoriesDashboard()
             } else {
-                // Add new category to local arrays
-                addCategoryToLocalData(newCategory)
+                await filterBySpotlight(currentSpotlightFilter)
             }
-
-            // Update filtered categories based on current filter
-            applyCurrentFilter()
-
-            // Re-render table and update stats
-            renderCategoriesTable(filteredCategories)
-            updateCategoryStats()
 
             const modal = bootstrap.Modal.getInstance(document.getElementById("categoryModal"))
             modal.hide()
@@ -559,24 +615,14 @@ async function saveCategoryOrder() {
         })
 
         if (response) {
-            // Update local active categories with new order
-            activeCategories = response
-
-            // Update all categories array
-            response.forEach((updatedCategory) => {
-                const index = allCategories.findIndex((cat) => cat.id === updatedCategory.id)
-                if (index !== -1) {
-                    allCategories[index] = updatedCategory
-                }
-            })
-
-            // Update filtered categories
-            applyCurrentFilter()
-
             showNotification("success", "Kategoriyalar tartibi yangilandi")
 
-            // Re-render table
-            renderCategoriesTable(filteredCategories)
+            // Refresh data based on current spotlight filter
+            if (currentSpotlightFilter === "all") {
+                await loadCategoriesDashboard()
+            } else {
+                await filterBySpotlight(currentSpotlightFilter)
+            }
 
             const modal = bootstrap.Modal.getInstance(document.getElementById("orderCategoriesModal"))
             modal.hide()
@@ -594,94 +640,17 @@ async function toggleCategory(categoryId) {
             method: "PATCH",
         })
 
-        if (response === "OK" || response === 200) {
-            // Find category in all categories
-            const categoryIndex = allCategories.findIndex((cat) => cat.id === categoryId)
-            if (categoryIndex !== -1) {
-                const category = allCategories[categoryIndex]
-                const wasActive = category.active
-                category.active = !category.active
+        showNotification("success", "Kategoriya holati o'zgartirildi")
 
-                // Move category between active and inactive arrays
-                if (wasActive) {
-                    // Move from active to inactive
-                    const activeIndex = activeCategories.findIndex((cat) => cat.id === categoryId)
-                    if (activeIndex !== -1) {
-                        const [movedCategory] = activeCategories.splice(activeIndex, 1)
-                        movedCategory.active = false
-                        inactiveCategories.push(movedCategory)
-                    }
-                } else {
-                    // Move from inactive to active
-                    const inactiveIndex = inactiveCategories.findIndex((cat) => cat.id === categoryId)
-                    if (inactiveIndex !== -1) {
-                        const [movedCategory] = inactiveCategories.splice(inactiveIndex, 1)
-                        movedCategory.active = true
-                        activeCategories.push(movedCategory)
-                    }
-                }
-
-                // Update dashboard data counts
-                if (dashboardData) {
-                    dashboardData.activeCount = activeCategories.length
-                    dashboardData.inactiveCount = inactiveCategories.length
-                    dashboardData.activeCategoryResList = [...activeCategories]
-                    dashboardData.inactiveCategoryResList = [...inactiveCategories]
-                }
-
-                // Update filtered categories based on current filter
-                applyCurrentFilter()
-
-                // Re-render and update stats without page refresh
-                renderCategoriesTable(filteredCategories)
-                updateCategoryStats()
-
-                showNotification("success", `Kategoriya ${category.active ? "faollashtirildi" : "nofaollashtirildi"}`)
-            }
+        // Refresh data based on current spotlight filter
+        if (currentSpotlightFilter === "all") {
+            await loadCategoriesDashboard()
+        } else {
+            await filterBySpotlight(currentSpotlightFilter)
         }
     } catch (error) {
         console.error("Error toggling category:", error)
         showNotification("error", "Kategoriya holatini o'zgartirishda xatolik")
-    }
-}
-
-// Helper functions for local data management
-function addCategoryToLocalData(newCategory) {
-    allCategories.push(newCategory)
-
-    if (newCategory.active) {
-        activeCategories.push(newCategory)
-        if (dashboardData) dashboardData.activeCount++
-    } else {
-        inactiveCategories.push(newCategory)
-        if (dashboardData) dashboardData.inactiveCount++
-    }
-
-    if (dashboardData) {
-        dashboardData.count++
-        dashboardData.categoryResList = [...allCategories]
-        dashboardData.activeCategoryResList = [...activeCategories]
-        dashboardData.inactiveCategoryResList = [...inactiveCategories]
-    }
-}
-
-function updateCategoryInLocalData(updatedCategory) {
-    const updateInArray = (array) => {
-        const index = array.findIndex((cat) => cat.id === updatedCategory.id)
-        if (index !== -1) {
-            array[index] = { ...array[index], ...updatedCategory }
-        }
-    }
-
-    updateInArray(allCategories)
-    updateInArray(activeCategories)
-    updateInArray(inactiveCategories)
-
-    // Update dashboard data
-    if (dashboardData) {
-        dashboardData.categoryResList = [...allCategories]
-        dashboardData.activeCategoryResList = [...activeCategories]
-        dashboardData.inactiveCategoryResList = [...inactiveCategories]
     }
 }
 
@@ -722,7 +691,7 @@ function searchCategories() {
     filteredCategories = allCategories.filter(
         (category) =>
             category.name.toLowerCase().includes(searchTerm) ||
-            (category.spotlightName && category.spotlightName.toLowerCase().includes(searchTerm)),
+            (category.spotlightRes && category.spotlightRes.name.toLowerCase().includes(searchTerm)),
     )
 
     renderCategoriesTable(filteredCategories)
@@ -751,8 +720,522 @@ function formatDate(dateString) {
     }
 }
 
+// Tab switching functionality
+function switchTab(tabName) {
+    currentTab = tabName
+
+    // Update tab buttons
+    document.querySelectorAll(".page-tab-btn").forEach((btn) => {
+        btn.classList.remove("active")
+    })
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add("active")
+
+    // Update tab content
+    document.querySelectorAll(".tab-content").forEach((content) => {
+        content.classList.remove("active")
+    })
+    document.getElementById(`${tabName}-content`).classList.add("active")
+
+    // Load appropriate data
+    if (tabName === "spotlights") {
+        loadSpotlightsDashboard()
+    } else {
+        loadCategoriesDashboard()
+    }
+}
+
+// Setup spotlight image upload
+function setupSpotlightImageUpload() {
+    const uploadArea = document.getElementById("spotlight-image-upload")
+    const fileInput = document.getElementById("spotlight-image-input")
+    const preview = document.getElementById("spotlight-image-preview")
+
+    if (uploadArea && fileInput) {
+        uploadArea.addEventListener("click", () => fileInput.click())
+
+        uploadArea.addEventListener("dragover", (e) => {
+            e.preventDefault()
+            uploadArea.classList.add("dragover")
+        })
+
+        uploadArea.addEventListener("dragleave", () => {
+            uploadArea.classList.remove("dragover")
+        })
+
+        uploadArea.addEventListener("drop", (e) => {
+            e.preventDefault()
+            uploadArea.classList.remove("dragover")
+            const files = e.dataTransfer.files
+            if (files.length > 0) {
+                handleSpotlightImageUpload(files[0])
+            }
+        })
+
+        fileInput.addEventListener("change", (e) => {
+            if (e.target.files.length > 0) {
+                handleSpotlightImageUpload(e.target.files[0])
+            }
+        })
+    }
+}
+
+// Handle spotlight image upload
+async function handleSpotlightImageUpload(file) {
+    if (!file.type.startsWith("image/")) {
+        showNotification("error", "Faqat rasm fayllari qabul qilinadi")
+        return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        showNotification("error", "Fayl hajmi 5MB dan oshmasligi kerak")
+        return
+    }
+
+    try {
+        const formData = new FormData()
+        formData.append("file", file)
+
+        const response = await apiRequest("/api/v1/admin/attachment", {
+            method: "POST",
+            body: formData,
+        })
+
+        if (response && response.id) {
+            document.getElementById("spotlight-image-id").value = response.id
+
+            // Show preview
+            const preview = document.getElementById("spotlight-image-preview")
+            preview.innerHTML = `
+        <div class="preview-item">
+          <img src="${URL.createObjectURL(file)}" alt="Preview">
+          <button class="preview-remove" onclick="removeSpotlightImage()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      `
+
+            showNotification("success", "Rasm muvaffaqiyatli yuklandi")
+        }
+    } catch (error) {
+        console.error("Error uploading image:", error)
+        showNotification("error", "Rasm yuklashda xatolik")
+    }
+}
+
+// Remove spotlight image
+function removeSpotlightImage() {
+    document.getElementById("spotlight-image-id").value = ""
+    document.getElementById("spotlight-image-preview").innerHTML = ""
+    document.getElementById("spotlight-image-input").value = ""
+}
+
+// Setup spotlight search input
+function setupSpotlightSearchInput() {
+    const searchInput = document.getElementById("spotlight-search-input")
+    if (searchInput) {
+        searchInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                searchSpotlights()
+            }
+        })
+    }
+}
+
+// Load spotlights dashboard
+async function loadSpotlightsDashboard() {
+    try {
+        showLoading()
+
+        const response = await apiRequest("/api/v1/admin/spotlights/dashboard")
+
+        if (response) {
+            spotlightDashboardData = response
+            allSpotlights = response.spotlightResList || []
+            activeSpotlights = response.activeSpotlightResList || []
+            inactiveSpotlights = response.inactiveSpotlightResList || []
+            filteredSpotlights = [...allSpotlights]
+
+            updateSpotlightStats()
+            renderSpotlightsTable(filteredSpotlights)
+            hideErrorState()
+        } else {
+            throw new Error("No spotlight data received")
+        }
+
+        hideLoading()
+    } catch (error) {
+        console.error("Error loading spotlights dashboard:", error)
+        hideLoading()
+        showErrorState("Toifalar ma'lumotlarini yuklashda xatolik yuz berdi")
+        showNotification("error", "Toifalar ma'lumotlarini yuklashda xatolik")
+    }
+}
+
+// Update spotlight statistics
+function updateSpotlightStats() {
+    if (spotlightDashboardData) {
+        animateCounter("total-spotlights", spotlightDashboardData.count || 0)
+        animateCounter("active-spotlights", spotlightDashboardData.activeCount || 0)
+        animateCounter("inactive-spotlights", spotlightDashboardData.inactiveCount || 0)
+    }
+}
+
+// Render spotlights table
+function renderSpotlightsTable(spotlights) {
+    const tbody = document.getElementById("spotlights-table")
+    if (!tbody) return
+
+    if (spotlights.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Ma\'lumotlar mavjud emas</td></tr>'
+        return
+    }
+
+    tbody.innerHTML = spotlights
+        .map(
+            (spotlight) => `
+    <tr class="fade-in">
+      <td><strong>T-${spotlight.orderNumber}</strong></td>
+      <td>${spotlight.id}</td>
+      <td class="fw-bold">${spotlight.name}</td>
+      <td>${spotlight.categoriesCount || 0}</td>
+      <td>
+        <span class="status-badge ${spotlight.active ? "active" : "inactive"}">
+          ${spotlight.active ? "FAOL" : "NOFAOL"}
+        </span>
+      </td>
+      <td>${formatDate(new Date())}</td>
+      <td>
+        <button class="action-btn edit" onclick="showViewSpotlightModal(${spotlight.id})" title="Ko'rish">
+          <i class="fas fa-eye"></i>
+        </button>
+        <button class="action-btn edit" onclick="showEditSpotlightModal(${spotlight.id})" title="Tahrirlash">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="action-btn ${spotlight.active ? "delete" : "edit"}" onclick="toggleSpotlight(${spotlight.id})" title="${spotlight.active ? "Nofaollashtirish" : "Faollashtirish"}">
+          <i class="fas fa-${spotlight.active ? "pause" : "play"}"></i>
+        </button>
+      </td>
+    </tr>
+  `,
+        )
+        .join("")
+}
+
+// Show add spotlight modal
+function showAddSpotlightModal() {
+    document.getElementById("spotlightModalTitle").textContent = "Toifa qo'shish"
+    document.getElementById("spotlight-save-btn-text").textContent = "Saqlash"
+    document.getElementById("spotlight-form").reset()
+    document.getElementById("spotlight-id").value = ""
+    document.getElementById("spotlight-active").checked = true
+    document.getElementById("spotlight-image-id").value = ""
+    document.getElementById("spotlight-image-preview").innerHTML = ""
+
+    const modal = new bootstrap.Modal(document.getElementById("spotlightModal"))
+    modal.show()
+}
+
+// Show edit spotlight modal
+async function showEditSpotlightModal(spotlightId) {
+    try {
+        let spotlight = allSpotlights.find((s) => s.id === spotlightId)
+
+        if (!spotlight) {
+            spotlight = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}`)
+        }
+
+        if (!spotlight) {
+            throw new Error("Spotlight not found")
+        }
+
+        document.getElementById("spotlightModalTitle").textContent = "Toifani tahrirlash"
+        document.getElementById("spotlight-save-btn-text").textContent = "Yangilash"
+        document.getElementById("spotlight-id").value = spotlight.id
+        document.getElementById("spotlight-name").value = spotlight.name
+        document.getElementById("spotlight-active").checked = spotlight.active
+
+        const modal = new bootstrap.Modal(document.getElementById("spotlightModal"))
+        modal.show()
+    } catch (error) {
+        console.error("Error loading spotlight for edit:", error)
+        showNotification("error", "Toifa ma'lumotlarini yuklashda xatolik")
+    }
+}
+
+// Show view spotlight modal
+async function showViewSpotlightModal(spotlightId) {
+    try {
+        const response = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}`)
+
+        if (!response) {
+            throw new Error("Spotlight not found")
+        }
+
+        document.getElementById("view-spotlight-id").textContent = response.id
+        document.getElementById("view-spotlight-name").textContent = response.name
+        document.getElementById("view-spotlight-order").textContent = `T-${response.orderNumber}`
+        document.getElementById("view-spotlight-status").innerHTML = `
+      <span class="status-badge ${response.active ? "active" : "inactive"}">
+        ${response.active ? "FAOL" : "NOFAOL"}
+      </span>
+    `
+
+        // Show categories
+        if (response.categoriesName && response.categoriesName.length > 0) {
+            document.getElementById("view-spotlight-categories").innerHTML = `
+        <div class="category-tags">
+          ${response.categoriesName.map((name) => `<span class="category-tag">${name}</span>`).join("")}
+        </div>
+      `
+        } else {
+            document.getElementById("view-spotlight-categories").textContent = "Kategoriyalar mavjud emas"
+        }
+
+        // Show image
+        if (response.imageKey) {
+            document.getElementById("view-spotlight-image").src = `${API_BASE_URL}/api/v1/attachment/${response.imageKey}`
+        } else {
+            document.getElementById("view-spotlight-image").src = "/placeholder.svg?height=300&width=300"
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById("viewSpotlightModal"))
+        modal.show()
+    } catch (error) {
+        console.error("Error viewing spotlight:", error)
+        showNotification("error", "Toifa ma'lumotlarini yuklashda xatolik")
+    }
+}
+
+// Show order spotlights modal
+function showOrderSpotlightsModal() {
+    const modalBody = document.getElementById("order-spotlights-list")
+
+    modalBody.innerHTML = activeSpotlights
+        .sort((a, b) => a.orderNumber - b.orderNumber)
+        .map(
+            (spotlight) => `
+      <div class="order-item" data-id="${spotlight.id}" data-order="${spotlight.orderNumber}">
+        <div class="order-handle">
+          <i class="fas fa-grip-vertical"></i>
+        </div>
+        <div class="order-content">
+          <span class="order-number">T-${spotlight.orderNumber}</span>
+          <span class="order-name">${spotlight.name}</span>
+        </div>
+      </div>
+    `,
+        )
+        .join("")
+
+    initializeSpotlightDragAndDrop()
+
+    const modal = new bootstrap.Modal(document.getElementById("orderSpotlightsModal"))
+    modal.show()
+}
+
+// Initialize spotlight drag and drop
+function initializeSpotlightDragAndDrop() {
+    const container = document.getElementById("order-spotlights-list")
+    let draggedElement = null
+
+    container.addEventListener("dragstart", (e) => {
+        draggedElement = e.target.closest(".order-item")
+        e.target.style.opacity = "0.5"
+    })
+
+    container.addEventListener("dragend", (e) => {
+        e.target.style.opacity = ""
+        draggedElement = null
+    })
+
+    container.addEventListener("dragover", (e) => {
+        e.preventDefault()
+    })
+
+    container.addEventListener("drop", (e) => {
+        e.preventDefault()
+        const dropTarget = e.target.closest(".order-item")
+
+        if (dropTarget && draggedElement && dropTarget !== draggedElement) {
+            const rect = dropTarget.getBoundingClientRect()
+            const midpoint = rect.top + rect.height / 2
+
+            if (e.clientY < midpoint) {
+                container.insertBefore(draggedElement, dropTarget)
+            } else {
+                container.insertBefore(draggedElement, dropTarget.nextSibling)
+            }
+
+            updateSpotlightOrderNumbers()
+        }
+    })
+
+    container.querySelectorAll(".order-item").forEach((item) => {
+        item.draggable = true
+    })
+}
+
+// Update spotlight order numbers
+function updateSpotlightOrderNumbers() {
+    const items = document.querySelectorAll("#order-spotlights-list .order-item")
+    items.forEach((item, index) => {
+        const orderNumber = item.querySelector(".order-number")
+        orderNumber.textContent = `T-${index + 1}`
+        item.dataset.order = index + 1
+    })
+}
+
+// Save spotlight
+async function saveSpotlight() {
+    try {
+        const spotlightId = document.getElementById("spotlight-id").value
+        const name = document.getElementById("spotlight-name").value.trim()
+        const imageId = document.getElementById("spotlight-image-id").value
+        const isActive = document.getElementById("spotlight-active").checked
+
+        if (!name) {
+            showNotification("warning", "Toifa nomini kiriting")
+            return
+        }
+
+        if (!imageId && !spotlightId) {
+            showNotification("warning", "Rasm yuklang")
+            return
+        }
+
+        const spotlightData = {
+            name: name,
+            imageId: imageId ? Number.parseInt(imageId) : null,
+        }
+
+        let response
+        if (spotlightId) {
+            response = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(spotlightData),
+            })
+        } else {
+            response = await apiRequest("/api/v1/admin/spotlight", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(spotlightData),
+            })
+        }
+
+        if (response) {
+            showNotification("success", "Toifa muvaffaqiyatli saqlandi")
+            await loadSpotlightsDashboard()
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById("spotlightModal"))
+            modal.hide()
+        }
+    } catch (error) {
+        console.error("Error saving spotlight:", error)
+        showNotification("error", "Toifani saqlashda xatolik")
+    }
+}
+
+// Save spotlight order
+async function saveSpotlightOrder() {
+    try {
+        const items = document.querySelectorAll("#order-spotlights-list .order-item")
+        const spotlightOrderMap = {}
+
+        items.forEach((item, index) => {
+            const spotlightId = Number.parseInt(item.dataset.id)
+            spotlightOrderMap[spotlightId] = index + 1
+        })
+
+        const response = await apiRequest("/api/v1/admin/spotlights/order", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(spotlightOrderMap),
+        })
+
+        if (response) {
+            showNotification("success", "Toifalar tartibi yangilandi")
+            await loadSpotlightsDashboard()
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById("orderSpotlightsModal"))
+            modal.hide()
+        }
+    } catch (error) {
+        console.error("Error saving spotlight order:", error)
+        showNotification("error", "Toifalar tartibini saqlashda xatolik")
+    }
+}
+
+// Toggle spotlight
+async function toggleSpotlight(spotlightId) {
+    try {
+        const response = await apiRequest(`/api/v1/admin/spotlight/toggle/${spotlightId}`, {
+            method: "PATCH",
+        })
+
+        showNotification("success", "Toifa holati o'zgartirildi")
+        await loadSpotlightsDashboard()
+    } catch (error) {
+        console.error("Error toggling spotlight:", error)
+        showNotification("error", "Toifa holatini o'zgartirishda xatolik")
+    }
+}
+
+// Filter spotlights
+function filterSpotlights() {
+    const statusFilter = document.getElementById("spotlight-status-filter")?.value || "all"
+
+    switch (statusFilter) {
+        case "all":
+            filteredSpotlights = [...allSpotlights]
+            break
+        case "active":
+            filteredSpotlights = [...activeSpotlights]
+            break
+        case "inactive":
+            filteredSpotlights = [...inactiveSpotlights]
+            break
+        default:
+            filteredSpotlights = [...allSpotlights]
+    }
+
+    renderSpotlightsTable(filteredSpotlights)
+}
+
+// Search spotlights
+function searchSpotlights() {
+    const searchTerm = document.getElementById("spotlight-search-input")?.value.trim().toLowerCase()
+
+    if (!searchTerm) {
+        filterSpotlights()
+        return
+    }
+
+    filteredSpotlights = allSpotlights.filter((spotlight) => spotlight.name.toLowerCase().includes(searchTerm))
+
+    renderSpotlightsTable(filteredSpotlights)
+}
+
+// Clear spotlight search
+function clearSpotlightSearch() {
+    const searchInput = document.getElementById("spotlight-search-input")
+    if (searchInput) {
+        searchInput.value = ""
+    }
+    filterSpotlights()
+}
+
+// Update refreshData function to handle both tabs
 function refreshData() {
-    loadCategoriesDashboard()
+    if (currentTab === "spotlights") {
+        loadSpotlightsDashboard()
+    } else {
+        if (currentSpotlightFilter === "all") {
+            loadCategoriesDashboard()
+        } else {
+            filterBySpotlight(currentSpotlightFilter)
+        }
+    }
     showNotification("success", "Ma'lumotlar yangilandi")
 }
 
@@ -783,6 +1266,50 @@ function animateCounter(elementId, targetValue) {
     }
 
     requestAnimationFrame(updateCounter)
+}
+
+// Show error state
+function showErrorState(message) {
+    const tbody = document.getElementById("categories-table")
+    const statsCards = document.querySelectorAll(".stats-number")
+
+    if (tbody) {
+        tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="text-center">
+          <div class="error-state">
+            <div class="error-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h4>Xatolik yuz berdi</h4>
+            <p>${message}</p>
+            <button class="btn btn-primary" onclick="retryLoadData()">
+              <i class="fas fa-refresh"></i> Qayta urinish
+            </button>
+          </div>
+        </td>
+      </tr>
+    `
+    }
+
+    // Reset stats to 0
+    statsCards.forEach((card) => {
+        card.textContent = "0"
+    })
+}
+
+// Hide error state
+function hideErrorState() {
+    // Error state will be hidden when table is re-rendered with actual data
+}
+
+// Retry loading data
+function retryLoadData() {
+    if (currentSpotlightFilter === "all") {
+        loadCategoriesDashboard()
+    } else {
+        filterBySpotlight(currentSpotlightFilter)
+    }
 }
 
 function showLoading() {

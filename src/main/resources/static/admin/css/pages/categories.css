@@ -282,12 +282,6 @@ body {
 .breadcrumb h1 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--dark-color);
-    margin: 0;
-}
-
-.breadcrumb p {
-    font-size: 0.875rem;
     color: var(--gray-600);
     margin: 0;
 }
@@ -437,6 +431,73 @@ body {
     color: var(--danger-color);
 }
 
+/* Spotlight Filter Styles */
+.spotlight-filter-container {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1rem;
+}
+
+.spotlight-filter-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.spotlight-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.spotlight-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--border-radius-sm);
+    background: white;
+    color: var(--gray-700);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.spotlight-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.spotlight-btn.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.spotlight-btn.active:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Add this new CSS rule for spotlight name styling */
+.spotlight-name {
+    text-transform: uppercase;
+    font-weight: 300;
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    letter-spacing: 0.5px;
+}
+
 /* Table Card */
 .table-card {
     background: white;
@@ -519,6 +580,12 @@ body {
     background: rgba(102, 126, 234, 0.05);
 }
 
+/* Ensure table cell bold text works properly */
+.modern-table td.fw-bold {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
 .status-badge {
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -572,6 +639,64 @@ body {
     background: var(--danger-color);
     color: white;
     transform: scale(1.1);
+}
+
+/* Error State */
+.error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--gray-600);
+    text-align: center;
+}
+
+.error-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(245, 101, 101, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: var(--danger-color);
+    font-size: 2rem;
+}
+
+.error-state h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+.error-state p {
+    font-size: 0.95rem;
+    color: var(--gray-600);
+    margin-bottom: 1.5rem;
+    max-width: 400px;
+}
+
+.error-state .btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    border-radius: var(--border-radius-sm);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.error-state .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 /* Category Image Container */
@@ -844,6 +969,48 @@ body {
     padding: 1rem 2rem;
 }
 
+/* Category Info Grid for View Modal */
+.category-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 0.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--gray-50);
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--primary-color);
+    transition: var(--transition);
+}
+
+.info-item:hover {
+    background: var(--gray-100);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.info-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gray-600);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--dark-color);
+    margin: 0;
+    word-break: break-word;
+}
+
 /* Loading State */
 .loading-state {
     display: flex;
@@ -945,6 +1112,24 @@ body {
     .stats-grid {
         grid-template-columns: 1fr;
     }
+
+    .spotlight-buttons {
+        flex-direction: column;
+    }
+
+    .spotlight-btn {
+        justify-content: center;
+    }
+
+    /* Responsive adjustments for info grid */
+    .category-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .info-item {
+        padding: 0.75rem;
+    }
 }
 
 /* Custom Scrollbar */
@@ -965,4 +1150,85 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, var(--primary-dark), var(--secondary-color));
+}
+
+/* Page Tabs */
+.page-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 2rem;
+}
+
+.page-tab-btn {
+    padding: 0.5rem 1rem;
+    background: var(--gray-100);
+    border: 2px solid var(--gray-300);
+    border-radius: var(--border-radius-sm);
+    color: var(--gray-600);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-tab-btn:hover {
+    background: var(--gray-200);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.page-tab-btn.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Spotlight Image Container */
+.spotlight-image-container {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    background: var(--gray-50);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.spotlight-image {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+/* Spotlight Info Grid */
+.spotlight-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.spotlight-info-grid .info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Categories Tags in Spotlight View */
+.category-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.category-tag {
+    padding: 0.25rem 0.75rem;
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--primary-color);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
 }

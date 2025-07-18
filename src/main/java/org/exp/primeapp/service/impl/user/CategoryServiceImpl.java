@@ -3,6 +3,7 @@ package org.exp.primeapp.service.impl.user;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.spotlight.SimpleSpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
 import org.exp.primeapp.models.entities.Category;
@@ -82,6 +83,29 @@ public class CategoryServiceImpl implements CategoryService {
                 .categoryResList(categoryResList)
                 .activeCategoryResList(activeCategoryResList)
                 .inactiveCategoryResList(inactiveCategoryResList)
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public AdminCategoryDashboardRes getAdminSpotlightCategories(Long spotlightId) {
+        List<AdminCategoryRes> allCategories = categoryRepository.findAllBySpotlightId(spotlightId).stream()
+                .map(this::convertToAdminCategoryRes)
+                .toList();
+        List<AdminCategoryRes> activeCategories = categoryRepository.findBySpotlightIdAndActiveSorted(spotlightId, true).stream()
+                .map(this::convertToAdminCategoryRes)
+                .toList();
+        List<AdminCategoryRes> inactiveCategories = categoryRepository.findBySpotlightIdAndActiveSorted(spotlightId, false).stream()
+                .map(this::convertToAdminCategoryRes)
+                .toList();
+
+        return AdminCategoryDashboardRes.builder()
+                .count(allCategories.size())
+                .activeCount(activeCategories.size())
+                .inactiveCount(inactiveCategories.size())
+                .categoryResList(allCategories)
+                .activeCategoryResList(activeCategories)
+                .inactiveCategoryResList(inactiveCategories)
                 .build();
     }
 
@@ -207,11 +231,15 @@ public class CategoryServiceImpl implements CategoryService {
         );
     }
 
+    @Transactional
     public AdminCategoryRes convertToAdminCategoryRes(Category category) {
         return new AdminCategoryRes(
                 category.getId(),
                 category.getName(),
-                category.getSpotlightName(),
+                SimpleSpotlightRes.builder()
+                        .id(category.getSpotlight().getId())
+                        .name(category.getSpotlightName())
+                        .build(),
                 category.getOrderNumber(),
                 category.getActive()
         );

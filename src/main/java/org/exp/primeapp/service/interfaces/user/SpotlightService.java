@@ -1,6 +1,8 @@
 package org.exp.primeapp.service.interfaces.user;
 
-import org.exp.primeapp.models.dto.responce.admin.CategorySpotlightRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.spotlight.FullSpotlightRes;
+import org.exp.primeapp.models.dto.responce.admin.spotlight.SimpleSpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.user.SpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.CatalogSpotlightRes;
@@ -19,6 +21,7 @@ public interface SpotlightService {
 
     List<CategoryRes> getSpotlightCategories(Long spotlightId);
 
-    List<CategorySpotlightRes> getSpotlightsForCategory();
+    List<SimpleSpotlightRes> getSpotlightsForCategory();
 
+    FullSpotlightRes getFullSpotlight(Long spotlightId);
 }

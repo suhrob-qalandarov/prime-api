@@ -29,7 +29,7 @@ public class AdminAttachmentController {
 
     @GetMapping("/with-key/{attachmentKey}")
     public ResponseEntity<Attachment> getAttachmentWithKey(@PathVariable String attachmentKey) {
-        log.debug("Fetching attachment with ID: {}", attachmentKey);
+        log.debug("Fetching attachment with KEY: {}", attachmentKey);
         return ResponseEntity.ok(attachmentUtilService.getAttachmentWithKey(attachmentKey));
     }
 

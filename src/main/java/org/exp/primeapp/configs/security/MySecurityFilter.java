@@ -27,14 +27,18 @@ public class MySecurityFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // OPTIONS so‘rovlarini qo‘llab-quvvatlash
+        String origin = request.getHeader("Origin");
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
-            response.setHeader("Access-Control-Allow-Origin", "http://localhost");
-            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            response.setHeader("Access-Control-Allow-Headers", "*");
+            if (origin != null && (origin.equals("http://localhost") || origin.equals("https://prime77.uz"))) {
+                response.setHeader("Access-Control-Allow-Origin", origin);
+            }
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+            response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, X-Requested-With");
             response.setHeader("Access-Control-Allow-Credentials", "true");
             return;
         }
+
 
         /*String token = extractToken(request);
 
