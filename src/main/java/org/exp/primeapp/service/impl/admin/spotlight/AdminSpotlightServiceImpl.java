@@ -104,7 +104,9 @@ public class AdminSpotlightServiceImpl implements AdminSpotlightService {
                 .name(spotlight.getName())
                 .orderNumber(spotlight.getOrderNumber())
                 .active(spotlight.getActive())
-                .categoriesCount((long) spotlight.getCategories().size())
+                .categoriesCount(
+                        spotlight.getCategories() != null ? (long) spotlight.getCategories().size() : 0L
+                )
                 .build();
     }
 }

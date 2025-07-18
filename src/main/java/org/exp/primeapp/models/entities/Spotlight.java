@@ -1,13 +1,11 @@
 package org.exp.primeapp.models.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.exp.primeapp.models.base.BaseEntity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -26,5 +24,6 @@ public class Spotlight extends BaseEntity {
     private Attachment image;
 
     @OneToMany(mappedBy = "spotlight", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Category> categories;
+    @Builder.Default
+    private Set<Category> categories = new HashSet<>();
 }
