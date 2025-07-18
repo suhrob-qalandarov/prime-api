@@ -640,15 +640,13 @@ async function toggleCategory(categoryId) {
             method: "PATCH",
         })
 
-        if (response === "OK" || response === 200) {
-            showNotification("success", "Kategoriya holati o'zgartirildi")
+        showNotification("success", "Kategoriya holati o'zgartirildi")
 
-            // Refresh data based on current spotlight filter
-            if (currentSpotlightFilter === "all") {
-                await loadCategoriesDashboard()
-            } else {
-                await filterBySpotlight(currentSpotlightFilter)
-            }
+        // Refresh data based on current spotlight filter
+        if (currentSpotlightFilter === "all") {
+            await loadCategoriesDashboard()
+        } else {
+            await filterBySpotlight(currentSpotlightFilter)
         }
     } catch (error) {
         console.error("Error toggling category:", error)
@@ -797,7 +795,7 @@ async function handleSpotlightImageUpload(file) {
         const formData = new FormData()
         formData.append("file", file)
 
-        const response = await apiRequest("/api/v1/admin/upload", {
+        const response = await apiRequest("/api/v1/admin/attachment/upload", {
             method: "POST",
             body: formData,
         })
@@ -1149,7 +1147,7 @@ async function saveSpotlightOrder() {
             spotlightOrderMap[spotlightId] = index + 1
         })
 
-        const response = await apiRequest("/api/v1/admin/spotlights/dashboard", {
+        const response = await apiRequest("/api/v1/admin/spotlights/order", {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(spotlightOrderMap),
@@ -1175,10 +1173,8 @@ async function toggleSpotlight(spotlightId) {
             method: "PATCH",
         })
 
-        if (response) {
-            showNotification("success", "Toifa holati o'zgartirildi")
-            await loadSpotlightsDashboard()
-        }
+        showNotification("success", "Toifa holati o'zgartirildi")
+        await loadSpotlightsDashboard()
     } catch (error) {
         console.error("Error toggling spotlight:", error)
         showNotification("error", "Toifa holatini o'zgartirishda xatolik")
