@@ -327,7 +327,7 @@ function renderCategoriesTable(categories) {
                   ${category.active ? "FAOL" : "NOFAOL"}
               </span>
           </td>
-          <td>formatDate(new Date())</td>
+          <td>${formatDate(new Date())}</td>
           <td>
               <button class="action-btn edit" onclick="showViewCategoryModal(${category.id})" title="Ko'rish">
                   <i class="fas fa-eye"></i>
