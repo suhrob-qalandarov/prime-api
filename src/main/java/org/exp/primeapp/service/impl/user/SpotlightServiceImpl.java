@@ -1,14 +1,17 @@
 package org.exp.primeapp.service.impl.user;
 
 import lombok.RequiredArgsConstructor;
+import org.exp.primeapp.models.dto.responce.admin.spotlight.FullSpotlightRes;
 import org.exp.primeapp.models.dto.responce.admin.spotlight.SimpleSpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.CatalogSpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.user.SpotlightRes;
+import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Spotlight;
 import org.exp.primeapp.repository.SpotlightRepository;
 import org.exp.primeapp.service.interfaces.user.SpotlightService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,6 +31,13 @@ public class SpotlightServiceImpl implements SpotlightService {
         return mapToResponse(spotlight);
     }
 
+    @Transactional
+    @Override
+    public FullSpotlightRes getFullSpotlight(Long spotlightId) {
+        Spotlight spotlight = spotlightRepository.findById(spotlightId)
+                .orElseThrow(() -> new NoSuchElementException("Spotlight not found with id: " + spotlightId));
+        return mapToSpotlightFullSpotlightRes(spotlight);
+    }
 
     @Override
     public List<SpotlightRes> getHeroSpotlights() {
@@ -58,7 +68,7 @@ public class SpotlightServiceImpl implements SpotlightService {
     @Override
     public List<SimpleSpotlightRes> getSpotlightsForCategory() {
         return spotlightRepository.findAllByOrderByOrderNumberAsc().stream()
-                .map(this::mapToCategorySpotlightResponse)
+                .map(this::mapToSimpleSpotlightRes)
                 .toList();
     }
 
@@ -70,10 +80,23 @@ public class SpotlightServiceImpl implements SpotlightService {
                 .build();
     }
 
-    public SimpleSpotlightRes mapToCategorySpotlightResponse(Spotlight spotlight) {
+    public SimpleSpotlightRes mapToSimpleSpotlightRes(Spotlight spotlight) {
         return SimpleSpotlightRes.builder()
                 .id(spotlight.getId())
                 .name(spotlight.getName())
+                .build();
+    }
+
+    @Transactional
+    public FullSpotlightRes mapToSpotlightFullSpotlightRes(Spotlight spotlight) {
+        return FullSpotlightRes.builder()
+                .id(spotlight.getId())
+                .name(spotlight.getName())
+                .orderNumber(spotlight.getOrderNumber())
+                .imageKey(spotlight.getImage().getKey())
+                .categoriesName(spotlight.getCategories().stream()
+                        .map(Category::getName)
+                        .toList())
                 .build();
     }
 }

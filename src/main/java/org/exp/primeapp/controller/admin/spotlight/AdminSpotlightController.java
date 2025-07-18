@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.request.SpotlightReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.spotlight.AdminSpotlightRes;
+import org.exp.primeapp.models.dto.responce.admin.spotlight.FullSpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.SpotlightRes;
 import org.exp.primeapp.service.interfaces.user.CategoryService;
 import org.exp.primeapp.service.interfaces.user.SpotlightService;
@@ -27,10 +28,16 @@ public class AdminSpotlightController {
     private final AdminSpotlightService adminSpotlightService;
     private final CategoryService categoryService;
 
-    @GetMapping
+   /* @GetMapping
     public ResponseEntity<List<SpotlightRes>> getSpotlights() {
         List<SpotlightRes> spotlights = spotlightService.getHeroSpotlights();
         return new ResponseEntity<>(spotlights, HttpStatus.ACCEPTED);
+    }*/
+
+    @GetMapping("/{spotlightId}")
+    public ResponseEntity<FullSpotlightRes> getSpotlightById(@PathVariable Long spotlightId) {
+        FullSpotlightRes spotlight = spotlightService.getFullSpotlight(spotlightId);
+        return new ResponseEntity<>(spotlight, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/{spotlightId}/categories")
