@@ -20,7 +20,7 @@ public class AdminSpotlightsController {
 
     private final AdminSpotlightService adminSpotlightService;
 
-    @GetMapping
+    @GetMapping("/dashboard")
     public ResponseEntity<DashboardSpotlightRes> getSpotlights() {
         DashboardSpotlightRes dashboardSpotlightRes = adminSpotlightService.getDashboardSpotlightInfo();
         return new ResponseEntity<>(dashboardSpotlightRes, HttpStatus.OK);
