@@ -87,6 +87,15 @@
                 <h1>Kategoriyalar</h1>
                 <p>Kategoriyalarni boshqarish</p>
             </div>
+            <!-- Tab Navigation -->
+            <div class="page-tabs">
+                <button class="page-tab-btn" data-tab="spotlights" onclick="switchTab('spotlights')">
+                    <i class="fas fa-star"></i> Toifalar
+                </button>
+                <button class="page-tab-btn active" data-tab="categories" onclick="switchTab('categories')">
+                    <i class="fas fa-tags"></i> Kategoriyalar
+                </button>
+            </div>
         </div>
         <div class="header-right">
             <div class="header-actions">
@@ -100,8 +109,122 @@
         </div>
     </header>
 
+    <!-- Spotlights Content -->
+    <div class="tab-content" id="spotlights-content">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stats-card primary">
+                <div class="stats-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="total-spotlights">0</div>
+                    <div class="stats-label">Jami toifalar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+5%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card success">
+                <div class="stats-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="active-spotlights">0</div>
+                    <div class="stats-label">Faol toifalar</div>
+                    <div class="stats-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card warning">
+                <div class="stats-icon">
+                    <i class="fas fa-pause-circle"></i>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-number" id="inactive-spotlights">0</div>
+                    <div class="stats-label">Nofaol toifalar</div>
+                    <div class="stats-change negative">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>-2%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spotlights Management -->
+        <div class="table-card full-width">
+            <div class="card-header">
+                <h3>Toifalar ro'yxati</h3>
+                <div class="card-actions">
+                    <button class="btn btn-primary" onclick="showAddSpotlightModal()">
+                        <i class="fas fa-plus"></i> Qo'shish
+                    </button>
+                    <button class="btn btn-secondary" onclick="showOrderSpotlightsModal()">
+                        <i class="fas fa-sort"></i> Tartiblash
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <!-- Search and Filter -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <select class="form-select" id="spotlight-status-filter" onchange="filterSpotlights()">
+                            <option value="all">Barcha toifalar</option>
+                            <option value="active">Faol toifalar</option>
+                            <option value="inactive">Nofaol toifalar</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="spotlight-search-input" placeholder="Toifa qidirish...">
+                            <button class="btn btn-outline-secondary" onclick="searchSpotlights()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="clearSpotlightSearch()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spotlights Table -->
+                <div class="table-container scrollable-table">
+                    <table class="modern-table">
+                        <thead>
+                        <tr>
+                            <th>Tartib raqam</th>
+                            <th>ID</th>
+                            <th>Nomi</th>
+                            <th>Kategoriyalar soni</th>
+                            <th>Holati</th>
+                            <th>Yaratilgan</th>
+                            <th>Amallar</th>
+                        </tr>
+                        </thead>
+                        <tbody id="spotlights-table">
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <div class="loading-state">
+                                    <div class="loading-spinner"></div>
+                                    <p>Yuklanmoqda...</p>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Categories Content -->
-    <div class="tab-content active">
+    <div class="tab-content active" id="categories-content">
         <!-- Statistics Cards -->
         <div class="stats-grid">
             <div class="stats-card primary">
@@ -225,6 +348,132 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Spotlight Modal -->
+<div class="modal fade" id="spotlightModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modern-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="spotlightModalTitle">Toifa qo'shish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="spotlight-form" class="modern-form">
+                    <input type="hidden" id="spotlight-id">
+
+                    <div class="form-group">
+                        <label class="form-label">Toifa nomi</label>
+                        <input type="text" class="form-control" id="spotlight-name" placeholder="Toifa nomini kiriting" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Rasm</label>
+                        <div class="file-upload-area" id="spotlight-image-upload">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">
+                                <p>Rasm yuklash uchun bosing yoki suda torting</p>
+                                <span>PNG, JPG, JPEG (Max: 5MB)</span>
+                            </div>
+                            <input type="file" id="spotlight-image-input" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="uploaded-preview" id="spotlight-image-preview"></div>
+                        <input type="hidden" id="spotlight-image-id">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="spotlight-active" checked>
+                            <label for="spotlight-active">
+                                <div class="toggle-slider"></div>
+                            </label>
+                            <span class="toggle-label">Faol toifa</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                <button type="button" class="btn btn-primary" onclick="saveSpotlight()">
+                    <span id="spotlight-save-btn-text">Saqlash</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Spotlight Modal -->
+<div class="modal fade" id="viewSpotlightModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content modern-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Toifa ma'lumotlari</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="spotlight-info-grid">
+                            <div class="info-item">
+                                <label class="info-label">ID</label>
+                                <p id="view-spotlight-id" class="info-value">-</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Nomi</label>
+                                <p id="view-spotlight-name" class="info-value">-</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Tartib raqami</label>
+                                <p id="view-spotlight-order" class="info-value">-</p>
+                            </div>
+                            <div class="info-item">
+                                <label class="info-label">Holati</label>
+                                <div id="view-spotlight-status" class="info-value">-</div>
+                            </div>
+                            <div class="info-item full-width">
+                                <label class="info-label">Kategoriyalar</label>
+                                <div id="view-spotlight-categories" class="info-value">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="spotlight-image-container">
+                            <img id="view-spotlight-image" src="/placeholder.svg?height=300&width=300" alt="Toifa rasmi" class="spotlight-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Spotlights Modal -->
+<div class="modal fade" id="orderSpotlightsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modern-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Toifalar tartibini o'zgartirish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted mb-3">Toifalarni suda-suda tortib tartiblang:</p>
+                <div id="order-spotlights-list" class="order-list">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                <button type="button" class="btn btn-primary" onclick="saveSpotlightOrder()">
+                    Saqlash
+                </button>
             </div>
         </div>
     </div>

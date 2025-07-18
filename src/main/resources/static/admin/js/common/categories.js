@@ -8,6 +8,14 @@ let filteredCategories = []
 let currentSpotlightFilter = "all"
 const bootstrap = window.bootstrap
 
+// Global variables for spotlights
+let spotlightDashboardData = null
+let allSpotlights = []
+let activeSpotlights = []
+let inactiveSpotlights = []
+let filteredSpotlights = []
+let currentTab = "categories"
+
 // API Base URL
 const API_BASE_URL = "https://prime77.uz"
 
@@ -79,6 +87,23 @@ function setupEventListeners() {
     window.toggleFullscreen = toggleFullscreen
     window.logout = logout
     window.retryLoadData = retryLoadData
+
+    // New spotlight functions
+    window.switchTab = switchTab
+    window.showAddSpotlightModal = showAddSpotlightModal
+    window.showEditSpotlightModal = showEditSpotlightModal
+    window.showViewSpotlightModal = showViewSpotlightModal
+    window.showOrderSpotlightsModal = showOrderSpotlightsModal
+    window.saveSpotlight = saveSpotlight
+    window.saveSpotlightOrder = saveSpotlightOrder
+    window.toggleSpotlight = toggleSpotlight
+    window.filterSpotlights = filterSpotlights
+    window.searchSpotlights = searchSpotlights
+    window.clearSpotlightSearch = clearSpotlightSearch
+
+    // Setup spotlight image upload
+    setupSpotlightImageUpload()
+    setupSpotlightSearchInput()
 }
 
 // API request with token
@@ -302,7 +327,7 @@ function renderCategoriesTable(categories) {
                   ${category.active ? "FAOL" : "NOFAOL"}
               </span>
           </td>
-          <td>${formatDate(new Date())}</td>
+          <td>formatDate(new Date())</td>
           <td>
               <button class="action-btn edit" onclick="showViewCategoryModal(${category.id})" title="Ko'rish">
                   <i class="fas fa-eye"></i>
@@ -697,11 +722,523 @@ function formatDate(dateString) {
     }
 }
 
-function refreshData() {
-    if (currentSpotlightFilter === "all") {
-        loadCategoriesDashboard()
+// Tab switching functionality
+function switchTab(tabName) {
+    currentTab = tabName
+
+    // Update tab buttons
+    document.querySelectorAll(".page-tab-btn").forEach((btn) => {
+        btn.classList.remove("active")
+    })
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add("active")
+
+    // Update tab content
+    document.querySelectorAll(".tab-content").forEach((content) => {
+        content.classList.remove("active")
+    })
+    document.getElementById(`${tabName}-content`).classList.add("active")
+
+    // Load appropriate data
+    if (tabName === "spotlights") {
+        loadSpotlightsDashboard()
     } else {
-        filterBySpotlight(currentSpotlightFilter)
+        loadCategoriesDashboard()
+    }
+}
+
+// Setup spotlight image upload
+function setupSpotlightImageUpload() {
+    const uploadArea = document.getElementById("spotlight-image-upload")
+    const fileInput = document.getElementById("spotlight-image-input")
+    const preview = document.getElementById("spotlight-image-preview")
+
+    if (uploadArea && fileInput) {
+        uploadArea.addEventListener("click", () => fileInput.click())
+
+        uploadArea.addEventListener("dragover", (e) => {
+            e.preventDefault()
+            uploadArea.classList.add("dragover")
+        })
+
+        uploadArea.addEventListener("dragleave", () => {
+            uploadArea.classList.remove("dragover")
+        })
+
+        uploadArea.addEventListener("drop", (e) => {
+            e.preventDefault()
+            uploadArea.classList.remove("dragover")
+            const files = e.dataTransfer.files
+            if (files.length > 0) {
+                handleSpotlightImageUpload(files[0])
+            }
+        })
+
+        fileInput.addEventListener("change", (e) => {
+            if (e.target.files.length > 0) {
+                handleSpotlightImageUpload(e.target.files[0])
+            }
+        })
+    }
+}
+
+// Handle spotlight image upload
+async function handleSpotlightImageUpload(file) {
+    if (!file.type.startsWith("image/")) {
+        showNotification("error", "Faqat rasm fayllari qabul qilinadi")
+        return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        showNotification("error", "Fayl hajmi 5MB dan oshmasligi kerak")
+        return
+    }
+
+    try {
+        const formData = new FormData()
+        formData.append("file", file)
+
+        const response = await apiRequest("/api/v1/admin/upload", {
+            method: "POST",
+            body: formData,
+        })
+
+        if (response && response.id) {
+            document.getElementById("spotlight-image-id").value = response.id
+
+            // Show preview
+            const preview = document.getElementById("spotlight-image-preview")
+            preview.innerHTML = `
+        <div class="preview-item">
+          <img src="${URL.createObjectURL(file)}" alt="Preview">
+          <button class="preview-remove" onclick="removeSpotlightImage()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      `
+
+            showNotification("success", "Rasm muvaffaqiyatli yuklandi")
+        }
+    } catch (error) {
+        console.error("Error uploading image:", error)
+        showNotification("error", "Rasm yuklashda xatolik")
+    }
+}
+
+// Remove spotlight image
+function removeSpotlightImage() {
+    document.getElementById("spotlight-image-id").value = ""
+    document.getElementById("spotlight-image-preview").innerHTML = ""
+    document.getElementById("spotlight-image-input").value = ""
+}
+
+// Setup spotlight search input
+function setupSpotlightSearchInput() {
+    const searchInput = document.getElementById("spotlight-search-input")
+    if (searchInput) {
+        searchInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                searchSpotlights()
+            }
+        })
+    }
+}
+
+// Load spotlights dashboard
+async function loadSpotlightsDashboard() {
+    try {
+        showLoading()
+
+        const response = await apiRequest("/api/v1/admin/spotlights/dashboard")
+
+        if (response) {
+            spotlightDashboardData = response
+            allSpotlights = response.spotlightResList || []
+            activeSpotlights = response.activeSpotlightResList || []
+            inactiveSpotlights = response.inactiveSpotlightResList || []
+            filteredSpotlights = [...allSpotlights]
+
+            updateSpotlightStats()
+            renderSpotlightsTable(filteredSpotlights)
+            hideErrorState()
+        } else {
+            throw new Error("No spotlight data received")
+        }
+
+        hideLoading()
+    } catch (error) {
+        console.error("Error loading spotlights dashboard:", error)
+        hideLoading()
+        showErrorState("Toifalar ma'lumotlarini yuklashda xatolik yuz berdi")
+        showNotification("error", "Toifalar ma'lumotlarini yuklashda xatolik")
+    }
+}
+
+// Update spotlight statistics
+function updateSpotlightStats() {
+    if (spotlightDashboardData) {
+        animateCounter("total-spotlights", spotlightDashboardData.count || 0)
+        animateCounter("active-spotlights", spotlightDashboardData.activeCount || 0)
+        animateCounter("inactive-spotlights", spotlightDashboardData.inactiveCount || 0)
+    }
+}
+
+// Render spotlights table
+function renderSpotlightsTable(spotlights) {
+    const tbody = document.getElementById("spotlights-table")
+    if (!tbody) return
+
+    if (spotlights.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Ma\'lumotlar mavjud emas</td></tr>'
+        return
+    }
+
+    tbody.innerHTML = spotlights
+        .map(
+            (spotlight) => `
+    <tr class="fade-in">
+      <td><strong>T-${spotlight.orderNumber}</strong></td>
+      <td>${spotlight.id}</td>
+      <td class="fw-bold">${spotlight.name}</td>
+      <td>${spotlight.categoriesCount || 0}</td>
+      <td>
+        <span class="status-badge ${spotlight.active ? "active" : "inactive"}">
+          ${spotlight.active ? "FAOL" : "NOFAOL"}
+        </span>
+      </td>
+      <td>${formatDate(new Date())}</td>
+      <td>
+        <button class="action-btn edit" onclick="showViewSpotlightModal(${spotlight.id})" title="Ko'rish">
+          <i class="fas fa-eye"></i>
+        </button>
+        <button class="action-btn edit" onclick="showEditSpotlightModal(${spotlight.id})" title="Tahrirlash">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button class="action-btn ${spotlight.active ? "delete" : "edit"}" onclick="toggleSpotlight(${spotlight.id})" title="${spotlight.active ? "Nofaollashtirish" : "Faollashtirish"}">
+          <i class="fas fa-${spotlight.active ? "pause" : "play"}"></i>
+        </button>
+      </td>
+    </tr>
+  `,
+        )
+        .join("")
+}
+
+// Show add spotlight modal
+function showAddSpotlightModal() {
+    document.getElementById("spotlightModalTitle").textContent = "Toifa qo'shish"
+    document.getElementById("spotlight-save-btn-text").textContent = "Saqlash"
+    document.getElementById("spotlight-form").reset()
+    document.getElementById("spotlight-id").value = ""
+    document.getElementById("spotlight-active").checked = true
+    document.getElementById("spotlight-image-id").value = ""
+    document.getElementById("spotlight-image-preview").innerHTML = ""
+
+    const modal = new bootstrap.Modal(document.getElementById("spotlightModal"))
+    modal.show()
+}
+
+// Show edit spotlight modal
+async function showEditSpotlightModal(spotlightId) {
+    try {
+        let spotlight = allSpotlights.find((s) => s.id === spotlightId)
+
+        if (!spotlight) {
+            spotlight = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}`)
+        }
+
+        if (!spotlight) {
+            throw new Error("Spotlight not found")
+        }
+
+        document.getElementById("spotlightModalTitle").textContent = "Toifani tahrirlash"
+        document.getElementById("spotlight-save-btn-text").textContent = "Yangilash"
+        document.getElementById("spotlight-id").value = spotlight.id
+        document.getElementById("spotlight-name").value = spotlight.name
+        document.getElementById("spotlight-active").checked = spotlight.active
+
+        const modal = new bootstrap.Modal(document.getElementById("spotlightModal"))
+        modal.show()
+    } catch (error) {
+        console.error("Error loading spotlight for edit:", error)
+        showNotification("error", "Toifa ma'lumotlarini yuklashda xatolik")
+    }
+}
+
+// Show view spotlight modal
+async function showViewSpotlightModal(spotlightId) {
+    try {
+        const response = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}`)
+
+        if (!response) {
+            throw new Error("Spotlight not found")
+        }
+
+        document.getElementById("view-spotlight-id").textContent = response.id
+        document.getElementById("view-spotlight-name").textContent = response.name
+        document.getElementById("view-spotlight-order").textContent = `T-${response.orderNumber}`
+        document.getElementById("view-spotlight-status").innerHTML = `
+      <span class="status-badge ${response.active ? "active" : "inactive"}">
+        ${response.active ? "FAOL" : "NOFAOL"}
+      </span>
+    `
+
+        // Show categories
+        if (response.categoriesName && response.categoriesName.length > 0) {
+            document.getElementById("view-spotlight-categories").innerHTML = `
+        <div class="category-tags">
+          ${response.categoriesName.map((name) => `<span class="category-tag">${name}</span>`).join("")}
+        </div>
+      `
+        } else {
+            document.getElementById("view-spotlight-categories").textContent = "Kategoriyalar mavjud emas"
+        }
+
+        // Show image
+        if (response.imageKey) {
+            document.getElementById("view-spotlight-image").src = `${API_BASE_URL}/api/v1/files/${response.imageKey}`
+        } else {
+            document.getElementById("view-spotlight-image").src = "/placeholder.svg?height=300&width=300"
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById("viewSpotlightModal"))
+        modal.show()
+    } catch (error) {
+        console.error("Error viewing spotlight:", error)
+        showNotification("error", "Toifa ma'lumotlarini yuklashda xatolik")
+    }
+}
+
+// Show order spotlights modal
+function showOrderSpotlightsModal() {
+    const modalBody = document.getElementById("order-spotlights-list")
+
+    modalBody.innerHTML = activeSpotlights
+        .sort((a, b) => a.orderNumber - b.orderNumber)
+        .map(
+            (spotlight) => `
+      <div class="order-item" data-id="${spotlight.id}" data-order="${spotlight.orderNumber}">
+        <div class="order-handle">
+          <i class="fas fa-grip-vertical"></i>
+        </div>
+        <div class="order-content">
+          <span class="order-number">T-${spotlight.orderNumber}</span>
+          <span class="order-name">${spotlight.name}</span>
+        </div>
+      </div>
+    `,
+        )
+        .join("")
+
+    initializeSpotlightDragAndDrop()
+
+    const modal = new bootstrap.Modal(document.getElementById("orderSpotlightsModal"))
+    modal.show()
+}
+
+// Initialize spotlight drag and drop
+function initializeSpotlightDragAndDrop() {
+    const container = document.getElementById("order-spotlights-list")
+    let draggedElement = null
+
+    container.addEventListener("dragstart", (e) => {
+        draggedElement = e.target.closest(".order-item")
+        e.target.style.opacity = "0.5"
+    })
+
+    container.addEventListener("dragend", (e) => {
+        e.target.style.opacity = ""
+        draggedElement = null
+    })
+
+    container.addEventListener("dragover", (e) => {
+        e.preventDefault()
+    })
+
+    container.addEventListener("drop", (e) => {
+        e.preventDefault()
+        const dropTarget = e.target.closest(".order-item")
+
+        if (dropTarget && draggedElement && dropTarget !== draggedElement) {
+            const rect = dropTarget.getBoundingClientRect()
+            const midpoint = rect.top + rect.height / 2
+
+            if (e.clientY < midpoint) {
+                container.insertBefore(draggedElement, dropTarget)
+            } else {
+                container.insertBefore(draggedElement, dropTarget.nextSibling)
+            }
+
+            updateSpotlightOrderNumbers()
+        }
+    })
+
+    container.querySelectorAll(".order-item").forEach((item) => {
+        item.draggable = true
+    })
+}
+
+// Update spotlight order numbers
+function updateSpotlightOrderNumbers() {
+    const items = document.querySelectorAll("#order-spotlights-list .order-item")
+    items.forEach((item, index) => {
+        const orderNumber = item.querySelector(".order-number")
+        orderNumber.textContent = `T-${index + 1}`
+        item.dataset.order = index + 1
+    })
+}
+
+// Save spotlight
+async function saveSpotlight() {
+    try {
+        const spotlightId = document.getElementById("spotlight-id").value
+        const name = document.getElementById("spotlight-name").value.trim()
+        const imageId = document.getElementById("spotlight-image-id").value
+        const isActive = document.getElementById("spotlight-active").checked
+
+        if (!name) {
+            showNotification("warning", "Toifa nomini kiriting")
+            return
+        }
+
+        if (!imageId && !spotlightId) {
+            showNotification("warning", "Rasm yuklang")
+            return
+        }
+
+        const spotlightData = {
+            name: name,
+            imageId: imageId ? Number.parseInt(imageId) : null,
+        }
+
+        let response
+        if (spotlightId) {
+            response = await apiRequest(`/api/v1/admin/spotlight/${spotlightId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(spotlightData),
+            })
+        } else {
+            response = await apiRequest("/api/v1/admin/spotlight", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(spotlightData),
+            })
+        }
+
+        if (response) {
+            showNotification("success", "Toifa muvaffaqiyatli saqlandi")
+            await loadSpotlightsDashboard()
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById("spotlightModal"))
+            modal.hide()
+        }
+    } catch (error) {
+        console.error("Error saving spotlight:", error)
+        showNotification("error", "Toifani saqlashda xatolik")
+    }
+}
+
+// Save spotlight order
+async function saveSpotlightOrder() {
+    try {
+        const items = document.querySelectorAll("#order-spotlights-list .order-item")
+        const spotlightOrderMap = {}
+
+        items.forEach((item, index) => {
+            const spotlightId = Number.parseInt(item.dataset.id)
+            spotlightOrderMap[spotlightId] = index + 1
+        })
+
+        const response = await apiRequest("/api/v1/admin/spotlights/dashboard", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(spotlightOrderMap),
+        })
+
+        if (response) {
+            showNotification("success", "Toifalar tartibi yangilandi")
+            await loadSpotlightsDashboard()
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById("orderSpotlightsModal"))
+            modal.hide()
+        }
+    } catch (error) {
+        console.error("Error saving spotlight order:", error)
+        showNotification("error", "Toifalar tartibini saqlashda xatolik")
+    }
+}
+
+// Toggle spotlight
+async function toggleSpotlight(spotlightId) {
+    try {
+        const response = await apiRequest(`/api/v1/admin/spotlight/toggle/${spotlightId}`, {
+            method: "PATCH",
+        })
+
+        if (response) {
+            showNotification("success", "Toifa holati o'zgartirildi")
+            await loadSpotlightsDashboard()
+        }
+    } catch (error) {
+        console.error("Error toggling spotlight:", error)
+        showNotification("error", "Toifa holatini o'zgartirishda xatolik")
+    }
+}
+
+// Filter spotlights
+function filterSpotlights() {
+    const statusFilter = document.getElementById("spotlight-status-filter")?.value || "all"
+
+    switch (statusFilter) {
+        case "all":
+            filteredSpotlights = [...allSpotlights]
+            break
+        case "active":
+            filteredSpotlights = [...activeSpotlights]
+            break
+        case "inactive":
+            filteredSpotlights = [...inactiveSpotlights]
+            break
+        default:
+            filteredSpotlights = [...allSpotlights]
+    }
+
+    renderSpotlightsTable(filteredSpotlights)
+}
+
+// Search spotlights
+function searchSpotlights() {
+    const searchTerm = document.getElementById("spotlight-search-input")?.value.trim().toLowerCase()
+
+    if (!searchTerm) {
+        filterSpotlights()
+        return
+    }
+
+    filteredSpotlights = allSpotlights.filter((spotlight) => spotlight.name.toLowerCase().includes(searchTerm))
+
+    renderSpotlightsTable(filteredSpotlights)
+}
+
+// Clear spotlight search
+function clearSpotlightSearch() {
+    const searchInput = document.getElementById("spotlight-search-input")
+    if (searchInput) {
+        searchInput.value = ""
+    }
+    filterSpotlights()
+}
+
+// Update refreshData function to handle both tabs
+function refreshData() {
+    if (currentTab === "spotlights") {
+        loadSpotlightsDashboard()
+    } else {
+        if (currentSpotlightFilter === "all") {
+            loadCategoriesDashboard()
+        } else {
+            filterBySpotlight(currentSpotlightFilter)
+        }
     }
     showNotification("success", "Ma'lumotlar yangilandi")
 }
@@ -760,7 +1297,7 @@ function showErrorState(message) {
     }
 
     // Reset stats to 0
-    statsCards.forEach(card => {
+    statsCards.forEach((card) => {
         card.textContent = "0"
     })
 }
