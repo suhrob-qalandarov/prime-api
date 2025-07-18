@@ -737,7 +737,7 @@ function switchTab(tabName) {
     document.getElementById(`${tabName}-content`).classList.add("active")
 
     // Load appropriate data
-    if (tabName === "categories") {
+    if (tabName === "spotlights") {
         loadSpotlightsDashboard()
     } else {
         loadCategoriesDashboard()
