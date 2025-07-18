@@ -14,7 +14,7 @@ const ORDER_STATUSES = {
 
 // Global o'zgaruvchilar
 let allOrders = []
-const API_BASE_URL = "https://prime.77/api/v1"
+const API_BASE_URL = "https://prime77.uz/api/v1"
 
 // DOM yuklanganda ishga tushadi
 document.addEventListener("DOMContentLoaded", () => {
