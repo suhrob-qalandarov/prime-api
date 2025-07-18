@@ -282,12 +282,6 @@ body {
 .breadcrumb h1 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--dark-color);
-    margin: 0;
-}
-
-.breadcrumb p {
-    font-size: 0.875rem;
     color: var(--gray-600);
     margin: 0;
 }

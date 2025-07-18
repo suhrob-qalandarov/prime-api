@@ -41,7 +41,7 @@ public class SpotlightServiceImpl implements SpotlightService {
 
     @Override
     public List<SpotlightRes> getHeroSpotlights() {
-        return spotlightRepository.findAll().stream()
+        return spotlightRepository.findAllByActiveTrueOrderByOrderNumberAsc().stream()
                 .map(spotlight -> new SpotlightRes(
                         spotlight.getId(),
                         spotlight.getName(),

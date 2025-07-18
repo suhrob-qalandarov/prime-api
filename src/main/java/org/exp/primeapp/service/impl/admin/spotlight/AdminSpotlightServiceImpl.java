@@ -89,11 +89,14 @@ public class AdminSpotlightServiceImpl implements AdminSpotlightService {
         return getDashboardSpotlightInfo();
     }
 
-    private Spotlight mapToEntity(SpotlightReq spotlightReq) {
+    @Transactional
+    public Spotlight mapToEntity(SpotlightReq spotlightReq) {
         Long imageId = spotlightReq.imageId();
+        long orderNumber = spotlightRepository.count() + 1;
         Attachment attachment = attachmentUtilService.getAttachment(imageId);
         return Spotlight.builder()
                 .name(spotlightReq.name())
+                .orderNumber(orderNumber)
                 .image(attachment)
                 .build();
     }
