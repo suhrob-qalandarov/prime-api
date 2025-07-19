@@ -10,6 +10,7 @@ import org.exp.primeapp.models.base.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,12 +23,17 @@ import java.util.List;
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
 
+    private Long telegramId;
     private String firstName;
     private String lastName;
+    private String username;
     private String email;
     private String password;
     private String phone;
-    private String verifyCode;
+
+    private Integer verifyCode;
+    @Column(name = "verify_code_expiration")
+    private LocalDateTime verifyCodeExpiration;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;

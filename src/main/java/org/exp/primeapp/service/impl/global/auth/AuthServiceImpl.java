@@ -90,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Email already exists.");
         }
 
-        String code = String.valueOf(1000 + new Random().nextInt(9000));
+        Integer code = 1000 + new Random().nextInt(9000);
 
         List<Role> roleUser = roleRepository.findALlByNameIn(List.of("ROLE_USER"));
 
@@ -106,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         userRepository.save(user);
 
-        emailService.sendVerificationEmail(req.getEmail(), code);
+        emailService.sendVerificationEmail(req.getEmail(), code.toString());
         return new ApiResponse(true, "Verification code sent to email");
     }
 
@@ -119,7 +119,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         User user = optionalUser.get();
-        String verifyCode = user.getVerifyCode();
+        Integer verifyCode = user.getVerifyCode();
 
         if (verifyCode != null && verifyCode.equals(req.getCode())) {
             user.setActive(true);

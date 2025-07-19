@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -36,4 +37,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByActive(boolean b);
 
     long countByActive(Boolean active);
+
+    User findByTelegramId(Long telegramId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.phone = :phone WHERE u.id = :userId")
+    void updatePhoneByUserId(@Param("userId") Long userId, @Param("phone") String phone);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.verifyCode = :code, u.verifyCodeExpiration = :expiration WHERE u.id = :userId")
+    void updateVerifyCodeAndExpiration(@Param("userId") Long userId,
+                                       @Param("code") Integer oneTimeCode,
+                                       @Param("expiration") LocalDateTime expirationTime);
 }
