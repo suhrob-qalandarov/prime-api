@@ -66,6 +66,7 @@ jobs:
             echo "SPRING_DATASOURCE_URL=jdbc:postgresql://web_db:5432/prime_db" > .env
             echo "SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}" >> .env
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" >> .env
+            echo "TELEGRAM_BOT_TOKEN"=${{secrets.TELEGRAM_BOT_TOKEN}} >> .env
             echo "AWS_S3_BUCKET=${{ secrets.S3_BUCKET_NAME }}" >> .env
             echo "AWS_S3_REGION=${{ secrets.S3_REGION }}" >> .env
             echo "AWS_S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY }}" >> .env
