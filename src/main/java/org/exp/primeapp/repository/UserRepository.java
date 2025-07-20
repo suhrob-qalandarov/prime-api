@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE User u SET u.active = :active WHERE u.id = :productId")
+    @Query("UPDATE User u SET u.active = :active WHERE u.id = :userId")
     int updateActive(@Param("active")boolean active, @Param("userId") Long userId);
 
     @Transactional
@@ -51,4 +51,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void updateVerifyCodeAndExpiration(@Param("userId") Long userId,
                                        @Param("code") Integer oneTimeCode,
                                        @Param("expiration") LocalDateTime expirationTime);
+
+    User findOneByVerifyCode(Integer verifyCode);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.messageId = :messageId WHERE u.id = :id")
+    void updateMessageId(@Param("id") Long id, @Param("messageId") Integer messageId);
 }

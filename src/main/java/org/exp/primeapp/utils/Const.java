@@ -17,6 +17,8 @@ public interface Const {
     String LOGOUT = "/logout";
     String REFRESH = "/refresh";
 
+    String BOT = "/bot";
+
     String ADMIN = "/admin";
     String USER = "/user";
     String USERS = "/users";

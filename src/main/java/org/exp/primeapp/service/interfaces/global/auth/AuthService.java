@@ -15,4 +15,6 @@ public interface AuthService {
 
     ApiResponse sendVerificationCode(RegisterReq registerDTO);
     ApiResponse verifyCodeAndRegister(VerifyEmailReq req);
+
+    UserRes verifyWithCodeAndSendUserData(Integer code, HttpServletResponse response);
 }

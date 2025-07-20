@@ -31,6 +31,7 @@ public class User extends BaseEntity implements UserDetails {
     private String password;
     private String phone;
 
+    private Integer messageId;
     private Integer verifyCode;
     @Column(name = "verify_code_expiration")
     private LocalDateTime verifyCodeExpiration;

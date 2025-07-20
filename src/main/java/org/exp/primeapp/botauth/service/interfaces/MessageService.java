@@ -11,4 +11,10 @@ public interface MessageService {
     void sendLoginMsg(Long chatId);
 
     void removeKeyboardAndSendCode(User user);
+
+    void removeKeyboardAndSendMsg(Long telegramId);
+
+    void sendCode(User user);
+
+    void renewCode(User user);
 }

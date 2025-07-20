@@ -22,20 +22,23 @@ public class MessageHandler implements Consumer<Message> {
     @Override
     public void accept(Message message) {
         String text = message.text();
-        Long tgUserId = message.from().id();
-        User user = userService.getOrCreateUser(message);
+        User user = userService.getOrCreateUser(message.from());
 
         if (message.contact() != null) {
             Contact contact = message.contact();
-            messageService.removeKeyboardAndSendCode(user);
+            messageService.removeKeyboardAndSendMsg(user.getTelegramId());
+            messageService.sendCode(user);
             userService.updateUserPhoneById(user.getId(), contact.phoneNumber());
 
         } else if (text.equals("/start")) {
-            messageService.sendStartMsg(tgUserId, user.getFirstName());
+            messageService.sendStartMsg(user.getTelegramId(), user.getFirstName());
 
         } else if (text.equals("/login")) {
             userService.updateOneTimeCode(user.getId());
             messageService.sendLoginMsg(user.getTelegramId());
+
         }
+
+
     }
 }

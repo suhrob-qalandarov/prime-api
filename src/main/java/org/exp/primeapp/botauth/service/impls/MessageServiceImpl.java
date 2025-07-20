@@ -3,8 +3,10 @@ package org.exp.primeapp.botauth.service.impls;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardRemove;
+import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.botauth.service.interfaces.ButtonService;
 import org.exp.primeapp.botauth.service.interfaces.MessageService;
@@ -54,25 +56,51 @@ public class MessageServiceImpl implements MessageService {
         Integer oneTimeCode = botAuthUserService.generateOneTimeCode();
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(2);
         telegramBot.execute(new SendMessage(user.getTelegramId(),
-                "🔒 Code:\n<pre>" + oneTimeCode + "</pre>"
+                "🔒 Kod:\n<pre>" + oneTimeCode + "</pre>"
         )
                 .parseMode(ParseMode.HTML)
                 .replyMarkup(new ReplyKeyboardRemove())
         );
         userRepository.updateVerifyCodeAndExpiration(user.getId(), oneTimeCode, expirationTime);
-        sendLoginMsg(user.getTelegramId());
+        //sendLoginMsg(user.getTelegramId());
     }
 
+    @Override
+    public void removeKeyboardAndSendMsg(Long chatId) {
+        telegramBot.execute(new SendMessage(chatId, "🔑Muvaffaqiyatli ro'yhatdan o'tkazildi!")
+                .parseMode(ParseMode.Markdown)
+                .replyMarkup(new ReplyKeyboardRemove())
+        );
+    }
+
+    @Transactional
     public void sendCode(User user) {
         Integer oneTimeCode = botAuthUserService.generateOneTimeCode();
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(2);
-        telegramBot.execute(new SendMessage(user.getTelegramId(),
-                        "🔒 Code:" + oneTimeCode + "\n\uD83D\uDD17 Click and Login:"
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(5);
+        SendResponse response = telegramBot.execute(new SendMessage(user.getTelegramId(),
+                        "🔒 Kod: \n<pre>" + oneTimeCode + "</pre>" + "\n\n\uD83D\uDD17 Bosing va Kiring: \nprime/login"
                 )
                         .parseMode(ParseMode.HTML)
                         .replyMarkup(buttonService.sendRenewCodeBtn())
         );
         userRepository.updateVerifyCodeAndExpiration(user.getId(), oneTimeCode, expirationTime);
-        sendLoginMsg(user.getTelegramId());
+        userRepository.updateMessageId(user.getId(), response.message().messageId());
+        //sendLoginMsg(user.getTelegramId());
+    }
+
+    @Transactional
+    public void renewCode(User user) {
+        Integer oneTimeCode = botAuthUserService.generateOneTimeCode();
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(5);
+
+        SendResponse response = (SendResponse) telegramBot.execute(new EditMessageText(
+                user.getTelegramId(),
+                user.getMessageId(),
+                "🔒 Kod: \n<pre>" + oneTimeCode + "</pre>" + "\n\n\uD83D\uDD17 Bosing va Kiring: \nprime/login"
+                ).parseMode(ParseMode.HTML)
+                .replyMarkup(buttonService.sendRenewCodeBtn())
+        );
+        userRepository.updateVerifyCodeAndExpiration(user.getId(), oneTimeCode, expirationTime);
+        userRepository.updateMessageId(user.getId(), response.message().messageId());
     }
 }

@@ -1,5 +1,6 @@
 package org.exp.primeapp.botauth.service.impls;
 
+import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.botauth.service.interfaces.UserService;
@@ -23,8 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User getOrCreateUser(Message message) {
-        com.pengrad.telegrambot.model.User tgUser = message.from();
+    public User getOrCreateUser(com.pengrad.telegrambot.model.User tgUser) {
         Long id = tgUser.id();
         User user = userRepository.findByTelegramId(id);
 

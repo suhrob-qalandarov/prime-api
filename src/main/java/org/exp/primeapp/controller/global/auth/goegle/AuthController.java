@@ -1,4 +1,4 @@
-package org.exp.primeapp.controller.global.auth;
+package org.exp.primeapp.controller.global.auth.goegle;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -64,10 +65,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Parol noto‘g‘ri");
         }
 
-        String accessToken = jwtService.generateToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
-
-        setTokensToCookie(accessToken, refreshToken, response);
+        setTokenToCookie(user, response);
 
         return UserRes.builder()
                 .id(user.getId())
@@ -130,17 +128,36 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    public void setTokensToCookie(String accessToken, String refreshToken, HttpServletResponse response) {
-        String accessTokenValue = (accessToken != null && accessToken.startsWith("Bearer "))
-                ? accessToken.substring(7)
-                : accessToken;
+    @Override
+    public UserRes verifyWithCodeAndSendUserData(Integer code, HttpServletResponse response) {
+        User user = userRepository.findOneByVerifyCode(code);
 
-        String refreshTokenValue = (refreshToken != null && refreshToken.startsWith("Bearer "))
-                ? refreshToken.substring(7)
-                : refreshToken;
+        if (user.getVerifyCodeExpiration().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Code expired");
+        }
 
-        if (accessTokenValue != null && refreshTokenValue != null) {
-            ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessTokenValue)
+        setTokenToCookie(user, response);
+
+        var auth = new UsernamePasswordAuthenticationToken(
+                user.getPhone(),
+               user.getVerifyCode()
+        );
+        authenticationManager.authenticate(auth);
+
+        return UserRes.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .username(user.getUsername())
+                .phone(user.getPhone())
+                .roles(user.getRoles().stream().map(Role::getName).toList())
+                .build();
+    }
+
+    public void setTokenToCookie(User user, HttpServletResponse response) {
+        String token = jwtService.generateToken(user);
+        if (token != null) {
+            ResponseCookie accessCookie = ResponseCookie.from("prime-token", token)
                     .httpOnly(true)
                     .secure(true)
                     .path("/")
@@ -148,18 +165,9 @@ public class AuthServiceImpl implements AuthService {
                     .sameSite("Strict")
                     .build();
 
-            ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshTokenValue)
-                    .httpOnly(true)
-                    .secure(true)
-                    .path("/")
-                    .maxAge(Duration.ofDays(14))
-                    .sameSite("Strict")
-                    .build();
-
             response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-            response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
         } else {
-            log.error("Tokenlardan biri null: accessToken= {}, refreshToken={}", accessToken, refreshToken);
+            log.error("Token null: token= {}", token);
         }
     }
 }

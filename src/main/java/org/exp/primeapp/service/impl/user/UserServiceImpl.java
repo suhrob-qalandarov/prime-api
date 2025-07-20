@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService {
                 savedUser.getId(),
                 savedUser.getFirstName(),
                 savedUser.getLastName(),
+                savedUser.getUsername(),
                 savedUser.getEmail(),
                 savedUser.getPhone(),
                 savedUser.getRoles().stream().map(Role::getName).toList()
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
                         user.getId(),
                         user.getFirstName(),
                         user.getLastName(),
+                        user.getUsername(),
                         user.getEmail(),
                         user.getPhone(),
                         user.getRoles().stream().map(Role::getName).toList()
@@ -136,6 +138,7 @@ public class UserServiceImpl implements UserService {
                 user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
+                user.getUsername(),
                 user.getEmail(),
                 user.getPhone(),
                 user.getRoles().stream().map(Role::getName).toList()

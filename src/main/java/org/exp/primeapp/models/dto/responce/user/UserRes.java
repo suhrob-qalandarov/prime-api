@@ -9,6 +9,7 @@ public record UserRes(
         Long id,
         String firstName,
         String lastName,
+        String username,
         String email,
         String phone,
         List<String> roles
