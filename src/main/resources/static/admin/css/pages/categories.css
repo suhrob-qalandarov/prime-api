@@ -282,6 +282,12 @@ body {
 .breadcrumb h1 {
     font-size: 1.5rem;
     font-weight: 700;
+    color: var(--dark-color);
+    margin: 0;
+}
+
+.breadcrumb p {
+    font-size: 0.875rem;
     color: var(--gray-600);
     margin: 0;
 }
@@ -518,6 +524,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .card-header h3 {
@@ -525,6 +533,7 @@ body {
     font-weight: 600;
     color: var(--dark-color);
     margin: 0;
+    flex-shrink: 0;
 }
 
 .card-actions {
@@ -1231,4 +1240,60 @@ body {
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 500;
+}
+
+/* Header Statistics */
+.header-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: var(--border-radius-sm);
+    border-left: 3px solid var(--primary-color);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Responsive adjustments for header stats */
+@media (max-width: 768px) {
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .stat-item {
+        flex: 1;
+        min-width: 0;
+        justify-content: center;
+    }
+
+    .card-actions {
+        width: 100%;
+        justify-content: center;
+    }
 }

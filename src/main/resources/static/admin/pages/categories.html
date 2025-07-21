@@ -83,9 +83,6 @@
             <button class="sidebar-toggle" id="sidebar-toggle">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="breadcrumb">
-                <h1>Kategoriyalarni boshqarish</h1>
-            </div>
             <!-- Tab Navigation -->
             <div class="page-tabs">
                 <button class="page-tab-btn" data-tab="spotlights" onclick="switchTab('spotlights')">
@@ -110,55 +107,25 @@
 
     <!-- Spotlights Content -->
     <div class="tab-content" id="spotlights-content">
-        <!-- Statistics Cards -->
-        <div class="stats-grid">
-            <div class="stats-card primary">
-                <div class="stats-icon">
-                    <i class="fas fa-star"></i>
-                </div>
-                <div class="stats-content">
-                    <div class="stats-number" id="total-spotlights">0</div>
-                    <div class="stats-label">Jami toifalar</div>
-                    <div class="stats-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+5%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-card success">
-                <div class="stats-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stats-content">
-                    <div class="stats-number" id="active-spotlights">0</div>
-                    <div class="stats-label">Faol toifalar</div>
-                    <div class="stats-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+8%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-card warning">
-                <div class="stats-icon">
-                    <i class="fas fa-pause-circle"></i>
-                </div>
-                <div class="stats-content">
-                    <div class="stats-number" id="inactive-spotlights">0</div>
-                    <div class="stats-label">Nofaol toifalar</div>
-                    <div class="stats-change negative">
-                        <i class="fas fa-arrow-down"></i>
-                        <span>-2%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Spotlights Management -->
         <div class="table-card full-width">
             <div class="card-header">
                 <h3>Toifalar ro'yxati</h3>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Jami toifalar:</span>
+                        <span class="stat-value" id="total-spotlights">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Faol toifalar:</span>
+                        <span class="stat-value" id="active-spotlights">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Nofaol toifalar:</span>
+                        <span class="stat-value" id="inactive-spotlights">0</span>
+                    </div>
+                </div>
                 <div class="card-actions">
                     <button class="btn btn-primary" onclick="showAddSpotlightModal()">
                         <i class="fas fa-plus"></i> Qo'shish
@@ -224,55 +191,24 @@
 
     <!-- Categories Content -->
     <div class="tab-content active" id="categories-content">
-        <!-- Statistics Cards -->
-        <div class="stats-grid">
-            <div class="stats-card primary">
-                <div class="stats-icon">
-                    <i class="fas fa-list"></i>
-                </div>
-                <div class="stats-content">
-                    <div class="stats-number" id="total-categories">0</div>
-                    <div class="stats-label">Jami kategoriyalar</div>
-                    <div class="stats-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+5%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-card success">
-                <div class="stats-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stats-content">
-                    <div class="stats-number" id="active-categories">0</div>
-                    <div class="stats-label">Faol kategoriyalar</div>
-                    <div class="stats-change positive">
-                        <i class="fas fa-arrow-up"></i>
-                        <span>+8%</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-card warning">
-                <div class="stats-icon">
-                    <i class="fas fa-pause-circle"></i>
-                </div>
-                <div class="stats-content">
-                    <div class="stats-number" id="inactive-categories">0</div>
-                    <div class="stats-label">Nofaol kategoriyalar</div>
-                    <div class="stats-change negative">
-                        <i class="fas fa-arrow-down"></i>
-                        <span>-2%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Categories Management -->
         <div class="table-card full-width">
             <div class="card-header">
                 <h3>Kategoriyalar ro'yxati</h3>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Jami kategoriyalar:</span>
+                        <span class="stat-value" id="total-categories">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Faol kategoriyalar:</span>
+                        <span class="stat-value" id="active-categories">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Nofaol kategoriyalar:</span>
+                        <span class="stat-value" id="inactive-categories">0</span>
+                    </div>
+                </div>
                 <div class="card-actions">
                     <button class="btn btn-primary" onclick="showAddCategoryModal()">
                         <i class="fas fa-plus"></i> Qo'shish

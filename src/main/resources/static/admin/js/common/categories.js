@@ -296,6 +296,11 @@ function updateCategoryStats() {
         animateCounter("total-categories", dashboardData.count || 0)
         animateCounter("active-categories", dashboardData.activeCount || 0)
         animateCounter("inactive-categories", dashboardData.inactiveCount || 0)
+
+        // Update header stats
+        animateCounter("total-categories-header", dashboardData.count || 0)
+        animateCounter("active-categories-header", dashboardData.activeCount || 0)
+        animateCounter("inactive-categories-header", dashboardData.inactiveCount || 0)
     }
 }
 
@@ -877,6 +882,11 @@ function updateSpotlightStats() {
         animateCounter("total-spotlights", spotlightDashboardData.count || 0)
         animateCounter("active-spotlights", spotlightDashboardData.activeCount || 0)
         animateCounter("inactive-spotlights", spotlightDashboardData.inactiveCount || 0)
+
+        // Update header stats
+        animateCounter("total-spotlights-header", spotlightDashboardData.count || 0)
+        animateCounter("active-spotlights-header", spotlightDashboardData.activeCount || 0)
+        animateCounter("inactive-spotlights-header", spotlightDashboardData.inactiveCount || 0)
     }
 }
 
