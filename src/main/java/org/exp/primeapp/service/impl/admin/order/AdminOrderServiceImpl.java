@@ -58,7 +58,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             OrdersItemRes ordersItemResponse = OrdersItemRes.builder()
                     .productRes(productServiceImpl.convertToProductRes(orderItem.getProduct()))
                     .productSize(ProductSizeRes.builder()
-                            .size(orderItem.getProductSize().getSize().name())
+                            .size(orderItem.getProductSize().getSize())
                             .amount(orderItem.getProductSize().getAmount())
                             .build())
                     .quantity(orderItem.getQuantity())
