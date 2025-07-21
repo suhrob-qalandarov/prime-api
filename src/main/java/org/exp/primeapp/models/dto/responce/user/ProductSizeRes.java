@@ -5,7 +5,7 @@ import org.exp.primeapp.models.enums.Size;
 
 @Builder
 public record ProductSizeRes (
-        String size,
+        Size size,
         Integer amount
 ) {
 }
