@@ -3,6 +3,7 @@ package org.exp.primeapp.service.impl.user.order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.responce.order.OrderItemRes;
+import org.exp.primeapp.models.dto.responce.order.UserOrderRes;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.enums.OrderStatus;
 import org.exp.primeapp.repository.*;
@@ -25,6 +26,14 @@ public class OrderServiceImpl implements OrderService {
     private final ProductSizeRepository productSizeRepository;
     private final ProductOutcomeRepository productOutcomeRepository;
 
+    @Override
+    public UserOrderRes getOrdersByPhone(Long telegramId) {
+        orderRepository.findByUserTelegramId(telegramId)
+        UserOrderRes.builder()
+                .id()
+                .build();
+        return null;
+    }
 
     @Transactional
     public Order createOrder(Long userId, List<OrderItemRes> orderItems) {
