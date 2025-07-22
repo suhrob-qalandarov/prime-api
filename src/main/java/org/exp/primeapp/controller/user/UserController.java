@@ -30,9 +30,9 @@ public class UserController {
     }
 
     // it's conflicted end-point
-    @GetMapping("/by-username/{username}")
-    public ResponseEntity<UserRes> getUser(@PathVariable String username) {
-        UserRes user = userService.getByUsername(username);
+    @GetMapping("/by-username/{tgUsername}")
+    public ResponseEntity<UserRes> getUser(@PathVariable String tgUsername) {
+        UserRes user = userService.getByUsername(tgUsername);
         return ResponseEntity.ok(user);
     }
 }

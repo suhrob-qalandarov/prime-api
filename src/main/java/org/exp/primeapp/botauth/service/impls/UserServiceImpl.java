@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
                 .telegramId(tgUser.id())
                 .firstName(tgUser.firstName())
                 .lastName(tgUser.lastName())
-                .username(tgUser.username())
+                .tgUsername(tgUser.username())
                 .active(true)
                 .verifyCode(oneTimeCode)
                 .verifyCodeExpiration(expirationTime)

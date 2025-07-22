@@ -24,7 +24,7 @@ public class User extends Auditable implements UserDetails {
     private Long telegramId;
     private String firstName;
     private String lastName;
-    private String username;
+    private String tgUsername;
     private String phone;
 
     @Builder.Default
@@ -44,8 +44,13 @@ public class User extends Auditable implements UserDetails {
     }
 
     @Override
+    public String getUsername() {
+        return this.phone;
+    }
+
+    @Override
     public String getPassword() {
-        return this.phone + this.telegramId;
+        return "[PROTECTED]";
     }
 
     @Override

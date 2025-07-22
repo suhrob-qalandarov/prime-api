@@ -44,13 +44,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRes getByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+    public UserRes getByUsername(String tgUsername) {
+        User user = userRepository.findByTgUsername(tgUsername);
         return UserRes.builder()
                 .telegramId(user.getTelegramId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .username(user.getUsername())
+                .username(user.getTgUsername())
                 .phone(user.getPhone())
                 .build();
     }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
                 user.getTelegramId(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getUsername(),
+                user.getTgUsername(),
                 user.getPhone(),
                 user.getRoles().stream().map(Role::getName).toList()
         );
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
                 user.getTelegramId(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getUsername(),
+                user.getTgUsername(),
                 user.getPhone(),
                 user.getRoles().stream().map(Role::getName).toList(),
                 user.getActive(),

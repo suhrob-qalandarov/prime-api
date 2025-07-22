@@ -8,6 +8,7 @@ public interface Const {
     String V1 = "/v1";
 
     String AUTH_HEADER = "Authorization";
+    String AUTHORIZATION = "Authorization";
     String TOKEN_PREFIX = "Bearer ";
 
     String AUTH = "/auth";

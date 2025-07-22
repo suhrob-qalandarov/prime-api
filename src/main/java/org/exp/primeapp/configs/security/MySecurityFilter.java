@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.entities.User;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
 
         // OPTIONS so‘rovlarini qo‘llab-quvvatlash
@@ -39,13 +40,12 @@ public class MySecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = request.getHeader(AUTH_HEADER);
+        String token = request.getHeader(AUTHORIZATION);
 
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
                 if (jwtService.validateToken(token)) {
                     User user = jwtService.getUserObject(token);
-                    log.info("User object from token: {}", user);
 
                     if (user == null || user.getTelegramId() == null) {
                         log.error("User or ID is null from token: {}", user);
@@ -53,7 +53,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
                     }
 
                     if (user.getActive() != null && !user.getActive()) {
-                        log.warn("User is not active: {}", user.getUsername());
+                        log.warn("User is not active: {}", user.getPhone());
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.getWriter().write("User account is not active.");
                         return;

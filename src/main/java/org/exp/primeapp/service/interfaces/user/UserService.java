@@ -12,7 +12,7 @@ public interface UserService {
 
     AdminUserDashboardRes getAdminAllUsers();
 
-    UserRes getByUsername(String username);
+    UserRes getByUsername(String tgUsername);
 
     void toggleUserUpdate(Long userId);
 }

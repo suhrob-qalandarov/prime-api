@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByTelegramId(Long telegramId);
 
-    User findByUsername(String username);
+    User findByTgUsername(String tgUsername);
 
     User findByPhone(String phone);
 

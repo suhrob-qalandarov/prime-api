@@ -37,7 +37,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                             .telegramId(order.getUser().getTelegramId())
                             .firstName(order.getUser().getFirstName())
                             .lastName(order.getUser().getLastName())
-                            .username(order.getUser().getUsername())
+                            .username(order.getUser().getTgUsername())
                             .phone(order.getUser().getPhone())
                             .build())
                     .totalPrice(order.getTotalPrice())

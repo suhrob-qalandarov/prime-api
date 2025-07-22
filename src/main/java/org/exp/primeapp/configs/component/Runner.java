@@ -40,7 +40,7 @@ public class Runner implements CommandLineRunner {
                             .telegramId(777777777L)
                             .firstName("Jiga")
                             .lastName("Sb")
-                            .username("jigasb")
+                            .tgUsername("jigasb")
                             .phone("+998998042134")
                             .active(true)
                             .roles(roles)
