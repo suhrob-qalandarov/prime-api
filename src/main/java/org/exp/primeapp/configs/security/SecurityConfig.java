@@ -42,7 +42,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
-                        .requestMatchers("/", "/index", "/index.html", "/index.html/**").permitAll()
+                        .requestMatchers("/", "/**", "/index", "/index.html", "/index.html/**").permitAll()
                         .requestMatchers(
                                 "/assets/**",
                                 "/images/**",
@@ -51,8 +51,9 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .requestMatchers(
-                               API + V1 + AUTH,
-                               API + V1 + AUTH + WAY_ALL
+                                "POST",
+                                API + V1 + AUTH,
+                                API + V1 + AUTH + WAY_ALL
                         ).permitAll()
 
                        .requestMatchers(

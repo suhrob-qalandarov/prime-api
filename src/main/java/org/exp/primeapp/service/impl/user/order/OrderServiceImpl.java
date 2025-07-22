@@ -3,7 +3,9 @@ package org.exp.primeapp.service.impl.user.order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.responce.order.OrderItemRes;
+import org.exp.primeapp.models.dto.responce.order.UserOrderItemRes;
 import org.exp.primeapp.models.dto.responce.order.UserOrderRes;
+import org.exp.primeapp.models.dto.responce.order.UserProfileOrdersRes;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.enums.OrderStatus;
 import org.exp.primeapp.repository.*;
@@ -26,13 +28,49 @@ public class OrderServiceImpl implements OrderService {
     private final ProductSizeRepository productSizeRepository;
     private final ProductOutcomeRepository productOutcomeRepository;
 
+    @Transactional
     @Override
-    public UserOrderRes getOrdersByPhone(Long telegramId) {
-        orderRepository.findByUserTelegramId(telegramId)
-        UserOrderRes.builder()
-                .id()
+    public UserProfileOrdersRes getUserProfileOrdersByTelegramId(Long telegramId) {
+        List<UserOrderRes> pendingOrderResList = orderRepository.findByUser_TelegramIdAndStatus(
+                telegramId,OrderStatus.PENDING
+                ).stream().map(this::convertToUserOrderRes).toList();
+
+        List<UserOrderRes> confirmedOrderResList = orderRepository.findByUser_TelegramIdAndStatus(
+                telegramId, OrderStatus.CONFIRMED
+                ).stream().map(this::convertToUserOrderRes).toList();
+
+        List<UserOrderRes> shippedOrderResList = orderRepository.findByUser_TelegramIdAndStatus(
+                telegramId, OrderStatus.SHIPPED
+                ).stream().map(this::convertToUserOrderRes).toList();
+
+        return UserProfileOrdersRes.builder()
+                .pendingOrders(pendingOrderResList)
+                .confirmedOrders(confirmedOrderResList)
+                .shippedOrders(shippedOrderResList)
                 .build();
-        return null;
+    }
+
+    @Transactional
+    public UserOrderRes convertToUserOrderRes(Order order) {
+        return UserOrderRes.builder()
+                .id(order.getId())
+                .status(order.getStatus().name())
+                .createdAt(order.getCreatedAt())
+                .orderItems(order.getItems().stream()
+                        .map(orderItem -> UserOrderItemRes.builder()
+                                .name(orderItem.getProduct().getName())
+                                .imageKey(orderItem.getProduct().getAttachments().stream()
+                                        .findFirst()
+                                        .toString())
+                                .size(orderItem.getProductSize().getSize().name())
+                                .price(orderItem.getPrice())
+                                .discount(orderItem.getProduct().getDiscount())
+                                .count(orderItem.getQuantity())
+                                .totalSum((long) (orderItem.getQuantity() * calculateItemPrice(orderItem.getProduct())))
+                                .build())
+                        .toList())
+                .totalSum((long)order.getTotalPrice())
+                .build();
     }
 
     @Transactional
