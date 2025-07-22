@@ -22,7 +22,7 @@ public class BotRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        /*bot.setUpdatesListener(updates -> {
+        bot.setUpdatesListener(updates -> {
             for (Update update : updates) {
                 executorService.execute(() -> {
                     if (update.message() != null) {
@@ -35,6 +35,6 @@ public class BotRunner implements CommandLineRunner {
                 });
             }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
-        });*/
+        });
     }
 }
