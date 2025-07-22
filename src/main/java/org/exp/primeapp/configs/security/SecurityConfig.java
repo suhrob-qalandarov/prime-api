@@ -42,13 +42,12 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
+                        .requestMatchers("/", "/index", "/index.html", "/index.html/**").permitAll()
                         .requestMatchers(
-                                "/index.html",
-                                "/index.html/**"
-                        ).permitAll()
-                        .requestMatchers(
-                                "/pages",
-                                "/pages/**"
+                                "/assets/**",
+                                "/images/**",
+                                "/scripts/**",
+                                "/styles/**"
                         ).permitAll()
 
                         .requestMatchers(
