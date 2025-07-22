@@ -1,12 +1,11 @@
 package org.exp.primeapp.controller.user;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.models.dto.request.UserUpdateReq;
 import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.service.interfaces.user.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static org.exp.primeapp.utils.Const.*;
@@ -18,27 +17,22 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserRes> getUser(@PathVariable Long userId) {
-        UserRes user = userService.getByUserId(userId);
+    @GetMapping("/me")
+    public ResponseEntity<UserRes> getUserData(@AuthenticationPrincipal User user) {
+        UserRes userRes = userService.getUserData(user);
+        return ResponseEntity.ok(userRes);
+    }
+
+    @GetMapping("/{telegramId}")
+    public ResponseEntity<UserRes> getUser(@PathVariable Long telegramId) {
+        UserRes user = userService.getByTelegramId(telegramId);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/by-email/{email}")
-    public ResponseEntity<UserRes> getUser(@PathVariable String email) {
-        UserRes user = userService.getByEmail(email);
+    // it's conflicted end-point
+    @GetMapping("/by-username/{username}")
+    public ResponseEntity<UserRes> getUser(@PathVariable String username) {
+        UserRes user = userService.getByUsername(username);
         return ResponseEntity.ok(user);
-    }
-
-    @PutMapping("/{userId}")
-    public ResponseEntity<UserRes> updateUser(@PathVariable Long userId, @RequestBody UserUpdateReq userReq) {
-        UserRes user = userService.updateUser(userId, userReq);
-        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
-    }
-
-    @DeleteMapping("/{user_id}")
-    public ResponseEntity<User> deleteUser(@PathVariable Long user_id) {
-        userService.updateUser_Active(user_id);
-        return ResponseEntity.noContent().build();
     }
 }

@@ -37,10 +37,11 @@ public class Runner implements CommandLineRunner {
         if (userRepository.count() == 0) {
             userRepository.save(
                     User.builder()
-                            .firstName(ROLE_MEGA_SUPER_ADMIN)
-                            .email("admin@gmail.com")
-                            .password(passwordEncoder.encode("123"))
-                            .phone("901234567")
+                            .telegramId(777777777L)
+                            .firstName("Jiga")
+                            .lastName("Sb")
+                            .username("jigasb")
+                            .phone("+998998042134")
                             .active(true)
                             .roles(roles)
                             .build()

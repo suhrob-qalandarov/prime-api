@@ -8,13 +8,8 @@ import java.util.List;
 public class UserUpdateReq {
     String firstName;
     String lastName;
-    String email;
+    String username;
     String phone;
-
-    //    description = "Optional: Used only by admin when creating or updating users"
     Boolean _active;
-
-
-    //    description = "Optional: Used only by admin when creating or updating users"
     List<Long> role_ids;
 }

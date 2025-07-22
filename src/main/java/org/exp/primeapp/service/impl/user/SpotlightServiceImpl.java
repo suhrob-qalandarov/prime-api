@@ -26,7 +26,7 @@ public class SpotlightServiceImpl implements SpotlightService {
     @Override
     public SpotlightRes getSpotlight(Long id) {
         Spotlight spotlight = spotlightRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Spotlight not found with id: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Spotlight not found with telegramId: " + id));
 
         return mapToResponse(spotlight);
     }
@@ -35,7 +35,7 @@ public class SpotlightServiceImpl implements SpotlightService {
     @Override
     public FullSpotlightRes getFullSpotlight(Long spotlightId) {
         Spotlight spotlight = spotlightRepository.findById(spotlightId)
-                .orElseThrow(() -> new NoSuchElementException("Spotlight not found with id: " + spotlightId));
+                .orElseThrow(() -> new NoSuchElementException("Spotlight not found with telegramId: " + spotlightId));
         return mapToSpotlightFullSpotlightRes(spotlight);
     }
 

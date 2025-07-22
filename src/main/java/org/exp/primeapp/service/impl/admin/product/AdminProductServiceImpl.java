@@ -76,7 +76,7 @@ public class AdminProductServiceImpl implements AdminProductService {
     @Override
     public AdminProductViewRes getProductById(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+                .orElseThrow(() -> new RuntimeException("Product not found with telegramId: " + productId));
         List<ProductSizeRes> productSizeReslist = product.getSizes().stream().map(size -> new ProductSizeRes(size.getSize(), size.getAmount())).toList();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
@@ -100,7 +100,7 @@ public class AdminProductServiceImpl implements AdminProductService {
     @Override
     public ApiResponse saveProduct(ProductReq productReq) {
         Category category = categoryRepository.findById(productReq.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + productReq.getCategoryId()));
+                .orElseThrow(() -> new RuntimeException("Category not found with telegramId: " + productReq.getCategoryId()));
 
         List<Long> attachmentIds = productReq.getAttachmentIds();
         if (attachmentIds == null || attachmentIds.isEmpty()) {
@@ -161,7 +161,7 @@ public class AdminProductServiceImpl implements AdminProductService {
     @Override
     public ApiResponse updateProduct(Long productId, ProductReq productReq) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+                .orElseThrow(() -> new RuntimeException("Product not found with telegramId: " + productId));
 
         updateProductFields(product, productReq);
         productRepository.save(product);
@@ -172,7 +172,7 @@ public class AdminProductServiceImpl implements AdminProductService {
     private void updateProductFields(Product product, ProductReq req) {
         if (req.getCategoryId() != null) {
             Category category = categoryRepository.findById(req.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + req.getCategoryId()));
+                    .orElseThrow(() -> new RuntimeException("Category not found with telegramId: " + req.getCategoryId()));
             product.setCategory(category);
         }
 

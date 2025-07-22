@@ -28,13 +28,13 @@ public class MessageHandler implements Consumer<Message> {
             Contact contact = message.contact();
             messageService.removeKeyboardAndSendMsg(user.getTelegramId());
             messageService.sendCode(user);
-            userService.updateUserPhoneById(user.getId(), contact.phoneNumber());
+            userService.updateUserPhoneById(user.getTelegramId(), contact.phoneNumber());
 
         } else if (text.equals("/start")) {
             messageService.sendStartMsg(user.getTelegramId(), user.getFirstName());
 
         } else if (text.equals("/login")) {
-            userService.updateOneTimeCode(user.getId());
+            userService.updateOneTimeCode(user.getTelegramId());
             messageService.sendLoginMsg(user.getTelegramId());
 
         }

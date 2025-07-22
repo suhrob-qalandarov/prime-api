@@ -1,38 +1,20 @@
 package org.exp.primeapp.service.impl.global.auth;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.configs.security.JwtService;
-import org.exp.primeapp.models.dto.request.LoginReq;
-import org.exp.primeapp.models.dto.request.RegisterReq;
-import org.exp.primeapp.models.dto.request.VerifyEmailReq;
-import org.exp.primeapp.models.dto.responce.global.ApiResponse;
+import org.exp.primeapp.models.dto.responce.global.LoginRes;
 import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
-import org.exp.primeapp.repository.RoleRepository;
 import org.exp.primeapp.repository.UserRepository;
 import org.exp.primeapp.service.interfaces.global.auth.AuthService;
-import org.exp.primeapp.service.interfaces.global.auth.EmailService;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 @Slf4j
 @Service
@@ -40,134 +22,37 @@ import java.util.Random;
 public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
-    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
-    private final EmailService emailService;
-    private final UserDetailsService userDetailsService;
 
     @Override
-    public UserRes login(LoginReq loginReq, HttpServletResponse response) {
-        var auth = new UsernamePasswordAuthenticationToken(
-                loginReq.email(),
-                loginReq.password()
-        );
-
-        User user;
-        try {
-            authenticationManager.authenticate(auth);
-            user = (User) userDetailsService.loadUserByUsername(loginReq.email());
-        } catch (UsernameNotFoundException e) {
-            log.error("Foydalanuvchi topilmadi: {}", loginReq.email());
-            throw new UsernameNotFoundException("Foydalanuvchi topilmadi: " + loginReq.email());
-        } catch (BadCredentialsException e) {
-            log.error("Parol noto‘g‘ri: {}", loginReq.email());
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Parol noto‘g‘ri");
-        }
-
-        setTokenToCookie(user, response);
-
-        return UserRes.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .roles(user.getRoles().stream().map(Role::getName).toList())
-                .build();
-    }
-
-    @Override
-    @Transactional
-    public ApiResponse sendVerificationCode(RegisterReq req) {
-        if (!req.getPassword().equals(req.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords do not match.");
-        }
-
-        if (userRepository.existsByEmail(req.getEmail())) {
-            throw new IllegalArgumentException("Email already exists.");
-        }
-
-        Integer code = 1000 + new Random().nextInt(9000);
-
-        List<Role> roleUser = roleRepository.findALlByNameIn(List.of("ROLE_USER"));
-
-        User user = User.builder()
-                .firstName(req.getFirstName())
-                .lastName(req.getLastName())
-                .email(req.getEmail())
-                .password(passwordEncoder.encode(req.getPassword()))
-                .phone(req.getPhone())
-                .active(false)
-                .roles(roleUser)
-                .verifyCode(code)
-                .build();
-        userRepository.save(user);
-
-        emailService.sendVerificationEmail(req.getEmail(), code.toString());
-        return new ApiResponse(true, "Verification code sent to email");
-    }
-
-    @Override
-    public ApiResponse verifyCodeAndRegister(VerifyEmailReq req) {
-        Optional<User> optionalUser = userRepository.getByEmailOptional(req.getEmail());
-
-        if (optionalUser.isEmpty()) {
-            return new ApiResponse(false, "Invalid email address.");
-        }
-
-        User user = optionalUser.get();
-        Integer verifyCode = user.getVerifyCode();
-
-        if (verifyCode != null && verifyCode.equals(req.getCode())) {
-            user.setActive(true);
-            userRepository.save(user);
-            return new ApiResponse(true, "User registered successfully");
-        } else {
-            return new ApiResponse(false, "Invalid verification code.");
-        }
-    }
-
-    @Override
-    public UserRes verifyWithCodeAndSendUserData(Integer code, HttpServletResponse response) {
+    public LoginRes verifyWithCodeAndSendUserData(Integer code) {
         User user = userRepository.findOneByVerifyCode(code);
+
+        if (user == null) {
+            throw new IllegalArgumentException("Code noto‘g‘ri");
+        }
 
         if (user.getVerifyCodeExpiration().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Code expired");
         }
+        String token = jwtService.generateToken(user);
 
-        setTokenToCookie(user, response);
+        var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
-        var auth = new UsernamePasswordAuthenticationToken(
-                user.getPhone(),
-               user.getVerifyCode()
-        );
-        authenticationManager.authenticate(auth);
-
-        return UserRes.builder()
-                .id(user.getId())
+        UserRes userRes = UserRes.builder()
+                .telegramId(user.getTelegramId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .username(user.getUsername())
                 .phone(user.getPhone())
                 .roles(user.getRoles().stream().map(Role::getName).toList())
                 .build();
-    }
 
-    public void setTokenToCookie(User user, HttpServletResponse response) {
-        String token = jwtService.generateToken(user);
-        if (token != null) {
-            ResponseCookie accessCookie = ResponseCookie.from("prime-token", token)
-                    .httpOnly(true)
-                    .secure(true)
-                    .path("/")
-                    .maxAge(Duration.ofDays(7))
-                    .sameSite("Strict")
-                    .build();
 
-            response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
-        } else {
-            log.error("Token null: token= {}", token);
-        }
+        return LoginRes.builder()
+                .token(token)
+                .userRes(userRes)
+                .build();
     }
 }

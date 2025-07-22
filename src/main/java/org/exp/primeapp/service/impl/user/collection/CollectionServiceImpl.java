@@ -25,7 +25,7 @@ public class CollectionServiceImpl implements CollectionService {
     public HeroCollectionRes getRandomHeroCollection() {
         Long randomCollectionId = collectionRepository.findRandomActiveCollectionId();
         Collection collection = collectionRepository.findById(randomCollectionId)
-                .orElseThrow(() -> new RuntimeException("Collection not found with id: " + randomCollectionId));
+                .orElseThrow(() -> new RuntimeException("Collection not found with telegramId: " + randomCollectionId));
 
         return HeroCollectionRes.builder()
                 .collectionId(collection.getId())
@@ -47,7 +47,7 @@ public class CollectionServiceImpl implements CollectionService {
     @Transactional(readOnly = true)
     public CollectionProductRes getCollection(Long collectionId) {
         Collection collection = collectionRepository.findById(collectionId)
-                .orElseThrow(() -> new RuntimeException("Collection not found with id: " + collectionId));
+                .orElseThrow(() -> new RuntimeException("Collection not found with telegramId: " + collectionId));
         return collectionMapper.toCollectionProductResponse(collection);
     }
 

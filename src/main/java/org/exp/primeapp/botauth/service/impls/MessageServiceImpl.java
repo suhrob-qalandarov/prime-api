@@ -61,7 +61,7 @@ public class MessageServiceImpl implements MessageService {
                 .parseMode(ParseMode.HTML)
                 .replyMarkup(new ReplyKeyboardRemove())
         );
-        userRepository.updateVerifyCodeAndExpiration(user.getId(), oneTimeCode, expirationTime);
+        userRepository.updateVerifyCodeAndExpiration(user.getTelegramId(), oneTimeCode, expirationTime);
         //sendLoginMsg(user.getTelegramId());
     }
 
@@ -78,13 +78,13 @@ public class MessageServiceImpl implements MessageService {
         Integer oneTimeCode = botAuthUserService.generateOneTimeCode();
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(5);
         SendResponse response = telegramBot.execute(new SendMessage(user.getTelegramId(),
-                        "🔒 Kod: \n<pre>" + oneTimeCode + "</pre>" + "\n\n\uD83D\uDD17 Bosing va Kiring: \nprime/login"
+                        "🔒 Kod: <pre>" + oneTimeCode + "</pre>" + "\n\n\uD83D\uDD17 Bosing va Kiring: \nprime/login"
                 )
                         .parseMode(ParseMode.HTML)
                         .replyMarkup(buttonService.sendRenewCodeBtn())
         );
-        userRepository.updateVerifyCodeAndExpiration(user.getId(), oneTimeCode, expirationTime);
-        userRepository.updateMessageId(user.getId(), response.message().messageId());
+        userRepository.updateVerifyCodeAndExpiration(user.getTelegramId(), oneTimeCode, expirationTime);
+        userRepository.updateMessageId(user.getTelegramId(), response.message().messageId());
         //sendLoginMsg(user.getTelegramId());
     }
 
@@ -100,7 +100,7 @@ public class MessageServiceImpl implements MessageService {
                 ).parseMode(ParseMode.HTML)
                 .replyMarkup(buttonService.sendRenewCodeBtn())
         );
-        userRepository.updateVerifyCodeAndExpiration(user.getId(), oneTimeCode, expirationTime);
-        userRepository.updateMessageId(user.getId(), response.message().messageId());
+        userRepository.updateVerifyCodeAndExpiration(user.getTelegramId(), oneTimeCode, expirationTime);
+        userRepository.updateMessageId(user.getTelegramId(), response.message().messageId());
     }
 }

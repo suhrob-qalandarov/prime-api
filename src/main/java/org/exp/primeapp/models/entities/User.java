@@ -1,12 +1,9 @@
 package org.exp.primeapp.models.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.exp.primeapp.models.base.BaseEntity;
+import org.exp.primeapp.models.base.Auditable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,15 +18,17 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User extends BaseEntity implements UserDetails {
+public class User extends Auditable implements UserDetails {
 
+    @Id
     private Long telegramId;
     private String firstName;
     private String lastName;
     private String username;
-    private String email;
-    private String password;
     private String phone;
+
+    @Builder.Default
+    private Boolean active = true;
 
     private Integer messageId;
     private Integer verifyCode;
@@ -45,13 +44,8 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    public User(String email, List<Role> roles) {
-        this.email = email;
-        this.roles = roles;
+    public String getPassword() {
+        return this.phone + this.telegramId;
     }
 
     @Override

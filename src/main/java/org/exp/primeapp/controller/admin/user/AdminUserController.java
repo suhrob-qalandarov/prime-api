@@ -1,12 +1,9 @@
 package org.exp.primeapp.controller.admin.user;
 
 import lombok.RequiredArgsConstructor;
-import org.exp.primeapp.models.dto.request.UserUpdateReq;
-import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.repository.UserRepository;
 import org.exp.primeapp.service.interfaces.user.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +22,9 @@ public class AdminUserController {
         return ResponseEntity.ok(user);
     }
 
-    @PatchMapping("/toogle/{userId}")
+    @PatchMapping("/toggle/{userId}")
     public ResponseEntity<?> toggleUser(@PathVariable Long userId) {
-        userService.toogleUserUpdate(userId);
+        userService.toggleUserUpdate(userId);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,11 +1,11 @@
 package org.exp.primeapp.models.dto.responce.global;
 
 import lombok.Builder;
+import org.exp.primeapp.models.dto.responce.user.UserRes;
 
 @Builder
 public record LoginRes(
-        String accessToken,
-        String refreshToken,
-        String message
+        String token,
+        UserRes userRes
 ) {
 }

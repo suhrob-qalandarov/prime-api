@@ -82,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductRes getProductById(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+                .orElseThrow(() -> new RuntimeException("Product not found with telegramId: " + productId));
         return convertToProductRes(product);
     }
 

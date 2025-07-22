@@ -18,6 +18,7 @@ public interface Const {
     String REFRESH = "/refresh";
 
     String BOT = "/bot";
+    String CODE = "/code";
 
     String ADMIN = "/admin";
     String USER = "/user";

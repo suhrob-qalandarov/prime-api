@@ -28,28 +28,28 @@ public class AuthController {
 
     @PostMapping(LOGIN)
     public ResponseEntity<UserRes> login(@RequestBody @Valid LoginReq loginReq, HttpServletResponse response) {
-        UserRes user = authService.login(loginReq, response);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        //UserRes user = authService.login(loginReq, response);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(REGISTER)
     public ResponseEntity<ApiResponse> sendCode(@RequestBody RegisterReq req) {
-        ApiResponse response = authService.sendVerificationCode(req);
-        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        //ApiResponse response = authService.sendVerificationCode(req);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PostMapping(VERIFY)
     public ResponseEntity<ApiResponse> verifyCode(@RequestBody VerifyEmailReq req) {
-        ApiResponse response = authService.verifyCodeAndRegister(req);
-        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        //ApiResponse response = authService.verifyCodeAndRegister(req);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PostMapping(REFRESH + "/{refreshToken}")
     public ResponseEntity<LoginRes> verifyEmail(@RequestParam String refreshToken) {
         User user = jwtService.getUserObject(refreshToken);
         String accessToken = jwtService.generateToken(user);
-        LoginRes loginRes = new LoginRes(accessToken, refreshToken, "Successfully updated token!");
-        return new ResponseEntity<>(loginRes, HttpStatus.ACCEPTED);
+        //LoginRes loginRes = new LoginRes(accessToken, refreshToken, "Successfully updated token!");
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }
 

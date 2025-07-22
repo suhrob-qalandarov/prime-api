@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryRes getCategoryResById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+                .orElseThrow(() -> new RuntimeException("Category not found with telegramId: " + categoryId));
         return convertToCategoryRes(category);
     }
 

@@ -39,8 +39,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-
-        /*String token = extractToken(request);
+        String token = request.getHeader(AUTH_HEADER);
 
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
@@ -48,7 +47,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
                     User user = jwtService.getUserObject(token);
                     log.info("User object from token: {}", user);
 
-                    if (user == null || user.getId() == null) {
+                    if (user == null || user.getTelegramId() == null) {
                         log.error("User or ID is null from token: {}", user);
                         throw new IllegalArgumentException("Invalid user data from token");
                     }
@@ -67,15 +66,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
                 log.error("Invalid token: {}", e.getMessage());
             }
         }
-        */
         filterChain.doFilter(request, response);
-    }
-    private String extractToken(HttpServletRequest request) {
-        String header = request.getHeader(AUTH_HEADER);
-        if (header != null && header.startsWith(TOKEN_PREFIX)) {
-            return header.substring(TOKEN_PREFIX.length());
-        }
-        return null;
     }
 }
 
