@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog - Prime77</title>
+    <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -46,7 +46,11 @@
     <div class="container-custom">
         <div class="row align-items-center">
             <div class="col-lg-3">
-                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: rgba(195,164,9,0.84);">PRIME<span style="color: #ff6b6b">77</span></h1>
+                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: rgba(195,164,9,0.84);">
+                    <a href="/index.html" style="text-decoration: none; color: inherit;">
+                        PRIME<span style="color: #ff6b6b">77</span>
+                    </a>
+                </h1>
             </div>
             <div class="col-lg-6">
                 <nav class="navbar navbar-expand-lg">
@@ -77,7 +81,7 @@
                             </svg>
                         </a>
                         <span class="header-separator">|</span>
-                        <a href="/assets/auth/login.html" class="header-icon">
+                        <a href="#" class="header-icon" id="profileBtn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
                                 <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
                             </svg>
@@ -115,9 +119,13 @@
             <span></span>
             <span></span>
         </button>
-        <h1 class="mobile-logo">PRIME<span>77</span></h1>
+        <h1 class="mobile-logo">
+            <a href="/index.html" style="text-decoration: none; color: inherit;">
+                PRIME<span>77</span>
+            </a>
+        </h1>
         <div class="mobile-header-icons">
-            <a href="#" class="mobile-header-icon">
+            <a href="#" class="mobile-header-icon" id="mobileProfileBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
                     <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
                 </svg>
@@ -157,7 +165,6 @@
     <!-- Cart modal content will be loaded dynamically by cart-modal.js -->
 </div>
 
-
 <!-- Loading Spinner -->
 <div class="loading-spinner" id="loadingSpinner" style="display: none;">
     <div class="spinner-border text-primary" role="status">
@@ -170,20 +177,33 @@
     <!-- Page Header -->
     <section class="page-header">
         <div class="container-custom">
-            <div class="page-header-content">
-                <h1 class="page-title">Kirish</h1>
-                <nav class="breadcrumb-nav">
-                    <a href="/index.html" class="breadcrumb-link">Asosiy</a>
-                    <span class="breadcrumb-separator">/</span>
-                    <span class="breadcrumb-current">Kirish</span>
-                </nav>
+            <div class="login-content">
+                <h2 class="main-title">Kodni Kiriting</h2>
+
+                <p class="login-description">
+                    @prime_77_uz_bot telegram botiga kiring va 2 daqiqalik kodingizni oling.
+                </p>
+
+                <form id="loginForm">
+                    <div class="code-inputs">
+                        <input type="text" class="code-input" maxlength="1" data-index="0">
+                        <input type="text" class="code-input" maxlength="1" data-index="1">
+                        <input type="text" class="code-input" maxlength="1" data-index="2">
+                        <input type="text" class="code-input" maxlength="1" data-index="3">
+                        <input type="text" class="code-input" maxlength="1" data-index="4">
+                        <input type="text" class="code-input" maxlength="1" data-index="5">
+                    </div>
+
+                    <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+                    <div id="successMessage" class="alert alert-success" style="display: none;"></div>
+
+                    <div class="text-center">
+                        <div class="spinner" id="loadingSpinner"></div>
+                        <p id="statusText" class="status-text"></p>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
-
-    <!-- Login Section -->
-    <section class="login-section">
-
     </section>
 </main>
 
@@ -228,7 +248,9 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-6 col-6 mb-4">
-                <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 25px; color: #F5F5DC;">PRIME<span style="color: #ff6b6b">77</span></h1>
+                <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 25px; color: #F5F5DC;">
+                    PRIME<span style="color: #ff6b6b">77</span>
+                </h1>
             </div>
             <div class="col-lg-2 col-md-6 col-6 mb-4">
                 <h3 class="footer-title">KOMPANIYA</h3>
@@ -282,5 +304,7 @@
 <script src="/scripts/desktop/common/discount.js"></script>
 <script src="/scripts/desktop/common/quick-view.js"></script>
 <script src="/scripts/desktop/common/cart-modal.js"></script>
+<script src="/assets/auth/auth-modal.js"></script>
+<script src="/assets/auth/login.js"></script>
 </body>
 </html>

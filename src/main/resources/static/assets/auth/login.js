@@ -2,28 +2,21 @@ class LoginManager {
     constructor() {
         this.codeInputs = document.querySelectorAll('.code-input');
         this.loginForm = document.getElementById('loginForm');
-        this.loginButton = document.getElementById('loginButton');
-        this.loginButtonText = document.getElementById('loginButtonText');
-        this.loginSpinner = document.getElementById('loginSpinner');
         this.errorMessage = document.getElementById('errorMessage');
         this.successMessage = document.getElementById('successMessage');
-        this.resendButton = document.getElementById('resendCode');
+        this.loadingSpinner = document.getElementById('loadingSpinner');
+        this.statusText = document.getElementById('statusText');
 
         this.init();
     }
 
     init() {
         this.setupCodeInputs();
-        this.setupFormSubmission();
-        this.setupResendButton();
-
-        // Focus first input on load
         this.codeInputs[0].focus();
     }
 
     setupCodeInputs() {
         this.codeInputs.forEach((input, index) => {
-            // Handle input
             input.addEventListener('input', (e) => {
                 const value = e.target.value;
 
@@ -33,29 +26,25 @@ class LoginManager {
                     return;
                 }
 
-                // Move to next input if current is filled
+                // Move to next input
                 if (value && index < this.codeInputs.length - 1) {
                     this.codeInputs[index + 1].focus();
                 }
 
-                // Clear error message when user starts typing
-                this.hideMessage();
+                // Auto submit when all fields are filled
+                if (this.getCode().length === 6) {
+                    this.handleLogin();
+                }
+
+                this.hideMessages();
             });
 
-            // Handle backspace
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && !e.target.value && index > 0) {
                     this.codeInputs[index - 1].focus();
                 }
-
-                // Handle Enter key
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    this.handleLogin();
-                }
             });
 
-            // Handle paste
             input.addEventListener('paste', (e) => {
                 e.preventDefault();
                 const pastedData = e.clipboardData.getData('text');
@@ -67,24 +56,10 @@ class LoginManager {
                     }
                 });
 
-                // Focus the next empty input or the last one
-                const nextEmptyIndex = digits.length < 6 ? digits.length : 5;
-                this.codeInputs[nextEmptyIndex].focus();
+                if (digits.length === 6) {
+                    this.handleLogin();
+                }
             });
-        });
-    }
-
-    setupFormSubmission() {
-        this.loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.handleLogin();
-        });
-    }
-
-    setupResendButton() {
-        this.resendButton.addEventListener('click', () => {
-            this.showSuccessMessage('Kod qayta yuborildi!');
-            // Here you would typically make an API call to resend the code
         });
     }
 
@@ -102,22 +77,15 @@ class LoginManager {
     async handleLogin() {
         const code = this.getCode();
 
-        // Validate code length
         if (code.length !== 6) {
-            this.showErrorMessage('Iltimos, 6 xonali kodni to\'liq kiriting');
-            return;
-        }
-
-        // Validate code contains only numbers
-        if (!/^\d{6}$/.test(code)) {
-            this.showErrorMessage('Kod faqat raqamlardan iborat bo\'lishi kerak');
             return;
         }
 
         this.setLoading(true);
+        this.statusText.textContent = 'Kod tekshirilmoqda...';
 
         try {
-            const response = await fetch(`/api/v1/bot/auth/${code}`, {
+            const response = await fetch(`http://localhost/api/v1/auth/code/${code}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,43 +93,37 @@ class LoginManager {
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                if (response.status === 404) {
+                    throw new Error('Noto\'g\'ri kod kiritildi');
+                } else if (response.status === 500) {
+                    throw new Error('Server xatosi');
+                } else {
+                    throw new Error('Kirish jarayonida xatolik');
+                }
             }
 
-            const userData = await response.json();
+            const data = await response.json();
 
-            // Validate response structure
-            if (!userData || !userData.id) {
+            if (!data.token || !data.userRes) {
                 throw new Error('Noto\'g\'ri javob formati');
             }
 
-            // Store token in cookie (assuming the token comes in response or generate one)
-            const token = userData.token || `prime-token-${userData.id}-${Date.now()}`;
-            this.setCookie('prime-token', token, 30); // 30 days expiry
+            // Save token and user data
+            this.setCookie('prime-token', data.token, 30);
+            localStorage.setItem('prime-user', JSON.stringify(data.userRes));
 
-            // Store user data in localStorage for easy access
-            localStorage.setItem('prime-user', JSON.stringify(userData));
+            this.showSuccessMessage(`Xush kelibsiz, ${data.userRes.firstName}!`);
+            this.statusText.textContent = 'Muvaffaqiyatli kirildi!';
 
-            this.showSuccessMessage(`Xush kelibsiz, ${userData.firstName}!`);
-
-            // Redirect after successful login
+            // Redirect to profile
             setTimeout(() => {
-                window.location.href = '/dashboard.html'; // or wherever you want to redirect
+                window.location.href = 'profile.html';
             }, 1500);
 
         } catch (error) {
             console.error('Login error:', error);
-
-            if (error.message.includes('404')) {
-                this.showErrorMessage('Noto\'g\'ri kod kiritildi');
-            } else if (error.message.includes('500')) {
-                this.showErrorMessage('Server xatosi. Iltimos, qayta urinib ko\'ring');
-            } else if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
-                this.showErrorMessage('Internet aloqasi bilan muammo. Iltimos, ulanishni tekshiring');
-            } else {
-                this.showErrorMessage('Kirish jarayonida xatolik yuz berdi. Qayta urinib ko\'ring');
-            }
-
+            this.showErrorMessage(error.message);
+            this.statusText.textContent = '';
             this.clearCode();
         } finally {
             this.setLoading(false);
@@ -169,44 +131,34 @@ class LoginManager {
     }
 
     setLoading(isLoading) {
-        this.loginButton.disabled = isLoading;
-
         if (isLoading) {
-            this.loginButtonText.classList.add('hidden');
-            this.loginSpinner.classList.remove('hidden');
+            this.loadingSpinner.style.display = 'inline-block';
             this.codeInputs.forEach(input => input.disabled = true);
         } else {
-            this.loginButtonText.classList.remove('hidden');
-            this.loginSpinner.classList.add('hidden');
+            this.loadingSpinner.style.display = 'none';
             this.codeInputs.forEach(input => input.disabled = false);
         }
     }
 
     showErrorMessage(message) {
-        this.hideMessage();
+        this.hideMessages();
         this.errorMessage.textContent = message;
-        this.errorMessage.classList.remove('hidden');
+        this.errorMessage.style.display = 'block';
 
-        // Auto hide after 5 seconds
         setTimeout(() => {
-            this.hideMessage();
+            this.hideMessages();
         }, 5000);
     }
 
     showSuccessMessage(message) {
-        this.hideMessage();
+        this.hideMessages();
         this.successMessage.textContent = message;
-        this.successMessage.classList.remove('hidden');
-
-        // Auto hide after 3 seconds
-        setTimeout(() => {
-            this.hideMessage();
-        }, 3000);
+        this.successMessage.style.display = 'block';
     }
 
-    hideMessage() {
-        this.errorMessage.classList.add('hidden');
-        this.successMessage.classList.add('hidden');
+    hideMessages() {
+        this.errorMessage.style.display = 'none';
+        this.successMessage.style.display = 'none';
     }
 
     setCookie(name, value, days) {
@@ -214,29 +166,16 @@ class LoginManager {
         expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
         document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
     }
-
-    getCookie(name) {
-        const nameEQ = name + "=";
-        const ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
-    }
 }
 
-// Initialize login manager when DOM is loaded
+// Initialize login manager
 document.addEventListener('DOMContentLoaded', () => {
-    new LoginManager();
-});
-
-// Check if user is already logged in
-document.addEventListener('DOMContentLoaded', () => {
+    // Check if already logged in
     const token = document.cookie.split('; ').find(row => row.startsWith('prime-token='));
     if (token) {
-        // User is already logged in, redirect to dashboard
-        window.location.href = '/dashboard.html';
+        window.location.href = 'profile.html';
+        return;
     }
+
+    new LoginManager();
 });
