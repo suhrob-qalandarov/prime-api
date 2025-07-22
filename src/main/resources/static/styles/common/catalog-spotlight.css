@@ -10,26 +10,25 @@
 }
 
 .spotlight-selector.filter-style {
-    display: none; /* Hide the actual select */
+    display: none;
 }
 
 .spotlight-custom-btn {
-    background: var(--light-color); /* UPDATED: Changed from burgundy-dark to light-color */
-    color: #333; /* UPDATED: Changed text color for better contrast */
-    border: 1px solid #e0e0e0; /* UPDATED: Added border */
+    background: var(--light-color);
+    color: #333;
+    border: 1px solid #e0e0e0;
     border-radius: 6px;
     padding: 10px 30px 10px 15px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     width: 100%;
-    text-align: left;
+    text-align: center;
     transition: all 0.2s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
-/* REMOVED: Hover effect as requested */
 .spotlight-custom-btn:focus {
     border-color: var(--burgundy-color);
     outline: none;

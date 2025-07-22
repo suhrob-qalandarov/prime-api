@@ -151,11 +151,10 @@ function populateCustomSpotlightDropdown() {
     // Clear existing items
     spotlightCustomDropdown.innerHTML = ""
 
-    // Add "Barchasi" option - UPDATED to "Spotlights"
     const allItem = document.createElement("div")
     allItem.className = "spotlight-dropdown-item selected"
     allItem.setAttribute("data-value", "all")
-    allItem.textContent = "Spotlights"
+    allItem.textContent = "Barchasi"
     spotlightCustomDropdown.appendChild(allItem)
 
     // Add spotlight options
