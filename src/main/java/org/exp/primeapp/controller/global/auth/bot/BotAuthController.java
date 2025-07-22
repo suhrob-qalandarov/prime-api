@@ -1,9 +1,7 @@
 package org.exp.primeapp.controller.global.auth.bot;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.global.LoginRes;
-import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.service.interfaces.global.auth.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +22,6 @@ public class BotAuthController {
     @PostMapping("/{code}")
     public ResponseEntity<LoginRes> verifyUserWithCode(@PathVariable Integer code) {
         LoginRes loginRes = authService.verifyWithCodeAndSendUserData(code);
-        return new ResponseEntity<>(loginRes, HttpStatus.OK);
+        return new ResponseEntity<>(loginRes, HttpStatus.ACCEPTED);
     }
 }
