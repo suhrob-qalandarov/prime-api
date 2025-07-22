@@ -2,120 +2,272 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>Kirish</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px;
-            margin-top: 4px;
-            box-sizing: border-box;
-        }
-
-        .error {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 2px;
-        }
-
-        button {
-            padding: 10px 20px;
-            margin-top: 15px;
-        }
-
-        .general-error {
-            color: red;
-            font-weight: bold;
-            margin-top: 15px;
-        }
-    </style>
-</head>
-<body>
-
-<h2>Tizimga kirish</h2>
-
-<form id="loginForm">
-    <label>
-        Email:
-        <input name="email" type="email" required>
-        <div class="error" id="emailError"></div>
-    </label>
-
-    <label>
-        Parol:
-        <input name="password" type="password" required>
-        <div class="error" id="passwordError"></div>
-    </label>
-
-    <button type="submit">Kirish</button>
-
-    <div class="general-error" id="generalError"></div>
-</form>
-
-<script>
-    const loginForm = document.getElementById("loginForm");
-
-    loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        // Xatoliklarni tozalash
-        document.getElementById("emailError").textContent = "";
-        document.getElementById("passwordError").textContent = "";
-        document.getElementById("generalError").textContent = "";
-
-        const formData = {
-            email: e.target.email.value.trim(),
-            password: e.target.password.value
-        };
-
-        try {
-            const res = await fetch("http://localhost/api/v1/auth/login", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-                alert("Muvaffaqiyatli kirildi!");
-                window.location.href = "/index.html";
-            } else {
-                // Agar backend validatsiya xatolari bo‘lsa
-                if (data.errors) {
-                    if (data.errors.email) {
-                        document.getElementById("emailError").textContent = data.errors.email;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime77 - Kirish</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/images/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/images/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/images/favicon/site.webmanifest" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/styles/common/styles.css">
+    <link rel="stylesheet" href="/styles/common/styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'burgundy': '#8b1538',
+                        'burgundy-light': '#a01b47',
+                        'burgundy-dark': '#6b0f2a',
+                        'light-color': '#f5f5dc'
                     }
-                    if (data.errors.password) {
-                        document.getElementById("passwordError").textContent = data.errors.password;
-                    }
-                } else if (data.message) {
-                    // Umumiy xatolik (masalan: Login yoki parol noto‘g‘ri)
-                    document.getElementById("generalError").textContent = data.message;
-                } else {
-                    document.getElementById("generalError").textContent = "Noma’lum xatolik yuz berdi.";
                 }
             }
-        } catch (err) {
-            console.error("Tarmoq xatoligi:", err);
-            document.getElementById("generalError").textContent = "Serverga ulanishda muammo yuz berdi.";
         }
-    });
-</script>
+    </script>
+</head>
+<body class="bg-light-color">
 
+<!-- Top Header -->
+<div class="top-header">
+    <div class="container-custom">
+        <div class="row align-items-center">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
+                <div class="d-flex align-items-center justify-content-end">
+                    <div class="social-icons me-4">
+                        <a href="#"><i class="fab fa-telegram-plane"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                    <div>
+                        <i class="fas fa-phone-alt me-2"></i>
+                        <a href="tel:+998901234567">+998 90 123 45 67</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Header (Desktop Only) -->
+<header class="main-header" id="main-header">
+    <div class="container-custom">
+        <div class="row align-items-center">
+            <div class="col-lg-3">
+                <h1 id="main-logo" style="font-weight: 700; font-size: 24px; margin: 0; color: rgba(195,164,9,0.84);">
+                    <a href="/index.html" class="text-decoration-none" style="color: inherit;">
+                        PRIME<span style="color: #ff6b6b">77</span>
+                    </a>
+                </h1>
+            </div>
+            <div class="col-lg-6">
+                <nav class="navbar navbar-expand-lg">
+                    <div class="collapse navbar-collapse justify-content-start">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/assets/pages/desktop/catalog.html">KATALOG</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/assets/pages/desktop/collection.html">KOLLEKSIYA</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/assets/pages/desktop/about.html">BIZ HAQIMIZDA</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/assets/pages/desktop/contact.html">KONTAKTLAR</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-lg-3">
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="header-icons">
+                        <a href="#" class="header-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
+                            </svg>
+                        </a>
+                        <span class="header-separator">|</span>
+                        <a href="/admin/pages/dashboard.html" class="header-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
+                            </svg>
+                        </a>
+                        <div class="position-relative">
+                            <a href="#" class="header-icon" id="cartIcon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M239.89,198.12l-14.26-120a16,16,0,0,0-16-14.12H176a48,48,0,0,0-96,0H46.33a16,16,0,0,0-16,14.12l-14.26,120A16,16,0,0,0,20,210.6a16.13,16.13,0,0,0,12,5.4H223.92A16.13,16.13,0,0,0,236,210.6,16,16,0,0,0,239.89,198.12ZM128,32a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32ZM32,200,46.33,80H80v24a8,8,0,0,0,16,0V80h64v24a8,8,0,0,0,16,0V80h33.75l14.17,120Z"></path>
+                                </svg>
+                                <span class="badge" id="cartBadge">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Desktop Message Button -->
+<div class="desktop-message-btn" id="desktopMessageBtn">
+    <div class="desktop-message-btn-inner">
+        <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"></path>
+            <path d="M0 0h24v24H0z" fill="none"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- Mobile Header (Mobile Only) -->
+<div class="mobile-header">
+    <div class="container">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <h1 class="mobile-logo">PRIME<span>77</span></h1>
+        <div class="mobile-header-icons">
+            <a href="#" class="mobile-header-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Cart Modal -->
+<div class="cart-modal" id="cartModal">
+    <!-- Cart modal content will be loaded dynamically by cart-modal.js -->
+</div>
+
+<!-- Login Section -->
+<main class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style="margin-top: 5px; margin-bottom: 20px;">
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container-custom">
+            <div class="page-header-content">
+                <h1 class="page-title">Login</h1>
+                <nav class="breadcrumb-nav">
+                    <a href="/index.html" class="breadcrumb-link">Asosiy</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-current">Kirish</span>
+                </nav>
+            </div>
+        </div>
+    </section>
+    <div class="max-w-md w-full space-y-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-burgundy-dark mb-2">Tizimga kirish</h2>
+            <p class="text-gray-600 text-sm">6 xonali kodni kiriting</p>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label for="code" class="block text-sm font-medium text-gray-700 mb-2">
+                        Tasdiqlash kodi
+                    </label>
+                    <div class="flex justify-center space-x-2">
+                        <input type="text" maxlength="1" class="code-input w-12 h-12 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-burgundy focus:ring-2 focus:ring-burgundy focus:ring-opacity-20 focus:outline-none transition-colors" data-index="0">
+                        <input type="text" maxlength="1" class="code-input w-12 h-12 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-burgundy focus:ring-2 focus:ring-burgundy focus:ring-opacity-20 focus:outline-none transition-colors" data-index="1">
+                        <input type="text" maxlength="1" class="code-input w-12 h-12 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-burgundy focus:ring-2 focus:ring-burgundy focus:ring-opacity-20 focus:outline-none transition-colors" data-index="2">
+                        <input type="text" maxlength="1" class="code-input w-12 h-12 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-burgundy focus:ring-2 focus:ring-burgundy focus:ring-opacity-20 focus:outline-none transition-colors" data-index="3">
+                        <input type="text" maxlength="1" class="code-input w-12 h-12 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-burgundy focus:ring-2 focus:ring-burgundy focus:ring-opacity-20 focus:outline-none transition-colors" data-index="4">
+                        <input type="text" maxlength="1" class="code-input w-12 h-12 text-center text-xl font-semibold border-2 border-gray-300 rounded-lg focus:border-burgundy focus:ring-2 focus:ring-burgundy focus:ring-opacity-20 focus:outline-none transition-colors" data-index="5">
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                </div>
+
+                <div id="successMessage" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+                </div>
+
+                <button type="submit" id="loginButton" class="w-full bg-burgundy hover:bg-burgundy-dark text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-burgundy focus:ring-opacity-50">
+                    <span id="loginButtonText">Kirish</span>
+                    <div id="loginSpinner" class="hidden inline-flex items-center">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Tekshirilmoqda...
+                    </div>
+                </button>
+
+                <div class="text-center">
+                    <p class="text-sm text-gray-600">
+                        Kod kelmadimi?
+                        <button type="button" id="resendCode" class="text-burgundy hover:text-burgundy-dark font-medium">
+                            Qayta yuborish
+                        </button>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-6 mb-4">
+                <h1 style="font-weight: 700; font-size: 24px; margin-bottom: 25px; color: rgba(195,164,9,0.84);">PRIME<span style="color: #ff6b6b">77</span></h1>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6 mb-4">
+                <h3 class="footer-title">KOMPANIYA</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Biz bilan bog'lanish</a></li>
+                    <li><a href="#">Biz haqimizda</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6 mb-4">
+                <h3 class="footer-title">QO'LLAB-QUVVATLASH</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Yetkazib berish</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 col-6 mb-4">
+                <h3 class="footer-title">IJTIMOIY TARMOQLAR</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <i class="fab fa-telegram-plane"></i>
+                        <span>Telegram</span>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2024 Prime77. All Rights Reserved.</p>
+                </div>
+                <div class="col-md-6 d-none d-md-block">
+                    <div class="payment-methods">
+                        <span>To'lov turlari:</span>
+                        <div class="payment-images">
+                            <img src="/images/click.webp" alt="Click" />
+                            <img src="/images/payme.webp" alt="Payme" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="/assets/auth/login.js"></script>
 </body>
 </html>
