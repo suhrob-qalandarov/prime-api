@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.global.auth.goegle;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,3 +54,4 @@ public class AuthController {
     }
 }
 
+*/

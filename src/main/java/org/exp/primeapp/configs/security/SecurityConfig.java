@@ -52,8 +52,7 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "POST",
-                                API + V1 + AUTH,
-                                API + V1 + AUTH + WAY_ALL
+                                API + V1 + AUTH + "/code/*"
                         ).permitAll()
 
                        .requestMatchers(
