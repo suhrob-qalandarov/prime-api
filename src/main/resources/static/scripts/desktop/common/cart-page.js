@@ -165,12 +165,12 @@ async function renderCartItemsWithAPI() {
     } catch (error) {
         console.error("Error rendering cart items with API:", error)
         cartProductsList.innerHTML = `
-          <div class="text-center py-4 text-danger">
-              <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
-              <p>Mahsulotlarni yuklashda xatolik yuz berdi</p>
-              <button class="btn btn-primary" onclick="window.CartPageAPI.renderCartItemsWithAPI()">Qayta urinish</button>
-          </div>
-      `
+        <div class="text-center py-4 text-danger">
+            <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+            <p>Mahsulotlarni yuklashda xatolik yuz berdi</p>
+            <button class="btn btn-primary" onclick="window.CartPageAPI.renderCartItemsWithAPI()">Qayta urinish</button>
+        </div>
+    `
     }
 }
 
@@ -200,35 +200,35 @@ function createCartItemElement(item, index) {
     const sizeInfo = window.getItemSizeInfo(item)
 
     cartItem.innerHTML = `
-      <img src="${imageUrl}" alt="${item.name}" class="cart-product-image" onerror="this.src='/placeholder.svg?height=100&width=100&text=No+Image'">
-      <div class="cart-product-details">
-          <div class="cart-product-info">
-              <h4 class="cart-product-name">${item.name}</h4>
-              ${sizeInfo.html}
-              <div class="cart-product-pricing">
-              <span class="cart-current-price">${window.API.formatPrice(pricingInfo.displayPrice)}</span>
-              ${pricingInfo.hasDiscount ? `<span class="cart-original-price">${window.API.formatPrice(pricingInfo.originalPrice)}</span>` : ""}
-              </div>
-          </div>
-          
-          </div>
-          <div class="cart-product-controls">
-              <div class="cart-quantity-controls">
-                  <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, -1)" ${item.quantity <= 1 ? "disabled" : ""}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256" class="text-base max-md:text-sm cursor-pointer"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128Z"></path></svg>
-                  </button>
-                  <span class="cart-quantity-display">${item.quantity}</span>
-                  <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, 1)" ${isOutOfStock ? "disabled" : ""}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256" class="text-base max-md:text-sm cursor-pointer"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
-                  </button>
-              </div>
-              <div class="cart-item-total">${window.API.formatPrice(pricingInfo.displayPrice * item.quantity)}</div>
-              <button class="cart-remove-btn" onclick="window.removeCartPageItem(${index})" title="Savatdan o'chirish">
-                  <i class="fas fa-times"></i>
-              </button>
-          </div>
-      </div>
-  `
+    <img src="${imageUrl}" alt="${item.name}" class="cart-product-image" onerror="this.src='/placeholder.svg?height=100&width=100&text=No+Image'">
+    <div class="cart-product-details">
+        <div class="cart-product-info">
+            <h4 class="cart-product-name">${item.name}</h4>
+            ${sizeInfo.html}
+            <div class="cart-product-pricing">
+            <span class="cart-current-price">${window.API.formatPrice(pricingInfo.displayPrice)}</span>
+            ${pricingInfo.hasDiscount ? `<span class="cart-original-price">${window.API.formatPrice(pricingInfo.originalPrice)}</span>` : ""}
+            </div>
+        </div>
+        
+        </div>
+        <div class="cart-product-controls">
+            <div class="cart-quantity-controls">
+                <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, -1)" ${item.quantity <= 1 ? "disabled" : ""}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256" class="text-base max-md:text-sm cursor-pointer"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128Z"></path></svg>
+                </button>
+                <span class="cart-quantity-display">${item.quantity}</span>
+                <button class="cart-quantity-btn" onclick="window.updateCartPageItemQuantity(${index}, 1)" ${isOutOfStock ? "disabled" : ""}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 256 256" class="text-base max-md:text-sm cursor-pointer"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg>
+                </button>
+            </div>
+            <div class="cart-item-total">${window.API.formatPrice(pricingInfo.displayPrice * item.quantity)}</div>
+            <button class="cart-remove-btn" onclick="window.removeCartPageItem(${index})" title="Savatdan o'chirish">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+`
 
     return cartItem
 }
@@ -363,19 +363,49 @@ async function handleCheckout() {
 
     window.API.showLoading(true) // Use API's showLoading
     try {
-        await new Promise((resolve) => setTimeout(resolve, 2000))
+        // Construct the CreateOrderReq object
+        const userId = 777777777 // Placeholder: Replace with actual user ID from authentication context
+        const orderItems = window.cartItems.map((item) => ({
+            productId: item.id,
+            productSizeId: 4, // Assuming item.size is the productSizeId (a number) or null
+            quantity: item.quantity,
+        }))
+
+        const createOrderRequest = {
+            userId: userId,
+            orderItems: orderItems,
+        }
+
+        console.log("Sending order request:", createOrderRequest)
+
+        const response = await fetch("/api/v1/order", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                // Add any necessary authorization headers here, e.g., "Authorization": `Bearer ${window.API.getToken()}`
+            },
+            body: JSON.stringify(createOrderRequest),
+        })
+
+        if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.message || "Buyurtma berishda xatolik yuz berdi.")
+        }
+
+        // Order successful
         window.API.showNotification(
-            `Buyurtma qabul qilindi! Jami: ${window.API.formatPrice(window.cartPageTotal)}`,
+            `Buyurtma muvaffaqiyatli qabul qilindi! Jami: ${window.API.formatPrice(window.cartPageTotal)}`,
             "success",
         )
 
+        // Clear cart and update UI after a short delay for notification to be seen
         setTimeout(async () => {
             window.cartItems = [] // Clear cart
             window.cartCount = 0 // Clear cart count
             window.saveCartToStorage()
-            await renderCartPage()
+            await renderCartPage() // Re-render cart page to show empty state
             window.updateCartBadge()
-            window.API.showNotification("Buyurtma muvaffaqiyatli yuborildi!", "success")
+            window.API.showNotification("Savat tozalandi va buyurtma yuborildi!", "info")
         }, 1000)
     } catch (error) {
         console.error("Checkout error:", error)
@@ -394,15 +424,15 @@ function showErrorState(message = "Savatni yuklashda muammo bo'ldi") {
 
     if (cartEmptyState) {
         cartEmptyState.innerHTML = `
-          <div class="empty-cart-content">
-              <div class="empty-cart-icon" style="color: #dc3545;">
-                  <i class="fas fa-exclamation-triangle"></i>
-              </div>
-              <h2 class="empty-cart-title" style="color: #dc3545;">Xatolik yuz berdi</h2>
-              <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">${message}</p>
-              <button class="empty-cart-btn" onclick="location.reload()" style="background: #dc3545;">Qayta yuklash</button>
-          </div>
-      `
+        <div class="empty-cart-content">
+            <div class="empty-cart-icon" style="color: #dc3545;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="empty-cart-title" style="color: #dc3545;">Xatolik yuz berdi</h2>
+            <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">${message}</p>
+            <button class="empty-cart-btn" onclick="location.reload()" style="background: #dc3545;">Qayta yuklash</button>
+        </div>
+    `
         cartEmptyState.style.display = "flex"
     }
     if (cartWithItems) {

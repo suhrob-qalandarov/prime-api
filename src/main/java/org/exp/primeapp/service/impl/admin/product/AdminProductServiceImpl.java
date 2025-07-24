@@ -77,7 +77,7 @@ public class AdminProductServiceImpl implements AdminProductService {
     public AdminProductViewRes getProductById(Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with telegramId: " + productId));
-        List<ProductSizeRes> productSizeReslist = product.getSizes().stream().map(size -> new ProductSizeRes(size.getSize(), size.getAmount())).toList();
+        List<ProductSizeRes> productSizeReslist = product.getSizes().stream().map(size -> new ProductSizeRes(size.getId(), size.getSize(), size.getAmount())).toList();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
