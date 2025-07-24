@@ -1,4 +1,3 @@
-/*
 package org.exp.primeapp.controller.global.advice;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -41,12 +40,12 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage()));
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
+    /*@ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException e) {
         log.warn("Parol noto‘g‘ri: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), "Parol noto‘g‘ri"));
-    }
+    }*/
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException e) {
@@ -99,4 +98,4 @@ public class GlobalExceptionHandler {
             this(status, message, null);
         }
     }
-}*/
+}

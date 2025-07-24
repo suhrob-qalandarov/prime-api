@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(title = "PRIME77 e-commerce", version = "v1", description = "Online e-commerce webapp"),
-        servers = @Server(url = "https://prime77.uz")
+        servers = @Server(url = "http://localhost")
 )
 public class OpenApiConfig {
     @Bean
