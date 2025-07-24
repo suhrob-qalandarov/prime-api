@@ -77,8 +77,9 @@ public class OrderServiceImpl implements OrderService {
     public Order createOrder(Long userId, List<OrderItemRes> orderItems) {
         log.info("Buyurtma yaratish jarayoni boshlandi. Foydalanuvchi ID: {}", userId);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Foydalanuvchi topilmadi"));
+        User user = userRepository.findByTelegramId(userId);
+        System.out.println(userId + " " + user);
+//                .orElseThrow(() -> new RuntimeException("Foydalanuvchi topilmadi"));
 
         Order order = new Order();
         order.setUser(user);
