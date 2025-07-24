@@ -1,68 +1,68 @@
 // Profile dropdown modal functionality
 class AuthModal {
     constructor() {
-        this.isLoggedIn = false;
-        this.currentUser = null;
-        this.modal = null;
+        this.isLoggedIn = false
+        this.currentUser = null
+        this.modal = null
 
-        this.init();
+        this.init()
     }
 
     init() {
-        this.checkAuthStatus();
-        this.setupProfileButtons();
-        this.createModal();
+        this.checkAuthStatus()
+        this.setupProfileButtons()
+        this.createModal()
     }
 
     checkAuthStatus() {
-        const token = this.getCookie('prime-token');
-        const userData = localStorage.getItem('prime-user');
+        const token = this.getCookie("prime-token")
+        const userData = localStorage.getItem("prime-user")
 
         if (token && userData) {
             try {
-                this.currentUser = JSON.parse(userData);
-                this.isLoggedIn = true;
+                this.currentUser = JSON.parse(userData)
+                this.isLoggedIn = true
             } catch (error) {
-                console.error('Error parsing user data:', error);
-                this.isLoggedIn = false;
+                console.error("Error parsing user data:", error)
+                this.isLoggedIn = false
             }
         }
     }
 
     setupProfileButtons() {
-        const profileBtn = document.getElementById('profileBtn');
-        const mobileProfileBtn = document.getElementById('mobileProfileBtn');
+        const profileBtn = document.getElementById("profileBtn")
+        const mobileProfileBtn = document.getElementById("mobileProfileBtn")
 
         if (profileBtn) {
-            profileBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.handleProfileClick();
-            });
+            profileBtn.addEventListener("click", (e) => {
+                e.preventDefault()
+                this.handleProfileClick()
+            })
         }
 
         if (mobileProfileBtn) {
-            mobileProfileBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.handleProfileClick();
-            });
+            mobileProfileBtn.addEventListener("click", (e) => {
+                e.preventDefault()
+                this.handleProfileClick()
+            })
         }
     }
 
     handleProfileClick() {
         if (this.isLoggedIn) {
             // Redirect to profile page
-            window.location.href = 'profile.html';
+            window.location.href = "profile.html"
         } else {
             // Show login modal
-            this.showLoginModal();
+            this.showLoginModal()
         }
     }
 
     createModal() {
         // Remove existing modal if any
-        const existingModal = document.getElementById('authModal');
+        const existingModal = document.getElementById("authModal")
         if (existingModal) {
-            existingModal.remove();
+            existingModal.remove()
         }
 
         // Create modal HTML
@@ -156,73 +156,73 @@ class AuthModal {
                     </div>
                 </div>
             </div>
-        `;
+        `
 
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        this.modal = document.getElementById('authModal');
+        document.body.insertAdjacentHTML("beforeend", modalHTML)
+        this.modal = document.getElementById("authModal")
 
         // Setup modal event listeners
-        this.setupModalEvents();
+        this.setupModalEvents()
     }
 
     setupModalEvents() {
-        const closeBtn = document.getElementById('closeAuthModal');
+        const closeBtn = document.getElementById("closeAuthModal")
 
         // Close button
-        closeBtn.addEventListener('click', () => {
-            this.hideModal();
-        });
+        closeBtn.addEventListener("click", () => {
+            this.hideModal()
+        })
 
         // Click outside to close
-        this.modal.addEventListener('click', (e) => {
+        this.modal.addEventListener("click", (e) => {
             if (e.target === this.modal) {
-                this.hideModal();
+                this.hideModal()
             }
-        });
+        })
 
         // Escape key to close
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.modal.style.display === 'flex') {
-                this.hideModal();
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && this.modal.style.display === "flex") {
+                this.hideModal()
             }
-        });
+        })
     }
 
     showLoginModal() {
         if (this.modal) {
-            this.modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            this.modal.style.display = "flex"
+            document.body.style.overflow = "hidden"
 
             // Animate in
             setTimeout(() => {
-                this.modal.style.opacity = '1';
-            }, 10);
+                this.modal.style.opacity = "1"
+            }, 10)
         }
     }
 
     hideModal() {
         if (this.modal) {
-            this.modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
+            this.modal.style.display = "none"
+            document.body.style.overflow = "auto"
         }
     }
 
     getCookie(name) {
-        const nameEQ = name + "=";
-        const ca = document.cookie.split(';');
+        const nameEQ = name + "="
+        const ca = document.cookie.split(";")
         for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            let c = ca[i]
+            while (c.charAt(0) === " ") c = c.substring(1, c.length)
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length)
         }
-        return null;
+        return null
     }
 }
 
 // Initialize auth modal when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new AuthModal();
-});
+document.addEventListener("DOMContentLoaded", () => {
+    new AuthModal()
+})
 
 // Make it globally available
-window.AuthModal = AuthModal;
+window.AuthModal = AuthModal

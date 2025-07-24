@@ -18,7 +18,7 @@ public class BotAuthController {
 
     private final AuthService authService;
 
-    @GetMapping("check-admin-role")
+    @GetMapping("check-user-permission")
     public ResponseEntity<Boolean> checkUserAdminRole(@AuthenticationPrincipal User user) {
         boolean hasAdminRole = user.getRoles()
                 .stream()

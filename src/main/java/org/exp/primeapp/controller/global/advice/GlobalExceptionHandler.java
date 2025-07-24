@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.global.advice;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -98,4 +99,4 @@ public class GlobalExceptionHandler {
             this(status, message, null);
         }
     }
-}
+}*/

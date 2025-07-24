@@ -31,7 +31,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
         String origin = request.getHeader("Origin");
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
-            if (origin != null && (origin.equals("http://localhost") || origin.equals("https://prime77.uz"))) {
+            if (origin != null && (origin.equals("http://localhost") || origin.equals("http://192.168.1.2") || origin.equals("https://prime77.uz"))) {
                 response.setHeader("Access-Control-Allow-Origin", origin);
             }
             response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
@@ -40,7 +40,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = request.getHeader(AUTHORIZATION);
+        /*String token = request.getHeader(AUTHORIZATION);
 
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
@@ -65,7 +65,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 log.error("Invalid token: {}", e.getMessage());
             }
-        }
+        }*/
         filterChain.doFilter(request, response);
     }
 }

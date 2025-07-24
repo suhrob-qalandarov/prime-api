@@ -13,7 +13,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png" />
     <link rel="manifest" href="/images/favicon/site.webmanifest" />
     <link rel="stylesheet" href="/styles/common/styles.css">
-    <link rel="stylesheet" href="/styles/desktop/pages/collection.css">
     <link rel="stylesheet" href="/styles/common/cart-modal.css">
     <link rel="stylesheet" href="/assets/auth/profile.css">
 </head>
@@ -171,7 +170,8 @@
         <span class="visually-hidden">Yuklanmoqda...</span>
     </div>
 </div>
-ProfileCollection Page Content -->
+
+<!-- Profile Page Content -->
 <main class="profile-page">
     <!-- Page Header -->
     <section class="page-header">
@@ -189,7 +189,54 @@ ProfileCollection Page Content -->
 
     <!-- Profile Section -->
     <section class="profile-section">
+        <div class="container-custom">
+            <div class="row">
+                <!-- Left Column - User Info -->
+                <div class="col-lg-4">
+                    <div class="profile-card">
+                        <div class="user-info">
+                            <div>
+                                <h5 id="userName" style="margin: 0; color: var(--burgundy-color); font-weight: 700;">Loading...</h5>
+                                <p id="userPhone" style="margin: 0; color: #666; font-size: 14px;">Loading...</p>
+                            </div>
+                            <div>
+                                <button class="logout-btn" id="logoutBtn">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Chiqish
+                                </button>
+                            </div>
+                        </div>
+                        <div class="admin-section" id="adminSection" style="display: none;">
+                            <a href="/admin/pages/dashboard.html" class="admin-btn" id="adminBtn">
+                                <i class="fas fa-cog me-2"></i>ADMIN PAGE
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Right Column - Orders -->
+                <div class="col-lg-8">
+                    <div class="orders-card">
+                        <h4 style="color: var(--burgundy-color); margin-bottom: 20px; font-weight: 700;">Buyurtmalar</h4>
+
+                        <div class="order-tabs">
+
+                            <button class="order-tab active" data-status="PENDING">Kutilmoqda</button>
+                            <button class="order-tab" data-status="ACCEPTED">Rasmiylashtirildi</button>
+                            <button class="order-tab" data-status="SHIPPED">Bajarildi</button>
+                        </div>
+
+                        <div id="ordersContainer">
+                            <div class="loading">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Yuklanmoqda...</span>
+                                </div>
+                                <p class="mt-3">Buyurtmalar yuklanmoqda...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </main>
 
@@ -285,9 +332,11 @@ ProfileCollection Page Content -->
     </div>
 </footer>
 
-<script src="/scripts/desktop/common/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/scripts/common/api.js"></script>
+<script src="/scripts/desktop/common/script.js"></script>
 <script src="/scripts/common/cart-add-logic.js"></script>
 <script src="/scripts/desktop/common/cart-modal.js"></script>
+<script src="/assets/auth/profile.js"></script>
 </body>
 </html>
