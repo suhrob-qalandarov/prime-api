@@ -141,7 +141,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         if (req.getProductSizes() != null) {
             req.getProductSizes().forEach(sizeReq -> {
                 ProductSize productSize = new ProductSize();
-                productSize.setSize(sizeReq.getSizes());
+                productSize.setSize(sizeReq.getSize());
                 productSize.setAmount(sizeReq.getAmount());
                 product.addSize(productSize);
             });
@@ -206,7 +206,7 @@ public class AdminProductServiceImpl implements AdminProductService {
             product.getSizes().clear();
             req.getProductSizes().forEach(sizeReq -> {
                 ProductSize productSize = new ProductSize();
-                productSize.setSize(sizeReq.getSizes());
+                productSize.setSize(sizeReq.getSize());
                 productSize.setAmount(sizeReq.getAmount());
                 product.addSize(productSize);
             });

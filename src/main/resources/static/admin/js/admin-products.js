@@ -12,6 +12,35 @@ const bootstrap = window.bootstrap
 // API Base URL
 const API_BASE_URL = "https://prime77.uz"
 
+// Define all possible sizes based on your Java enum
+const ALL_SIZES = [
+    { value: "SMALL", label: "KICHIK" },
+    { value: "MEDIUM", label: "O'RTACHA" },
+    { value: "BIG", label: "KATTA" },
+    { value: "SIZE_39", label: "39" },
+    { value: "SIZE_40", label: "40" },
+    { value: "SIZE_41", label: "41" },
+    { value: "SIZE_42", label: "42" },
+    { value: "SIZE_43", label: "43" },
+    { value: "SIZE_44", label: "44" },
+    { value: "SIZE_45", label: "45" },
+    { value: "SIZE_28", label: "28" },
+    { value: "SIZE_29", label: "29" },
+    { value: "SIZE_30", label: "30" },
+    { value: "SIZE_31", label: "31" },
+    { value: "SIZE_32", label: "32" },
+    { value: "SIZE_33", label: "33" },
+    { value: "SIZE_34", label: "34" },
+    { value: "SIZE_35", label: "35" },
+    { value: "SIZE_36", label: "36" },
+    { value: "S", label: "S" },
+    { value: "M", label: "M" },
+    { value: "L", label: "L" },
+    { value: "XL", label: "XL" },
+    { value: "XXL", label: "XXL" },
+    { value: "XXXL", label: "XXXL" },
+]
+
 // Initialize products panel
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM Content Loaded - Products")
@@ -302,6 +331,19 @@ async function populateCategorySelect(selectId, selectedId = null) {
             .join("")
 }
 
+// Populate size select dropdown
+function populateSizeSelect(selectId, selectedValue = null) {
+    const select = document.getElementById(selectId)
+    if (!select) return
+
+    select.innerHTML =
+        '<option value="">O\'lcham tanlang</option>' +
+        ALL_SIZES.map(
+            (size) =>
+                `<option value="${size.value}" ${selectedValue === size.value ? "selected" : ""}>${size.label}</option>`,
+        ).join("")
+}
+
 // Show add product modal
 async function showAddProductModal() {
     document.getElementById("productModalTitle").textContent = "Mahsulot qo'shish"
@@ -321,8 +363,9 @@ async function showAddProductModal() {
     selectedSizes = []
     uploadedAttachments = []
 
-    // Populate category select
+    // Populate category and size selects
     await populateCategorySelect("product-category")
+    populateSizeSelect("size-select") // Populate the size dropdown
 
     const modal = new bootstrap.Modal(document.getElementById("productModal"))
     modal.show()
@@ -350,10 +393,13 @@ async function showEditProductModal(productId) {
         document.getElementById("product-status").disabled = false
 
         await populateCategorySelect("product-category", product.category?.id)
+        populateSizeSelect("size-select") // Populate the size dropdown
 
-        // Use productSizeRes from the new DTO
+        // Use productSizeRes from the new DTO, filtering out any null/undefined sizes
         selectedSizes = product.productSizeRes
-            ? product.productSizeRes.map((ps) => ({ size: ps.size, amount: ps.amount }))
+            ? product.productSizeRes
+                .filter((ps) => ps.size !== null && ps.size !== undefined) // IMPORTANT: Filter out null/undefined sizes
+                .map((ps) => ({ size: ps.size, amount: ps.amount }))
             : []
         renderSelectedSizes()
 
@@ -638,10 +684,10 @@ function renderSelectedSizes() {
 
 // Get size display text
 function getSizeDisplayText(size) {
-    if (size.startsWith("SIZE_")) {
+    if (typeof size === "string" && size.startsWith("SIZE_")) {
         return size.replace("SIZE_", "")
     }
-    return size
+    return size || "-" // Return '-' if size is null, undefined, or not a string
 }
 
 // Save product (Add or Update)
@@ -702,7 +748,7 @@ async function saveProduct() {
             categoryId: Number.parseInt(categoryId),
             attachmentIds: attachmentIdsToSend, // Send combined IDs/keys
             productSizes: selectedSizes.map((s) => ({
-                size: s.size,
+                size: s.size, // This will now correctly map to 'size' in ProductSizeReq
                 amount: s.amount,
             })),
         }
