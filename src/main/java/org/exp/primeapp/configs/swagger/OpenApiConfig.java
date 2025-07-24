@@ -12,21 +12,20 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(title = "ECOMMERCE", version = "v1", description = "Starting program"),
-        servers = @Server(url = "http://localhost:8080")
+        info = @Info(title = "PRIME77 e-commerce", version = "v1", description = "Online e-commerce webapp"),
+        servers = @Server(url = "https://prime77.uz")
 )
 public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenAPI() {
-        final String SCHEME_NAME = "bearerAuth";
+        final String SCHEME_NAME = "Authorization";
         return new OpenAPI()
                 .addSecurityItem(new SecurityRequirement().addList(SCHEME_NAME))
                 .components(new Components().addSecuritySchemes(SCHEME_NAME,
                         new SecurityScheme()
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")
+                                .name(SCHEME_NAME)
+                                .type(SecurityScheme.Type.APIKEY)
+                                .in(SecurityScheme.In.HEADER)
                 ));
     }
-
 }

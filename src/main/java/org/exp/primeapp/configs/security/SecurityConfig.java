@@ -102,7 +102,11 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Allow requests from these origins
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost", "https://prime77.uz"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://prime77.uz",
+                "http://localhost",
+                "http://localhost:8080"
+        ));
 
         // Allow these HTTP methods
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
