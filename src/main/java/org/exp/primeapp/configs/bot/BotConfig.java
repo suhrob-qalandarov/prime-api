@@ -1,4 +1,4 @@
-
+/*
 package org.exp.primeapp.configs;
 
 import jakarta.annotation.PostConstruct;
@@ -27,4 +27,4 @@ public class BotConfig {
         }
     }
 }
-
+*/
