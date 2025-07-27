@@ -1,4 +1,4 @@
-/*
+
 package org.exp.primeapp.telegram;
 
 import lombok.Data;
@@ -8,9 +8,9 @@ import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.enums.ProductStatus;
+import org.exp.primeapp.service.interfaces.admin.attachment.AdminAttachmentService;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
 import org.exp.primeapp.service.interfaces.user.CategoryService;
-import org.exp.primeapp.service.interfaces.attachment.AdminAttachmentService;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -100,7 +100,7 @@ public class ProductAdminBot extends TelegramLongPollingBot {
                         userStep.put(chatId, Step.SELECT_CATEGORY);
 
                         StringBuilder sb = new StringBuilder("🏷️ Kategoriya raqamini tanlang:\n");
-                        List<Category> categories = categoryService.getAll();
+                        List<Category> categories = categoryService.getCategories();
                         for (Category category : categories) {
                             sb.append(category.getId()).append(" - ").append(category.getName()).append("\n");
                         }
@@ -198,4 +198,4 @@ public class ProductAdminBot extends TelegramLongPollingBot {
         return "7777304787:AAGx6_AOKvstwEUnQhqdpZv0aRFuHOj1EYY";
     }
 }
-*/
+
