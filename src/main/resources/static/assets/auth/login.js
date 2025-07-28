@@ -89,7 +89,7 @@ class LoginManager {
         this.statusText.textContent = "Kod tekshirilmoqda..."
 
         try {
-            const response = await fetch(`https://prime77.uz/api/v1/auth/code/${code}`, {
+            const response = await fetch(`http://localhost/api/v1/auth/code/${code}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

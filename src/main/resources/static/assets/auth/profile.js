@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_BASE_URL = "https://prime77.uz/api/v1"
+const API_BASE_URL = "http://localhost/api/v1"
 
 class ProfileManager {
     constructor() {
