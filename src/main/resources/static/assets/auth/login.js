@@ -119,9 +119,9 @@ class LoginManager {
             this.showSuccessMessage(`Xush kelibsiz, ${data.userRes.firstName}!`)
             this.statusText.textContent = "Muvaffaqiyatli kirildi!"
 
-            // Redirect to profile
+            // Redirect to main page (index.html)
             setTimeout(() => {
-                window.location.href = "profile.html"
+                window.location.href = "/index.html"
             }, 1500)
         } catch (error) {
             console.error("Login error:", error)
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Check if already logged in
     const token = document.cookie.split("; ").find((row) => row.startsWith("prime-token="))
     if (token) {
-        window.location.href = "profile.html"
+        window.location.href = "/index.html"
         return
     }
 

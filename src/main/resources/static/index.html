@@ -76,7 +76,7 @@
                             </svg>
                         </a>
                         <span class="header-separator">|</span>
-                        <a href="/assets/auth/login.html" class="header-icon">
+                        <a href="#" class="header-icon" id="profileBtn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
                                 <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
                             </svg>
@@ -84,7 +84,7 @@
                         <div class="position-relative">
                             <a href="#" class="header-icon" id="cartIcon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256">
-                                    <path d="M239.89,198.12l-14.26-120a16,16,0,0,0-16-14.12H176a48,48,0,0,0-96,0H46.33a16,16,0,0,0-16,14.12l-14.26,120A16,16,0,0,0,20,210.6a16.13,16.13,0,0,0,12,5.4H223.92A16.13,16.13,0,0,0,236,210.6,16,16,0,0,0,239.89,198.12ZM128,32a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32ZM32,200,46.33,80H80v24a8,8,0,0,0,16,0V80h64v24a8,8,0,0,0,16,0V80h33.75l14.17,120Z"></path>
+                                    <path d="M239.89,198.12l-14.26-120a16,16,0,0,0-16-14.12H176a48,48,0,1,0-96,0H46.33a16,16,0,0,0-16,14.12l-14.26,120A16,16,0,0,0,20,210.6a16.13,16.13,0,0,0,12,5.4H223.92A16.13,16.13,0,0,0,236,210.6,16,16,0,0,0,239.89,198.12ZM128,32a32,32,0,0,1,32,32H96A32,32,0,0,1,128,32ZM32,200,46.33,80H80v24a8,8,0,0,0,16,0V80h64v24a8,8,0,0,0,16,0V80h33.75l14.17,120Z"></path>
                                 </svg>
                                 <span class="badge" id="cartBadge">0</span>
                             </a>
@@ -116,7 +116,7 @@
         </button>
         <h1 class="mobile-logo">PRIME<span>77</span></h1>
         <div class="mobile-header-icons">
-            <a href="/assets/auth/login.html" class="mobile-header-icon">
+            <a href="#" class="mobile-header-icon" id="mobileProfileBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
                     <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
                 </svg>
@@ -155,7 +155,6 @@
 <div class="cart-modal" id="cartModal">
     <!-- Cart modal content will be loaded dynamically by cart-modal.js -->
 </div>
-
 
 <!-- 3D Hero Showcase Section -->
 <section class="hero-section">
@@ -461,16 +460,15 @@
 <div class="product-quick-view-modal" id="productQuickViewModal">
 </div>
 
-
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="scripts/common/api.js"></script>
 <script src="assets/auth/auth-modal.js"></script>
-<script src="scripts/common/cart-add-logic.js"></script> <!-- New cart logic -->
-<script src="scripts/desktop/common/discount.js"></script> <!-- Ensure discount.js is loaded if used -->
+<script src="scripts/common/cart-add-logic.js"></script>
+<script src="scripts/desktop/common/discount.js"></script>
 <script src="scripts/common/featured.js"></script>
 <script src="scripts/desktop/common/script.js"></script>
-<script src="scripts/desktop/common/quick-view.js"></script> <!-- New quick view logic -->
-<script src="scripts/desktop/common/cart-modal.js"></script> <!-- New cart modal logic -->
+<script src="scripts/desktop/common/quick-view.js"></script>
+<script src="scripts/desktop/common/cart-modal.js"></script>
 </body>
 </html>

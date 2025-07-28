@@ -3,7 +3,7 @@ class AuthModal {
     constructor() {
         this.isLoggedIn = false
         this.currentUser = null
-        this.modal = null
+        this.dropdown = null
 
         this.init()
     }
@@ -11,7 +11,7 @@ class AuthModal {
     init() {
         this.checkAuthStatus()
         this.setupProfileButtons()
-        this.createModal()
+        //this.createDropdown() /** rest of code here **/
     }
 
     checkAuthStatus() {
@@ -30,7 +30,9 @@ class AuthModal {
     }
 
     setupProfileButtons() {
+        // Desktop profile button
         const profileBtn = document.getElementById("profileBtn")
+        // Mobile profile button
         const mobileProfileBtn = document.getElementById("mobileProfileBtn")
 
         if (profileBtn) {
@@ -46,165 +48,296 @@ class AuthModal {
                 this.handleProfileClick()
             })
         }
+
+        // Close dropdown when clicking outside
+        //document.addEventListener("click", (e) => { /** rest of code here **/
+        //  if (this.dropdown && !e.target.closest(".user-icon") && !e.target.closest(".login-popup")) {
+        //    this.hideDropdown()
+        //  }
+        //})
     }
 
     handleProfileClick() {
+        // Check current auth status
+        this.checkAuthStatus()
+
         if (this.isLoggedIn) {
-            // Redirect to profile page
-            window.location.href = "profile.html"
+            // User is logged in - go to profile page
+            window.location.href = "/assets/auth/profile.html"
         } else {
-            // Show login modal
-            this.showLoginModal()
+            // User is not logged in - go to login page
+            window.location.href = "/assets/auth/login.html"
         }
     }
 
-    createModal() {
-        // Remove existing modal if any
-        const existingModal = document.getElementById("authModal")
-        if (existingModal) {
-            existingModal.remove()
-        }
+    //createDropdown() { /** rest of code here **/
+    //  // Remove existing dropdown if any
+    //  const existingDropdown = document.querySelector(".login-popup")
+    //  if (existingDropdown) {
+    //    existingDropdown.remove()
+    //  }
 
-        // Create modal HTML
-        const modalHTML = `
-            <div id="authModal" style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                display: none;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-                backdrop-filter: blur(5px);
-            ">
-                <div style="
-                    background: white;
-                    border-radius: 15px;
-                    padding: 0;
-                    max-width: 400px;
-                    width: 90%;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-                    overflow: hidden;
-                    position: relative;
-                ">
-                    <div style="
-                        background: linear-gradient(135deg, var(--burgundy-color), var(--burgundy-light));
-                        color: white;
-                        padding: 30px;
-                        text-align: center;
-                        position: relative;
-                    ">
-                        <button id="closeAuthModal" style="
-                            position: absolute;
-                            top: 15px;
-                            right: 15px;
-                            background: none;
-                            border: none;
-                            color: white;
-                            font-size: 24px;
-                            cursor: pointer;
-                            width: 30px;
-                            height: 30px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            border-radius: 50%;
-                            transition: all 0.3s ease;
-                        " onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'">
-                            ×
-                        </button>
-                        <div style="
-                            width: 80px;
-                            height: 80px;
-                            background: rgba(255,255,255,0.1);
-                            border-radius: 50%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            margin: 0 auto 20px;
-                        ">
-                            <i class="fas fa-user" style="font-size: 40px;"></i>
-                        </div>
-                        <h3 style="margin: 0; font-weight: 700;">KIRISH</h3>
-                    </div>
-                    <div style="padding: 30px; text-align: center;">
-                        <p style="
-                            color: #666;
-                            margin-bottom: 25px;
-                            line-height: 1.6;
-                        ">Bu yerda birinchi martamisiz? Ro'yxatdan o'tish</p>
-                        <a href="login.html" style="
-                            display: inline-block;
-                            background: var(--burgundy-color);
-                            color: white;
-                            padding: 12px 30px;
-                            border-radius: 25px;
-                            text-decoration: none;
-                            font-weight: 600;
-                            transition: all 0.3s ease;
-                            border: 2px solid var(--burgundy-color);
-                        " onmouseover="
-                            this.style.background='transparent';
-                            this.style.color='var(--burgundy-color)';
-                        " onmouseout="
-                            this.style.background='var(--burgundy-color)';
-                            this.style.color='white';
-                        ">Qo'llab-quvvatlash</a>
-                    </div>
-                </div>
-            </div>
-        `
+    //  // Find the profile button container
+    //  const profileBtn =
+    //    document.querySelector('.header-icons a[href*="login"], .header-icons a[id*="profile"]') ||
+    //    document.querySelector(".header-icons .header-icon")
 
-        document.body.insertAdjacentHTML("beforeend", modalHTML)
-        this.modal = document.getElementById("authModal")
+    //  if (profileBtn) {
+    //    // Make parent container relative
+    //    const parentContainer = profileBtn.closest(".header-icons") || profileBtn.parentElement
+    //    parentContainer.style.position = "relative"
 
-        // Setup modal event listeners
-        this.setupModalEvents()
+    //    // Add user-icon class to profile button parent
+    //    const userIconContainer = profileBtn.parentElement
+    //    if (userIconContainer) {
+    //      userIconContainer.classList.add("user-icon")
+    //      userIconContainer.style.position = "relative"
+    //    }
+
+    //    // Create dropdown HTML matching your structure
+    //    const dropdownHTML = `
+    //      <div class="login-popup absolute top-[74px] w-[320px] p-7 rounded-xl bg-white text-black box-shadow-small" style="
+    //        position: absolute;
+    //        top: 74px;
+    //        right: 0;
+    //        width: 320px;
+    //        padding: 28px;
+    //        border-radius: 12px;
+    //        background: white;
+    //        color: black;
+    //        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    //        z-index: 9999;
+    //        display: none;
+    //        border: 1px solid #eee;
+    //      ">
+    //        ${this.getDropdownContent()}
+    //      </div>
+    //    `
+
+    //    userIconContainer.insertAdjacentHTML("beforeend", dropdownHTML)
+    //    this.dropdown = userIconContainer.querySelector(".login-popup")
+    //  }
+    //}
+
+    //getDropdownContent() { /** rest of code here **/
+    //  if (this.isLoggedIn && this.currentUser) {
+    //    return `
+    //      <a class="button-main w-full text-center" href="/assets/auth/profile.html" style="
+    //        display: block;
+    //        width: 100%;
+    //        text-align: center;
+    //        background: var(--burgundy-color);
+    //        color: white;
+    //        padding: 12px 24px;
+    //        border-radius: 8px;
+    //        text-decoration: none;
+    //        font-weight: 600;
+    //        margin-bottom: 16px;
+    //        transition: all 0.3s ease;
+    //      " onmouseover="this.style.background='var(--burgundy-dark)'" onmouseout="this.style.background='var(--burgundy-color)'">
+    //        Profil
+    //      </a>
+    //      <div class="bottom mt-4 pt-4 border-t border-line" style="
+    //        margin-top: 16px;
+    //        padding-top: 16px;
+    //        border-top: 1px solid #eee;
+    //      ">
+    //        <a href="https://t.me/prime_77_uz_bot" target="_blank" class="body1 hover:underline" style="
+    //          color: #333;
+    //          text-decoration: none;
+    //          font-size: 16px;
+    //          transition: all 0.3s ease;
+    //        " onmouseover="this.style.textDecoration='underline'; this.style.color='var(--burgundy-color)'" onmouseout="this.style.textDecoration='none'; this.style.color='#333'">
+    //          Qo'llab-quvvatlash
+    //        </a>
+    //        <button class="logout-btn" style="
+    //          display: block;
+    //          background: none;
+    //          border: none;
+    //          color: #dc3545;
+    //          font-size: 16px;
+    //          margin-top: 12px;
+    //          cursor: pointer;
+    //          padding: 0;
+    //          text-decoration: none;
+    //          transition: all 0.3s ease;
+    //        " onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+    //          Chiqish
+    //        </button>
+    //      </div>
+    //    `
+    //  } else {
+    //    return `
+    //      <a class="button-main w-full text-center" href="/assets/auth/login.html" style="
+    //        display: block;
+    //        width: 100%;
+    //        text-align: center;
+    //        background: var(--burgundy-color);
+    //        color: white;
+    //        padding: 12px 24px;
+    //        border-radius: 8px;
+    //        text-decoration: none;
+    //        font-weight: 600;
+    //        margin-bottom: 16px;
+    //        transition: all 0.3s ease;
+    //      " onmouseover="this.style.background='var(--burgundy-dark)'" onmouseout="this.style.background='var(--burgundy-color)'">
+    //        Kirish
+    //      </a>
+    //      <div class="bottom mt-4 pt-4 border-t border-line" style="
+    //        margin-top: 16px;
+    //        padding-top: 16px;
+    //        border-top: 1px solid #eee;
+    //      ">
+    //        <a href="https://t.me/prime_77_uz_bot" target="_blank" class="body1 hover:underline" style="
+    //          color: #333;
+    //          text-decoration: none;
+    //          font-size: 16px;
+    //          transition: all 0.3s ease;
+    //        " onmouseover="this.style.textDecoration='underline'; this.style.color='var(--burgundy-color)'" onmouseout="this.style.textDecoration='none'; this.style.color='#333'">
+    //          Qo'llab-quvvatlash
+    //        </a>
+    //      </div>
+    //    `
+    //  }
+    //}
+
+    //toggleDropdown(e, buttonElement) { /** rest of code here **/
+    //  if (!this.dropdown) {
+    //    this.createDropdown()
+    //  }
+
+    //  const isVisible = this.dropdown.style.display === "block"
+
+    //  if (isVisible) {
+    //    this.hideDropdown()
+    //  } else {
+    //    this.showDropdown(buttonElement)
+    //  }
+    //}
+
+    //showDropdown(buttonElement) { /** rest of code here **/
+    //  if (!this.dropdown) return
+
+    //  // Update dropdown content based on current auth status
+    //  this.checkAuthStatus()
+    //  this.dropdown.innerHTML = this.getDropdownContent()
+    //  this.setupDropdownEvents()
+
+    //  this.dropdown.style.display = "block"
+
+    //  // Position dropdown correctly
+    //  const rect = buttonElement.getBoundingClientRect()
+    //  const dropdownRect = this.dropdown.getBoundingClientRect()
+
+    //  // Adjust position if dropdown goes off screen
+    //  if (rect.right - 320 < 0) {
+    //    this.dropdown.style.right = "auto"
+    //    this.dropdown.style.left = "0"
+    //  } else {
+    //    this.dropdown.style.right = "0"
+    //    this.dropdown.style.left = "auto"
+    //  }
+
+    //  // Animate in
+    //  this.dropdown.style.opacity = "0"
+    //  this.dropdown.style.transform = "translateY(-10px)"
+    //  setTimeout(() => {
+    //    this.dropdown.style.opacity = "1"
+    //    this.dropdown.style.transform = "translateY(0)"
+    //    this.dropdown.style.transition = "all 0.3s ease"
+    //  }, 10)
+    //}
+
+    //hideDropdown() { /** rest of code here **/
+    //  if (!this.dropdown) return
+    //  this.dropdown.style.display = "none"
+    //  this.dropdown.style.transition = "none"
+    //}
+
+    //setupDropdownEvents() { /** rest of code here **/
+    //  if (!this.dropdown) return
+
+    //  // Logout button event
+    //  const logoutBtn = this.dropdown.querySelector(".logout-btn")
+    //  if (logoutBtn) {
+    //    logoutBtn.addEventListener("click", (e) => {
+    //      e.preventDefault()
+    //      this.logout()
+    //    })
+    //  }
+
+    //  // Profile link click tracking
+    //  const profileLink = this.dropdown.querySelector('a[href*="profile"]')
+    //  if (profileLink) {
+    //    profileLink.addEventListener("click", () => {
+    //      this.hideDropdown()
+    //    })
+    //  }
+
+    //  // Login link click tracking
+    //  const loginLink = this.dropdown.querySelector('a[href*="login"]')
+    //  if (loginLink) {
+    //    loginLink.addEventListener("click", () => {
+    //      this.hideDropdown()
+    //    })
+    //  }
+    //}
+
+    logout() {
+        // Clear cookie and localStorage
+        document.cookie = "prime-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+        localStorage.removeItem("prime-user")
+
+        // Update auth status
+        this.isLoggedIn = false
+        this.currentUser = null
+
+        // Hide dropdown
+        //this.hideDropdown() /** rest of code here **/
+
+        // Show success message
+        this.showNotification("Tizimdan muvaffaqiyatli chiqdingiz", "success")
+
+        // Redirect to home after a short delay
+        setTimeout(() => {
+            window.location.href = "/index.html"
+        }, 1500)
     }
 
-    setupModalEvents() {
-        const closeBtn = document.getElementById("closeAuthModal")
+    showNotification(message, type = "info") {
+        const notification = document.createElement("div")
+        notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${type === "success" ? "#4CAF50" : type === "error" ? "#f44336" : "#2196F3"};
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      z-index: 99999;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      max-width: 300px;
+    `
+        notification.textContent = message
+        document.body.appendChild(notification)
 
-        // Close button
-        closeBtn.addEventListener("click", () => {
-            this.hideModal()
-        })
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = "translateX(0)"
+        }, 100)
 
-        // Click outside to close
-        this.modal.addEventListener("click", (e) => {
-            if (e.target === this.modal) {
-                this.hideModal()
-            }
-        })
-
-        // Escape key to close
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape" && this.modal.style.display === "flex") {
-                this.hideModal()
-            }
-        })
-    }
-
-    showLoginModal() {
-        if (this.modal) {
-            this.modal.style.display = "flex"
-            document.body.style.overflow = "hidden"
-
-            // Animate in
+        // Remove after 3 seconds
+        setTimeout(() => {
+            notification.style.transform = "translateX(100%)"
             setTimeout(() => {
-                this.modal.style.opacity = "1"
-            }, 10)
-        }
-    }
-
-    hideModal() {
-        if (this.modal) {
-            this.modal.style.display = "none"
-            document.body.style.overflow = "auto"
-        }
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification)
+                }
+            }, 300)
+        }, 3000)
     }
 
     getCookie(name) {

@@ -18,7 +18,7 @@ class ProfileManager {
     init() {
         // Check authentication
         if (!this.checkAuth()) {
-            window.location.href = "login.html"
+            window.location.href = "/assets/auth/login.html"
             return
         }
 
@@ -115,15 +115,19 @@ class ProfileManager {
         try {
             const token = this.getCookie("prime-token")
 
-            const response = await axios.get(`${API_BASE_URL}/orders/${this.currentUser.telegramId}`, {
+            const response = await fetch(`${API_BASE_URL}/orders/${this.currentUser.telegramId}`, {
+                method: "GET",
                 headers: {
-                    Authorization: `${token}`,
+                    Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
-                timeout: 1500,
             })
 
-            const data = response.data
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
+            }
+
+            const data = await response.json()
 
             // Store the grouped orders data
             this.ordersData = {
@@ -138,30 +142,17 @@ class ProfileManager {
 
             let errorMessage = "Buyurtmalarni yuklashda xatolik yuz berdi"
 
-            if (error.response) {
-                switch (error.response.status) {
-                    case 401:
-                        errorMessage = "Avtorizatsiya xatosi. Qayta kiring"
-                        setTimeout(() => {
-                            this.logout()
-                        }, 2000)
-                        break
-                    case 403:
-                        errorMessage = "Ruxsat yo'q. Buyurtmalarni ko'rish huquqi mavjud emas"
-                        break
-                    case 404:
-                        errorMessage = "Foydalanuvchi topilmadi"
-                        break
-                    case 500:
-                        errorMessage = "Server xatosi. Iltimos, qayta urinib ko'ring"
-                        break
-                    default:
-                        errorMessage = `Server xatosi: ${error.response.status}`
-                }
-            } else if (error.request) {
-                errorMessage = "Internet aloqasi bilan muammo. Ulanishni tekshiring"
-            } else if (error.code === "ECONNABORTED") {
-                errorMessage = "So'rov vaqti tugadi. Qayta urinib ko'ring"
+            if (error.message.includes("401")) {
+                errorMessage = "Avtorizatsiya xatosi. Qayta kiring"
+                setTimeout(() => {
+                    this.logout()
+                }, 2000)
+            } else if (error.message.includes("403")) {
+                errorMessage = "Ruxsat yo'q. Buyurtmalarni ko'rish huquqi mavjud emas"
+            } else if (error.message.includes("404")) {
+                errorMessage = "Foydalanuvchi topilmadi"
+            } else if (error.message.includes("500")) {
+                errorMessage = "Server xatosi. Iltimos, qayta urinib ko'ring"
             }
 
             this.showError(errorMessage)
@@ -176,6 +167,8 @@ class ProfileManager {
                 return this.ordersData.confirmedOrders
             case "SHIPPED":
                 return this.ordersData.shippedOrders
+            default:
+                return this.ordersData.pendingOrders
         }
     }
 
@@ -239,9 +232,7 @@ class ProfileManager {
     }
 
     createOrderItemElement(item) {
-        const imageUrl = item.imageKey
-            ? `${API_BASE_URL}/attachment/${item.imageKey}`
-            : "/images/default/box.jpeg"
+        const imageUrl = item.imageKey ? `${API_BASE_URL}/attachment/${item.imageKey}` : "/images/default/box.jpeg"
         const discountText = item.discount > 0 ? `(-${item.discount}%)` : ""
 
         return `
@@ -299,7 +290,7 @@ class ProfileManager {
                 <i class="fas fa-shopping-bag" style="font-size: 48px; color: #ccc; margin-bottom: 20px;"></i>
                 <h5 style="color: #666;">${message}</h5>
                 <p style="color: #999;">Hozircha buyurtmalar yo'q</p>
-                <a href="index.html" class="btn btn-primary mt-3" style="background: var(--burgundy-color); border-color: var(--burgundy-color);">
+                <a href="/index.html" class="btn btn-primary mt-3" style="background: var(--burgundy-color); border-color: var(--burgundy-color);">
                     Xarid qilishni boshlash
                 </a>
             </div>
@@ -337,7 +328,7 @@ class ProfileManager {
 
         // Redirect to home after a short delay
         setTimeout(() => {
-            window.location.href = "index.html"
+            window.location.href = "/index.html"
         }, 1500)
     }
 
@@ -357,7 +348,7 @@ class ProfileManager {
             const token = this.getCookie("prime-token")
             if (!token) {
                 console.log("Token not found, redirecting to login")
-                window.location.href = "login.html"
+                window.location.href = "/assets/auth/login.html"
             }
         }, 30000) // Check every 30 seconds
     }
