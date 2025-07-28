@@ -362,9 +362,10 @@ async function handleCheckout() {
     }
 
     window.API.showLoading(true) // Use API's showLoading
+    const currentUser = JSON.parse(localStorage.getItem("prime-user"));
     try {
         // Construct the CreateOrderReq object
-        const userId = 777777777 // Placeholder: Replace with actual user ID from authentication context
+        const userId = currentUser.telegramId; // Placeholder: Replace with actual user ID from authentication context
         const orderItems = window.cartItems.map((item) => ({
             productId: item.id,
             productSizeId: 4, // Assuming item.size is the productSizeId (a number) or null
@@ -377,10 +378,11 @@ async function handleCheckout() {
         }
 
         console.log("Sending order request:", createOrderRequest)
-
+        const token = this.getCookie("prime-token")
         const response = await fetch("/api/v1/order", {
             method: "POST",
             headers: {
+                Authorization: `Bearer ${token}`,
                 "Content-Type": "application/json",
                 // Add any necessary authorization headers here, e.g., "Authorization": `Bearer ${window.API.getToken()}`
             },
