@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = "http://localhost"
+const API_BASE_URL = "https://prime77.uz"
 
 // Global variables
 let allCategories = []

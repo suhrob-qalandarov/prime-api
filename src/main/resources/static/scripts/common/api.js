@@ -3,7 +3,7 @@
 // ======================================================
 
 // API Base URL - Updated to correct URL
-const API_BASE_URL = "http://localhost"
+const API_BASE_URL = "https://prime77.uz"
 
 // Configure fetch defaults
 const defaultFetchOptions = {
