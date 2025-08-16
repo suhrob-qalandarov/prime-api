@@ -23,7 +23,7 @@ public class BotRunner implements CommandLineRunner {
     private final MessageHandler messageHandler;
     private final CallbackHandler callbackHandler;
 
-   /* @PostConstruct
+    @PostConstruct
     public void deleteWebhookIfExists() {
         BaseResponse response = bot.execute(new DeleteWebhook());
         if (response.isOk()) {
@@ -31,11 +31,11 @@ public class BotRunner implements CommandLineRunner {
         } else {
             System.out.println("❌ Failed to delete webhook: " + response.description());
         }
-    }*/
+    }
 
     @Override
     public void run(String... args) throws Exception {
-       /* bot.setUpdatesListener(updates -> {
+        bot.setUpdatesListener(updates -> {
             for (Update update : updates) {
                 executorService.execute(() -> {
                     if (update.message() != null) {
@@ -48,6 +48,6 @@ public class BotRunner implements CommandLineRunner {
                 });
             }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
-        });*/
+        });
     }
 }
