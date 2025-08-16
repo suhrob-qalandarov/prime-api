@@ -1,4 +1,4 @@
-package org.exp.primeapp.controller.global.auth.bot;
+package org.exp.primeapp.controller.global.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.global.LoginRes;
