@@ -3,7 +3,7 @@ package org.exp.primeapp.service.interfaces.admin.spotlight;
 import org.exp.primeapp.models.dto.request.SpotlightReq;
 import org.exp.primeapp.models.dto.responce.admin.spotlight.AdminSpotlightRes;
 import org.exp.primeapp.models.dto.responce.admin.spotlight.DashboardSpotlightRes;
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
