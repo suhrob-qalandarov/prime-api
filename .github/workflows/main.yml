@@ -74,7 +74,11 @@ jobs:
             echo "AWS_S3_ACCESS_KEY=${{ secrets.S3_ACCESS }}" >> .env
             echo "AWS_S3_SECRET_ACCESS_KEY=${{ secrets.S3_SECRET }}" >> .env
             echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET }}" >> .env
-            echo "SPRING_PROFILES_ACTIVE=prod" >> .env
+            echo "SPRING_PROFILES_ACTIVE=${{ secrets.SPRING_PROFILES_ACTIVE }}" >> .env
+            echo "SERVER_PORT=${{ secrets.SERVER_PORT }}" >> .env
+            echo "JPA_DDL=${{ secrets.JPA_DDL }}" >> .env
+            echo "JPA_SHOW_SQL=${{ secrets.JPA_SHOW_SQL }}" >> .env
+            echo "JPA_DIALECT=${{ secrets.JPA_DIALECT }}" >> .env
             cat .env
             sudo apt-get update && sudo apt-get install -y dos2unix
             dos2unix .env
