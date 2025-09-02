@@ -33,9 +33,10 @@ jobs:
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.HOST_USER }}
           key: ${{ secrets.HOST_SSH_KEY }}
+          port: ${{ secrets.HOST_PORT }}
           script: |
-            mkdir -p /home/ubuntu/prime_app
-            cd /home/ubuntu/prime_app
+            mkdir -p /home/${{ secrets.HOST_USER }}/prime_app
+            cd /home/${{ secrets.HOST_USER }}/prime_app
             sudo docker-compose down || echo "docker-compose down failed"
             sudo docker system prune -f --volumes || echo "Docker prune failed"
 
@@ -46,7 +47,7 @@ jobs:
           username: ${{ secrets.HOST_USER }}
           key: ${{ secrets.HOST_SSH_KEY }}
           source: "target/app.jar,docker-compose.yml,Dockerfile"
-          target: /home/ubuntu/prime_app
+          target: /home/${{ secrets.HOST_USER }}/prime_app
           port: ${{ secrets.HOST_PORT }}
           timeout: 30s
           command_timeout: 10m
@@ -60,8 +61,9 @@ jobs:
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.HOST_USER }}
           key: ${{ secrets.HOST_SSH_KEY }}
+          port: ${{ secrets.HOST_PORT }}
           script: |
-            cd /home/ubuntu/prime_app
+            cd /home/${{ secrets.HOST_USER }}/prime_app
             ls -l
             echo "SPRING_DATASOURCE_URL=${{ secrets.DATASOURCE_URI }}" > .env
             echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DATASOURCE_USER }}" >> .env
