@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.service.impl.global.auth;
 
 import lombok.RequiredArgsConstructor;
@@ -20,3 +21,4 @@ public class EmailServiceImpl implements EmailService {
         mailSender.send(message);
     }
 }
+*/
