@@ -68,6 +68,7 @@ jobs:
             echo "SPRING_DATASOURCE_URL=${{ secrets.DATASOURCE_URI }}" > .env
             echo "SPRING_DATASOURCE_USERNAME=${{ secrets.DATASOURCE_USER }}" >> .env
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.DATASOURCE_PASS }}" >> .env
+            echo "SPRING_DATASOURCE_DRIVER=${{ secrets.SPRING_DATASOURCE_DRIVER }}" >> .env
             echo "TELEGRAM_BOT_TOKEN=${{ secrets.BOT_TOKEN }}" >> .env
             echo "AWS_S3_BUCKET=${{ secrets.S3_BUCKET }}" >> .env
             echo "AWS_S3_REGION=${{ secrets.S3_REGION }}" >> .env
