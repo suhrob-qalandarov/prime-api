@@ -1,18 +1,28 @@
-#version: '3.8'
+version: '3.8'
 services:
   web_app:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:8080"
+      - "${SERVER_PORT}:8080"
     env_file:
       - .env
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=${DATASOURCE_URI}
-      - SPRING_DATASOURCE_USERNAME=${DATASOURCE_USER}
-      - SPRING_DATASOURCE_PASSWORD=${DATASOURCE_PASS}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=${SPRING_DATASOURCE_DRIVER}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+      - AWS_S3_REGION=${AWS_S3_REGION}
+      - AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY}
+      - AWS_S3_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${JPA_DDL}
+      - SPRING_JPA_SHOW_SQL=${JPA_SHOW_SQL}
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=${JPA_DIALECT}
     depends_on:
       web_db:
         condition: service_healthy
@@ -25,8 +35,8 @@ services:
     env_file:
       - .env
     environment:
-      - POSTGRES_USER=${DATASOURCE_USER}
-      - POSTGRES_PASSWORD=${DATASOURCE_PASS}
+      - POSTGRES_USER=${SPRING_DATASOURCE_USERNAME}
+      - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - POSTGRES_DB=prime_db
     ports:
       - "5432:5432"
@@ -35,7 +45,7 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DATASOURCE_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${SPRING_DATASOURCE_USERNAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
