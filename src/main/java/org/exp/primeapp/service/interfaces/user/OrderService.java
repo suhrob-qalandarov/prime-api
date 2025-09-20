@@ -10,4 +10,6 @@ public interface OrderService {
     Order createOrder(Long userId, List<OrderItemRes> orderItems);
 
     UserProfileOrdersRes getUserProfileOrdersByTelegramId(Long telegramId);
+
+    UserProfileOrdersRes getUserProfileOrdersByPhoneNumber(String phoneNumber);
 }

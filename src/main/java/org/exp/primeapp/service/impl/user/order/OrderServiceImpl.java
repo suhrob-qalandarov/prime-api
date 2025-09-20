@@ -28,8 +28,8 @@ public class OrderServiceImpl implements OrderService {
     private final ProductSizeRepository productSizeRepository;
     private final ProductOutcomeRepository productOutcomeRepository;
 
-    @Transactional
     @Override
+    @Transactional
     public UserProfileOrdersRes getUserProfileOrdersByTelegramId(Long telegramId) {
         List<UserOrderRes> pendingOrderResList = orderRepository.findByUser_TelegramIdAndStatus(
                 telegramId,OrderStatus.PENDING
@@ -42,6 +42,28 @@ public class OrderServiceImpl implements OrderService {
         List<UserOrderRes> shippedOrderResList = orderRepository.findByUser_TelegramIdAndStatus(
                 telegramId, OrderStatus.SHIPPED
                 ).stream().map(this::convertToUserOrderRes).toList();
+
+        return UserProfileOrdersRes.builder()
+                .pendingOrders(pendingOrderResList)
+                .confirmedOrders(confirmedOrderResList)
+                .shippedOrders(shippedOrderResList)
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public UserProfileOrdersRes getUserProfileOrdersByPhoneNumber(String phoneNumber) {
+        List<UserOrderRes> pendingOrderResList = orderRepository.findByUserPhoneAndStatus(
+                phoneNumber, OrderStatus.PENDING
+        ).stream().map(this::convertToUserOrderRes).toList();
+
+        List<UserOrderRes> confirmedOrderResList = orderRepository.findByUserPhoneAndStatus(
+                phoneNumber, OrderStatus.CONFIRMED
+        ).stream().map(this::convertToUserOrderRes).toList();
+
+        List<UserOrderRes> shippedOrderResList = orderRepository.findByUserPhoneAndStatus(
+                phoneNumber, OrderStatus.SHIPPED
+        ).stream().map(this::convertToUserOrderRes).toList();
 
         return UserProfileOrdersRes.builder()
                 .pendingOrders(pendingOrderResList)
