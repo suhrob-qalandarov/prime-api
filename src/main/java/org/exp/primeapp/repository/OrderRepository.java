@@ -13,6 +13,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByUser_TelegramIdAndStatus(Long userTelegramId, OrderStatus status);
 
+    List<Order> findByUserPhoneAndStatus(String userPhone, OrderStatus status);
+
     default List<Order> findPendingOrdersByTelegramId(Long userTelegramId) {
         return findByUser_TelegramIdAndStatus(userTelegramId, OrderStatus.PENDING);
     }
