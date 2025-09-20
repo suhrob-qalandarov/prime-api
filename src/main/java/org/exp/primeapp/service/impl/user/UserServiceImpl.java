@@ -72,6 +72,11 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    public UserRes getUserDataFromToken(User user) {
+        return convertToUserRes(user);
+    }
+
     private UserRes convertToUserRes(User user) {
         return new UserRes(
                 user.getTelegramId(),

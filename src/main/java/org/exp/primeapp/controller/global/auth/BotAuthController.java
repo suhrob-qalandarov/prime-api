@@ -2,8 +2,10 @@ package org.exp.primeapp.controller.global.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.global.LoginRes;
+import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.service.interfaces.global.auth.AuthService;
+import org.exp.primeapp.service.interfaces.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +19,13 @@ import static org.exp.primeapp.utils.Const.*;
 public class BotAuthController {
 
     private final AuthService authService;
+    private final UserService userService;
+
+    @GetMapping("/me")
+    public ResponseEntity<UserRes> getUserData(@AuthenticationPrincipal User user) {
+        UserRes userRes = userService.getUserDataFromToken(user);
+        return ResponseEntity.ok(userRes);
+    }
 
     @GetMapping("check-user-permission")
     public ResponseEntity<Boolean> checkUserAdminRole(@AuthenticationPrincipal User user) {

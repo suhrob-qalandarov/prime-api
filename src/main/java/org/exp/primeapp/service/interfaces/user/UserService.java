@@ -17,4 +17,6 @@ public interface UserService {
     void toggleUserUpdate(Long userId);
 
     UserRes getByPhoneNumber(String phoneNumber);
+
+    UserRes getUserDataFromToken(User user);
 }
