@@ -23,16 +23,22 @@ public class UserController {
         return ResponseEntity.ok(userRes);
     }
 
-    @GetMapping("/{telegramId}")
-    public ResponseEntity<UserRes> getUser(@PathVariable Long telegramId) {
+    @GetMapping("/by/{telegramId}")
+    public ResponseEntity<UserRes> getUserByTelegramId(@PathVariable Long telegramId) {
         UserRes user = userService.getByTelegramId(telegramId);
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/by/{phoneNumber}")
+    public ResponseEntity<UserRes> getUserByPhoneNumber(@PathVariable String phoneNumber) {
+        UserRes user = userService.getByPhoneNumber(phoneNumber);
+        return ResponseEntity.ok(user);
+    }
+
     // it's conflicted end-point
-    @GetMapping("/by-username/{tgUsername}")
-    public ResponseEntity<UserRes> getUser(@PathVariable String tgUsername) {
-        UserRes user = userService.getByUsername(tgUsername);
+    @GetMapping("/by/{username}")
+    public ResponseEntity<UserRes> getUserByUserName(@PathVariable String username) {
+        UserRes user = userService.getByUsername(username);
         return ResponseEntity.ok(user);
     }
 }

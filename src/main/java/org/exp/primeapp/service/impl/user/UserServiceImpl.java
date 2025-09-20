@@ -60,6 +60,18 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public UserRes getByPhoneNumber(String phoneNumber) {
+        User user = userRepository.findByPhone(phoneNumber);
+        return UserRes.builder()
+                .telegramId(user.getTelegramId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .username(user.getTgUsername())
+                .phone(user.getPhone())
+                .build();
+    }
+
     private UserRes convertToUserRes(User user) {
         return new UserRes(
                 user.getTelegramId(),

@@ -15,4 +15,6 @@ public interface UserService {
     UserRes getByUsername(String tgUsername);
 
     void toggleUserUpdate(Long userId);
+
+    UserRes getByPhoneNumber(String phoneNumber);
 }
