@@ -19,13 +19,13 @@ public class OrdersController {
 
     private final OrderService orderService;
 
-    @GetMapping("/by/{telegramId}")
+    @GetMapping("/bytelegram/{telegramId}")
     public ResponseEntity<UserProfileOrdersRes> getUserOrdersByTelegramId(@PathVariable Long telegramId) {
         UserProfileOrdersRes profileOrderRes = orderService.getUserProfileOrdersByTelegramId(telegramId);
         return new ResponseEntity<>(profileOrderRes, HttpStatus.OK);
     }
 
-    @GetMapping("/by/{phoneNumber}")
+    @GetMapping("/byphone/{phoneNumber}")
     public ResponseEntity<UserProfileOrdersRes> getUserOrdersByPhoneNumber(@PathVariable String phoneNumber) {
         UserProfileOrdersRes profileOrderRes = orderService.getUserProfileOrdersByPhoneNumber(phoneNumber);
         return new ResponseEntity<>(profileOrderRes, HttpStatus.OK);
