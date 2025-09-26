@@ -34,6 +34,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
             OrdersRes ordersRes = OrdersRes.builder()
                     .id(order.getId())
                     .user(UserRes.builder()
+                            .id(order.getUser().getId())
                             .telegramId(order.getUser().getTelegramId())
                             .firstName(order.getUser().getFirstName())
                             .phone(order.getUser().getPhone())
