@@ -6,10 +6,9 @@ import java.util.List;
 
 @Builder
 public record UserRes(
+        Long id,
         Long telegramId,
         String firstName,
-        String lastName,
-        String username,
         String phone,
         List<String> roles
 ) {
