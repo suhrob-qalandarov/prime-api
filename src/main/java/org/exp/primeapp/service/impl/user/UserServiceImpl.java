@@ -49,8 +49,6 @@ public class UserServiceImpl implements UserService {
         return UserRes.builder()
                 .telegramId(user.getTelegramId())
                 .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .username(user.getTgUsername())
                 .phone(user.getPhone())
                 .build();
     }
@@ -66,8 +64,6 @@ public class UserServiceImpl implements UserService {
         return UserRes.builder()
                 .telegramId(user.getTelegramId())
                 .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .username(user.getTgUsername())
                 .phone(user.getPhone())
                 .build();
     }
@@ -82,8 +78,6 @@ public class UserServiceImpl implements UserService {
                 user.getTelegramId(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getTgUsername(),
-                user.getPhone(),
                 user.getRoles().stream().map(Role::getName).toList()
         );
     }
