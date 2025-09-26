@@ -75,6 +75,7 @@ public class UserServiceImpl implements UserService {
 
     private UserRes convertToUserRes(User user) {
         return new UserRes(
+                user.getId(),
                 user.getTelegramId(),
                 user.getFirstName(),
                 user.getLastName(),
