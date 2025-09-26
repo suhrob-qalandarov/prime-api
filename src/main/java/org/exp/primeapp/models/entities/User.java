@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.exp.primeapp.models.base.Auditable;
+import org.exp.primeapp.models.base.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,17 +19,13 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User extends Auditable implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
-    @Id
     private Long telegramId;
     private String firstName;
     private String lastName;
     private String tgUsername;
     private String phone;
-
-    @Builder.Default
-    private Boolean active = true;
 
     private Integer messageId;
     private Integer verifyCode;
