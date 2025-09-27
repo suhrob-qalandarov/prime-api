@@ -34,8 +34,6 @@ public class JwtService {
                 .setSubject(user.getPhone())
                 .claim("telegramId", user.getTelegramId())
                 .claim("firstName", user.getFirstName())
-                .claim("lastName", user.getLastName())
-                .claim("tgUsername", user.getTgUsername())
                 .claim("active", user.getActive())
                 .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                 .issuedAt(new Date())
@@ -67,8 +65,6 @@ public class JwtService {
         String phone = claims.getSubject();
         Long id = claims.get("telegramId", Long.class);
         String firstName = claims.get("firstName", String.class);
-        String lastName = claims.get("lastName", String.class);
-        String username = claims.get("tgUsername", String.class);
         Boolean active = claims.get("active", Boolean.class);
         String roles = (String) claims.get("roles");
         List<Role> authorities = Arrays.stream(roles.split(",")).map(Role::new).toList();
@@ -76,8 +72,6 @@ public class JwtService {
                 .phone(phone)
                 .telegramId(id)
                 .firstName(firstName)
-                .lastName(lastName)
-                .tgUsername(username)
                 .active(active)
                 .roles(authorities)
                 .build();
