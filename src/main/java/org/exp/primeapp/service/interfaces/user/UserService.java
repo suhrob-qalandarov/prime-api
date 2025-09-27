@@ -19,4 +19,6 @@ public interface UserService {
     UserRes getByPhoneNumber(String phoneNumber);
 
     UserRes getUserDataFromToken(User user);
+
+    UserRes getById(Long id);
 }

@@ -23,6 +23,12 @@ public class UserController {
         return ResponseEntity.ok(userRes);
     }
 
+    @GetMapping("/by/{id}")
+    public ResponseEntity<UserRes> getUserById(@PathVariable Long id) {
+        UserRes user = userService.getById(id);
+        return ResponseEntity.ok(user);
+    }
+
     @GetMapping("/by/{telegramId}")
     public ResponseEntity<UserRes> getUserByTelegramId(@PathVariable Long telegramId) {
         UserRes user = userService.getByTelegramId(telegramId);

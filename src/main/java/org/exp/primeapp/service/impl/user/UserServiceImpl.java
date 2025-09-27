@@ -12,6 +12,8 @@ import org.exp.primeapp.service.interfaces.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -71,6 +73,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRes getUserDataFromToken(User user) {
         return convertToUserRes(user);
+    }
+
+    @Override
+    public UserRes getById(Long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        return optionalUser.map(this::convertToUserRes).orElse(null);
     }
 
     private UserRes convertToUserRes(User user) {
