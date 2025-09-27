@@ -19,6 +19,12 @@ public class OrdersController {
 
     private final OrderService orderService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserProfileOrdersRes> getUserOrdersById(@PathVariable Long id) {
+        UserProfileOrdersRes profileOrderRes = orderService.getUserProfileOrdersById(id);
+        return new ResponseEntity<>(profileOrderRes, HttpStatus.OK);
+    }
+
     @GetMapping("/bytelegram/{telegramId}")
     public ResponseEntity<UserProfileOrdersRes> getUserOrdersByTelegramId(@PathVariable Long telegramId) {
         UserProfileOrdersRes profileOrderRes = orderService.getUserProfileOrdersByTelegramId(telegramId);

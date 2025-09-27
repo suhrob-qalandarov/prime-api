@@ -12,4 +12,6 @@ public interface OrderService {
     UserProfileOrdersRes getUserProfileOrdersByTelegramId(Long telegramId);
 
     UserProfileOrdersRes getUserProfileOrdersByPhoneNumber(String phoneNumber);
+
+    UserProfileOrdersRes getUserProfileOrdersById(Long id);
 }

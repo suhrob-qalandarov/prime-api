@@ -72,6 +72,27 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+    @Override
+    public UserProfileOrdersRes getUserProfileOrdersById(Long id) {
+        List<UserOrderRes> pendingOrderResList = orderRepository.findByIdAndStatus(
+                id, OrderStatus.PENDING
+        ).stream().map(this::convertToUserOrderRes).toList();
+
+        List<UserOrderRes> confirmedOrderResList = orderRepository.findByIdAndStatus(
+                id, OrderStatus.CONFIRMED
+        ).stream().map(this::convertToUserOrderRes).toList();
+
+        List<UserOrderRes> shippedOrderResList = orderRepository.findByIdAndStatus(
+                id, OrderStatus.SHIPPED
+        ).stream().map(this::convertToUserOrderRes).toList();
+
+        return UserProfileOrdersRes.builder()
+                .pendingOrders(pendingOrderResList)
+                .confirmedOrders(confirmedOrderResList)
+                .shippedOrders(shippedOrderResList)
+                .build();
+    }
+
     @Transactional
     public UserOrderRes convertToUserOrderRes(Order order) {
         return UserOrderRes.builder()
