@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static org.exp.primeapp.utils.Const.*;
 
 @RestController
@@ -19,9 +21,15 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<CategoryRes> getCategoryById(@PathVariable Long categoryId) {
-        CategoryRes categoryRes = categoryService.getCategoryResById(categoryId);
-        return new ResponseEntity<>(categoryRes, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<CategoryRes>> getCategories() {
+        List<CategoryRes> categories = categoryService.getResCategories();
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
+    @GetMapping("/by-spotlight/{spotlightId}")
+    public ResponseEntity <List<CategoryRes>> getCategoriesBySpotlightId(@PathVariable Long spotlightId) {
+        List<CategoryRes> categories = categoryService.getSpotlightCategories(spotlightId);
+        return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 }
