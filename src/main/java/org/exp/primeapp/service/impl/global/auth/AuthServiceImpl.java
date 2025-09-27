@@ -41,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         UserRes userRes = UserRes.builder()
+                .id(user.getId())
                 .telegramId(user.getTelegramId())
                 .firstName(user.getFirstName())
                 .phone(user.getPhone())
