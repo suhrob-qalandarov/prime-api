@@ -74,15 +74,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public UserProfileOrdersRes getUserProfileOrdersById(Long id) {
-        List<UserOrderRes> pendingOrderResList = orderRepository.findByIdAndStatus(
+        List<UserOrderRes> pendingOrderResList = orderRepository.findByUserIdAndStatus(
                 id, OrderStatus.PENDING
         ).stream().map(this::convertToUserOrderRes).toList();
 
-        List<UserOrderRes> confirmedOrderResList = orderRepository.findByIdAndStatus(
+        List<UserOrderRes> confirmedOrderResList = orderRepository.findByUserIdAndStatus(
                 id, OrderStatus.CONFIRMED
         ).stream().map(this::convertToUserOrderRes).toList();
 
-        List<UserOrderRes> shippedOrderResList = orderRepository.findByIdAndStatus(
+        List<UserOrderRes> shippedOrderResList = orderRepository.findByUserIdAndStatus(
                 id, OrderStatus.SHIPPED
         ).stream().map(this::convertToUserOrderRes).toList();
 
