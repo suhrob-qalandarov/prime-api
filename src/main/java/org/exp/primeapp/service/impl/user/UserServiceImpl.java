@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     public UserRes getByUsername(String tgUsername) {
         User user = userRepository.findByTgUsername(tgUsername);
         return UserRes.builder()
-                .telegramId(user.getTelegramId())
+                .id(user.getId())
                 .firstName(user.getFirstName())
                 .phone(user.getPhone())
                 .build();
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     public UserRes getByPhoneNumber(String phoneNumber) {
         User user = userRepository.findByPhone(phoneNumber);
         return UserRes.builder()
-                .telegramId(user.getTelegramId())
+                .id(user.getId())
                 .firstName(user.getFirstName())
                 .phone(user.getPhone())
                 .build();
@@ -88,9 +88,8 @@ public class UserServiceImpl implements UserService {
         UserProfileOrdersRes profileOrdersById = orderService.getUserProfileOrdersById(user.getId());
         return new UserRes(
                 user.getId(),
-                user.getTelegramId(),
                 user.getFirstName(),
-                user.getLastName(),
+                user.getPhone(),
                 user.getRoles().stream().map(Role::getName).toList(),
                 profileOrdersById
         );

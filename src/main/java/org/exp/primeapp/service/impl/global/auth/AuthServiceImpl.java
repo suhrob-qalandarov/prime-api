@@ -49,7 +49,6 @@ public class AuthServiceImpl implements AuthService {
 
         UserRes userRes = UserRes.builder()
                 .id(user.getId())
-                .telegramId(user.getTelegramId())
                 .firstName(user.getFirstName())
                 .phone(user.getPhone())
                 .roles(user.getRoles().stream().map(Role::getName).toList())
