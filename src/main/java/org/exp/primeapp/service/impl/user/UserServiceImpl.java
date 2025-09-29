@@ -4,10 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.admin.AdminUserDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminUserRes;
+import org.exp.primeapp.models.dto.responce.order.UserProfileOrdersRes;
 import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.repository.UserRepository;
+import org.exp.primeapp.service.interfaces.user.OrderService;
 import org.exp.primeapp.service.interfaces.user.UserService;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +21,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final OrderService orderService;
 
     @Override
     public UserRes getUserData(User user) {
-        return getByTelegramId(user.getTelegramId());
+        return getById(user.getId());
     }
 
     @Override
@@ -82,12 +85,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserRes convertToUserRes(User user) {
+        UserProfileOrdersRes profileOrdersById = orderService.getUserProfileOrdersById(user.getId());
         return new UserRes(
                 user.getId(),
                 user.getTelegramId(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getRoles().stream().map(Role::getName).toList()
+                user.getRoles().stream().map(Role::getName).toList(),
+                profileOrdersById
         );
     }
 
