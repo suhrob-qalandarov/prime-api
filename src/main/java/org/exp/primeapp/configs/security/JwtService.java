@@ -32,8 +32,9 @@ public class JwtService {
     public String generateToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getPhone())
-                .claim("telegramId", user.getTelegramId())
+                .claim("id", user.getId())
                 .claim("firstName", user.getFirstName())
+                .claim("phoneNumber", user.getPhone())
                 .claim("active", user.getActive())
                 .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                 .issuedAt(new Date())
@@ -63,14 +64,14 @@ public class JwtService {
                 .getPayload();
 
         String phone = claims.getSubject();
-        Long id = claims.get("telegramId", Long.class);
+        Long id = claims.get("id", Long.class);
         String firstName = claims.get("firstName", String.class);
         Boolean active = claims.get("active", Boolean.class);
         String roles = (String) claims.get("roles");
         List<Role> authorities = Arrays.stream(roles.split(",")).map(Role::new).toList();
         return User.builder()
+                .id(id)
                 .phone(phone)
-                .telegramId(id)
                 .firstName(firstName)
                 .active(active)
                 .roles(authorities)
