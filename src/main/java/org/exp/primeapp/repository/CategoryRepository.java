@@ -41,4 +41,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             @Param("spotlightId") Long spotlightId,
             @Param("active") Boolean active
     );
+
+    List<Category> findBySpotlightNameAndActive(String spotlightName, Boolean active);
 }
