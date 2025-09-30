@@ -27,6 +27,12 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
+    @GetMapping("/{spotlightName}")
+    public ResponseEntity<List<CategoryRes>> getCategoriesBySpotlightName(@PathVariable String spotlightName) {
+        List<CategoryRes> categories = categoryService.getResCategoriesBySpotlightName(spotlightName);
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
     @GetMapping("/by-spotlight/{spotlightId}")
     public ResponseEntity <List<CategoryRes>> getCategoriesBySpotlightId(@PathVariable Long spotlightId) {
         List<CategoryRes> categories = categoryService.getSpotlightCategories(spotlightId);
