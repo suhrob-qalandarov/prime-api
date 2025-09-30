@@ -30,6 +30,17 @@ public class CategoryServiceImpl implements CategoryService {
     private final SpotlightRepository spotlightRepository;
     private final AttachmentRepository attachmentRepository;
 
+    @Override
+    public List<CategoryRes> getResCategoriesBySpotlightName(String spotlightName) {
+        return categoryRepository.findBySpotlightNameAndActive(spotlightName, true)
+                .stream()
+                .map(category -> new CategoryRes(
+                        category.getId(),
+                        category.getName()
+                ))
+                .toList();
+    }
+
     public List<CategoryRes> getResCategories() {
         return categoryRepository.findByActive(true).stream()
                 .map(category -> new CategoryRes(

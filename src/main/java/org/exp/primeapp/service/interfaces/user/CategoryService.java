@@ -34,4 +34,6 @@ public interface CategoryService {
     List<CategoryRes> getSpotlightCategories(Long spotlightId);
 
     AdminCategoryDashboardRes getAdminSpotlightCategories(Long spotlightId);
+
+    List<CategoryRes> getResCategoriesBySpotlightName(String spotlightName);
 }
