@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.admin.order;
 
 import lombok.RequiredArgsConstructor;
@@ -46,3 +47,4 @@ public class AdminOrderController {
         messagingTemplate.convertAndSend("/topic/order/dropped", id);
     }
 }
+*/

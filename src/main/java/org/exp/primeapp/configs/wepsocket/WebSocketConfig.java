@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.configs.wepsocket;
 
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("https://prime77.uz")
+                .setAllowedOrigins(
+                        "https://prime77.uz",
+                        "http://localhsot:3000",
+                        "http://192.168.1.2:3000"
+                )
                 .withSockJS();
     }
 
@@ -24,3 +29,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 }
 
+*/
