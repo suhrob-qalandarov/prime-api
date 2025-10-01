@@ -10,7 +10,7 @@ let uploadedAttachments = [] // This will now store { file: File, isNew: true, i
 const bootstrap = window.bootstrap
 
 // API Base URL
-const API_BASE_URL = "https://prime77.uz"
+const API_BASE_URL = "http://16.171.3.35"
 
 // Define all possible sizes based on your Java enum
 const ALL_SIZES = [

@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const API_BASE_URL = "http://localhost/api/v1"
+const API_BASE_URL = "http://16.171.3.35/api/v1"
 
 class ProfileManager {
     constructor() {

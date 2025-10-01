@@ -17,7 +17,7 @@ let filteredSpotlights = []
 let currentTab = "categories"
 
 // API Base URL
-const API_BASE_URL = "https://prime77.uz"
+const API_BASE_URL = "http://16.171.3.35"
 
 // Initialize categories panel
 document.addEventListener("DOMContentLoaded", () => {

@@ -7,7 +7,7 @@ let filteredUsers = []
 const bootstrap = window.bootstrap
 
 // API Base URL
-const API_BASE_URL = "https://prime77.uz" // Using the same base URL as products.js
+const API_BASE_URL = "http://16.171.3.35" // Using the same base URL as products.js
 
 // Initialize users panel
 document.addEventListener("DOMContentLoaded", () => {
