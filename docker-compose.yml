@@ -1,8 +1,8 @@
-version: '3.8'
+#version: '3.8'
 services:
   web_app:
     build:
-      context: ..
+      context: .
       dockerfile: Dockerfile
     ports:
       - "${SERVER_PORT}:8080"
