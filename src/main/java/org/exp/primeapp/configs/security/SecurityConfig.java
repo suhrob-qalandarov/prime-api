@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.exp.primeapp.utils.Const.*;
 
@@ -104,15 +105,15 @@ public class SecurityConfig {
         // Allow requests from these origins
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://prime77.uz", "https://api.prime77.uz",
-                "http://localhost:3000", "http://10.30.4.19:3000", "http://192.168.1.2:3000",
-                "http://localhost:80", "http://localhost:8080"
+                "http://192.168.1.2:3000",
+                "http://localhost:3000", "http://localhost:80", "http://localhost:8080"
         ));
 
         // Allow these HTTP methods
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 
         // Allow all headers
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(List.of("*"));
 
         // Allow credentials (cookies, authorization headers, etc.)
         configuration.setAllowCredentials(true);
