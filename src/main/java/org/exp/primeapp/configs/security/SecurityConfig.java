@@ -104,9 +104,13 @@ public class SecurityConfig {
 
         // Allow requests from these origins
         configuration.setAllowedOrigins(Arrays.asList(
-                "https://prime77.uz", "https://api.prime77.uz",
+                "https://prime77.uz",
+                "https://api.prime77.uz", "http://api.prime77.uz",
                 "http://192.168.1.2:3000",
-                "http://localhost:3000", "http://localhost:80", "http://localhost:8080"
+                "http://16.171.3.35",
+                "http://localhost:3000",
+                "http://localhost:80",
+                "http://localhost:8080"
         ));
 
         // Allow these HTTP methods
