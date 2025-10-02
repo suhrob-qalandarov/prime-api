@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.user.spotlight;
 
 import lombok.RequiredArgsConstructor;
@@ -42,3 +43,4 @@ public class SpotlightsController {
         return new ResponseEntity<>(catalogSpotlights, HttpStatus.OK);
     }
 }
+*/
