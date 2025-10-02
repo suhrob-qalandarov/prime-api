@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.admin.user;
 
 import lombok.RequiredArgsConstructor;
@@ -24,3 +25,4 @@ public class AdminUsersController {
     }
 
 }
+*/
