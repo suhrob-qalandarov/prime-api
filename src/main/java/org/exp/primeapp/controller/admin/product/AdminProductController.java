@@ -2,9 +2,9 @@ package org.exp.primeapp.controller.admin.product;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductViewRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
-import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +23,12 @@ public class AdminProductController {
     public ResponseEntity<ApiResponse> addProduct(@RequestBody ProductReq productReq) {
         ApiResponse response = adminProductService.saveProduct(productReq);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<AdminProductDashboardRes> adminProductDashboard() {
+        AdminProductDashboardRes adminProductDashboardRes = adminProductService.getProductDashboarRes();
+        return ResponseEntity.ok(adminProductDashboardRes);
     }
 
     @GetMapping("/{productId}")
