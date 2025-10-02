@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 import static org.exp.primeapp.utils.Const.*;
 
 @Slf4j
@@ -33,7 +35,7 @@ public class AdminAttachmentController {
         return ResponseEntity.ok(attachmentUtilService.getAttachmentWithKey(attachmentKey));
     }
 
-    @PostMapping
+    @PostMapping("/oneupload")
     public ResponseEntity<AttachmentRes> uploadFile(@RequestParam("file") MultipartFile file) {
         log.debug("Uploading single file: {}", file.getOriginalFilename());
         Attachment attachment = adminAttachmentService.uploadOne(file);
@@ -46,6 +48,15 @@ public class AdminAttachmentController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/multiupload")
+    public ResponseEntity<List<AttachmentRes>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
+        log.debug("Uploading multiple files: {}", files.length);
+        List<Attachment> uploadedFiles = adminAttachmentService.uploadMultiple(files);
+        List<AttachmentRes> responses = attachmentUtilService.convertToAttachmentResList(uploadedFiles);
+        return ResponseEntity.ok(responses);
+    }
+
+
     @PutMapping("/{attachmentId}")
     public ResponseEntity<AttachmentRes> updateFile(@PathVariable Long attachmentId, @RequestParam("file") MultipartFile file) {
         log.debug("Updating attachment ID: {}", attachmentId);
@@ -53,24 +64,24 @@ public class AdminAttachmentController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/toggle/{attachmentId}")
+    /*@PostMapping("/toggle/{attachmentId}")
     public ResponseEntity<AttachmentRes> activate(@PathVariable Long attachmentId) {
         log.debug("Updating attachment ID: {}", attachmentId);
         AttachmentRes response = adminAttachmentService.toggleAttachmentActiveStatus(attachmentId);
         return ResponseEntity.ok(response);
-    }
+    }*/
 
-    @DeleteMapping("/{attachmentId}")
+    /*@DeleteMapping("/{attachmentId}")
     public ResponseEntity<Void> deleteAttachment(@PathVariable Long attachmentId) {
         log.debug("Deleting attachment ID: {}", attachmentId);
         adminAttachmentService.delete(attachmentId);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
-    @DeleteMapping("/delete-from-base/{attachmentId}")
+    /*@DeleteMapping("/delete-from-base/{attachmentId}")
     public ResponseEntity<Void> deleteAttachmentFromS3(@PathVariable Long attachmentId) {
         log.debug("Deleting attachment ID: {}", attachmentId);
         adminAttachmentService.deleteFromS3(attachmentId);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 }

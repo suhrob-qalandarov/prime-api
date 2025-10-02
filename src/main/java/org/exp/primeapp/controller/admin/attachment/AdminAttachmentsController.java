@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.admin.attachment;
 
 import lombok.RequiredArgsConstructor;
@@ -54,3 +55,4 @@ public class AdminAttachmentsController {
         return (ResponseEntity<Void>) ResponseEntity.ok();
     }
 }
+*/
