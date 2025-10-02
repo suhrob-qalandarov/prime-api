@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = "http://16.171.3.35"
+const API_BASE_URL = "https://api.howdy.uz"
 
 // Global variables
 let allCategories = []

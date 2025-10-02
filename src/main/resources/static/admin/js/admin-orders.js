@@ -1,5 +1,5 @@
 // WebSocket ulanish
-const socket = new SockJS("http://16.171.3.35/ws")
+const socket = new SockJS("https://api.howdy.uz")
 const stompClient = Stomp.over(socket)
 let movingOrderId = null
 
@@ -14,7 +14,7 @@ const ORDER_STATUSES = {
 
 // Global o'zgaruvchilar
 let allOrders = []
-const API_BASE_URL = "http://16.171.3.35/api/v1"
+const API_BASE_URL = "https://api.howdy.uz"
 
 // DOM yuklanganda ishga tushadi
 document.addEventListener("DOMContentLoaded", () => {

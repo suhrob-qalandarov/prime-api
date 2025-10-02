@@ -15,7 +15,7 @@ class FeaturedProducts {
         }
         this.cardWidth = 300 // 280px + 20px gap
         this.visibleCards = 4
-        this.API_BASE_URL = "https://prime77.uz"
+        this.API_BASE_URL = "https://api.howdy.uz"
         this.isLoading = false
 
         console.log("FeaturedProducts constructor called")
