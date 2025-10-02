@@ -49,9 +49,9 @@ public class AdminProductController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/deactivate/{productId}")
+    /*@DeleteMapping("/deactivate/{productId}")
     public ResponseEntity<ApiResponse> deactivateProduct(@PathVariable Long productId) {
         ApiResponse response = adminProductService.deactivateProduct(productId);
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+    }*/
 }
