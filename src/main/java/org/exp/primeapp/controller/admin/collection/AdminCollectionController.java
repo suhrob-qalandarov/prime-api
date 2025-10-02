@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.admin.collection;
 
 import lombok.RequiredArgsConstructor;
@@ -27,3 +28,4 @@ public class AdminCollectionController {
         return ResponseEntity.ok().build();
     }
 }
+*/
