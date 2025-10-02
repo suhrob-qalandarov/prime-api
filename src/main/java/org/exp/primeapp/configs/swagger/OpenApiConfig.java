@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @OpenAPIDefinition(
-        info = @Info(title = "PRIME77 e-commerce", version = "v1", description = "Online e-commerce webapp"),
-        servers = @Server(url = "http://localhost")
+        info = @Info(title = "PRIME77 e-commerce", version = "v2", description = "Online e-commerce webapp"),
+        servers = @Server(url = "https://api.howdy.uz")
 )
 public class OpenApiConfig {
     @Bean
