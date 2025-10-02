@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.admin.spotlight;
 
 import lombok.RequiredArgsConstructor;
@@ -28,11 +29,13 @@ public class AdminSpotlightController {
     private final AdminSpotlightService adminSpotlightService;
     private final CategoryService categoryService;
 
-   /* @GetMapping
+   */
+/* @GetMapping
     public ResponseEntity<List<SpotlightRes>> getSpotlights() {
         List<SpotlightRes> spotlights = spotlightService.getHeroSpotlights();
         return new ResponseEntity<>(spotlights, HttpStatus.ACCEPTED);
-    }*/
+    }*//*
+
 
     @GetMapping("/{spotlightId}")
     public ResponseEntity<FullSpotlightRes> getSpotlightById(@PathVariable Long spotlightId) {
@@ -64,3 +67,4 @@ public class AdminSpotlightController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
+*/

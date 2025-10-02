@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.admin.spotlight;
 
 import lombok.RequiredArgsConstructor;
@@ -31,4 +32,4 @@ public class AdminSpotlightsController {
         DashboardSpotlightRes dashboardSpotlightRes = adminSpotlightService.updateSpotlightsOrder(spotlightOrderMap);
         return new ResponseEntity<>(dashboardSpotlightRes, HttpStatus.OK);
     }
-}
+}*/
