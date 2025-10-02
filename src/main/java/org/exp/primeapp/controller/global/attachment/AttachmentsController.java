@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.global.attachment;
 
 import jakarta.servlet.annotation.MultipartConfig;
@@ -24,12 +25,15 @@ public class AttachmentsController {
 
     private final AttachmentService attachmentService;
 
-    /*@GetMapping
+    */
+/*@GetMapping
     public void getMultipleAttachments(@RequestParam("attachmentIds") List<Long> attachmentIds, HttpServletResponse response) throws IOException {
         log.debug("Fetching multiple attachments with IDs: {}", attachmentIds);
         for (Long attachmentId : attachmentIds) {
             attachmentService.get(attachmentId, response);
         }
         log.info("Successfully served multiple attachments: {}", attachmentIds);
-    }*/
+    }*//*
+
 }
+*/
