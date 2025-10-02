@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.user.product;
 
 import lombok.RequiredArgsConstructor;
@@ -40,4 +41,4 @@ public class ProductsController {
         return new ResponseEntity<>(products, HttpStatus.ACCEPTED);
     }
 }
-    
+    */
