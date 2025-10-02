@@ -2,6 +2,7 @@ package org.exp.primeapp.configs.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,27 @@ public class MySecurityFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
+    private String extractTokenFromCookie(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("prime-token".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    public void setJwtCookie(HttpServletResponse response, String token) {
+        Cookie cookie = new Cookie("prime-token", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(7 * 24 * 60 * 60);
+        cookie.setAttribute("SameSite", "None");
+        response.addCookie(cookie);
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         String origin = request.getHeader("Origin");
@@ -30,8 +52,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_OK);
             if (origin != null && (
                     origin.equals("https://prime77.uz")
-                    || origin.equals("http://localhost")
-                    || origin.equals("http://localhost:8080")
+                    || origin.equals("http://localhost:3000")
             )) {
                 response.setHeader("Access-Control-Allow-Origin", origin);
             }
@@ -42,12 +63,16 @@ public class MySecurityFilter extends OncePerRequestFilter {
         }
 
         String token = request.getHeader(AUTHORIZATION);
+        if (token == null) {
+            token = extractTokenFromCookie(request);
+        }
+
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
                 if (jwtService.validateToken(token)) {
                     User user = jwtService.getUserObject(token);
 
-                    if (user == null || user.getTelegramId() == null) {
+                    if (user == null || user.getId() == null) {
                         log.error("User or ID is null from token: {}", user);
                         throw new IllegalArgumentException("Invalid user data from token");
                     }
