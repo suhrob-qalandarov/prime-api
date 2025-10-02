@@ -2,12 +2,17 @@ package org.exp.primeapp.controller.admin.category;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
+import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.service.interfaces.user.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.exp.primeapp.utils.Const.*;
 
@@ -37,6 +42,18 @@ public class AdminCategoryController {
     ) {
         AdminCategoryRes categoryRes = categoryService.updateCategoryById(categoryId,categoryReq);
         return new ResponseEntity<>(categoryRes, HttpStatus.OK);
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<AdminCategoryDashboardRes> getCategoryDashboard() {
+        AdminCategoryDashboardRes categoryDashboardRes = categoryService.getCategoryDashboardRes();
+        return new ResponseEntity<>(categoryDashboardRes, HttpStatus.ACCEPTED);
+    }
+
+    @PatchMapping("/order")
+    public ResponseEntity<List<AdminCategoryRes>> updateCategoriesOrder(@RequestBody Map<Long, Long> categoryOrderMap) {
+        List<AdminCategoryRes> updatedCategories = categoryService.updateCategoryOrder(categoryOrderMap);
+        return new ResponseEntity<>(updatedCategories, HttpStatus.OK);
     }
 
     @PatchMapping("/toggle/{categoryId}")

@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.controller.admin.category;
 
 import lombok.RequiredArgsConstructor;
@@ -39,3 +40,4 @@ public class AdminCategoriesController {
         return new ResponseEntity<>(updatedCategories, HttpStatus.OK);
     }
 }
+*/
