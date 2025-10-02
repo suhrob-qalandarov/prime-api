@@ -90,7 +90,7 @@ public class SecurityConfig {
                                 "GET",
                                 API + V1 + SPOTLIGHTS + WAY_ALL
                         ).permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
         );
 
         http.addFilterBefore(mySecurityFilter, UsernamePasswordAuthenticationFilter.class);
