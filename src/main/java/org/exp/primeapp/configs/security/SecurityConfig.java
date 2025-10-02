@@ -37,18 +37,10 @@ public class SecurityConfig {
         http.cors(Customizer.withDefaults());
         http.authorizeHttpRequests(auth ->
                 auth
-                        .requestMatchers("/api/v1/admin/attachments/**").permitAll()
                         .requestMatchers(
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
-                        ).permitAll()
-                        .requestMatchers("/", "/**", "/index", "/index.html", "/index.html/**").permitAll()
-                        .requestMatchers(
-                                "/assets/**",
-                                "/images/**",
-                                "/scripts/**",
-                                "/styles/**"
                         ).permitAll()
 
                         .requestMatchers(
@@ -58,15 +50,13 @@ public class SecurityConfig {
 
                        .requestMatchers(
                                "GET",
-                               API + V1 + PRODUCT,
                                API + V1 + PRODUCT + WAY_ALL
                        ).permitAll()
 
                        .requestMatchers(
                                "GET",
                                API + V1 + PRODUCTS,
-                               API + V1 + PRODUCTS + BY_CATEGORY + "/{categoryId}",
-                               API + V1 + PRODUCTS + WAY_ALL
+                               API + V1 + PRODUCTS + BY_CATEGORY + "/*"
                        ).permitAll()
 
                        .requestMatchers(
@@ -83,13 +73,9 @@ public class SecurityConfig {
 
                        .requestMatchers(
                                "GET",
-                               API + V1 + ATTACHMENT + WAY_ALL
+                               API + V1 + ATTACHMENT + "/*"
                        ).permitAll()
 
-                        .requestMatchers(
-                                "GET",
-                                API + V1 + SPOTLIGHTS + WAY_ALL
-                        ).permitAll()
                         .anyRequest().authenticated()
         );
 
@@ -106,11 +92,8 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
                 "https://prime77.uz",
                 "https://api.prime77.uz", "http://api.prime77.uz",
-                "http://192.168.1.2:3000",
-                "http://16.171.3.35",
-                "http://localhost:3000",
-                "http://localhost:80",
-                "http://localhost:8080"
+                "http://localhost:3000", "http://192.168.1.2:3000",
+                "http://16.171.3.35"
         ));
 
         // Allow these HTTP methods
