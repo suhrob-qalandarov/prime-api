@@ -1,5 +1,6 @@
 package org.exp.primeapp.controller.global.auth;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.global.LoginRes;
 import org.exp.primeapp.models.dto.responce.user.UserRes;
@@ -37,8 +38,8 @@ public class BotAuthController {
     }
 
     @PostMapping("/code/{code}")
-    public ResponseEntity<LoginRes> verifyUserWithCode(@PathVariable Integer code) {
-        LoginRes loginRes = authService.verifyWithCodeAndSendUserData(code);
+    public ResponseEntity<LoginRes> verifyUserWithCode(@PathVariable Integer code, HttpServletResponse response) {
+        LoginRes loginRes = authService.verifyWithCodeAndSendUserData(code, response);
         return new ResponseEntity<>(loginRes, HttpStatus.ACCEPTED);
     }
 }
