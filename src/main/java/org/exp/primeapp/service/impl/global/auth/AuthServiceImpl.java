@@ -14,7 +14,6 @@ import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.repository.UserRepository;
 import org.exp.primeapp.service.interfaces.global.auth.AuthService;
 import org.exp.primeapp.service.interfaces.user.OrderService;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final MySecurityFilter mySecurityFilter;
     private final UserRepository userRepository;
@@ -45,7 +43,6 @@ public class AuthServiceImpl implements AuthService {
         }
         String token = jwtService.generateToken(user);
 
-        // Set JWT token in cookie
         mySecurityFilter.setJwtCookie(response, token);
 
         var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
