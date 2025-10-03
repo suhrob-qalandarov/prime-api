@@ -66,6 +66,7 @@ public class MySecurityFilter extends OncePerRequestFilter {
         String token = request.getHeader(AUTHORIZATION);
         if (token == null) {
             token = extractTokenFromCookie(request);
+            log.info("Cookie extracted token: {}", token);
         }
 
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
