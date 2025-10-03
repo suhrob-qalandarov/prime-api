@@ -29,50 +29,6 @@ public class OrderServiceImpl implements OrderService {
     private final ProductOutcomeRepository productOutcomeRepository;
 
     @Override
-    @Transactional
-    public UserProfileOrdersRes getUserProfileOrdersByTelegramId(Long telegramId) {
-        List<UserOrderRes> pendingOrderResList = orderRepository.findByUser_TelegramIdAndStatus(
-                telegramId,OrderStatus.PENDING
-                ).stream().map(this::convertToUserOrderRes).toList();
-
-        List<UserOrderRes> confirmedOrderResList = orderRepository.findByUser_TelegramIdAndStatus(
-                telegramId, OrderStatus.CONFIRMED
-                ).stream().map(this::convertToUserOrderRes).toList();
-
-        List<UserOrderRes> shippedOrderResList = orderRepository.findByUser_TelegramIdAndStatus(
-                telegramId, OrderStatus.SHIPPED
-                ).stream().map(this::convertToUserOrderRes).toList();
-
-        return UserProfileOrdersRes.builder()
-                .pendingOrders(pendingOrderResList)
-                .confirmedOrders(confirmedOrderResList)
-                .shippedOrders(shippedOrderResList)
-                .build();
-    }
-
-    @Override
-    @Transactional
-    public UserProfileOrdersRes getUserProfileOrdersByPhoneNumber(String phoneNumber) {
-        List<UserOrderRes> pendingOrderResList = orderRepository.findByUserPhoneAndStatus(
-                phoneNumber, OrderStatus.PENDING
-        ).stream().map(this::convertToUserOrderRes).toList();
-
-        List<UserOrderRes> confirmedOrderResList = orderRepository.findByUserPhoneAndStatus(
-                phoneNumber, OrderStatus.CONFIRMED
-        ).stream().map(this::convertToUserOrderRes).toList();
-
-        List<UserOrderRes> shippedOrderResList = orderRepository.findByUserPhoneAndStatus(
-                phoneNumber, OrderStatus.SHIPPED
-        ).stream().map(this::convertToUserOrderRes).toList();
-
-        return UserProfileOrdersRes.builder()
-                .pendingOrders(pendingOrderResList)
-                .confirmedOrders(confirmedOrderResList)
-                .shippedOrders(shippedOrderResList)
-                .build();
-    }
-
-    @Override
     public UserProfileOrdersRes getUserProfileOrdersById(Long id) {
         List<UserOrderRes> pendingOrderResList = orderRepository.findByUserIdAndStatus(
                 id, OrderStatus.PENDING
@@ -117,12 +73,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Transactional
-    public Order createOrder(Long userId, List<OrderItemRes> orderItems) {
+    public UserOrderRes createOrder(Long userId, List<OrderItemRes> orderItems) {
         log.info("Buyurtma yaratish jarayoni boshlandi. Foydalanuvchi ID: {}", userId);
 
-        User user = userRepository.findByTelegramId(userId);
-        System.out.println(userId + " " + user);
-//                .orElseThrow(() -> new RuntimeException("Foydalanuvchi topilmadi"));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Foydalanuvchi topilmadi"));
 
         Order order = new Order();
         order.setUser(user);
@@ -154,7 +109,7 @@ public class OrderServiceImpl implements OrderService {
             Order savedOrder = orderRepository.save(order);
 
             log.info("Buyurtma muvaffaqiyatli yaratildi. UserId: {}, OrderId: {}", userId, savedOrder.getId());
-            return savedOrder;
+            return convertToUserOrderRes(savedOrder);
 
         } catch (ObjectOptimisticLockingFailureException e) {
             log.error("Optimistik qulf xatosi. UserId: {}", userId, e);
@@ -182,7 +137,6 @@ public class OrderServiceImpl implements OrderService {
         }
         return productSize;
     }
-
 
     private double calculateItemPrice(Product product) {
         double price = product.getPrice();
