@@ -13,11 +13,7 @@ public interface CategoryService {
 
     Category getCategoryById(Long categoryId);
 
-    CategoryRes getCategoryResById(Long categoryId);
-
     AdminCategoryDashboardRes getCategoryDashboardRes();
-
-    List<Category> getCategories();
 
     List<CategoryRes> getResCategories();
 
