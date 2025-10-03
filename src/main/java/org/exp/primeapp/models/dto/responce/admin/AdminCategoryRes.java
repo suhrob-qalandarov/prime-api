@@ -7,7 +7,7 @@ import org.exp.primeapp.models.dto.responce.admin.spotlight.SimpleSpotlightRes;
 public record AdminCategoryRes(
         Long id,
         String name,
-        SimpleSpotlightRes spotlightRes,
+        String spotlightName,
         Long order,
         Boolean active
 ) {

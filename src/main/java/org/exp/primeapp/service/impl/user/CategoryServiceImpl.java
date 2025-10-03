@@ -3,7 +3,6 @@ package org.exp.primeapp.service.impl.user;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
-import org.exp.primeapp.models.dto.responce.admin.spotlight.SimpleSpotlightRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
 import org.exp.primeapp.models.entities.Category;
@@ -14,6 +13,7 @@ import org.exp.primeapp.repository.CategoryRepository;
 import org.exp.primeapp.repository.ProductRepository;
 import org.exp.primeapp.repository.SpotlightRepository;
 import org.exp.primeapp.service.interfaces.user.CategoryService;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +28,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final SpotlightRepository spotlightRepository;
-    private final AttachmentRepository attachmentRepository;
 
     @Override
     public List<CategoryRes> getResCategoriesBySpotlightName(String spotlightName) {
@@ -50,14 +49,14 @@ public class CategoryServiceImpl implements CategoryService {
                 .toList();
     }
 
-    @Override
+    //@Override
     public CategoryRes getCategoryResById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found with telegramId: " + categoryId));
         return convertToCategoryRes(category);
     }
 
-    @Override
+    //@Override
     public List<Category> getCategories() {
         return categoryRepository.findAll();
     }
@@ -82,15 +81,10 @@ public class CategoryServiceImpl implements CategoryService {
                     return convertToAdminCategoryRes(category);
                 })
                 .toList();
-
-        long allCategoryCount = categoryRepository.count();
-        long activeCategoryCount = categoryRepository.countByActiveTrue();
-        long inactiveCategoryCount = categoryRepository.countByActiveFalse();
-
         return AdminCategoryDashboardRes.builder()
-                .count(allCategoryCount)
-                .activeCount(activeCategoryCount)
-                .inactiveCount(inactiveCategoryCount)
+                .count(categoryResList.size())
+                .activeCount(activeCategoryResList.size())
+                .inactiveCount(inactiveCategoryResList.size())
                 .categoryResList(categoryResList)
                 .activeCategoryResList(activeCategoryResList)
                 .inactiveCategoryResList(inactiveCategoryResList)
@@ -130,7 +124,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public AdminCategoryRes saveCategory(CategoryReq categoryReq) {
+    public AdminCategoryRes saveCategory(@NonNull CategoryReq categoryReq) {
         Category category;
         Optional<Spotlight> optionalSpotlight = spotlightRepository.findById(categoryReq.spotlightId());
         long count = categoryRepository.count();
@@ -158,7 +152,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public AdminCategoryRes updateCategoryById(Long categoryId, CategoryReq categoryReq) {
+    public AdminCategoryRes updateCategoryById(Long categoryId, @NonNull CategoryReq categoryReq) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
         Spotlight spotlight = spotlightRepository.findById(categoryReq.spotlightId()).orElseThrow(RuntimeException::new);
         category.setName(categoryReq.name());
@@ -224,7 +218,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public List<AdminCategoryRes> updateCategoryOrder(Map<Long, Long> categoryOrderMap) {
+    public List<AdminCategoryRes> updateCategoryOrder(@NonNull Map<Long, Long> categoryOrderMap) {
         List<Category> categories = categoryRepository.findAllById(categoryOrderMap.keySet());
 
         for (Category category : categories) {
@@ -235,7 +229,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.saveAll(categories).stream().map(this::convertToAdminCategoryRes).toList();
     }
 
-    public CategoryRes convertToCategoryRes(Category category) {
+    public CategoryRes convertToCategoryRes(@NonNull Category category) {
         return new CategoryRes(
                 category.getId(),
                 category.getName()
@@ -243,14 +237,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional
-    public AdminCategoryRes convertToAdminCategoryRes(Category category) {
+    public AdminCategoryRes convertToAdminCategoryRes(@NonNull Category category) {
         return new AdminCategoryRes(
                 category.getId(),
                 category.getName(),
-                SimpleSpotlightRes.builder()
-                        .id(category.getSpotlight().getId())
-                        .name(category.getSpotlightName())
-                        .build(),
+                category.getSpotlightName(),
                 category.getOrderNumber(),
                 category.getActive()
         );
