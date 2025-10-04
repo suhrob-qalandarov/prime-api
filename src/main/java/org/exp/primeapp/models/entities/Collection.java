@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.models.entities;
 
 import jakarta.persistence.*;
@@ -36,4 +37,4 @@ public class Collection extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private Set<Product> products = new HashSet<>();
-}
+}*/

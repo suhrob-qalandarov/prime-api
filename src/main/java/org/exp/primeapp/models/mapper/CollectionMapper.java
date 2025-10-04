@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.models.mapper;
 
 import org.exp.primeapp.models.dto.responce.user.CollectionProductRes;
@@ -14,4 +15,4 @@ public interface CollectionMapper {
     CollectionProductRes toCollectionProductResponse(Collection collection);
 
     List<CollectionProductRes> toCollectionProductResponseList(List<Collection> collections);
-}
+}*/

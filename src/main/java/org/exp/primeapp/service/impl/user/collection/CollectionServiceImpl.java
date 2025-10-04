@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.service.impl.user.collection;
 
 import lombok.RequiredArgsConstructor;
@@ -57,4 +58,4 @@ public class CollectionServiceImpl implements CollectionService {
         List<Collection> collections = collectionRepository.findRandomCollections();
         return collectionMapper.toCollectionProductResponseList(collections);
     }
-}
+}*/

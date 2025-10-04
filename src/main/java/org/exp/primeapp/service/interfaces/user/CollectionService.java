@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.service.interfaces.user;
 
 import org.exp.primeapp.models.dto.responce.user.CollectionProductRes;
@@ -18,3 +19,4 @@ public interface CollectionService {
     List<CollectionProductRes> getRandomCollections();
 
 }
+*/

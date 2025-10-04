@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.repository;
 
 import org.exp.primeapp.models.entities.Collection;
@@ -25,4 +26,4 @@ public interface CollectionRepository extends JpaRepository<Collection, Long> {
     List<Collection> findRandomCollections();
 
     List<Collection> findAllByActiveTrue();
-}
+}*/
