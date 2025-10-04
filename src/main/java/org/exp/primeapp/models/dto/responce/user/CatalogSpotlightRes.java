@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.models.dto.responce.user;
 
 import lombok.Builder;
@@ -10,4 +11,4 @@ public record CatalogSpotlightRes(
         String name,
         List<CategoryRes> categories
 ) {
-}
+}*/
