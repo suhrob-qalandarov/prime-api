@@ -129,11 +129,11 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .description(req.getDescription())
                 .price(req.getPrice())
                 .discount(req.getDiscount())
-                .active(req.getActive())
+                //.active(req.getActive())
                 .status(req.getStatus())
                 .category(category)
-                .collection(null)
-                .attachments(attachments)
+                //.collection(null)
+                //.attachments(attachments)
                 .sizes(new HashSet<>())
                 .build();
 
@@ -176,10 +176,10 @@ public class AdminProductServiceImpl implements AdminProductService {
             product.setCategory(category);
         }
 
-        if (req.getAttachmentIds() != null && !req.getAttachmentIds().isEmpty()) {
+        /*if (req.getAttachmentIds() != null && !req.getAttachmentIds().isEmpty()) {
             Set<Attachment> attachments = new HashSet<>(attachmentRepository.findAllById(req.getAttachmentIds()));
             product.setAttachments(attachments);
-        }
+        }*/
 
         if (hasText(req.getName())) {
             product.setName(req.getName());

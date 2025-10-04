@@ -12,7 +12,7 @@ import java.util.Set;
 @Mapper(componentModel = "spring", uses = {ProductSizeMapper.class})
 public interface ProductMapper {
     @Mapping(source = "category.name", target = "categoryName")
-    @Mapping(source = "attachments", target = "attachmentKeys", qualifiedByName = "toAttachmentKeys")
+    //@Mapping(source = "attachments", target = "attachmentKeys", qualifiedByName = "toAttachmentKeys")
     @Mapping(source = "sizes", target = "productSizes")
     ProductRes toProductResponse(Product product);
 
