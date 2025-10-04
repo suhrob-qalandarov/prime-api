@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.service.impl.user;
 
 import lombok.RequiredArgsConstructor;
@@ -26,16 +27,16 @@ public class SpotlightServiceImpl implements SpotlightService {
     @Override
     public SpotlightRes getSpotlight(Long id) {
         Spotlight spotlight = spotlightRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Spotlight not found with spotlightId: " + id));
+                .orElseThrow(() -> new NoSuchElementException("Spotlight not found with spotlightName: " + id));
 
         return mapToResponse(spotlight);
     }
 
     @Transactional
     @Override
-    public FullSpotlightRes getFullSpotlight(Long spotlightId) {
-        Spotlight spotlight = spotlightRepository.findById(spotlightId)
-                .orElseThrow(() -> new NoSuchElementException("Spotlight not found with spotlightId: " + spotlightId));
+    public FullSpotlightRes getFullSpotlight(Long spotlightName) {
+        Spotlight spotlight = spotlightRepository.findById(spotlightName)
+                .orElseThrow(() -> new NoSuchElementException("Spotlight not found with spotlightName: " + spotlightName));
         return mapToSpotlightFullSpotlightRes(spotlight);
     }
 
@@ -61,8 +62,8 @@ public class SpotlightServiceImpl implements SpotlightService {
     }
 
     @Override
-    public List<CategoryRes> getSpotlightCategories(Long spotlightId) {
-        return categoryServiceImpl.getSpotlightCategories(spotlightId);
+    public List<CategoryRes> getSpotlightCategories(Long spotlightName) {
+        return categoryServiceImpl.getSpotlightCategories(spotlightName);
     }
 
     @Override
@@ -100,3 +101,4 @@ public class SpotlightServiceImpl implements SpotlightService {
                 .build();
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.service.interfaces.user;
 
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
@@ -25,3 +26,4 @@ public interface SpotlightService {
 
     FullSpotlightRes getFullSpotlight(Long spotlightId);
 }
+*/

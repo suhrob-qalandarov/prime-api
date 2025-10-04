@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.service.interfaces.admin.spotlight;
 
 import org.exp.primeapp.models.dto.request.SpotlightReq;
@@ -20,3 +21,4 @@ public interface AdminSpotlightService {
 
     DashboardSpotlightRes updateSpotlightsOrder(Map<Long, Long> spotlightOrderMap);
 }
+*/

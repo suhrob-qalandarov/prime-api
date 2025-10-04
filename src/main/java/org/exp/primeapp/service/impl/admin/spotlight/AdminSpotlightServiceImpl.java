@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.service.impl.admin.spotlight;
 
 import lombok.RequiredArgsConstructor;
@@ -113,3 +114,4 @@ public class AdminSpotlightServiceImpl implements AdminSpotlightService {
                 .build();
     }
 }
+*/

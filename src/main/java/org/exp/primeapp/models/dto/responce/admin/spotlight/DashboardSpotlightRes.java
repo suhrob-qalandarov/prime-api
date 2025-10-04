@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.models.dto.responce.admin.spotlight;
 
 import lombok.Builder;
@@ -14,3 +15,4 @@ public record DashboardSpotlightRes(
         List<AdminSpotlightRes> inactiveSpotlightResList
 ) {
 }
+*/

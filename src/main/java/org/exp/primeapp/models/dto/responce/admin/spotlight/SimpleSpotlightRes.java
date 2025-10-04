@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.models.dto.responce.admin.spotlight;
 
 import lombok.Builder;
@@ -8,3 +9,4 @@ public record SimpleSpotlightRes(
         String name
 ) {
 }
+*/

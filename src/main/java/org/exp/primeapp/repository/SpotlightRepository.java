@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.repository;
 
 import org.exp.primeapp.models.entities.Spotlight;
@@ -21,6 +22,7 @@ public interface SpotlightRepository extends JpaRepository<Spotlight, Long> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Spotlight s SET s.active = CASE WHEN s.active = true THEN false ELSE true END WHERE s.id = :spotlightId")
-    void toggleSpotlightActiveStatus(@Param("spotlightId") Long spotlightId);
+    @Query("UPDATE Spotlight s SET s.active = CASE WHEN s.active = true THEN false ELSE true END WHERE s.id = :spotlightName")
+    void toggleSpotlightActiveStatus(@Param("spotlightName") Long spotlightName);
 }
+*/

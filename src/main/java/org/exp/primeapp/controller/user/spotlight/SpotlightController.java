@@ -24,9 +24,9 @@ public class SpotlightController {
 
     private final SpotlightService spotlightService;
 
-    @GetMapping("/categories/{spotlightId}")
-    public ResponseEntity <List<CategoryRes>> getCategoriesBySpotlightId(@PathVariable Long spotlightId) {
-        List<CategoryRes> categories = spotlightService.getSpotlightCategories(spotlightId);
+    @GetMapping("/categories/{spotlightName}")
+    public ResponseEntity <List<CategoryRes>> getCategoriesBySpotlightId(@PathVariable Long spotlightName) {
+        List<CategoryRes> categories = spotlightService.getSpotlightCategories(spotlightName);
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 }

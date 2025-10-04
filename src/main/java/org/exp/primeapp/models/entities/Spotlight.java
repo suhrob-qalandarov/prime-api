@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.models.entities;
 
 import jakarta.persistence.*;
@@ -26,4 +27,4 @@ public class Spotlight extends BaseEntity {
     @OneToMany(mappedBy = "spotlight", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private Set<Category> categories = new HashSet<>();
-}
+}*/

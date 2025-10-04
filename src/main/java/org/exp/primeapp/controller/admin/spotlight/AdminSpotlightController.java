@@ -37,15 +37,15 @@ public class AdminSpotlightController {
     }*//*
 
 
-    @GetMapping("/{spotlightId}")
-    public ResponseEntity<FullSpotlightRes> getSpotlightById(@PathVariable Long spotlightId) {
-        FullSpotlightRes spotlight = spotlightService.getFullSpotlight(spotlightId);
+    @GetMapping("/{spotlightName}")
+    public ResponseEntity<FullSpotlightRes> getSpotlightById(@PathVariable Long spotlightName) {
+        FullSpotlightRes spotlight = spotlightService.getFullSpotlight(spotlightName);
         return new ResponseEntity<>(spotlight, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/{spotlightId}/categories")
-    public ResponseEntity<AdminCategoryDashboardRes> getSpotlightCategories(@PathVariable Long spotlightId) {
-        AdminCategoryDashboardRes spotlightCategories = categoryService.getAdminSpotlightCategories(spotlightId);
+    @GetMapping("/{spotlightName}/categories")
+    public ResponseEntity<AdminCategoryDashboardRes> getSpotlightCategories(@PathVariable Long spotlightName) {
+        AdminCategoryDashboardRes spotlightCategories = categoryService.getAdminSpotlightCategories(spotlightName);
         return new ResponseEntity<>(spotlightCategories, HttpStatus.ACCEPTED);
     }
 
@@ -55,15 +55,15 @@ public class AdminSpotlightController {
         return new ResponseEntity<>(spotlightRes, HttpStatus.OK);
     }
 
-    @PutMapping("/{spotlightId}")
-    public ResponseEntity<AdminSpotlightRes> updateSpotlight(@PathVariable Long spotlightId, @RequestBody SpotlightReq spotlightReq) {
-        AdminSpotlightRes spotlightRes = adminSpotlightService.updateSpotlightById(spotlightId, spotlightReq);
+    @PutMapping("/{spotlightName}")
+    public ResponseEntity<AdminSpotlightRes> updateSpotlight(@PathVariable Long spotlightName, @RequestBody SpotlightReq spotlightReq) {
+        AdminSpotlightRes spotlightRes = adminSpotlightService.updateSpotlightById(spotlightName, spotlightReq);
         return new ResponseEntity<>(spotlightRes, HttpStatus.OK);
     }
 
-    @PatchMapping("/toggle/{spotlightId}")
-    public ResponseEntity<Void> toggleSpotlight(@PathVariable Long spotlightId) {
-        adminSpotlightService.toggleSpotlightById(spotlightId);
+    @PatchMapping("/toggle/{spotlightName}")
+    public ResponseEntity<Void> toggleSpotlight(@PathVariable Long spotlightName) {
+        adminSpotlightService.toggleSpotlightById(spotlightName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

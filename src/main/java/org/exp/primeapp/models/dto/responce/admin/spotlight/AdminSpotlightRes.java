@@ -1,3 +1,4 @@
+/*
 package org.exp.primeapp.models.dto.responce.admin.spotlight;
 
 import lombok.Builder;
@@ -11,3 +12,4 @@ public record AdminSpotlightRes(
         Long categoriesCount
 ) {
 }
+*/
