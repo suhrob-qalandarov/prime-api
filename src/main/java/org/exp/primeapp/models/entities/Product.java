@@ -11,7 +11,9 @@ import org.exp.primeapp.models.enums.ProductStatus;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -43,18 +45,18 @@ public class Product extends BaseEntity {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "attachment_id")
     )
-    private Set<Attachment> attachments = new HashSet<>();
+    private List<Attachment> attachments = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductSize> sizes = new HashSet<>();
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinTable(
             name = "collections_products",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "collection_id")
     )
-    private Collection collection;
+    private Collection collection;*/
 
     public void addSize(ProductSize productSize) {
         if (sizes.stream().noneMatch(ps -> ps.getSize() == productSize.getSize())) {
