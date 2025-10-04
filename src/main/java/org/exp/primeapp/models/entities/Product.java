@@ -1,5 +1,7 @@
 package org.exp.primeapp.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,8 +10,6 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.exp.primeapp.models.base.BaseEntity;
 import org.exp.primeapp.models.enums.ProductStatus;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,14 +34,12 @@ public class Product extends BaseEntity {
     private ProductStatus status = ProductStatus.NEW;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Category category;
-
-    @OneToOne
-    private Attachment mainImage;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "product_attachment",
+            name = "products_attachments",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "attachment_id")
     )
@@ -49,14 +47,6 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductSize> sizes = new HashSet<>();
-
-    /*@ManyToOne
-    @JoinTable(
-            name = "collections_products",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "collection_id")
-    )
-    private Collection collection;*/
 
     public void addSize(ProductSize productSize) {
         if (sizes.stream().noneMatch(ps -> ps.getSize() == productSize.getSize())) {
