@@ -2,6 +2,8 @@ package org.exp.primeapp.repository;
 
 import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -55,4 +57,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findRandom4ActiveProductsStatusHot();
 
 
+    //List<Product> findAllByCategory_IdAndActive(Long categoryId, Boolean active);
+
+    Page<Product> findAllByActive(boolean active, Pageable pageable);
+    Page<Product> findAllByCategory_IdAndActive(Long categoryId, boolean active, Pageable pageable);
 }
