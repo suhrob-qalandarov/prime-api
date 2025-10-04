@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.user.FeaturedProductRes;
 import org.exp.primeapp.models.dto.responce.user.ProductRes;
 import org.exp.primeapp.models.dto.responce.user.ProductSizeRes;
+import org.exp.primeapp.models.dto.responce.user.page.PageRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.repository.ProductRepository;
 import org.exp.primeapp.service.interfaces.user.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,11 +51,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductRes> getActiveProducts() {
-        return productRepository.findAllByActive(true)
-                .stream()
-                .map(this::convertToProductRes)
-                .collect(toList());
+    public PageRes<ProductRes> getActiveProducts(Pageable pageable) {
+        Page<ProductRes> productRes = productRepository.findAllByActive(true, pageable)
+                .map(this::convertToProductRes);
+        return toPageRes(productRes);
+    }
+
+    @Override
+    public PageRes<ProductRes> getProductsByCategoryId(Long categoryId, Pageable pageable) {
+        Page<ProductRes> productRes = productRepository.findAllByCategory_IdAndActive(categoryId, true, pageable)
+                .map(this::convertToProductRes);
+
+        return toPageRes(productRes);
     }
 
     @Override
@@ -84,6 +94,17 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with productId: " + productId));
         return convertToProductRes(product);
+    }
+
+    public <T> PageRes<T> toPageRes(Page<T> page) {
+        return PageRes.<T>builder()
+                .content(page.getContent())
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .last(page.isLast())
+                .build();
     }
 
     public ProductRes convertToProductRes(Product product) {
