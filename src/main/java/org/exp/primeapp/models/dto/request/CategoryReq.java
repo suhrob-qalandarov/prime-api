@@ -5,8 +5,7 @@ import lombok.Builder;
 @Builder
 public record CategoryReq(
         String name,
-        Long spotlightId,
-        //Long imageId,
+        String spotlightName,
         Boolean active
 ) {
 }

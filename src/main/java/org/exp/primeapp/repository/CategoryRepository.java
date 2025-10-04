@@ -21,26 +21,26 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     long count();
 
-    long countByActiveTrue();
+    /*long countByActiveTrue();
 
-    long countByActiveFalse();
+    long countByActiveFalse();*/
 
     List<Category> findByActive(boolean active);
 
-    List<Category> findAllBySpotlightId(Long spotlightId);
+    //List<Category> findAllBySpotlightId(Long spotlightName);
 
     @Transactional
     @Modifying
     @Query("UPDATE Category c SET c.active = CASE WHEN c.active = true THEN false ELSE true END WHERE c.id = :categoryId")
     void toggleCategoryActiveStatus(@Param("categoryId") Long categoryId);
 
-    @Query("SELECT c FROM Category c " +
-            "WHERE c.spotlight.id = :spotlightId AND c.active = :active " +
+    /*@Query("SELECT c FROM Category c " +
+            "WHERE c.spotlight.id = :spotlightName AND c.active = :active " +
             "ORDER BY c.orderNumber ASC")
     List<Category> findBySpotlightIdAndActiveSorted(
-            @Param("spotlightId") Long spotlightId,
+            @Param("spotlightName") Long spotlightName,
             @Param("active") Boolean active
-    );
+    );*/
 
     List<Category> findBySpotlightNameAndActive(String spotlightName, Boolean active);
 }
