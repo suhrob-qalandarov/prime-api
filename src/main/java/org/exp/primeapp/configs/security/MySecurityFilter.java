@@ -69,22 +69,23 @@ public class MySecurityFilter extends OncePerRequestFilter {
             log.info("Cookie extracted token: {}", token);
         }
 
-        if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (token != null) {
             try {
                 if (jwtService.validateToken(token)) {
                     User user = jwtService.getUserObject(token);
+                    log.info("Validated user: {}", user);
 
                     if (user == null || user.getId() == null) {
                         log.error("User or ID is null from token: {}", user);
                         throw new IllegalArgumentException("Invalid user data from token");
                     }
 
-                    if (user.getActive() != null && !user.getActive()) {
+                    /*if (user.getActive() != null && !user.getActive()) {
                         log.warn("User is not active: {}", user.getPhone());
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.getWriter().write("User account is not active.");
                         return;
-                    }
+                    }*/
 
                     var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(auth);
