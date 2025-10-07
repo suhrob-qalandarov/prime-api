@@ -90,6 +90,8 @@ public class SecurityConfig {
 
         // Allow requests from these origins
         configuration.setAllowedOrigins(Arrays.asList(
+                "https://prime.howdy.uz", "https://api.howdy.uz",
+
                 "https://prime77.uz",
                 "https://api.prime77.uz", "http://api.prime77.uz",
                 "http://localhost:3000", "http://192.168.1.2:3000",
