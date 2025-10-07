@@ -38,7 +38,7 @@ public class JwtService {
                 .claim("active", user.getActive())
                 .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                 .issuedAt(new Date())
-                .expiration(new Date(new Date().getTime() + 1000 * 60 * 60 * 24))
+                .expiration(new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7))
                 .signWith(getSecretKey())
                 .compact();
     }
