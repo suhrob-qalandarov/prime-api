@@ -3,6 +3,7 @@ package org.exp.primeapp.configs.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class JwtService {
                 .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                 .issuedAt(new Date())
                 .expiration(new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7))
-                .signWith(getSecretKey())
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
