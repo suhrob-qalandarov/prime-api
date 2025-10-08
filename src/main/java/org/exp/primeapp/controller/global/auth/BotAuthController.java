@@ -42,4 +42,10 @@ public class BotAuthController {
         LoginRes loginRes = authService.verifyWithCodeAndSendUserData(code, response);
         return new ResponseEntity<>(loginRes, HttpStatus.ACCEPTED);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<LoginRes> logout(HttpServletResponse response) {
+        authService.logout(response);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 }
