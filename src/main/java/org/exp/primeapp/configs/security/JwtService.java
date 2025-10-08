@@ -36,7 +36,7 @@ public class JwtService {
                 .claim("id", user.getId())
                 .claim("firstName", user.getFirstName())
                 .claim("phoneNumber", user.getPhone())
-                .claim("active", user.getActive())
+                //.claim("active", user.getActive())
                 .claim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")))
                 .issuedAt(new Date())
                 .expiration(new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 7))
@@ -67,14 +67,15 @@ public class JwtService {
         String phone = claims.getSubject();
         Long id = claims.get("id", Long.class);
         String firstName = claims.get("firstName", String.class);
-        Boolean active = claims.get("active", Boolean.class);
+        String phoneNumber = claims.get("phoneNumber", String.class);
         String roles = (String) claims.get("roles");
         List<Role> authorities = Arrays.stream(roles.split(",")).map(Role::new).toList();
         return User.builder()
                 .id(id)
                 .phone(phone)
                 .firstName(firstName)
-                .active(active)
+                .phone(phoneNumber)
+                //.active(active)
                 .roles(authorities)
                 .build();
     }
