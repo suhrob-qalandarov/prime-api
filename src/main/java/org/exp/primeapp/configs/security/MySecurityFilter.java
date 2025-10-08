@@ -53,7 +53,9 @@ public class MySecurityFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_OK);
             if (origin != null && (
                     origin.equals("https://prime77.uz")
-                    || origin.equals("http://localhost:3000")
+                            || origin.equals("http://localhost:3000")
+                            || origin.equals("https://api.howdy.uz")
+                            || origin.equals("https://prime.howdy.uz")
             )) {
                 response.setHeader("Access-Control-Allow-Origin", origin);
             }
