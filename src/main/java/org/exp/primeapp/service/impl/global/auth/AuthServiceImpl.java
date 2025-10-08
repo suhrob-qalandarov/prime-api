@@ -57,6 +57,7 @@ public class AuthServiceImpl implements AuthService {
                 .phone(user.getPhone())
                 .roles(user.getRoles().stream().map(Role::getName).toList())
                 .ordersRes(profileOrdersById)
+                .isAdmin(user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN")))
                 .build();
 
         return LoginRes.builder()
