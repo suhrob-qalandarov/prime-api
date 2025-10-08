@@ -1,5 +1,6 @@
 package org.exp.primeapp.service.impl.global.auth;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -62,5 +63,17 @@ public class AuthServiceImpl implements AuthService {
                 .token(token)
                 .userRes(userRes)
                 .build();
+    }
+
+    @Override
+    public void logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("prime-token", null);
+        cookie.setHttpOnly(true);
+        cookie.setDomain("howdy.uz");
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        cookie.setAttribute("SameSite", "None");
+        response.addCookie(cookie);
     }
 }
