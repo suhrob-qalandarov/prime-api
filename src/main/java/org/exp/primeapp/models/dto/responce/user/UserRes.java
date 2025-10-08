@@ -11,6 +11,7 @@ public record UserRes(
         String firstName,
         String phone,
         List<String> roles,
-        UserProfileOrdersRes ordersRes
+        UserProfileOrdersRes ordersRes,
+        Boolean isAdmin
 ) {
 }

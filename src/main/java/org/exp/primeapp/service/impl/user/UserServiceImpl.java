@@ -91,7 +91,8 @@ public class UserServiceImpl implements UserService {
                 user.getFirstName(),
                 user.getPhone(),
                 user.getRoles().stream().map(Role::getName).toList(),
-                profileOrdersById
+                profileOrdersById,
+                user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))
         );
     }
 
