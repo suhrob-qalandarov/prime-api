@@ -3,7 +3,6 @@ package org.exp.primeapp.models.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.exp.primeapp.models.base.Auditable;
 import org.exp.primeapp.models.base.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +28,7 @@ public class User extends BaseEntity implements UserDetails {
 
     private Integer messageId;
     private Integer verifyCode;
-    @Column(name = "verify_code_expiration")
+
     private LocalDateTime verifyCodeExpiration;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -50,10 +49,10 @@ public class User extends BaseEntity implements UserDetails {
         return "[PROTECTED]";
     }
 
-    @Override
+    /*@Override
     public boolean isEnabled() {
         return Boolean.TRUE.equals(getActive());
-    }
+    }*/
 }
 
 
