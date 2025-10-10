@@ -79,6 +79,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserRes getAdminUserDataFromToken(User user) {
+        UserRes userRes = convertToUserRes(user);
+        return userRes.isAdmin() ? userRes : null;
+    }
+
+    @Override
     public UserRes getById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.map(this::convertToUserRes).orElse(null);

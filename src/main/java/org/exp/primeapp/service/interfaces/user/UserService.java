@@ -21,4 +21,6 @@ public interface UserService {
     UserRes getUserDataFromToken(User user);
 
     UserRes getById(Long id);
+
+    UserRes getAdminUserDataFromToken(User user);
 }
