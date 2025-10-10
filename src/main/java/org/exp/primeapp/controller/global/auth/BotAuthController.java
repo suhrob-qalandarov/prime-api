@@ -29,12 +29,9 @@ public class BotAuthController {
     }
 
     @GetMapping("/admin")
-    public ResponseEntity<Boolean> checkUserAdminRole(@AuthenticationPrincipal User user) {
-        boolean hasAdminRole = user.getRoles()
-                .stream()
-                .anyMatch(role -> ROLE_ADMIN.equals(role.getName().trim()));
-
-        return ResponseEntity.ok(hasAdminRole);
+    public ResponseEntity<UserRes> checkUserAdminRole(@AuthenticationPrincipal User user) {
+        UserRes userRes = userService.getAdminUserDataFromToken(user);
+        return new ResponseEntity<>(userRes, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/code/{code}")
