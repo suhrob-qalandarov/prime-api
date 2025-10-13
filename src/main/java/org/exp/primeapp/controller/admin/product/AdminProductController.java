@@ -20,9 +20,9 @@ public class AdminProductController {
     private final AdminProductService adminProductService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> addProduct(@RequestBody ProductReq productReq) {
-        ApiResponse response = adminProductService.saveProduct(productReq);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<?> addProduct(@RequestBody ProductReq productReq) {
+        adminProductService.saveProduct(productReq);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/dashboard")

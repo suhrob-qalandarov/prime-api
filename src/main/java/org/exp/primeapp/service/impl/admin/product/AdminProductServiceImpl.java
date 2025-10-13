@@ -98,7 +98,7 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     @Transactional
     @Override
-    public ApiResponse saveProduct(ProductReq productReq) {
+    public void saveProduct(ProductReq productReq) {
         Category category = categoryRepository.findById(productReq.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found with telegramId: " + productReq.getCategoryId()));
 
@@ -120,7 +120,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         ProductIncome income = createIncome(product, totalAmount);
         productIncomeRepository.save(income);
 
-        return new ApiResponse(true, "Product saved successfully with ID: " + savedProduct.getId());
+        //return new ApiResponse(true, "Product saved successfully with ID: " + savedProduct.getId());
     }
 
     private Product createProductFromReq(ProductReq req, Category category, Set<Attachment> attachments) {
