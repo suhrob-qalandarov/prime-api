@@ -6,9 +6,10 @@ import lombok.Builder;
 public record AdminProductRes(
         Long id,
         String name,
-        Integer discount,
+        String brand,
         Boolean active,
         String status,
+        Integer discount,
         String categoryName,
         Integer attachmentCount,
         //String collectionName,
