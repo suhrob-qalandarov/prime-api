@@ -25,6 +25,7 @@ import java.util.Set;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Product extends BaseEntity {
     private String name;
+    private String brand;
     private String description;
     private Double price;
     private Integer discount;
