@@ -49,10 +49,10 @@ public class AdminAttachmentController {
     }
 
     @PostMapping("/multiupload")
-    public ResponseEntity<List<AttachmentRes>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity<List<String>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
         log.debug("Uploading multiple files: {}", files.length);
         List<Attachment> uploadedFiles = adminAttachmentService.uploadMultiple(files);
-        List<AttachmentRes> responses = attachmentUtilService.convertToAttachmentResList(uploadedFiles);
+        List<String> responses = attachmentUtilService.convertToAttachmentKeys(uploadedFiles);
         return ResponseEntity.ok(responses);
     }
 
