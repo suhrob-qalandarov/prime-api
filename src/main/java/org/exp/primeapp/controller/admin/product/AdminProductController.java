@@ -1,14 +1,18 @@
 package org.exp.primeapp.controller.admin.product;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductViewRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.exp.primeapp.utils.Const.*;
 
@@ -20,9 +24,15 @@ public class AdminProductController {
     private final AdminProductService adminProductService;
 
     @PostMapping
-    public ResponseEntity<?> addProduct(@RequestBody ProductReq productReq) {
-        adminProductService.saveProduct(productReq);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<AdminProductRes> addProduct(@Valid @RequestBody ProductReq productReq) {
+        AdminProductRes adminProductRes = adminProductService.saveProduct(productReq);
+        return new ResponseEntity<>(adminProductRes, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AdminProductRes>> adminProducts() {
+        List<AdminProductRes> adminDashboardProductsRes = adminProductService.getAdminDashboardProducts();
+        return ResponseEntity.ok(adminDashboardProductsRes);
     }
 
     @GetMapping("/dashboard")
