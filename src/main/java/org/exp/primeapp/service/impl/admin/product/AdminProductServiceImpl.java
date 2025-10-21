@@ -10,6 +10,7 @@ import org.exp.primeapp.models.dto.responce.admin.AdminProductViewRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.dto.responce.user.ProductSizeRes;
 import org.exp.primeapp.models.entities.*;
+import org.exp.primeapp.models.enums.ProductStatus;
 import org.exp.primeapp.repository.AttachmentRepository;
 import org.exp.primeapp.repository.CategoryRepository;
 import org.exp.primeapp.repository.ProductIncomeRepository;
@@ -125,26 +126,26 @@ public class AdminProductServiceImpl implements AdminProductService {
         //return new ApiResponse(true, "Product saved successfully with ID: " + savedProduct.getId());
     }
 
-    private Product createProductFromReq(ProductReq req, Category category, Set<Attachment> attachments) {
+    private Product createProductFromReq(ProductReq req, Category category, List<Attachment> attachments) {
         Product product = Product.builder()
-                .name(req.getName())
-                .description(req.getDescription())
-                .price(req.getPrice())
-                .discount(req.getDiscount())
-                //.active(req.getActive())
-                .status(req.getStatus())
+                .name(req.name())
+                .brand(req.brand())
+                .description(req.description())
+                .price(req.price())
+                .active(true)
+                .status(ProductStatus.NEW)
                 .category(category)
                 //.collection(null)
-                //.attachments(attachments)
+                .attachments(attachments)
                 .sizes(new HashSet<>())
                 .build();
 
         // ProductSize'larni qo‘shamiz
-        if (req.getProductSizes() != null) {
-            req.getProductSizes().forEach(sizeReq -> {
+        if (req.productSizes() != null) {
+            req.productSizes().forEach(sizeReq -> {
                 ProductSize productSize = new ProductSize();
-                productSize.setSize(sizeReq.getSize());
-                productSize.setAmount(sizeReq.getAmount());
+                productSize.setSize(sizeReq.size());
+                productSize.setAmount(sizeReq.amount());
                 product.addSize(productSize);
             });
         }

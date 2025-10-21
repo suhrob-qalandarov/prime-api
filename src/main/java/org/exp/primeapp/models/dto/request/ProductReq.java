@@ -1,20 +1,22 @@
 package org.exp.primeapp.models.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import lombok.Value;
-import org.exp.primeapp.models.enums.ProductStatus;
-
 import java.util.List;
+
 @Builder
-@Value
-public class ProductReq {
-    String name;
-    String description;
-    Double price;
-    Integer discount;
-    Boolean active;
-    ProductStatus status;
-    Long categoryId;
-    List<Long> attachmentIds;
-    List<ProductSizeReq> productSizes;
-}
+public record ProductReq (
+
+        @NotBlank @Size(max = 512, message = "Nomi 512 belgidan oshmasin")
+        String name,
+
+        @NotBlank @Size(max = 512, message = "Brend 512 belgidan oshmasin")
+        String brand,
+
+        Double price,
+        String description,
+        Long categoryId,
+        List<String> attachmentKeys,
+        List<ProductSizeReq> productSizes
+) {}
