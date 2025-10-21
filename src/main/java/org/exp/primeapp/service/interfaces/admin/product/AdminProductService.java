@@ -14,7 +14,7 @@ public interface AdminProductService {
 
     AdminProductViewRes getProductById(Long productId);
 
-    void saveProduct(ProductReq productReq);
+    AdminProductRes saveProduct(ProductReq productReq);
 
     ApiResponse updateProduct(Long productId, ProductReq productReq);
 

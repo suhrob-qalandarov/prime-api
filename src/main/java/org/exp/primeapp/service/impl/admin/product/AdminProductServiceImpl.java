@@ -98,16 +98,16 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     @Transactional
     @Override
-    public void saveProduct(ProductReq productReq) {
-        Category category = categoryRepository.findById(productReq.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found with telegramId: " + productReq.getCategoryId()));
+    public AdminProductRes saveProduct(ProductReq productReq) {
+        Category category = categoryRepository.findById(productReq.categoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found with categoryId: " + productReq.categoryId()));
 
-        List<Long> attachmentIds = productReq.getAttachmentIds();
+        List<String> attachmentIds = productReq.attachmentKeys();
         if (attachmentIds == null || attachmentIds.isEmpty()) {
-            attachmentIds = List.of(1L); // fallback
+            throw new RuntimeException("Attachments empty");
         }
 
-        Set<Attachment> attachments = new HashSet<>(attachmentRepository.findAllById(attachmentIds));
+        List<Attachment> attachments = attachmentRepository.findAllByKeyIn(attachmentIds);
 
         Product product = createProductFromReq(productReq, category, attachments);
         product.setDiscount(0);
@@ -119,6 +119,8 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .sum();
         ProductIncome income = createIncome(product, totalAmount);
         productIncomeRepository.save(income);
+
+        return convertToAdminProductRes(savedProduct);
 
         //return new ApiResponse(true, "Product saved successfully with ID: " + savedProduct.getId());
     }
