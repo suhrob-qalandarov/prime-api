@@ -19,4 +19,6 @@ public interface AttachmentUtilService {
     List<AttachmentRes> convertToAttachmentResList(List<Attachment> attachments);
 
     AttachmentRes convertToAttachmentRes(Attachment attachment);
+
+    List<String> convertToAttachmentKeys(List<Attachment> attachments);
 }

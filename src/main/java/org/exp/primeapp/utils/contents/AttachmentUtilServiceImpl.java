@@ -3,6 +3,7 @@ package org.exp.primeapp.utils.contents;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.exp.primeapp.models.base.BaseEntity;
 import org.exp.primeapp.models.dto.responce.global.AttachmentRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.repository.AttachmentRepository;
@@ -57,6 +58,11 @@ public class AttachmentUtilServiceImpl implements AttachmentUtilService {
         return attachments.stream()
                 .map(this::convertToAttachmentRes)
                 .collect(Collectors.toList());
+    }
+
+    public List<String> convertToAttachmentKeys(List<Attachment> attachments) {
+        return attachments.stream()
+                .map(Attachment::getKey).toList();
     }
 
     @Override
