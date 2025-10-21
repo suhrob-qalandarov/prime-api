@@ -1,10 +1,10 @@
 package org.exp.primeapp.models.dto.request;
 
-import lombok.Value;
+import lombok.Builder;
 import org.exp.primeapp.models.enums.Size;
 
-@Value
-public class ProductSizeReq {
-    Size size;
-    Integer amount;
-}
+@Builder
+public record ProductSizeReq (
+        Size size,
+        Integer amount
+) {}
