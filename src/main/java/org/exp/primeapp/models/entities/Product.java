@@ -26,7 +26,10 @@ import java.util.Set;
 public class Product extends BaseEntity {
     private String name;
     private String brand;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
+
     private Double price;
     private Integer discount;
 
