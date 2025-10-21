@@ -2,6 +2,7 @@ package org.exp.primeapp.service.interfaces.admin.product;
 
 import org.exp.primeapp.models.dto.request.ProductReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductViewRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.entities.Product;
@@ -28,4 +29,6 @@ public interface AdminProductService {
     AdminProductDashboardRes getProductDashboarRes();
 
     void toggleProductUpdate(Long productId);
+
+    List<AdminProductRes> getAdminDashboardProducts();
 }

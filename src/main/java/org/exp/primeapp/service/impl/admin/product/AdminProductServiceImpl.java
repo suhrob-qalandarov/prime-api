@@ -3,7 +3,6 @@ package org.exp.primeapp.service.impl.admin.product;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
-import org.exp.primeapp.models.dto.request.ProductSizeReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductViewRes;
@@ -59,17 +58,25 @@ public class AdminProductServiceImpl implements AdminProductService {
         productRepository.toggleProductUpdateStatus(productId);
     }
 
+    @Override
+    public List<AdminProductRes> getAdminDashboardProducts() {
+        return productRepository.findAll().stream().map(this::convertToAdminProductRes).toList();
+    }
+
     @Transactional
     public AdminProductRes convertToAdminProductRes(Product product) {
         return new AdminProductRes(
                 product.getId(),
                 product.getName(),
-                product.getDiscount(),
-                product.getActive(),
-                product.getStatus().name(),
+                product.getBrand(),
+                product.getDescription(),
+                product.getAttachments().stream().map(Attachment::getKey).toList(),
                 product.getCategory().getName(),
-                product.getAttachments().size(),
-                //product.getCollection().getName(),
+                product.getPrice(),
+                product.getStatus().name(),
+                product.getActive(),
+                product.getDiscount(),
+                product.getCreatedAt(),
                 product.getSizes().size()
         );
     }
@@ -164,18 +171,18 @@ public class AdminProductServiceImpl implements AdminProductService {
     @Override
     public ApiResponse updateProduct(Long productId, ProductReq productReq) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with telegramId: " + productId));
+                .orElseThrow(() -> new RuntimeException("Product not found with productId: " + productId));
 
         updateProductFields(product, productReq);
         productRepository.save(product);
 
-        return new ApiResponse(true, "Product updated successfully with ID: " + productId);
+        return new ApiResponse(true, "Product updated successfully with id: " + productId);
     }
 
     private void updateProductFields(Product product, ProductReq req) {
-        if (req.getCategoryId() != null) {
-            Category category = categoryRepository.findById(req.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category not found with telegramId: " + req.getCategoryId()));
+        if (req.categoryId() != null) {
+            Category category = categoryRepository.findById(req.categoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found with categoryId: " + req.categoryId()));
             product.setCategory(category);
         }
 
@@ -184,33 +191,33 @@ public class AdminProductServiceImpl implements AdminProductService {
             product.setAttachments(attachments);
         }*/
 
-        if (hasText(req.getName())) {
-            product.setName(req.getName());
+        if (hasText(req.name())) {
+            product.setName(req.name());
         }
 
-        if (hasText(req.getDescription())) {
-            product.setDescription(req.getDescription());
+        if (hasText(req.description())) {
+            product.setDescription(req.description());
         }
 
-        if (req.getPrice() != null) {
-            product.setPrice(req.getPrice());
+        if (req.price() != null) {
+            product.setPrice(req.price());
         }
 
-        if (req.getDiscount() != null) {
+        /*if (req.getDiscount() != null) {
             product.setDiscount(req.getDiscount());
         }
 
         if (req.getStatus() != null) {
             product.setStatus(req.getStatus());
-        }
+        }*/
 
         // ProductSize'larni yangilaymiz
-        if (req.getProductSizes() != null) {
+        if (req.productSizes() != null) {
             product.getSizes().clear();
-            req.getProductSizes().forEach(sizeReq -> {
+            req.productSizes().forEach(sizeReq -> {
                 ProductSize productSize = new ProductSize();
-                productSize.setSize(sizeReq.getSize());
-                productSize.setAmount(sizeReq.getAmount());
+                productSize.setSize(sizeReq.size());
+                productSize.setAmount(sizeReq.amount());
                 product.addSize(productSize);
             });
         }
