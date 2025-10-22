@@ -23,4 +23,6 @@ public interface UserService {
     UserRes getById(Long id);
 
     UserRes getAdminUserDataFromToken(User user);
+
+    Boolean getUserHasAdminFromToken(User user);
 }

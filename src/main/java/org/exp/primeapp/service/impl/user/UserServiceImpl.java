@@ -85,6 +85,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Boolean getUserHasAdminFromToken(User user) {
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+    }
+
+    @Override
     public UserRes getById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         return optionalUser.map(this::convertToUserRes).orElse(null);
