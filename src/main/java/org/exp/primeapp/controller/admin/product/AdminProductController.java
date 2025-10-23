@@ -3,9 +3,7 @@ package org.exp.primeapp.controller.admin.product;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
-import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
-import org.exp.primeapp.models.dto.responce.admin.AdminProductViewRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
 import org.springframework.http.HttpStatus;
@@ -38,18 +36,11 @@ public class AdminProductController {
         return ResponseEntity.ok(adminDashboardProductsRes);
     }
 
-    @GetMapping("/dashboard")
-    @PreAuthorize("hasAnyRole('ADMIN', 'VISITOR')")
-    public ResponseEntity<AdminProductDashboardRes> adminProductDashboard() {
-        AdminProductDashboardRes adminProductDashboardRes = adminProductService.getProductDashboarRes();
-        return ResponseEntity.ok(adminProductDashboardRes);
-    }
-
     @GetMapping("/{productId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'VISITOR')")
-    public ResponseEntity<AdminProductViewRes> getProduct(@PathVariable Long productId) {
-        AdminProductViewRes product = adminProductService.getProductById(productId);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+    public ResponseEntity<AdminProductRes> getProduct(@PathVariable Long productId) {
+        AdminProductRes productResponseList = adminProductService.getProductById(productId);
+        return new ResponseEntity<>(productResponseList, HttpStatus.OK);
     }
 
     @PutMapping("/{productId}")
