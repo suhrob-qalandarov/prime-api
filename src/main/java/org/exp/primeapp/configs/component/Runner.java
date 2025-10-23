@@ -25,6 +25,7 @@ public class Runner implements CommandLineRunner {
 
         ArrayList<Role> roles = new ArrayList<>(List.of(
                 new Role(ROLE_ADMIN),
+                new Role(ROLE_VISITOR),
                 new Role(ROLE_USER)
         ));
 
