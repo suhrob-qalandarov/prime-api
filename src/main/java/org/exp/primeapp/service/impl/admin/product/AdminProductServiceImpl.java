@@ -42,9 +42,11 @@ public class AdminProductServiceImpl implements AdminProductService {
         long activeCount = productResList.stream().filter(AdminProductRes::active).count();
         long inactiveCount = productResList.stream().filter(p -> !p.active()).count();
 
-        long newCount = getCountByStatus(productResList, ProductStatus.NEW);
-        long hotCount = getCountByStatus(productResList, ProductStatus.HOT);
-        long saleCount = getCountByStatus(productResList, ProductStatus.SALE);
+        Map<String, Long> countMap = mapCountByStatus(productResList);
+
+        long newCount = getCountByStatus(countMap, ProductStatus.NEW.name());
+        long hotCount = getCountByStatus(countMap, ProductStatus.HOT.name());
+        long saleCount = getCountByStatus(countMap, ProductStatus.SALE.name());
 
         return AdminProductDashboardRes.builder()
                 .totalCount(totalCount)
@@ -57,10 +59,13 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .build();
     }
 
-    private long getCountByStatus(List<AdminProductRes> productResList, ProductStatus status) {
-        Map<String, Long> countByStatus = productResList.stream()
+    private Map<String, Long> mapCountByStatus(List<AdminProductRes> productResList) {
+        return productResList.stream()
                 .collect(Collectors.groupingBy(AdminProductRes::status, Collectors.counting()));
-        return countByStatus.getOrDefault(status.name(), 0L);
+    }
+
+    private long getCountByStatus(Map<String, Long> countMap, String status) {
+        return countMap.getOrDefault(status, 0L);
     }
 
     @Override
@@ -229,27 +234,5 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     private boolean hasText(String str) {
         return str != null && !str.isBlank();
-    }
-
-    @Transactional
-    //@Override
-    public ApiResponse deactivateProduct(Long productId) {
-        int affected = productRepository.updateActive(false, productId);
-        if (affected > 0) {
-            return new ApiResponse(true, "Product deactivated successfully");
-        } else {
-            return new ApiResponse(false, "Product not found or already inactive");
-        }
-    }
-
-
-    //@Override
-    public List<Product> getActiveProductsForAdmin() {
-        return productRepository.findAllByActive(true);
-    }
-
-    //@Override
-    public List<Product> getInactiveProductsForAdmin() {
-        return productRepository.findAllByActive(false);
     }
 }
