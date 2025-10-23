@@ -31,6 +31,7 @@ public class AdminProductServiceImpl implements AdminProductService {
     private final AttachmentRepository attachmentRepository;
     private final ProductIncomeRepository productIncomeRepository;
 
+    @Override
     @Transactional
     public AdminProductDashboardRes getProductDashboardRes() {
         List<AdminProductRes> productResList = productRepository.findAll()
@@ -71,11 +72,6 @@ public class AdminProductServiceImpl implements AdminProductService {
     @Override
     public void toggleProductUpdate(Long productId) {
         productRepository.toggleProductUpdateStatus(productId);
-    }
-
-    @Override
-    public List<AdminProductRes> getAdminDashboardProducts() {
-        return productRepository.findAll().stream().map(this::convertToAdminProductRes).toList();
     }
 
     @Transactional

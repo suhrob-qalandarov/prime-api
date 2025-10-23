@@ -3,6 +3,7 @@ package org.exp.primeapp.controller.admin.product;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
@@ -31,8 +32,8 @@ public class AdminProductController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'VISITOR')")
-    public ResponseEntity<List<AdminProductRes>> adminProducts() {
-        List<AdminProductRes> adminDashboardProductsRes = adminProductService.getAdminDashboardProducts();
+    public ResponseEntity<AdminProductDashboardRes> adminProducts() {
+        AdminProductDashboardRes adminDashboardProductsRes = adminProductService.getProductDashboardRes();
         return ResponseEntity.ok(adminDashboardProductsRes);
     }
 

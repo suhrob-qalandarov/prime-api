@@ -1,14 +1,15 @@
 package org.exp.primeapp.service.interfaces.admin.product;
 
 import org.exp.primeapp.models.dto.request.ProductReq;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public interface AdminProductService {
+
+    AdminProductDashboardRes getProductDashboardRes();
 
     AdminProductRes getProductById(Long productId);
 
@@ -17,6 +18,4 @@ public interface AdminProductService {
     ApiResponse updateProduct(Long productId, ProductReq productReq);
 
     void toggleProductUpdate(Long productId);
-
-    List<AdminProductRes> getAdminDashboardProducts();
 }
