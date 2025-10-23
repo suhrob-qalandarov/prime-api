@@ -32,7 +32,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http, MySecurityFilter mySecurityFilter) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http, SecurityFilter mySecurityFilter) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(auth ->
@@ -88,28 +88,17 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Allow requests from these origins
         configuration.setAllowedOrigins(Arrays.asList(
-                "https://prime.howdy.uz", "https://api.howdy.uz",
-                "https://admin.howdy.uz",
-
-                "https://prime77.uz",
-                "https://api.prime77.uz", "http://api.prime77.uz",
-                "http://localhost:3000", "http://localhost:3001", "http://192.168.1.2:3000",
-                "http://16.171.3.35"
+                "https://prime.howdy.uz", "https://api.howdy.uz",  "https://admin.howdy.uz",
+                "https://prime77.uz",  "https://api.prime77.uz", "https://admin.prime77.uz",
+                "http://localhost:3000", "http://localhost:3001"
         ));
 
-        // Allow these HTTP methods
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-
-        // Allow all headers
         configuration.setAllowedHeaders(List.of("*"));
-
-        // Allow credentials (cookies, authorization headers, etc.)
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
 
-        // Apply this configuration to all paths
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
 
