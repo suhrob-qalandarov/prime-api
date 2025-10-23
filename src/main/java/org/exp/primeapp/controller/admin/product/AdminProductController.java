@@ -10,6 +10,7 @@ import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,44 +25,44 @@ public class AdminProductController {
     private final AdminProductService adminProductService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AdminProductRes> addProduct(@Valid @RequestBody ProductReq productReq) {
         AdminProductRes adminProductRes = adminProductService.saveProduct(productReq);
         return new ResponseEntity<>(adminProductRes, HttpStatus.CREATED);
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'VISITOR')")
     public ResponseEntity<List<AdminProductRes>> adminProducts() {
         List<AdminProductRes> adminDashboardProductsRes = adminProductService.getAdminDashboardProducts();
         return ResponseEntity.ok(adminDashboardProductsRes);
     }
 
     @GetMapping("/dashboard")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VISITOR')")
     public ResponseEntity<AdminProductDashboardRes> adminProductDashboard() {
         AdminProductDashboardRes adminProductDashboardRes = adminProductService.getProductDashboarRes();
         return ResponseEntity.ok(adminProductDashboardRes);
     }
 
     @GetMapping("/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VISITOR')")
     public ResponseEntity<AdminProductViewRes> getProduct(@PathVariable Long productId) {
         AdminProductViewRes product = adminProductService.getProductById(productId);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @PutMapping("/{productId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable Long productId, @RequestBody ProductReq productReq) {
         ApiResponse response = adminProductService.updateProduct(productId, productReq);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PatchMapping("/toggle/{productId}")
+    @DeleteMapping("/toggle/{productId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> activateProduct(@PathVariable Long productId) {
         adminProductService.toggleProductUpdate(productId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    /*@DeleteMapping("/deactivate/{productId}")
-    public ResponseEntity<ApiResponse> deactivateProduct(@PathVariable Long productId) {
-        ApiResponse response = adminProductService.deactivateProduct(productId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }*/
 }
