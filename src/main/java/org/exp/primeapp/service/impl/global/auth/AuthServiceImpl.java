@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
                 .phone(user.getPhone())
                 .roles(user.getRoles().stream().map(Role::getName).toList())
                 .ordersRes(profileOrdersById)
-                .isAdmin(user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN")))
+                .isAdmin(user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN") || role.getName().equals("ROLE_VISITOR")))
                 .build();
 
         return LoginRes.builder()
@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
     public void logout(HttpServletResponse response) {
         Cookie cookie = new Cookie("prime-token", null);
         cookie.setHttpOnly(true);
-        cookie.setDomain("howdy.uz");
+        //cookie.setDomain("howdy.uz");
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(0);

@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean getUserHasAdminFromToken(User user) {
-        return user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN") || role.getName().equals("ROLE_VISITOR"));
     }
 
     @Override
