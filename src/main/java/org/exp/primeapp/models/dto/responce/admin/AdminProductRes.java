@@ -2,6 +2,7 @@ package org.exp.primeapp.models.dto.responce.admin;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public record AdminProductRes(
         String description,
         List<String> picturesKeys,
         String categoryName,
-        Double price,
+        BigDecimal price,
         String status,
         Boolean active,
         Integer discount,

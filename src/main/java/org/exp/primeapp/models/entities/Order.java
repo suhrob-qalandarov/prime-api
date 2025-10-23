@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.exp.primeapp.models.base.BaseEntity;
 import org.exp.primeapp.models.enums.OrderStatus;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +27,8 @@ public class Order extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-
-    private Integer totalPrice;
+    private BigDecimal totalPrice;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> items = new ArrayList<>();
-
-
 }

@@ -2,6 +2,7 @@ package org.exp.primeapp.models.dto.responce.order;
 
 import lombok.Builder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,6 +12,6 @@ public record UserOrderRes(
         String status,
         LocalDateTime createdAt,
         List<UserOrderItemRes> orderItems,
-        Long totalSum
+        BigDecimal totalSum
 ) {
 }

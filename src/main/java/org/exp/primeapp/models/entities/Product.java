@@ -11,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 import org.exp.primeapp.models.base.BaseEntity;
 import org.exp.primeapp.models.enums.ProductStatus;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +31,8 @@ public class Product extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private Double price;
+    private BigDecimal price;
+    private BigDecimal costPrice;
     private Integer discount;
 
     @Enumerated(EnumType.STRING)

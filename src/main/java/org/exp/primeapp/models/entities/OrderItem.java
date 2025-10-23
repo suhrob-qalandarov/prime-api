@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.exp.primeapp.models.base.BaseEntity;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,5 +31,5 @@ public class OrderItem extends BaseEntity {
 
     private Integer quantity;
 
-    private Double price;
+    private BigDecimal price;
 }

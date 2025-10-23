@@ -3,6 +3,7 @@ package org.exp.primeapp.models.dto.responce.admin;
 import lombok.Builder;
 import org.exp.primeapp.models.dto.responce.user.ProductSizeRes;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Builder
@@ -10,7 +11,7 @@ public record AdminProductViewRes(
         Long id,
         String name,
         String description,
-        Double price,
+        BigDecimal price,
         Boolean active,
         String status,
         Integer discount,

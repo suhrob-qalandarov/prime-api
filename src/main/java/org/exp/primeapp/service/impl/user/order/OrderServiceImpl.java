@@ -14,6 +14,8 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,19 +58,25 @@ public class OrderServiceImpl implements OrderService {
                 .status(order.getStatus().name())
                 .createdAt(order.getCreatedAt())
                 .orderItems(order.getItems().stream()
-                        .map(orderItem -> UserOrderItemRes.builder()
-                                .name(orderItem.getProduct().getName())
-                                .imageKey(orderItem.getProduct().getAttachments().stream()
-                                        .findFirst()
-                                        .toString())
-                                .size(orderItem.getProductSize().getSize().name())
-                                .price(orderItem.getPrice())
-                                .discount(orderItem.getProduct().getDiscount())
-                                .count(orderItem.getQuantity())
-                                .totalSum((long) (orderItem.getQuantity() * calculateItemPrice(orderItem.getProduct())))
-                                .build())
+                        .map(orderItem -> {
+                            BigDecimal itemPrice = calculateItemPrice(orderItem.getProduct());
+                            BigDecimal totalSum = itemPrice.multiply(BigDecimal.valueOf(orderItem.getQuantity()));
+
+                            return UserOrderItemRes.builder()
+                                    .name(orderItem.getProduct().getName())
+                                    .imageKey(orderItem.getProduct().getAttachments().stream()
+                                            .findFirst()
+                                            .map(Object::toString)
+                                            .orElse(null))
+                                    .size(orderItem.getProductSize().getSize().name())
+                                    .price(itemPrice.setScale(2, RoundingMode.HALF_UP))
+                                    .discount(orderItem.getProduct().getDiscount())
+                                    .count(orderItem.getQuantity())
+                                    .totalSum(totalSum.setScale(2, RoundingMode.HALF_UP))
+                                    .build();
+                        })
                         .toList())
-                .totalSum((long)order.getTotalPrice())
+                .totalSum(order.getTotalPrice().setScale(2, RoundingMode.HALF_UP))
                 .build();
     }
 
@@ -82,9 +90,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
-        order.setTotalPrice(0);
+        order.setTotalPrice(BigDecimal.ZERO);
 
-        double totalPrice = 0.0;
+        BigDecimal totalPrice = BigDecimal.ZERO;
         List<OrderItem> orderItemsList = new ArrayList<>();
 
         try {
@@ -93,10 +101,13 @@ public class OrderServiceImpl implements OrderService {
                         itemDTO.getProductId(), itemDTO.getProductSizeId(), itemDTO.getQuantity());
 
                 Product product = fetchProduct(itemDTO.getProductId());
-                ProductSize productSize = fetchAndValidateProductSize(itemDTO.getProductSizeId(), product.getId(), itemDTO.getQuantity());
+                ProductSize productSize = fetchAndValidateProductSize(
+                        itemDTO.getProductSizeId(), product.getId(), itemDTO.getQuantity());
 
-                double itemPrice = calculateItemPrice(product);
-                totalPrice += itemPrice * itemDTO.getQuantity();
+                BigDecimal itemPrice = calculateItemPrice(product);
+                BigDecimal itemTotal = itemPrice.multiply(BigDecimal.valueOf(itemDTO.getQuantity()));
+
+                totalPrice = totalPrice.add(itemTotal);
 
                 OrderItem orderItem = createOrderItem(order, product, productSize, itemDTO.getQuantity(), itemPrice);
                 orderItemsList.add(orderItem);
@@ -105,7 +116,7 @@ public class OrderServiceImpl implements OrderService {
             }
 
             order.setItems(orderItemsList);
-            order.setTotalPrice((int) totalPrice);
+            order.setTotalPrice(totalPrice.setScale(2, RoundingMode.HALF_UP));
             Order savedOrder = orderRepository.save(order);
 
             log.info("Buyurtma muvaffaqiyatli yaratildi. UserId: {}, OrderId: {}", userId, savedOrder.getId());
@@ -138,16 +149,20 @@ public class OrderServiceImpl implements OrderService {
         return productSize;
     }
 
-    private double calculateItemPrice(Product product) {
-        double price = product.getPrice();
+    private BigDecimal calculateItemPrice(Product product) {
+        BigDecimal price = product.getPrice();
         Integer discount = product.getDiscount();
+
         if (discount != null && discount > 0) {
-            price = price * (1 - discount / 100.0);
+            BigDecimal discountPercent = BigDecimal.valueOf(discount)
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+            price = price.subtract(price.multiply(discountPercent));
         }
-        return price;
+
+        return price.setScale(2, RoundingMode.HALF_UP);
     }
 
-    private OrderItem createOrderItem(Order order, Product product, ProductSize productSize, int quantity, double price) {
+    private OrderItem createOrderItem(Order order, Product product, ProductSize productSize, int quantity, BigDecimal price) {
         OrderItem orderItem = new OrderItem();
         orderItem.setOrder(order);
         orderItem.setProduct(product);
