@@ -3,11 +3,11 @@ package org.exp.primeapp.configs.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -37,45 +37,76 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(auth ->
                 auth
+                        // Public endpoints (Swagger, etc.)
                         .requestMatchers(
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
+                        // Public auth endpoint
                         .requestMatchers(
-                                "POST",
+                                HttpMethod.POST,
                                 API + V1 + AUTH + "/code/*"
                         ).permitAll()
 
-                       .requestMatchers(
-                               "GET",
-                               API + V1 + PRODUCT + WAY_ALL
-                       ).permitAll()
+                        // Public product endpoints
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                API + V1 + PRODUCT + WAY_ALL
+                        ).permitAll()
 
-                       .requestMatchers(
-                               "GET",
-                               API + V1 + PRODUCTS,
-                               API + V1 + PRODUCTS + BY_CATEGORY + "/*"
-                       ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                API + V1 + PRODUCTS,
+                                API + V1 + PRODUCTS + BY_CATEGORY + "/*"
+                        ).permitAll()
 
-                       .requestMatchers(
-                               "GET",
-                               API + V1 + CATEGORY,
-                               API + V1 + CATEGORY + WAY_ALL
-                       ).permitAll()
+                        // Public category endpoints
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                API + V1 + CATEGORY,
+                                API + V1 + CATEGORY + WAY_ALL
+                        ).permitAll()
 
-                       .requestMatchers(
-                               "GET",
-                               API + V1 + CATEGORIES,
-                               API + V1 + CATEGORIES + WAY_ALL
-                       ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                API + V1 + CATEGORIES,
+                                API + V1 + CATEGORIES + WAY_ALL
+                        ).permitAll()
 
-                       .requestMatchers(
-                               "GET",
-                               API + V1 + ATTACHMENT + "/*"
-                       ).permitAll()
+                        // Public attachment endpoint
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                API + V1 + ATTACHMENT + "/*"
+                        ).permitAll()
 
+                        // Allow GET requests to AdminProductController for ROLE_ADMIN and ROLE_VISITOR
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                API + V1 + ADMIN + PRODUCT,
+                                API + V1 + ADMIN + PRODUCT + "/dashboard",
+                                API + V1 + ADMIN + PRODUCT + "/*"
+                        ).hasAnyRole("ADMIN", "VISITOR")
+
+                        // Restrict all other AdminProductController endpoints to ROLE_ADMIN
+                        .requestMatchers(
+                                API + V1 + ADMIN + PRODUCT + "/**"
+                        ).hasRole("ADMIN")
+
+                        // Allow GET requests to AdminAttachmentController for ROLE_ADMIN and ROLE_VISITOR
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                API + V1 + ADMIN + ATTACHMENT + "/{attachmentId}",
+                                API + V1 + ADMIN + ATTACHMENT + "/with-key/{attachmentKey}"
+                        ).hasAnyRole("ADMIN", "VISITOR")
+
+                        // Restrict all other AdminAttachmentController endpoints to ROLE_ADMIN
+                        .requestMatchers(
+                                API + V1 + ADMIN + ATTACHMENT + "/**"
+                        ).hasRole("ADMIN")
+
+                        // All other requests require authentication
                         .anyRequest().authenticated()
         );
 
