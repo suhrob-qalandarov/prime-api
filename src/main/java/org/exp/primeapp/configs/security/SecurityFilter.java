@@ -21,7 +21,7 @@ import static org.exp.primeapp.utils.Const.*;
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final JwtCookieService jwtService;
 
     @Override
     protected void doFilterInternal(
