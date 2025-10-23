@@ -50,6 +50,7 @@ public interface Const {
     String ROLE_MEGA_SUPER_ADMIN ="ROLE_MEGA_SUPER_ADMIN";
     String ROLE_SUPER_ADMIN ="ROLE_SUPER_ADMIN";
     String ROLE_ADMIN ="ROLE_ADMIN";
+    String ROLE_VISITOR ="ROLE_VISITOR";
     String ROLE_USER ="ROLE_USER";
 
 }
