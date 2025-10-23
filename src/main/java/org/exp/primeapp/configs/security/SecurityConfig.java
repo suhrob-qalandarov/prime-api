@@ -32,7 +32,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http, SecurityFilter mySecurityFilter) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http, JwtCookieFilter mySecurityFilter) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(auth ->

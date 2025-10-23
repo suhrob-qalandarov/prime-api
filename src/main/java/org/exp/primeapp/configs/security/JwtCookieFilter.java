@@ -19,7 +19,7 @@ import static org.exp.primeapp.utils.Const.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SecurityFilter extends OncePerRequestFilter {
+public class JwtCookieFilter extends OncePerRequestFilter {
 
     private final JwtCookieService jwtService;
 
