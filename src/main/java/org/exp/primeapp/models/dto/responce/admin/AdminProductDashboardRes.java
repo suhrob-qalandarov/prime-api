@@ -1,16 +1,16 @@
 package org.exp.primeapp.models.dto.responce.admin;
 
 import lombok.*;
-
 import java.util.List;
 
 @Builder
 public record AdminProductDashboardRes(
-        long count,
+        long totalCount,
         long activeCount,
         long inactiveCount,
-        List<AdminProductRes> productResList,
-        List<AdminProductRes> ActiveProductResList,
-        List<AdminProductRes> InactiveProductResList
-) {
-}
+        long newCount,
+        long hotCount,
+        long saleCount,
+        String responseDate,
+        List<AdminProductRes> productResList
+) {}

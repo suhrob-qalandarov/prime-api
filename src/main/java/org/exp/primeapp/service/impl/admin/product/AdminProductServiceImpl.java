@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
-import org.exp.primeapp.models.dto.responce.admin.AdminProductViewRes;
 import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.dto.responce.user.ProductSizeRes;
 import org.exp.primeapp.models.entities.*;
@@ -20,7 +19,8 @@ import org.springframework.stereotype.Service;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,26 +31,36 @@ public class AdminProductServiceImpl implements AdminProductService {
     private final AttachmentRepository attachmentRepository;
     private final ProductIncomeRepository productIncomeRepository;
 
-
-    @Override
     @Transactional
-    public AdminProductDashboardRes getProductDashboarRes() {
-        List<AdminProductRes> productResList = productRepository.findAll().stream().map(this::convertToAdminProductRes).toList();
-        List<AdminProductRes> productResByActive = productRepository.findAllByActive(true).stream().map(this::convertToAdminProductRes).toList();
-        List<AdminProductRes> productResByInactive = productRepository.findAllByActive(false).stream().map(this::convertToAdminProductRes).toList();
+    public AdminProductDashboardRes getProductDashboardRes() {
+        List<AdminProductRes> productResList = productRepository.findAll()
+                .stream()
+                .map(this::convertToAdminProductRes)
+                .toList();
 
-        long count = productRepository.count();
-        long countedByActive = productRepository.countByActive(true);
-        long countedByInactive = productRepository.countByActive(false);
+        long totalCount = productResList.size();
+        long activeCount = productResList.stream().filter(AdminProductRes::active).count();
+        long inactiveCount = productResList.stream().filter(p -> !p.active()).count();
+
+        long newCount = getCountByStatus(productResList, ProductStatus.NEW);
+        long hotCount = getCountByStatus(productResList, ProductStatus.HOT);
+        long saleCount = getCountByStatus(productResList, ProductStatus.SALE);
 
         return AdminProductDashboardRes.builder()
-                .count(count)
-                .activeCount(countedByActive)
-                .inactiveCount(countedByInactive)
+                .totalCount(totalCount)
+                .activeCount(activeCount)
+                .inactiveCount(inactiveCount)
+                .newCount(newCount)
+                .hotCount(hotCount)
+                .saleCount(saleCount)
                 .productResList(productResList)
-                .ActiveProductResList(productResByActive)
-                .InactiveProductResList(productResByInactive)
                 .build();
+    }
+
+    private long getCountByStatus(List<AdminProductRes> productResList, ProductStatus status) {
+        Map<String, Long> countByStatus = productResList.stream()
+                .collect(Collectors.groupingBy(AdminProductRes::status, Collectors.counting()));
+        return countByStatus.getOrDefault(status.name(), 0L);
     }
 
     @Override
@@ -65,43 +75,37 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     @Transactional
     public AdminProductRes convertToAdminProductRes(Product product) {
-        return new AdminProductRes(
-                product.getId(),
-                product.getName(),
-                product.getBrand(),
-                product.getDescription(),
-                product.getAttachments().stream().map(Attachment::getKey).toList(),
-                product.getCategory().getName(),
-                product.getPrice(),
-                product.getStatus().name(),
-                product.getActive(),
-                product.getDiscount(),
-                product.getCreatedAt(),
-                product.getSizes().size()
-        );
-    }
-
-    @Override
-    public AdminProductViewRes getProductById(Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found with telegramId: " + productId));
-        List<ProductSizeRes> productSizeReslist = product.getSizes().stream().map(size -> new ProductSizeRes(size.getId(), size.getSize(), size.getAmount())).toList();
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-
-        return AdminProductViewRes.builder()
+        List<ProductSizeRes> productSizeReslist = product.getSizes().stream()
+                .map(size -> ProductSizeRes.builder()
+                        .id(size.getId())
+                        .size(size.getSize())
+                        .amount(size.getAmount())
+                        .build())
+                .toList();
+        List<String> picturesKeyList = product.getAttachments().stream().map(Attachment::getKey).toList();
+        return AdminProductRes.builder()
                 .id(product.getId())
                 .name(product.getName())
+                .brand(product.getBrand())
                 .description(product.getDescription())
-                .price(product.getPrice())
-                .active(product.getActive())
-                .status(product.getStatus().name())
-                .discount(product.getDiscount())
                 .categoryName(product.getCategory().getName())
-                .attachmentKeys(product.getAttachments().stream().map(Attachment::getKey).toList())
-                .productSizeRes(productSizeReslist)
+                .price(product.getPrice())
+                .status(product.getStatus().name())
+                .active(product.getActive())
+                .discount(product.getDiscount())
                 .createdAt(product.getCreatedAt().format(formatter))
+                .picturesKeys(picturesKeyList)
+                .productSizeRes(productSizeReslist)
                 .build();
+    }
+
+    @Transactional
+    @Override
+    public AdminProductRes getProductById(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with telegramId: " + productId));
+        return convertToAdminProductRes(product);
     }
 
     @Transactional
@@ -228,7 +232,7 @@ public class AdminProductServiceImpl implements AdminProductService {
     }
 
     @Transactional
-    @Override
+    //@Override
     public ApiResponse deactivateProduct(Long productId) {
         int affected = productRepository.updateActive(false, productId);
         if (affected > 0) {
@@ -239,12 +243,12 @@ public class AdminProductServiceImpl implements AdminProductService {
     }
 
 
-    @Override
+    //@Override
     public List<Product> getActiveProductsForAdmin() {
         return productRepository.findAllByActive(true);
     }
 
-    @Override
+    //@Override
     public List<Product> getInactiveProductsForAdmin() {
         return productRepository.findAllByActive(false);
     }
