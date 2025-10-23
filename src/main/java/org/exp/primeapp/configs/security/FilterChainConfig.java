@@ -27,7 +27,7 @@ import static org.exp.primeapp.utils.Const.*;
 @EnableMethodSecurity
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class FilterChainConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
 
