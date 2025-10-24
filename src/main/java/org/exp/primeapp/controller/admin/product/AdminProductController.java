@@ -12,12 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import static org.exp.primeapp.utils.Const.*;
 
 @RestController
-@RequestMapping(API + V1 + ADMIN + PRODUCT)
+@RequestMapping(API + V2 + ADMIN + PRODUCT)
 @RequiredArgsConstructor
 public class AdminProductController {
 

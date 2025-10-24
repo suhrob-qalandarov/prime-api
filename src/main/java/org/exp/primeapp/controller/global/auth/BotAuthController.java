@@ -16,7 +16,7 @@ import static org.exp.primeapp.utils.Const.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(API + V1 + AUTH)
+@RequestMapping(API + V2 + AUTH)
 public class BotAuthController {
 
     private final AuthService authService;
