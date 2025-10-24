@@ -1,0 +1,27 @@
+package org.exp.primeapp.controller.admin.product;
+
+import lombok.RequiredArgsConstructor;
+import org.exp.primeapp.service.interfaces.admin.product.AdminSizeService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.exp.primeapp.utils.Const.*;
+
+@RestController
+@RequestMapping(API + V1 + ADMIN + PRODUCT + SIZE)
+@RequiredArgsConstructor
+public class AdminProductSizeController {
+
+    private final AdminSizeService adminSizeService;
+
+    @GetMapping
+    public ResponseEntity<List<Map<String, String>>> getSizes() {
+        return ResponseEntity.ok(adminSizeService.getSizeList());
+    }
+}
