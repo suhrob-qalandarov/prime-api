@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
-import org.exp.primeapp.models.dto.responce.global.ApiResponse;
 import org.exp.primeapp.models.dto.responce.user.ProductSizeRes;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.enums.ProductStatus;
@@ -70,8 +69,12 @@ public class AdminProductServiceImpl implements AdminProductService {
     }
 
     @Override
-    public void toggleProductUpdate(Long productId) {
+    @Transactional
+    public AdminProductRes toggleProductUpdate(Long productId) {
         productRepository.toggleProductUpdateStatus(productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow();
+        return convertToAdminProductRes(product);
     }
 
     @Transactional
@@ -174,14 +177,12 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     @Transactional
     @Override
-    public ApiResponse updateProduct(Long productId, ProductReq productReq) {
+    public AdminProductRes  updateProduct(Long productId, ProductReq productReq) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with productId: " + productId));
-
         updateProductFields(product, productReq);
-        productRepository.save(product);
-
-        return new ApiResponse(true, "Product updated successfully with id: " + productId);
+        Product updatedProduct = productRepository.save(product);
+        return convertToAdminProductRes(updatedProduct);
     }
 
     private void updateProductFields(Product product, ProductReq req) {
