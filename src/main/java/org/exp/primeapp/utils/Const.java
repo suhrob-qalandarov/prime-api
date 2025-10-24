@@ -39,6 +39,7 @@ public interface Const {
     String ATTACHMENTS = "/attachments";
     String PRODUCT = "/product";
     String PRODUCTS = "/products";
+    String SIZE = "/size";
     String INACTIVE = "/inactive";
     String BY_CATEGORY = "/by-category";
     String ORDER = "/order";
