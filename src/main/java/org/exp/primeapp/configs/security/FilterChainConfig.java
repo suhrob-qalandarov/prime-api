@@ -94,6 +94,11 @@ public class FilterChainConfig {
                                 API + V1 + ADMIN + PRODUCT + "/**"
                         ).hasRole("ADMIN")
 
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                API + V2 + ADMIN + PRODUCT + SIZE
+                        ).hasAnyRole("ADMIN", "VISITOR")
+
                         // Allow GET requests to AdminAttachmentController for ROLE_ADMIN and ROLE_VISITOR
                         .requestMatchers(
                                 HttpMethod.GET,
