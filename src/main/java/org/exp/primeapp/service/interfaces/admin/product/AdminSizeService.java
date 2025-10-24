@@ -1,11 +1,11 @@
 package org.exp.primeapp.service.interfaces.admin.product;
 
+import org.exp.primeapp.models.dto.responce.admin.AdminSizeRes;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public interface AdminSizeService {
-    List<Map<String, String>> getSizeList();
+    List<AdminSizeRes> getSizeList();
 }
