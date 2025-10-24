@@ -6,6 +6,7 @@ public interface Const {
     String API = "/api";
     //String VERSION = "/version";
     String V1 = "/v1";
+    String V2 = "/v2";
 
     String AUTH_HEADER = "Authorization";
     String AUTHORIZATION = "Authorization";
