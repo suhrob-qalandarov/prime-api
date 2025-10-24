@@ -153,14 +153,14 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .build();
 
         // ProductSize'larni qo‘shamiz
-        if (req.productSizes() != null) {
+        /*if (req.productSizes() != null) {
             req.productSizes().forEach(sizeReq -> {
                 ProductSize productSize = new ProductSize();
                 productSize.setSize(sizeReq.size());
                 productSize.setAmount(sizeReq.amount());
                 product.addSize(productSize);
             });
-        }
+        }*/
 
         return product;
     }
@@ -217,7 +217,7 @@ public class AdminProductServiceImpl implements AdminProductService {
         }*/
 
         // ProductSize'larni yangilaymiz
-        if (req.productSizes() != null) {
+        /*if (req.productSizes() != null) {
             product.getSizes().clear();
             req.productSizes().forEach(sizeReq -> {
                 ProductSize productSize = new ProductSize();
@@ -225,7 +225,7 @@ public class AdminProductServiceImpl implements AdminProductService {
                 productSize.setAmount(sizeReq.amount());
                 product.addSize(productSize);
             });
-        }
+        }*/
     }
 
     private boolean hasText(String str) {
