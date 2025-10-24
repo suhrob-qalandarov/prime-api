@@ -47,7 +47,7 @@ public class FilterChainConfig {
                         // Public auth endpoint
                         .requestMatchers(
                                 HttpMethod.POST,
-                                API + V1 + AUTH + "/code/*"
+                                API + V2 + AUTH + "/code/*"
                         ).permitAll()
 
                         // Public product endpoints
@@ -84,14 +84,14 @@ public class FilterChainConfig {
                         // Allow GET requests to AdminProductController for ROLE_ADMIN and ROLE_VISITOR
                         .requestMatchers(
                                 HttpMethod.GET,
-                                API + V1 + ADMIN + PRODUCT,
-                                API + V1 + ADMIN + PRODUCT + "/dashboard",
-                                API + V1 + ADMIN + PRODUCT + "/*"
+                                API + V2 + ADMIN + PRODUCT,
+                                API + V2 + ADMIN + PRODUCT + "/dashboard",
+                                API + V2 + ADMIN + PRODUCT + "/*"
                         ).hasAnyRole("ADMIN", "VISITOR")
 
                         // Restrict all other AdminProductController endpoints to ROLE_ADMIN
                         .requestMatchers(
-                                API + V1 + ADMIN + PRODUCT + "/**"
+                                API + V2 + ADMIN + PRODUCT + "/**"
                         ).hasRole("ADMIN")
 
                         .requestMatchers(
