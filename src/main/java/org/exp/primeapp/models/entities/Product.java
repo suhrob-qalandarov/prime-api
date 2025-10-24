@@ -55,11 +55,17 @@ public class Product extends BaseEntity {
     private Set<ProductSize> sizes = new HashSet<>();
 
     public void addSize(ProductSize productSize) {
-        if (sizes.stream().noneMatch(ps -> ps.getSize() == productSize.getSize())) {
+        ProductSize existing = sizes.stream()
+                .filter(ps -> ps.getSize().equals(productSize.getSize()))
+                .findFirst()
+                .orElse(null);
+
+        if (existing == null) {
             productSize.setProduct(this);
             sizes.add(productSize);
         } else {
-            throw new IllegalArgumentException("Product already has a size: " + productSize.getSize());
+            int newAmount = existing.getAmount() + productSize.getAmount();
+            existing.setAmount(newAmount);
         }
     }
 }
