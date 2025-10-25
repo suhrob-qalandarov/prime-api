@@ -3,6 +3,7 @@ package org.exp.primeapp.service.impl.user;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.CategoryReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
+import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
 import org.exp.primeapp.models.entities.Category;
@@ -11,15 +12,20 @@ import org.exp.primeapp.repository.CategoryRepository;
 import org.exp.primeapp.repository.ProductRepository;
 import org.exp.primeapp.service.face.user.CategoryService;
 import org.jspecify.annotations.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
+
+    @Value("${app.categories.update-offset-minutes}")
+    private long updateOffsetMinutes;
 
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
@@ -46,46 +52,31 @@ public class CategoryServiceImpl implements CategoryService {
                 .toList();
     }
 
-    //@Override
-    public CategoryRes getCategoryResById(Long categoryId) {
+    @Override
+    public AdminCategoryRes getAdminCategoryResById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found with telegramId: " + categoryId));
-        return convertToCategoryRes(category);
+        return convertToAdminCategoryRes(category);
     }
 
-    //@Override
-    public List<Category> getCategories() {
-        return categoryRepository.findAll();
-    }
-
-    @Transactional
     public AdminCategoryDashboardRes getCategoryDashboardRes() {
         List<AdminCategoryRes> categoryResList = categoryRepository.findAllByOrderByOrderNumberAsc().stream()
                 .map(this::convertToAdminCategoryRes)
                 .toList();
-        List<AdminCategoryRes> activeCategoryResList = categoryRepository.findAllByActiveTrueOrderByOrderNumberAsc().stream()
-                .map(this::convertToAdminCategoryRes)
-                .toList();
-        List<AdminCategoryRes> inactiveCategoryResList = categoryRepository.findAllByActiveFalseOrderByOrderNumberAsc().stream()
-                .map(this::convertToAdminCategoryRes)
-                .toList();
+
+        long totalCount = categoryResList.size();
+        long activeCount = categoryResList.stream().filter(AdminCategoryRes::active).count();
+        long inactiveCount = categoryResList.stream().filter(p -> !p.active()).count();
+
         return AdminCategoryDashboardRes.builder()
-                .count(categoryResList.size())
-                .activeCount(activeCategoryResList.size())
-                .inactiveCount(inactiveCategoryResList.size())
+                .totalCount(totalCount)
+                .activeCount(activeCount)
+                .inactiveCount(inactiveCount)
+                .responseDate(LocalDateTime.now().plusMinutes(updateOffsetMinutes))
                 .categoryResList(categoryResList)
-                .activeCategoryResList(activeCategoryResList)
-                .inactiveCategoryResList(inactiveCategoryResList)
                 .build();
     }
 
-    @Transactional
-    @Override
-    public Category getCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(RuntimeException::new);
-    }
-
-    @Transactional
     @Override
     public AdminCategoryRes saveCategory(@NonNull CategoryReq categoryReq) {
         Category saved = categoryRepository.save(
@@ -174,7 +165,6 @@ public class CategoryServiceImpl implements CategoryService {
         );
     }
 
-    @Transactional
     public AdminCategoryRes convertToAdminCategoryRes(@NonNull Category category) {
         return new AdminCategoryRes(
                 category.getId(),

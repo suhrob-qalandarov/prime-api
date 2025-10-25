@@ -4,18 +4,17 @@ import org.exp.primeapp.models.dto.request.CategoryReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryDashboardRes;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminCategoryRes;
-import org.exp.primeapp.models.entities.Category;
 
 import java.util.List;
 import java.util.Map;
 
 public interface CategoryService {
 
-    Category getCategoryById(Long categoryId);
-
     AdminCategoryDashboardRes getCategoryDashboardRes();
 
     List<CategoryRes> getResCategories();
+
+    AdminCategoryRes getAdminCategoryResById(Long categoryId);
 
     AdminCategoryRes saveCategory(CategoryReq categoryReq);
 
