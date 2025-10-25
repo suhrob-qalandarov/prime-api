@@ -12,6 +12,9 @@ public interface Const {
     String AUTHORIZATION = "Authorization";
     String TOKEN_PREFIX = "Bearer ";
 
+    String SETTING = "/setting";
+    String SETTINGS = "/settings";
+
     String AUTH = "/auth";
     String LOGIN = "/login";
     String REGISTER = "/register";
