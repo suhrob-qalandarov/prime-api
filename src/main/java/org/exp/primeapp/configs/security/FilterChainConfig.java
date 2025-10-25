@@ -111,6 +111,11 @@ public class FilterChainConfig {
                                 API + V1 + ADMIN + ATTACHMENT + "/**"
                         ).hasRole("ADMIN")
 
+                        // Setting path security
+                        .requestMatchers(
+                                API + V1 + ADMIN + SETTING + "/**"
+                        ).hasRole("SUPER_ADMIN")
+
                         // All other requests require authentication
                         .anyRequest().authenticated()
         );
