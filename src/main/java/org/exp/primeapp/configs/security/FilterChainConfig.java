@@ -89,6 +89,15 @@ public class FilterChainConfig {
                                 API + V2 + ADMIN + PRODUCT + "/*"
                         ).hasAnyRole("ADMIN", "VISITOR")
 
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                API + V2 + ADMIN + CATEGORY + WAY_ALL
+                        ).hasAnyRole("ADMIN", "VISITOR")
+
+                        .requestMatchers(
+                                API + V2 + ADMIN + CATEGORY + "/**"
+                        ).hasRole("ADMIN")
+
                         // Restrict all other AdminProductController endpoints to ROLE_ADMIN
                         .requestMatchers(
                                 API + V2 + ADMIN + PRODUCT + "/**"
