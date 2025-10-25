@@ -1,6 +1,8 @@
 package org.exp.primeapp.models.dto.responce.admin;
 
 import lombok.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -11,6 +13,6 @@ public record AdminProductDashboardRes(
         long newCount,
         long hotCount,
         long saleCount,
-        String responseDate,
+        LocalDateTime responseDate,
         List<AdminProductRes> productResList
-) {}
+){}

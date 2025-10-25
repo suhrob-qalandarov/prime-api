@@ -13,8 +13,10 @@ import org.exp.primeapp.repository.CategoryRepository;
 import org.exp.primeapp.repository.ProductIncomeRepository;
 import org.exp.primeapp.repository.ProductRepository;
 import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
@@ -25,10 +27,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminProductServiceImpl implements AdminProductService {
 
+    @Value("${app.products.update-offset-minutes}")
+    private long updateOffsetMinutes;
+
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
     private final ProductIncomeRepository productIncomeRepository;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     @Override
     @Transactional
@@ -55,6 +61,7 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .newCount(newCount)
                 .hotCount(hotCount)
                 .saleCount(saleCount)
+                .responseDate(LocalDateTime.now().plusMinutes(updateOffsetMinutes))
                 .productResList(productResList)
                 .build();
     }
@@ -79,7 +86,6 @@ public class AdminProductServiceImpl implements AdminProductService {
 
     @Transactional
     public AdminProductRes convertToAdminProductRes(Product product) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         List<ProductSizeRes> productSizeReslist = product.getSizes().stream()
                 .map(size -> ProductSizeRes.builder()
                         .id(size.getId())

@@ -20,5 +20,4 @@ public record AdminProductRes(
         String createdAt,
         List<String> picturesKeys,
         List<ProductSizeRes> productSizeRes
-) {
-}
+){}
