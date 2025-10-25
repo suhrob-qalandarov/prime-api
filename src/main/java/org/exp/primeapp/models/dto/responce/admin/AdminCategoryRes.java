@@ -8,6 +8,6 @@ public record AdminCategoryRes(
         String name,
         String spotlightName,
         Long order,
-        Boolean active
-) {
-}
+        Boolean active,
+        long productsCount
+){}
