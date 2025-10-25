@@ -9,5 +9,6 @@ public record AdminCategoryRes(
         String spotlightName,
         Long order,
         Boolean active,
-        long productsCount
+        long productsCount,
+        String createdAt
 ){}
