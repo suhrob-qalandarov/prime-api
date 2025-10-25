@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     @Override
     public List<CategoryRes> getResCategoriesBySpotlightName(String spotlightName) {
@@ -172,7 +175,8 @@ public class CategoryServiceImpl implements CategoryService {
                 category.getSpotlightName(),
                 category.getOrderNumber(),
                 category.getActive(),
-                countByCategory
+                countByCategory,
+                category.getCreatedAt().format(formatter)
         );
     }
 
