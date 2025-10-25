@@ -7,6 +7,7 @@ import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.service.face.admin.attachment.AdminAttachmentService;
 import org.exp.primeapp.utils.AttachmentUtilService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,7 @@ public class AdminAttachmentController {
     private final AttachmentUtilService attachmentUtilService;
 
     @GetMapping("/{attachmentId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'VISITOR')")
     public ResponseEntity<Attachment> getAttachment(@PathVariable Long attachmentId) {
         log.debug("Fetching attachment with ID: {}", attachmentId);
         return ResponseEntity.ok(attachmentUtilService.getAttachment(attachmentId));
@@ -36,6 +38,7 @@ public class AdminAttachmentController {
     }
 
     @PostMapping("/oneupload")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AttachmentRes> uploadFile(@RequestParam("file") MultipartFile file) {
         log.debug("Uploading single file: {}", file.getOriginalFilename());
         Attachment attachment = adminAttachmentService.uploadOne(file);
@@ -49,6 +52,7 @@ public class AdminAttachmentController {
     }
 
     @PostMapping("/multiupload")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<String>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
         log.debug("Uploading multiple files: {}", files.length);
         List<Attachment> uploadedFiles = adminAttachmentService.uploadMultiple(files);
@@ -58,6 +62,7 @@ public class AdminAttachmentController {
 
 
     @PutMapping("/{attachmentId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AttachmentRes> updateFile(@PathVariable Long attachmentId, @RequestParam("file") MultipartFile file) {
         log.debug("Updating attachment ID: {}", attachmentId);
         AttachmentRes response = adminAttachmentService.update(attachmentId, file);
