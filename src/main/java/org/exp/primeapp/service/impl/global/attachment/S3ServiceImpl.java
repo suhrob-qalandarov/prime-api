@@ -2,7 +2,7 @@ package org.exp.primeapp.service.impl.global.attachment;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.exp.primeapp.service.interfaces.global.attachment.S3Service;
+import org.exp.primeapp.service.face.global.attachment.S3Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

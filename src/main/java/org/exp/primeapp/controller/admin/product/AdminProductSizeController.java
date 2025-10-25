@@ -2,7 +2,7 @@ package org.exp.primeapp.controller.admin.product;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.admin.AdminSizeRes;
-import org.exp.primeapp.service.interfaces.admin.product.AdminSizeService;
+import org.exp.primeapp.service.face.admin.product.AdminSizeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -9,7 +9,7 @@ import org.exp.primeapp.models.entities.Category;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.repository.CategoryRepository;
 import org.exp.primeapp.repository.ProductRepository;
-import org.exp.primeapp.service.interfaces.user.CategoryService;
+import org.exp.primeapp.service.face.user.CategoryService;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

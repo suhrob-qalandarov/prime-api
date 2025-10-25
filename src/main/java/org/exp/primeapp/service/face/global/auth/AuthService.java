@@ -1,4 +1,4 @@
-package org.exp.primeapp.service.interfaces.global.auth;
+package org.exp.primeapp.service.face.global.auth;
 
 
 import jakarta.servlet.http.HttpServletResponse;

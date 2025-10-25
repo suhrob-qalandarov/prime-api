@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.dto.request.CreateOrderReq;
 import org.exp.primeapp.models.dto.responce.order.UserOrderRes;
 import org.exp.primeapp.models.dto.responce.order.UserProfileOrdersRes;
-import org.exp.primeapp.service.interfaces.user.OrderService;
+import org.exp.primeapp.service.face.user.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

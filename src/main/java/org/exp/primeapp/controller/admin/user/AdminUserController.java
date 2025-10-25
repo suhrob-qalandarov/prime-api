@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.admin.AdminUserDashboardRes;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.repository.UserRepository;
-import org.exp.primeapp.service.interfaces.user.UserService;
+import org.exp.primeapp.service.face.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

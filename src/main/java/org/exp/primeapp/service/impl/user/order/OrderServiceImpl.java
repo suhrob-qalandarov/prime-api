@@ -9,7 +9,7 @@ import org.exp.primeapp.models.dto.responce.order.UserProfileOrdersRes;
 import org.exp.primeapp.models.entities.*;
 import org.exp.primeapp.models.enums.OrderStatus;
 import org.exp.primeapp.repository.*;
-import org.exp.primeapp.service.interfaces.user.OrderService;
+import org.exp.primeapp.service.face.user.OrderService;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

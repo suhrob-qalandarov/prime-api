@@ -9,7 +9,7 @@ import org.exp.primeapp.models.dto.responce.user.page.PageRes;
 import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.models.entities.Product;
 import org.exp.primeapp.repository.ProductRepository;
-import org.exp.primeapp.service.interfaces.user.ProductService;
+import org.exp.primeapp.service.face.user.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,7 @@ package org.exp.primeapp.controller.user.product;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.user.ProductRes;
 import org.exp.primeapp.models.dto.responce.user.page.PageRes;
-import org.exp.primeapp.service.interfaces.user.ProductService;
+import org.exp.primeapp.service.face.user.ProductService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

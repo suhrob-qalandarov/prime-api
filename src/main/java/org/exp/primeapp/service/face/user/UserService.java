@@ -1,4 +1,4 @@
-package org.exp.primeapp.service.interfaces.user;
+package org.exp.primeapp.service.face.user;
 
 import org.exp.primeapp.models.dto.responce.admin.AdminUserDashboardRes;
 import org.exp.primeapp.models.dto.responce.user.UserRes;

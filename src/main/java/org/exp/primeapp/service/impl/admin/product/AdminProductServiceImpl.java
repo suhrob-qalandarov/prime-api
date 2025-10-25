@@ -12,7 +12,7 @@ import org.exp.primeapp.repository.AttachmentRepository;
 import org.exp.primeapp.repository.CategoryRepository;
 import org.exp.primeapp.repository.ProductIncomeRepository;
 import org.exp.primeapp.repository.ProductRepository;
-import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
+import org.exp.primeapp.service.face.admin.product.AdminProductService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

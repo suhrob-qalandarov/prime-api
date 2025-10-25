@@ -3,10 +3,9 @@ package org.exp.primeapp.service.impl.global.attachment;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.exp.primeapp.models.entities.Attachment;
 import org.exp.primeapp.repository.AttachmentRepository;
-import org.exp.primeapp.service.interfaces.global.attachment.AttachmentService;
-import org.exp.primeapp.service.interfaces.global.attachment.S3Service;
+import org.exp.primeapp.service.face.global.attachment.AttachmentService;
+import org.exp.primeapp.service.face.global.attachment.S3Service;
 import org.exp.primeapp.utils.AttachmentUtilService;
 import org.springframework.stereotype.Service;
 

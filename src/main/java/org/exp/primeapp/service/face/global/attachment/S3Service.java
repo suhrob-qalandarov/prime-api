@@ -1,4 +1,4 @@
-package org.exp.primeapp.service.interfaces.global.attachment;
+package org.exp.primeapp.service.face.global.attachment;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

@@ -2,7 +2,7 @@ package org.exp.primeapp.controller.user.category;
 
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.user.CategoryRes;
-import org.exp.primeapp.service.interfaces.user.CategoryService;
+import org.exp.primeapp.service.face.user.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

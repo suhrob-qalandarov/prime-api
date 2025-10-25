@@ -11,7 +11,7 @@ import org.exp.primeapp.models.entities.OrderItem;
 import org.exp.primeapp.repository.OrderItemRepository;
 import org.exp.primeapp.repository.OrderRepository;
 import org.exp.primeapp.service.impl.user.ProductServiceImpl;
-import org.exp.primeapp.service.interfaces.admin.order.AdminOrderService;
+import org.exp.primeapp.service.face.admin.order.AdminOrderService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

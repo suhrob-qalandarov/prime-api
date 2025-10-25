@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.request.ProductReq;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductDashboardRes;
 import org.exp.primeapp.models.dto.responce.admin.AdminProductRes;
-import org.exp.primeapp.service.interfaces.admin.product.AdminProductService;
+import org.exp.primeapp.service.face.admin.product.AdminProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

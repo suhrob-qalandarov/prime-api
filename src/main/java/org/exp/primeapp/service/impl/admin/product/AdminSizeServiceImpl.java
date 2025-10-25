@@ -3,7 +3,7 @@ package org.exp.primeapp.service.impl.admin.product;
 import lombok.RequiredArgsConstructor;
 import org.exp.primeapp.models.dto.responce.admin.AdminSizeRes;
 import org.exp.primeapp.models.enums.Size;
-import org.exp.primeapp.service.interfaces.admin.product.AdminSizeService;
+import org.exp.primeapp.service.face.admin.product.AdminSizeService;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;

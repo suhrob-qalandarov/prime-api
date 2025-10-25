@@ -1,4 +1,4 @@
-package org.exp.primeapp.service.interfaces.admin.attachment;
+package org.exp.primeapp.service.face.admin.attachment;
 
 import org.exp.primeapp.models.dto.responce.global.AttachmentRes;
 import org.exp.primeapp.models.entities.Attachment;

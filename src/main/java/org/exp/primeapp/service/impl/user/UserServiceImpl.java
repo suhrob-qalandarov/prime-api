@@ -9,8 +9,8 @@ import org.exp.primeapp.models.dto.responce.user.UserRes;
 import org.exp.primeapp.models.entities.Role;
 import org.exp.primeapp.models.entities.User;
 import org.exp.primeapp.repository.UserRepository;
-import org.exp.primeapp.service.interfaces.user.OrderService;
-import org.exp.primeapp.service.interfaces.user.UserService;
+import org.exp.primeapp.service.face.user.OrderService;
+import org.exp.primeapp.service.face.user.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
