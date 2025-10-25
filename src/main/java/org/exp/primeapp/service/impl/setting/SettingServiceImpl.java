@@ -2,6 +2,7 @@ package org.exp.primeapp.service.impl.setting;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.exp.primeapp.models.entities.settings.Setting;
 import org.exp.primeapp.models.enums.setting.SettingType;
 import org.exp.primeapp.repository.setting.SettingRepository;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SettingServiceImpl implements SettingService {
@@ -87,5 +90,17 @@ public class SettingServiceImpl implements SettingService {
     @Override
     public List<Setting> getAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public Setting findByType(SettingType settingType) {
+        Optional<Setting> optionalSetting = repository.findByType(settingType);
+
+        if (optionalSetting.isEmpty()) {
+            log.warn("⚠️ Setting with type {} not found in database.", settingType);
+            return null;
+        }
+
+        return optionalSetting.get();
     }
 }

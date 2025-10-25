@@ -20,4 +20,6 @@ public interface SettingService {
     void update(String key, String value, SettingType type, String description);
 
     List<Setting> getAll();
+
+    Setting findByType(SettingType settingType);
 }
