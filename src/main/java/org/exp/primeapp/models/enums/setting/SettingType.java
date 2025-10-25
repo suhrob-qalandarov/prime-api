@@ -6,5 +6,6 @@ public enum SettingType {
     BOOLEAN,
     DECIMAL,
     DATETIME,
-    JSON
+    JSON,
+    BOT_TOKEN
 }
