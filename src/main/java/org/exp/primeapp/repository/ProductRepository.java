@@ -61,4 +61,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findAllByActive(boolean active, Pageable pageable);
     Page<Product> findAllByCategory_IdAndActive(Long categoryId, boolean active, Pageable pageable);
+
+    long countByCategory(Category category);
+
+    long countByCategoryId(Long categoryId);
 }
