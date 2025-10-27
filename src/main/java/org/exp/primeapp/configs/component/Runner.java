@@ -30,7 +30,7 @@ public class Runner implements CommandLineRunner {
                 new Role(ROLE_USER)
         ));
 
-        if (roleRepository.count() == 3) {
+        if (roleRepository.count() == 2) {
             roleRepository.saveAll(roles);
         }
 
