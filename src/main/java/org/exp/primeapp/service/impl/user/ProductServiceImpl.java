@@ -121,6 +121,7 @@ public class ProductServiceImpl implements ProductService {
         return new ProductRes(
                 product.getId(),
                 product.getName(),
+                product.getBrand(),
                 product.getDescription(),
                 product.getPrice(),
                 product.getDiscount(),

@@ -10,6 +10,7 @@ import java.util.List;
 public record ProductRes(
         Long id,
         String name,
+        String brand,
         String description,
         BigDecimal price,
         Integer discount,
