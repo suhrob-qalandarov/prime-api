@@ -176,7 +176,7 @@ public class CategoryServiceImpl implements CategoryService {
                 category.getOrderNumber(),
                 category.getActive(),
                 countByCategory,
-                category.getCreatedAt().format(formatter)
+                category.getCreatedAt() != null ? category.getCreatedAt().format(formatter) : null
         );
     }
 
