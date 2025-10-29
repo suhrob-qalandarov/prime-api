@@ -1,27 +1,13 @@
-#version: '3.8'
 services:
   web_app:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: prime_app-web_app
     ports:
       - "8080:8080"
     env_file:
       - .env
-    environment:
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - SPRING_DATASOURCE_DRIVER=${SPRING_DATASOURCE_DRIVER}
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
-      - AWS_S3_BUCKET=${AWS_S3_BUCKET}
-      - AWS_S3_REGION=${AWS_S3_REGION}
-      - AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY}
-      - AWS_S3_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY}
-      - JPA_DDL=${JPA_DDL}
-      - JPA_SHOW_SQL=${JPA_SHOW_SQL}
-      - JPA_DIALECT=${JPA_DIALECT}
     depends_on:
       web_db:
         condition: service_healthy
@@ -30,25 +16,21 @@ services:
     restart: unless-stopped
 
   web_db:
-    image: postgres:latest
+    image: postgres:15
+    container_name: prime_app-web_db
     env_file:
       - .env
-    environment:
-      - POSTGRES_USER=${SPRING_DATASOURCE_USERNAME}
-      - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - POSTGRES_DB=prime_db
-    ports:
-      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - app-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${SPRING_DATASOURCE_USERNAME}"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d prime_db"]
+      interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
+    restart: unless-stopped
 
 networks:
   app-network:
