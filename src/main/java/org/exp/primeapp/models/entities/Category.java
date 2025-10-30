@@ -13,7 +13,11 @@ import org.exp.primeapp.models.base.BaseEntity;
 @SuperBuilder
 public class Category extends BaseEntity {
 
+    @Column(nullable = false)
     private String name;
+
     private Long orderNumber;
-    private String spotlightName;
+
+    @Builder.Default
+    private String spotlightName = null;
 }

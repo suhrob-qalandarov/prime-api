@@ -84,7 +84,12 @@ public class CategoryServiceImpl implements CategoryService {
         Category saved = categoryRepository.save(
                 Category.builder()
                         .name(categoryReq.name())
-                        .spotlightName(categoryReq.spotlightName())
+                        .spotlightName(
+                                categoryReq.spotlightName() != null && !categoryReq.spotlightName().isBlank()
+                                        ? categoryReq.spotlightName()
+                                        : null
+                        )
+                        .active(false)
                         .build()
         );
         System.out.println("Category saved successfully");
