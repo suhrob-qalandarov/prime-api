@@ -5,7 +5,6 @@ import lombok.Builder;
 @Builder
 public record CategoryReq(
         String name,
-        String spotlightName,
-        Boolean active
+        String spotlightName
 ) {
 }

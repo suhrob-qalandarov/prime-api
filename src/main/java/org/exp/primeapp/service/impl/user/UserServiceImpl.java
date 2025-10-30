@@ -86,7 +86,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean getUserHasAdminFromToken(User user) {
-        return user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN") || role.getName().equals("ROLE_VISITOR"));
+        User dbUser = userRepository.findById(user.getId())
+                .orElseThrow();
+        return dbUser.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ROLE_ADMIN")
+                        || role.getName().equals("ROLE_VISITOR")
+                );
     }
 
     @Override
@@ -97,13 +102,21 @@ public class UserServiceImpl implements UserService {
 
     private UserRes convertToUserRes(User user) {
         UserProfileOrdersRes profileOrdersById = orderService.getUserProfileOrdersById(user.getId());
+
+        List<String> rolesNamesList = user.getRoles().stream()
+                .map(Role::getName)
+                .toList();
+
+        boolean hasRoleAdmin = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+
         return new UserRes(
                 user.getId(),
                 user.getFirstName(),
                 user.getPhone(),
-                user.getRoles().stream().map(Role::getName).toList(),
+                rolesNamesList,
                 profileOrdersById,
-                user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))
+                hasRoleAdmin
         );
     }
 
