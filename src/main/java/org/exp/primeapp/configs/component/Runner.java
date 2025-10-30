@@ -24,7 +24,7 @@ public class Runner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         ArrayList<Role> roles = new ArrayList<>(List.of(
-                new Role(ROLE_SUPER_ADMIN),
+                //new Role(ROLE_SUPER_ADMIN),
                 new Role(ROLE_ADMIN),
                 new Role(ROLE_VISITOR),
                 new Role(ROLE_USER)
