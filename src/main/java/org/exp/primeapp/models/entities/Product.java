@@ -43,13 +43,14 @@ public class Product extends BaseEntity {
     @JoinColumn(nullable = false)
     private Category category;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "products_attachments",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "attachment_id")
     )
-    private List<Attachment> attachments = new ArrayList<>();
+    private Set<Attachment> attachments = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductSize> sizes = new HashSet<>();

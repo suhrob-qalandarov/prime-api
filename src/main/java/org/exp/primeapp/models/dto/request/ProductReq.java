@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
 @Builder
 public record ProductReq (
@@ -30,5 +30,5 @@ public record ProductReq (
 
         @NotNull(message = "Rasm yoki fayl kalitlari bo‘sh bo‘lmasligi kerak")
         @Size(max = 10, message = "Eng ko‘pi bilan 10 ta fayl yuklash mumkin")
-        List<String> attachmentKeys
+        Set<String> attachmentKeys
 ) {}
