@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,31 +49,31 @@ public class AdminProductServiceImpl implements AdminProductService {
         long activeCount = productResList.stream().filter(AdminProductRes::active).count();
         long inactiveCount = productResList.stream().filter(p -> !p.active()).count();
 
-        Map<String, Long> countMap = mapCountByStatus(productResList);
+        Map<String, Long> countMap = mapCountByTag(productResList);
 
-        long newCount = getCountByStatus(countMap, ProductStatus.NEW.name());
-        long hotCount = getCountByStatus(countMap, ProductStatus.HOT.name());
-        long saleCount = getCountByStatus(countMap, ProductStatus.SALE.name());
+        long newTagCount = getCountByTag(countMap, ProductTag.NEW.name());
+        long hotTagCount = getCountByTag(countMap, ProductTag.HOT.name());
+        long saleTagCount = getCountByTag(countMap, ProductTag.SALE.name());
 
         return AdminProductDashboardRes.builder()
                 .totalCount(totalCount)
                 .activeCount(activeCount)
                 .inactiveCount(inactiveCount)
-                .newCount(newCount)
-                .hotCount(hotCount)
-                .saleCount(saleCount)
+                .newTagCount(newTagCount)
+                .hotTagCount(hotTagCount)
+                .saleTagCount(saleTagCount)
                 .responseDate(LocalDateTime.now().plusMinutes(updateOffsetMinutes))
                 .productResList(productResList)
                 .build();
     }
 
-    private Map<String, Long> mapCountByStatus(List<AdminProductRes> productResList) {
+    private Map<String, Long> mapCountByTag(List<AdminProductRes> productResList) {
         return productResList.stream()
                 .collect(Collectors.groupingBy(AdminProductRes::status, Collectors.counting()));
     }
 
-    private long getCountByStatus(Map<String, Long> countMap, String status) {
-        return countMap.getOrDefault(status, 0L);
+    private long getCountByTag(Map<String, Long> countMap, String tag) {
+        return countMap.getOrDefault(tag, 0L);
     }
 
     @Override
@@ -124,12 +125,12 @@ public class AdminProductServiceImpl implements AdminProductService {
         Category category = categoryRepository.findById(productReq.categoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found with categoryId: " + productReq.categoryId()));
 
-        List<String> attachmentIds = productReq.attachmentKeys();
+        Set<String> attachmentIds = productReq.attachmentKeys();
         if (attachmentIds == null || attachmentIds.isEmpty()) {
             throw new RuntimeException("Attachments empty");
         }
 
-        List<Attachment> attachments = attachmentRepository.findAllByKeyIn(attachmentIds);
+        Set<Attachment> attachments = attachmentRepository.findAllByKeyIn(attachmentIds);
 
         Product product = createProductFromReq(productReq, category, attachments);
         product.setDiscount(0);
@@ -156,8 +157,7 @@ public class AdminProductServiceImpl implements AdminProductService {
                 .active(true)
                 .status(ProductStatus.NEW)
                 .category(category)
-                //.collection(null)
-                .attachments(attachments)
+                .attachments((Set<Attachment>) attachments)
                 .sizes(new HashSet<>())
                 .build();
 

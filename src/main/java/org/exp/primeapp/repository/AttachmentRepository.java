@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
@@ -47,5 +48,5 @@ public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
 
     Attachment findByKey(String key);
 
-    List<Attachment> findAllByKeyIn(Collection<String> keys);
+    Set<Attachment> findAllByKeyIn(Collection<String> keys);
 }
